@@ -1,0 +1,555 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  
+  p {
+    margin: 0;
+    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+  }
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem;
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  h2 {
+    margin: 0;
+    color: var(--mdc-theme-error, #f44336);
+  }
+}
+
+.serie-detail-container {
+  min-height: 100vh;
+}
+
+.hero-backdrop {
+  position: relative;
+  height: 60vh;
+  min-height: 500px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: end;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  display: flex;
+  align-items: end;
+}
+
+.hero-content {
+  position: relative;
+  width: 100%;
+  padding: 2rem;
+  color: white;
+}
+
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.serie-hero-info {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-end;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.poster-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.serie-poster {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 225px;
+  }
+}
+
+.rating-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--mdc-theme-primary, #6200ea);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.serie-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.serie-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.original-title {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.serie-meta {
+  margin-bottom: 2rem;
+  
+  mat-chip-set {
+    margin-bottom: 1rem;
+  }
+}
+
+.meta-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+
+  .separator {
+    opacity: 0.6;
+  }
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.vote-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+
+  .vote-average {
+    font-weight: 600;
+    color: var(--mdc-theme-primary, #6200ea);
+  }
+
+  .vote-count {
+    opacity: 0.8;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+.content-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.stats-card {
+  .mat-mdc-card-header {
+    padding-bottom: 1rem;
+  }
+}
+
+.stats-grid {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--mdc-theme-primary, #6200ea);
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+  }
+}
+
+.seasons-card {
+  .mat-mdc-card-header {
+    padding-bottom: 1rem;
+  }
+}
+
+.season-content {
+  padding: 1rem 0;
+}
+
+.season-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.season-poster {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.season-info {
+  flex: 1;
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .season-overview {
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.7));
+  }
+
+  .season-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+
+    .separator {
+      opacity: 0.6;
+    }
+  }
+}
+
+.episodes-section {
+  margin-top: 1.5rem;
+
+  h4 {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .mat-expansion-panel-header {
+    .episode-number {
+      font-weight: 600;
+      margin-right: 0.5rem;
+      color: var(--mdc-theme-primary, #6200ea);
+    }
+
+    .episode-name {
+      font-weight: 500;
+    }
+
+    mat-panel-description {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .separator {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+.episode-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .episode-still {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .episode-overview {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .episode-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--mdc-theme-primary, #6200ea);
+    font-weight: 500;
+
+    mat-icon {
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+}
+
+.overview-card,
+.details-card {
+  .mat-mdc-card-header {
+    padding-bottom: 1rem;
+  }
+}
+
+.overview-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.details-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .detail-label {
+    font-weight: 600;
+    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+    font-size: 0.9rem;
+  }
+
+  .detail-value {
+    font-size: 1rem;
+    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.87));
+  }
+}
+
+.season-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+    flex: 1;
+  }
+
+  .season-watched-button {
+    flex-shrink: 0;
+    
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+
+    mat-spinner {
+      width: 16px !important;
+      height: 16px !important;
+      margin-right: 0.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    .season-watched-button {
+      align-self: stretch;
+      text-align: center;
+    }
+  }
+}
+
+.seasons-accordion {
+  .season-panel {
+    margin-bottom: 0.5rem;
+
+    mat-expansion-panel-header {
+      .season-title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+
+        .season-title {
+          font-weight: 600;
+          font-size: 1.1rem;
+        }
+
+        .season-subtitle {
+          font-size: 0.9rem;
+          color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+        }
+      }
+
+      .season-description {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+
+        .separator {
+          margin: 0 0.25rem;
+        }
+      }
+    }
+  }
+}
+
+.episode-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+
+  .episode-info {
+    flex: 1;
+  }
+
+  .episode-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+
+    .episode-watched-button {
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+
+      mat-spinner {
+        width: 16px !important;
+        height: 16px !important;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .episode-actions {
+      align-self: stretch;
+
+      .episode-watched-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .tooltip-attached {
+  background-color: #616161 !important;
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 6px 8px !important;
+  border-radius: 4px !important;
+  max-width: 200px !important;
+  text-align: center !important;
+}

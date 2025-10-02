@@ -1,0 +1,95 @@
+<div class="search-page">
+    <div class="search-header">
+        <h1>{{ 'search.title' | transloco }}</h1>
+        <p class="search-subtitle">{{ 'search.subtitle' | transloco }}</p>
+    </div>
+
+    <div class="search-form-container">
+        <mat-form-field appearance="outline" class="search-field">
+            <mat-label>{{ 'search.placeholder' | transloco }}</mat-label>
+            <input matInput [formControl]="searchControl" [placeholder]="'search.placeholder' | transloco"
+                (keyup.enter)="onSearch()" autocomplete="off">
+
+            <mat-icon matPrefix>search</mat-icon>
+
+            @if (searchControl.value && searchControl.value.length > 0) {
+            <button matSuffix mat-icon-button (click)="clearSearch()" [attr.aria-label]="'search.clear' | transloco">
+                <mat-icon>clear</mat-icon>
+            </button>
+            }
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="onSearch()" [disabled]="!searchControl.valid || loading()"
+            class="search-button">
+            @if (loading()) {
+            <mat-icon>refresh</mat-icon>
+            } @else {
+            <mat-icon>search</mat-icon>
+            }
+            {{ 'search.search_button' | transloco }}
+        </button>
+    </div>
+
+    @if (loading()) {
+    <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>{{ 'search.searching' | transloco }}</p>
+    </div>
+    }
+
+    @if (error()) {
+    <div class="error-container">
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ error() }}</p>
+        <button mat-button (click)="onSearch()">
+            <mat-icon>refresh</mat-icon>
+            {{ 'search.retry' | transloco }}
+        </button>
+    </div>
+    }
+
+    @if (hasResults() && !loading()) {
+    <div class="search-results">
+        <div class="results-header">
+            <h2>{{ 'search.results_title' | transloco }}</h2>
+            <div class="results-info">
+                @if (lastQuery()) {
+                <p class="search-query">{{ 'search.results_for' | transloco }} "{{ lastQuery() }}"</p>
+                }
+                <mat-chip-set>
+                    <mat-chip>{{ 'search.results_count' | transloco: {count: searchResults().length} }}</mat-chip>
+                </mat-chip-set>
+            </div>
+        </div>
+        <div class="results-grid">
+            @for (serie of searchResults(); track serie.id) {
+            <app-serie-card [serie]="serie"></app-serie-card>
+            }
+        </div>
+    </div>
+    }
+
+    @if (showNoResults()) {
+    <div class="no-results-container">
+        <mat-icon class="no-results-icon">search_off</mat-icon>
+        <h3>{{ 'search.no_results_title' | transloco }}</h3>
+        <p>{{ 'search.no_results_subtitle' | transloco }}</p>
+        <button mat-stroked-button (click)="clearSearch()">
+            <mat-icon>refresh</mat-icon>
+            {{ 'search.new_search' | transloco }}
+        </button>
+    </div>
+    }
+
+    @if (!hasSearched() && !loading()) {
+    <div class="search-instructions">
+        <mat-icon class="instructions-icon">info</mat-icon>
+        <h3>{{ 'search.instructions_title' | transloco }}</h3>
+        <ul>
+            <li>{{ 'search.instruction_1' | transloco }}</li>
+            <li>{{ 'search.instruction_2' | transloco }}</li>
+            <li>{{ 'search.instruction_3' | transloco }}</li>
+        </ul>
+    </div>
+    }
+</div>

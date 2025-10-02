@@ -1,0 +1,358 @@
+.series-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .series-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: inherit;
+        }
+    }
+
+    .poster-container {
+        position: relative;
+        width: 100%;
+        padding-top: 150%; // Ratio 2:3 pour les posters
+        overflow: hidden;
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+
+        .series-poster {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(1) saturate(1.1);
+
+            &:hover {
+                transform: scale(1.08);
+                filter: brightness(1.05) saturate(1.2);
+            }
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 0, 0, 0.1) 0%,
+                rgba(0, 0, 0, 0.05) 50%,
+                rgba(0, 0, 0, 0.2) 100%
+            );
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover::before {
+            opacity: 1;
+        }
+
+        .rating-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 2;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+                color: #fbbf24;
+                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+            }
+        }
+    }
+
+    mat-card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+
+        .series-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #1f2937;
+            letter-spacing: -0.025em;
+        }
+
+        .series-info {
+            margin-bottom: 16px;
+
+            .series-meta {
+                display: flex;
+                gap: 16px;
+                font-size: 13px;
+                color: #6b7280;
+                font-weight: 500;
+
+                .seasons,
+                .episodes {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+
+                    &::before {
+                        content: '';
+                        width: 4px;
+                        height: 4px;
+                        background: #d1d5db;
+                        border-radius: 50%;
+                        display: inline-block;
+                    }
+
+                    &:first-child::before {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .series-overview {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #4b5563;
+            margin: 0;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 400;
+        }
+    }
+
+    mat-card-actions {
+        padding: 0 20px 20px 20px;
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        z-index: 1;
+        background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+        
+        button {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            position: relative;
+            z-index: 2;
+            border-radius: 12px;
+            padding: 8px 16px;
+            height: auto;
+            min-height: 36px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+                background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+
+            mat-icon {
+                margin-right: 6px;
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
+
+.dark-theme {
+    .series-card {
+        background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:hover {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        mat-card-content {
+            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+
+            .series-title {
+                color: #f9fafb;
+            }
+
+            .series-overview {
+                color: #d1d5db;
+            }
+
+            .series-meta {
+                color: #9ca3af;
+
+                .seasons,
+                .episodes {
+                    &::before {
+                        background: #6b7280;
+                    }
+                }
+            }
+        }
+
+        mat-card-actions {
+            background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .series-card {
+        border-radius: 12px;
+
+        .poster-container {
+            padding-top: 130%; // Ratio légèrement plus petit sur mobile
+
+            .rating-badge {
+                top: 8px;
+                right: 8px;
+                padding: 4px 8px;
+                font-size: 12px;
+
+                mat-icon {
+                    font-size: 14px;
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
+
+        mat-card-content {
+            padding: 16px;
+
+            .series-title {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            .series-info {
+                margin-bottom: 12px;
+
+                .series-meta {
+                    font-size: 12px;
+                    gap: 12px;
+                }
+            }
+
+            .series-overview {
+                font-size: 13px;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+            }
+        }
+
+        mat-card-actions {
+            padding: 0 16px 16px 16px;
+
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+                min-height: 32px;
+
+                mat-icon {
+                    font-size: 14px;
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
+
+        &:hover {
+            transform: translateY(-4px) scale(1.01);
+        }
+    }
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.series-card {
+    animation: cardFadeIn 0.6s ease-out;
+}
+
+.series-card {
+    .series-card-link {
+        &:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+            border-radius: 16px;
+        }
+    }
+
+    mat-card-actions button {
+        &:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+    }
+}

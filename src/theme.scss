@@ -1,0 +1,97 @@
+
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$primary-color: #e91e63; // Rose - Primary color
+$accent-color: #ff5722;  // Deep orange - Accent color  
+$warn-color: #f44336;    // Red - Warning color
+
+$border-radius: 8px;
+$elevation-shadow: 0 2px 4px rgba(0,0,0,0.1);
+$spacing-unit: 8px;
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$rose-palette,
+    tertiary: mat.$red-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+    plain-family: 'Roboto',
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$rose-palette,
+    tertiary: mat.$red-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+    plain-family: 'Roboto',
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+@mixin theme-styles() {
+  @include mat.all-component-themes($theme);
+  
+  :root {
+    --primary-color: #{$primary-color};
+    --accent-color: #{$accent-color};
+    --warn-color: #{$warn-color};
+    --border-radius: #{$border-radius};
+    --elevation-shadow: #{$elevation-shadow};
+    --spacing-unit: #{$spacing-unit};
+    --spacing-xs: #{$spacing-unit * 0.5};
+    --spacing-sm: #{$spacing-unit};
+    --spacing-md: #{$spacing-unit * 2};
+    --spacing-lg: #{$spacing-unit * 3};
+    --spacing-xl: #{$spacing-unit * 4};
+  }
+  
+  .dark-theme {
+    @include mat.all-component-colors($dark-theme);
+    
+    --primary-color: #f48fb1; // Lighter version for dark mode
+    --accent-color: #ff8a65;  // Lighter version for dark mode
+  }
+  
+  .mat-mdc-elevated-button, 
+  .mat-mdc-raised-button, 
+  .mat-mdc-outlined-button,
+  .mat-mdc-fab,
+  .mat-mdc-mini-fab {
+    border-radius: var(--border-radius) !important;
+  }
+  
+  .mat-mdc-card {
+    border-radius: var(--border-radius) !important;
+  }
+  
+  .mat-mdc-form-field {
+    .mdc-text-field {
+      border-radius: var(--border-radius) !important;
+    }
+  }
+  
+  .mat-elevation-z1 {
+    box-shadow: var(--elevation-shadow) !important;
+  }
+  
+  .mat-elevation-z2 {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.1) !important;
+  }
+  
+  .mat-elevation-z4 {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1) !important;
+  }
+}

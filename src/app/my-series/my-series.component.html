@@ -1,0 +1,70 @@
+<div class="my-series-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <mat-icon>favorite</mat-icon>
+                {{ 'my_series.title' | transloco }}
+            </h1>
+            <p class="page-subtitle">{{ 'my_series.subtitle' | transloco }}</p>
+        </div>
+
+        <div class="header-actions">
+            <button mat-raised-button color="primary" (click)="onRefresh()">
+                <mat-icon>refresh</mat-icon>
+                {{ 'my_series.refresh' | transloco }}
+            </button>
+            <button mat-stroked-button color="primary" (click)="goToSearch()">
+                <mat-icon>search</mat-icon>
+                {{ 'my_series.add_series' | transloco }}
+            </button>
+        </div>
+    </div>
+
+    @if (loading()) {
+    <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>{{ 'my_series.loading' | transloco }}</p>
+    </div>
+    }
+
+    @else if (error()) {
+    <div class="error-container">
+        <mat-icon color="warn">error</mat-icon>
+        <h2>{{ 'my_series.error_title' | transloco }}</h2>
+        <p>{{ error() }}</p>
+        <button mat-raised-button color="primary" (click)="onRefresh()">
+            <mat-icon>refresh</mat-icon>
+            {{ 'my_series.retry' | transloco }}
+        </button>
+    </div>
+    }
+
+    @else if (mySeries().length === 0) {
+    <div class="empty-container">
+        <mat-icon class="empty-icon">tv_off</mat-icon>
+        <h2>{{ 'my_series.empty_title' | transloco }}</h2>
+        <p>{{ 'my_series.empty_message' | transloco }}</p>
+        <button mat-raised-button color="primary" (click)="goToSearch()">
+            <mat-icon>search</mat-icon>
+            {{ 'my_series.start_exploring' | transloco }}
+        </button>
+    </div>
+    }
+
+    @else {
+    <div class="series-stats">
+        <mat-chip-set>
+            <mat-chip selected>
+                <mat-icon matChipTrailingIcon>tv</mat-icon>
+                {{ 'my_series.total_series' | transloco: {count: mySeries().length} }}
+            </mat-chip>
+        </mat-chip-set>
+    </div>
+
+    <div class="series-grid">
+        @for (serie of mySeries(); track serie.id) {
+        <app-serie-card [serie]="serie" />
+        }
+    </div>
+    }
+</div>

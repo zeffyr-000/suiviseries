@@ -1,0 +1,43 @@
+<div>
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>{{ 'hero.title' | transloco }}</h1>
+            <p>{{ 'hero.subtitle' | transloco }}</p>
+            <div class="hero-actions">
+                <button mat-raised-button color="primary" class="hero-button" routerLink="/search">
+                    <mat-icon>search</mat-icon>
+                    {{ 'hero.browse_series' | transloco }}
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="series-section">
+        <div class="section-header">
+            <h2>
+                <mat-icon>local_fire_department</mat-icon>
+                {{ 'sections.popular_right_now' | transloco }}
+            </h2>
+        </div>
+
+        @if (loading()) {
+        <div class="loading-grid">
+            @for (item of [1,2,3,4,5,6]; track item) {
+            <mat-card class="series-card loading">
+                <div class="poster-placeholder"></div>
+                <mat-card-content>
+                    <div class="title-placeholder"></div>
+                    <div class="info-placeholder"></div>
+                </mat-card-content>
+            </mat-card>
+            }
+        </div>
+        } @else {
+        <div class="series-grid">
+            @for (serie of popularSeries(); track serie.id) {
+            <app-serie-card [serie]="serie"></app-serie-card>
+            }
+        </div>
+        }
+    </section>
+</div>

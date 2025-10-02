@@ -1,0 +1,37 @@
+<div class="login-modal">
+    <h2 mat-dialog-title>
+        <mat-icon>tv</mat-icon>
+        {{ 'auth.sign_in_title' | transloco }}
+    </h2>
+
+    <mat-dialog-content>
+        <div class="login-content">
+            <p class="login-subtitle">{{ 'auth.sign_in_subtitle' | transloco }}</p>
+
+            @if (loading()) {
+            <div class="loading-state">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>{{ 'auth.connecting' | transloco }}</p>
+            </div>
+            }
+
+            @if (!loading()) {
+            <div class="google-signin-section">
+                <div #googleButton class="google-button-container"></div>
+
+                <div class="signin-hint">
+                    <mat-icon class="info-icon">info</mat-icon>
+                    <span>Connexion sécurisée avec votre compte Google</span>
+                </div>
+            </div>
+            }
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button (click)="goHome()">
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'auth.back_to_home' | transloco }}
+        </button>
+    </mat-dialog-actions>
+</div>
