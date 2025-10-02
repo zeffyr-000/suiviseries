@@ -649,7 +649,7 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 ```
 
-## � Métriques de qualité du projet
+## 📈 Métriques de qualité du projet
 
 ### Standards de code atteints
 

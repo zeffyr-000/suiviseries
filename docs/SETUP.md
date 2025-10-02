@@ -99,6 +99,24 @@ The frontend is configured to proxy API calls to a local backend:
 - **Backend URL**: `http://localhost:8888/suiviseries-api/www`
 - **Proxy configuration**: `proxy.conf.json`
 
+#### Proxy Configuration
+
+```json
+{
+  "/api/**": {
+    "target": "http://localhost:8888/suiviseries-api/www/",
+    "secure": false,
+    "pathRewrite": { "^/api": "" }
+  }
+}
+```
+
+**How it works:**
+
+- Frontend calls: `environment.apiUrl + '/series'` → `/api/series`
+- Proxy rewrites: `/api/series` → `http://localhost:8888/suiviseries-api/www/series`
+- The `pathRewrite` removes the `/api` prefix to match backend routes
+
 ### Start Backend Server
 
 Make sure your backend server is running on port 8888 with the path `/suiviseries-api/www`.

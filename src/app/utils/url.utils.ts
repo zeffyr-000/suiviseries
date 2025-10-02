@@ -12,10 +12,14 @@ export function createSlug(text: string): string {
         .replace(/-+/g, '-') // Replace multiple hyphens with single
         .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
         .trim();
-} export function extractIdFromParam(param: string): number {
+}
+
+export function extractIdFromParam(param: string): number {
     const id = parseInt(param, 10);
     return isNaN(id) ? 0 : id;
-} export function sanitizeText(text: string): string {
+}
+
+export function sanitizeText(text: string): string {
     return text
         .replace(/<[^>]*>/g, '') // Remove HTML tags
         .replace(/\s+/g, ' ') // Normalize whitespace

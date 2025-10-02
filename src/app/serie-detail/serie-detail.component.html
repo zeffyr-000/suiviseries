@@ -23,7 +23,8 @@
         <div class="hero-backdrop" [style.background-image]="'url(' + backdropUrl() + ')'">
             <div class="hero-overlay">
                 <div class="hero-content">
-                    <button mat-icon-button class="back-button" (click)="goBack()">
+                    <button mat-icon-button class="back-button" (click)="goBack()"
+                        [attr.aria-label]="'series.back_button' | transloco">
                         <mat-icon>arrow_back</mat-icon>
                     </button>
 
@@ -89,11 +90,12 @@
                                     </ng-container>
                                     }
                                 </button>
-                                <button mat-icon-button>
+                                <button mat-icon-button [attr.aria-label]="'series.share_button' | transloco">
                                     <mat-icon>share</mat-icon>
                                 </button>
                                 <button mat-icon-button matTooltip="{{ 'series.refresh_data' | transloco }}"
-                                    [disabled]="loading()" (click)="refreshSerieData()">
+                                    [disabled]="loading()" (click)="refreshSerieData()"
+                                    [attr.aria-label]="'series.refresh_data' | transloco">
                                     <mat-icon>refresh</mat-icon>
                                 </button>
                             </div>
@@ -145,6 +147,7 @@
                                             [disabled]="isSeasonLoading(season.id)"
                                             (click)="onToggleSeasonWatched(season.id); $event.stopPropagation()"
                                             [matTooltip]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
+                                            [attr.aria-label]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
                                             matTooltipPosition="right" class="season-watched-button">
                                             @if (isSeasonLoading(season.id)) {
                                             <mat-spinner diameter="16"></mat-spinner>
@@ -204,6 +207,7 @@
                                                         [disabled]="isEpisodeLoading(episode.id)"
                                                         (click)="onToggleEpisodeWatched(episode.id); $event.stopPropagation()"
                                                         [matTooltip]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
+                                                        [attr.aria-label]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
                                                         matTooltipPosition="right" class="episode-watched-button">
                                                         @if (isEpisodeLoading(episode.id)) {
                                                         <mat-spinner diameter="16"></mat-spinner>

@@ -24,6 +24,7 @@ The theme is configured in `src/theme.scss` and exposes the following CSS variab
   --accent-color: #ff5722; /* Accent color (deep orange) */
   --warn-color: #f44336; /* Warning color (red) */
   --border-radius: 8px; /* Border radius */
+  --border-radius-lg: 12px; /* Large border radius */
   --elevation-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Elevation shadow */
 
   /* Spacing */

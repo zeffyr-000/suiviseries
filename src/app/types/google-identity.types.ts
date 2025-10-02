@@ -33,7 +33,7 @@ export interface GoogleIdConfiguration {
 
 export interface CredentialResponse {
     credential: string;
-    select_by: 'auto' | 'user' | 'user_1tap' | 'user_2tap' | 'btn' | 'btn_confirm' | 'brn_add_session' | 'btn_confirm_add_session';
+    select_by: 'auto' | 'user' | 'user_1tap' | 'user_2tap' | 'btn' | 'btn_confirm' | 'btn_add_session' | 'btn_confirm_add_session';
     clientId?: string;
 }
 

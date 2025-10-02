@@ -47,7 +47,9 @@ export class App {
 
   toggleMenu() {
     this.menuOpen.set(!this.menuOpen());
-  } login(): void {
+  }
+
+  login(): void {
     this.dialog.open(LoginComponent, {
       width: '540px',
       maxWidth: '90vw',

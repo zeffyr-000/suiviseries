@@ -1,13 +1,14 @@
-import { Component, OnInit, computed, signal, inject } from '@angular/core';
+import { Component, OnInit, computed, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { switchMap, map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { TranslocoModule } from '@jsverse/transloco';
 
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
@@ -26,11 +27,9 @@ import { SerieStatusChipComponent } from '../shared/serie-status-chip/serie-stat
     imports: [
         CommonModule,
         TranslocoModule,
-        MatToolbarModule,
         MatButtonModule,
         MatIconModule,
         MatCardModule,
-        MatBadgeModule,
         MatProgressBarModule,
         MatProgressSpinnerModule,
         MatDividerModule,
@@ -40,7 +39,8 @@ import { SerieStatusChipComponent } from '../shared/serie-status-chip/serie-stat
         SerieStatusChipComponent
     ],
     templateUrl: './serie-detail.component.html',
-    styleUrl: './serie-detail.component.scss'
+    styleUrl: './serie-detail.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SerieDetailComponent implements OnInit {
     private serieId = signal<number>(0);
@@ -96,33 +96,84 @@ export class SerieDetailComponent implements OnInit {
     protected watchedSeasons = computed(() => {
         const userData = this.userSerieData();
         return userData?.watched_seasons || [];
-    }); protected isSeasonWatched(seasonId: number): boolean {
+    });
+
+    protected isSeasonWatched(seasonId: number): boolean {
         const watchedSeasons = this.watchedSeasons();
         return watchedSeasons.includes(seasonId);
-    } protected isSeasonLoading(seasonId: number): boolean {
+    }
+
+    protected isSeasonLoading(seasonId: number): boolean {
         const loadingStates = this.seasonLoadingStates();
         return loadingStates.get(seasonId) || false;
-    } protected isEpisodeWatched(episodeId: number): boolean {
+    }
+
+    protected isEpisodeWatched(episodeId: number): boolean {
         const watchedEpisodes = this.watchedEpisodes();
         return watchedEpisodes.includes(episodeId);
-    } protected refreshSerieData(): void {
+    }
+
+    protected refreshSerieData(): void {
         this.loadSerieDetails();
-    } protected isEpisodeLoading(episodeId: number): boolean {
+    }
+
+    protected isEpisodeLoading(episodeId: number): boolean {
         const loadingStates = this.episodeLoadingStates();
         return loadingStates.get(episodeId) || false;
+    }
+
+    private buildSerieStats(serie: Serie, stats: { seasons_count: number; episodes_count: number }, isReallyFollowed: boolean): SerieStats {
+        return {
+            followedByCurrentUser: isReallyFollowed,
+            watchedByCurrentUser: serie.user_data?.is_watched || false,
+            totalFollowers: 0, // Will be provided by backend later
+            seasons_count: stats.seasons_count,
+            episodes_count: stats.episodes_count
+        };
     }
 
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly seriesService = inject(SeriesService);
     private readonly authService = inject(AuthService);
-    private readonly translocoService = inject(TranslocoService);
+    private readonly destroyRef = inject(DestroyRef);
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            this.serieId.set(+params['id']);
-            this.serieName.set(params['nom']);
-            this.loadSerieDetails();
+        this.route.params.pipe(
+            switchMap(params => {
+                this.serieId.set(+params['id']);
+                this.serieName.set(params['nom']);
+
+                this.loading.set(true);
+                this.error.set(null);
+                return this.seriesService.getSerieDetails(this.serieId());
+            }),
+            switchMap((response) => {
+                if (response && response.success) {
+                    const { serie, stats } = response;
+                    this.serie.set(serie);
+
+                    // Use switchMap to avoid nested subscriptions
+                    return this.seriesService.isSerieReallyFollowed(serie.id)
+                        .pipe(
+                            map((isReallyFollowed) => ({ serie, stats, isReallyFollowed })),
+                            catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following || false }))
+                        );
+                } else {
+                    throw new Error('Serie not found');
+                }
+            }),
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+            next: ({ serie, stats, isReallyFollowed }) => {
+                const serieStats = this.buildSerieStats(serie, stats, isReallyFollowed);
+                this.stats.set(serieStats);
+                this.loading.set(false);
+            },
+            error: (err) => {
+                this.error.set(err?.message || 'Error loading serie');
+                this.loading.set(false);
+            }
         });
     }
 
@@ -130,44 +181,35 @@ export class SerieDetailComponent implements OnInit {
         this.loading.set(true);
         this.error.set(null);
 
-        this.seriesService.getSerieDetails(this.serieId()).subscribe({
-            next: (response) => {
-                if (response && response.success) {
-                    const { serie, stats } = response;
-                    this.serie.set(serie);
+        this.seriesService.getSerieDetails(this.serieId())
+            .pipe(
+                switchMap((response) => {
+                    if (response && response.success) {
+                        const { serie, stats } = response;
+                        this.serie.set(serie);
 
-                    this.seriesService.isSerieReallyFollowed(serie.id).subscribe({
-                        next: (isReallyFollowed) => {
-                            const serieStats: SerieStats = {
-                                followedByCurrentUser: isReallyFollowed,
-                                watchedByCurrentUser: serie.user_data?.is_watched || false,
-                                totalFollowers: 0, // Will need to be provided by backend later
-                                seasons_count: stats.seasons_count,
-                                episodes_count: stats.episodes_count
-                            };
-                            this.stats.set(serieStats);
-                        },
-                        error: () => {
-                            const serieStats: SerieStats = {
-                                followedByCurrentUser: serie.user_data?.is_following || false,
-                                watchedByCurrentUser: serie.user_data?.is_watched || false,
-                                totalFollowers: 0,
-                                seasons_count: stats.seasons_count,
-                                episodes_count: stats.episodes_count
-                            };
-                            this.stats.set(serieStats);
-                        }
-                    });
-                } else {
-                    this.error.set('Serie not found');
+                        return this.seriesService.isSerieReallyFollowed(serie.id)
+                            .pipe(
+                                map((isReallyFollowed) => ({ serie, stats, isReallyFollowed })),
+                                catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following || false }))
+                            );
+                    } else {
+                        throw new Error('Serie not found');
+                    }
+                }),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe({
+                next: ({ serie, stats, isReallyFollowed }) => {
+                    const serieStats = this.buildSerieStats(serie, stats, isReallyFollowed);
+                    this.stats.set(serieStats);
+                    this.loading.set(false);
+                },
+                error: (err) => {
+                    this.error.set(err?.message || 'Error loading serie');
+                    this.loading.set(false);
                 }
-                this.loading.set(false);
-            },
-            error: () => {
-                this.error.set('Error loading serie');
-                this.loading.set(false);
-            }
-        });
+            });
     }
 
     protected goBack() {

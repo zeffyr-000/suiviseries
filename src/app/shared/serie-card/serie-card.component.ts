@@ -1,7 +1,7 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,8 +28,6 @@ import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip
 })
 export class SerieCardComponent {
     @Input() serie!: Serie;
-
-    private readonly translocoService = inject(TranslocoService);
 
     protected getTmdbImageUrl = getTmdbImageUrl;
     protected formatRating = formatRating;

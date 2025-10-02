@@ -17,11 +17,11 @@ Suiviseries is a modern Angular 20 application built with current best practices
 
 ### Development Tools
 
-- **Angular CLI 20** - Scaffolding and build system
+- **Angular CLI 20** - Scaffolding and build system (with esbuild & webpack)
 - **ESLint** - Linting with strict configuration
 - **Prettier** - Consistent code formatting
 - **Karma + Jasmine** - Unit testing
-- **Vite** - Modern and fast build tool
+- **Angular Builder** - Optimized build pipeline with tree-shaking
 
 ## 🏛️ Component Architecture
 

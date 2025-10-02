@@ -1,4 +1,4 @@
-# � Quick Reference: ICU Pluralization
+# 📚 Quick Reference: ICU Pluralization
 
 ## Standard Format
 

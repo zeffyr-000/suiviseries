@@ -1,17 +1,15 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { SeriesService } from '../services/series.service';
-import { AuthService } from '../services/auth.service';
 import { Serie } from '../models/serie.model';
 import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
 
@@ -21,21 +19,20 @@ import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
     imports: [
         CommonModule,
         TranslocoModule,
-        MatToolbarModule,
         MatButtonModule,
         MatIconModule,
-        MatCardModule,
         MatProgressSpinnerModule,
         MatChipsModule,
         SerieCardComponent
     ],
     templateUrl: './my-series.component.html',
-    styleUrl: './my-series.component.scss'
+    styleUrl: './my-series.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MySeriesComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);
-    private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
 
     protected mySeries = signal<Serie[]>([]);
     protected loading = signal<boolean>(true);
@@ -49,7 +46,9 @@ export class MySeriesComponent implements OnInit {
         this.loading.set(true);
         this.error.set(null);
 
-        this.seriesService.getUserSeries().subscribe({
+        this.seriesService.getUserSeries().pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
             next: (series: Serie[]) => {
                 this.mySeries.set(series);
                 this.loading.set(false);

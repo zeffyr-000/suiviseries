@@ -1,7 +1,8 @@
-import { Component, OnInit, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -10,7 +11,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 
@@ -20,6 +20,7 @@ import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
 
 @Component({
     selector: 'app-search',
+    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -30,7 +31,6 @@ import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
         MatButtonModule,
         MatIconModule,
         MatProgressSpinnerModule,
-        MatCardModule,
         MatChipsModule,
         SerieCardComponent
     ],
@@ -40,7 +40,7 @@ import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
 })
 export class SearchComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);
-    private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
 
     protected readonly searchControl = new FormControl('', [
         Validators.minLength(2)
@@ -59,7 +59,9 @@ export class SearchComponent implements OnInit {
 
     ngOnInit() {
         this.setupSearchSubscription();
-    } private setupSearchSubscription(): void {
+    }
+
+    private setupSearchSubscription(): void {
         this.searchControl.valueChanges.pipe(
             debounceTime(400),
             distinctUntilChanged(),
@@ -73,7 +75,8 @@ export class SearchComponent implements OnInit {
                 this.error.set(null);
                 this.lastQuery.set(query.trim());
                 return this.seriesService.searchSeries(query.trim());
-            })
+            }),
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe({
             next: (results) => {
                 this.searchResults.set(results);
@@ -85,30 +88,26 @@ export class SearchComponent implements OnInit {
                 this.hasSearched.set(true);
             }
         });
-    } protected onSearch(): void {
+    }
+
+    protected onSearch(): void {
         const query = this.searchControl.value?.trim();
         if (!query || query.length < 2) {
             return;
         }
 
-        this.loading.set(true);
-        this.error.set(null);
-        this.hasSearched.set(true);
-        this.lastQuery.set(query);
+        // Trigger search via valueChanges stream to avoid duplicate requests
+        // Force re-trigger even if value is the same by setting empty then actual value
+        this.searchControl.setValue('', { emitEvent: false });
+        this.searchControl.setValue(query);
+    }
 
-        this.seriesService.searchSeries(query).subscribe({
-            next: (results) => {
-                this.searchResults.set(results);
-                this.loading.set(false);
-            },
-            error: () => {
-                this.loading.set(false);
-            }
-        });
-    } protected clearSearch(): void {
+    protected clearSearch(): void {
         this.searchControl.reset();
         this.clearResults();
-    } private clearResults(): void {
+    }
+
+    private clearResults(): void {
         this.searchResults.set([]);
         this.loading.set(false);
         this.hasSearched.set(false);

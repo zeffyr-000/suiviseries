@@ -45,6 +45,18 @@ export class AuthService {
 
     private readonly http = inject(HttpClient);
 
+    private setStorageItem(key: string, value: string): void {
+        localStorage.setItem(key, value);
+    }
+
+    private getStorageItem(key: string): string | null {
+        return localStorage.getItem(key);
+    }
+
+    private removeStorageItem(key: string): void {
+        localStorage.removeItem(key);
+    }
+
     constructor() {
         this.initializeAuth();
     }
@@ -62,7 +74,7 @@ export class AuthService {
     }
 
     private async initializeApp(): Promise<void> {
-        const token = localStorage.getItem(this.storageKey);
+        const token = this.getStorageItem(this.storageKey);
         const headers: Record<string, string> = {};
 
         if (token) {
@@ -92,13 +104,13 @@ export class AuthService {
     }
 
     private updateStoredUserData(user: User): void {
-        localStorage.setItem(this.userStorageKey, JSON.stringify(user));
+        this.setStorageItem(this.userStorageKey, JSON.stringify(user));
     }
 
     private clearAuthData(): void {
         this._currentUser.set(null);
-        localStorage.removeItem(this.storageKey);
-        localStorage.removeItem(this.userStorageKey);
+        this.removeStorageItem(this.storageKey);
+        this.removeStorageItem(this.userStorageKey);
     }
 
     private clearAuthCookies(): void {
@@ -202,15 +214,15 @@ export class AuthService {
     private setAuthenticatedUser(user: User, token?: string): void {
         this._currentUser.set(user);
         if (token) {
-            localStorage.setItem(this.storageKey, token);
+            this.setStorageItem(this.storageKey, token);
         }
-        localStorage.setItem(this.userStorageKey, JSON.stringify(user));
+        this.setStorageItem(this.userStorageKey, JSON.stringify(user));
         this._loading.set(false);
     }
 
     private loadUserFromStorage(): void {
-        const token = localStorage.getItem(this.storageKey);
-        const userData = localStorage.getItem(this.userStorageKey);
+        const token = this.getStorageItem(this.storageKey);
+        const userData = this.getStorageItem(this.userStorageKey);
 
         if (!token || !userData) {
             return;
@@ -245,13 +257,10 @@ export class AuthService {
     }
 
     async logout(): Promise<void> {
-        const token = localStorage.getItem(this.storageKey);
+        const token = this.getStorageItem(this.storageKey);
         this._currentUser.set(null);
-        localStorage.removeItem(this.storageKey);
-        localStorage.removeItem(this.userStorageKey);
-
-        sessionStorage.removeItem(this.storageKey);
-        sessionStorage.removeItem(this.userStorageKey);
+        this.removeStorageItem(this.storageKey);
+        this.removeStorageItem(this.userStorageKey);
 
         this.clearAuthCookies();
 
@@ -281,6 +290,6 @@ export class AuthService {
     }
 
     getStoredToken(): string | null {
-        return localStorage.getItem(this.storageKey);
+        return this.getStorageItem(this.storageKey);
     }
 }

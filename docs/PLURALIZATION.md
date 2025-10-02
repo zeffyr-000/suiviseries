@@ -29,7 +29,7 @@ This project uses `@jsverse/transloco-messageformat` to handle plurals according
 - `#` is replaced by the value of the `count` parameter
 - Example: `{count: 5}` → `# results` becomes `5 results`
 
-## � Localization Rules
+## 🌐 Localization Rules
 
 For most languages, we primarily use:
 

@@ -1,15 +1,14 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 
 import { SeriesService } from '../services/series.service';
@@ -28,22 +27,21 @@ import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
         MatButtonModule,
         MatIconModule,
         MatCardModule,
-        MatChipsModule,
-        MatBadgeModule,
         SerieCardComponent
     ],
     templateUrl: './home.component.html',
-    styleUrl: './home.component.scss'
+    styleUrl: './home.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
     protected popularSeries = signal<Serie[]>([]);
     protected loading = signal(true);
 
     private readonly seriesService = inject(SeriesService);
-    private readonly translocoService = inject(TranslocoService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly dialog = inject(MatDialog);
+    private readonly destroyRef = inject(DestroyRef);
     protected readonly authService = inject(AuthService);
 
     ngOnInit() {
@@ -57,7 +55,8 @@ export class HomeComponent implements OnInit {
         this.seriesService.getPopularSeries(12).pipe(
             catchError(() => {
                 return of([]);
-            })
+            }),
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe(series => {
             this.popularSeries.set(series);
             this.loading.set(false);
@@ -65,7 +64,9 @@ export class HomeComponent implements OnInit {
     }
 
     private checkForAutoLogin() {
-        this.route.queryParams.subscribe(params => {
+        this.route.queryParams.pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(params => {
             if (params['login'] === 'true' && !this.authService.isAuthenticated()) {
                 const returnUrl = params['returnUrl'];
                 this.goToLogin(returnUrl);
@@ -81,7 +82,9 @@ export class HomeComponent implements OnInit {
             data: { returnUrl: returnUrl }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(result => {
             if (result && returnUrl) {
                 this.router.navigate([returnUrl]);
             }

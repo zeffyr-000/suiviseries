@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Serie, SearchResponse, SerieDetailResponse, UserSeriesResponse } from '../models/serie.model';
 import { environment } from '../../environments/environment';
@@ -82,7 +82,7 @@ export class SeriesService {
                 return response.success;
             }),
             catchError((error) => {
-                throw error;
+                return throwError(() => error);
             })
         );
     }
@@ -96,7 +96,7 @@ export class SeriesService {
                 return response.success;
             }),
             catchError((error) => {
-                throw error;
+                return throwError(() => error);
             })
         );
     }
