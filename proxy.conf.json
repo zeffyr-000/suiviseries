@@ -1,0 +1,7 @@
+{
+  "/api/**": {
+    "target": "http://localhost:8888/suiviseries-api/www/",
+    "secure": false,
+    "pathRewrite": { "^/api": "" }
+  }
+}

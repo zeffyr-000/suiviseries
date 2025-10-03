@@ -1,0 +1,228 @@
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-lg);
+  
+  .login-content {
+    width: 100%;
+    max-width: 400px;
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      color: white;
+      
+      .app-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        
+        mat-icon {
+          font-size: 3rem;
+          width: 3rem;
+          height: 3rem;
+        }
+        
+        h1 {
+          font-size: 2.5rem;
+          font-weight: 700;
+          margin: 0;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+      }
+      
+      .login-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin: 0;
+      }
+    }
+    
+    .login-card {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border-radius: var(--border-radius-lg);
+      overflow: hidden;
+      
+      mat-card-header {
+        padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
+        text-align: center;
+        
+        mat-card-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: var(--spacing-xs);
+          color: var(--primary-color);
+        }
+        
+        mat-card-subtitle {
+          font-size: 1rem;
+          opacity: 0.7;
+        }
+      }
+      
+      mat-card-content {
+        padding: 0 var(--spacing-xl) var(--spacing-xl);
+        
+        .loading-state {
+          text-align: center;
+          padding: var(--spacing-lg) 0;
+          
+          mat-spinner {
+            margin: 0 auto var(--spacing-md);
+          }
+          
+          p {
+            color: var(--mat-sys-on-surface-variant);
+            margin: 0;
+          }
+        }
+        
+        .google-signin-section {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: var(--spacing-md);
+          
+          .google-button-container {
+            display: flex;
+            justify-content: center;
+            min-height: 44px;
+            
+            ::ng-deep .google-signin-button {
+              border-radius: var(--border-radius) !important;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+              transition: all 0.3s ease !important;
+              
+              &:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+              }
+            }
+          }
+          
+          .signin-hint {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 0.875rem;
+            color: var(--mat-sys-on-surface-variant);
+            opacity: 0.7;
+            
+            .info-icon {
+              font-size: 1rem;
+              width: 1rem;
+              height: 1rem;
+            }
+          }
+          
+          .google-fallback-button {
+            width: 250px;
+            height: 44px;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            display: none; // Affiché via JavaScript si nécessaire
+            
+            mat-icon {
+              margin-right: var(--spacing-sm);
+            }
+            
+            &.show {
+              display: flex;
+            }
+          }
+        }
+        
+        .auth-info {
+          margin-top: var(--spacing-lg);
+          padding-top: var(--spacing-lg);
+          border-top: 1px solid var(--mat-sys-outline-variant);
+          
+          .auth-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            font-size: 0.9rem;
+            color: var(--mat-sys-on-surface-variant);
+            line-height: 1.4;
+            margin: 0;
+            
+            mat-icon {
+              font-size: 1.2rem;
+              width: 1.2rem;
+              height: 1.2rem;
+              margin-top: 1px;
+              color: var(--mat-sys-primary);
+            }
+          }
+        }
+      }
+    }
+    
+    .login-actions {
+      text-align: center;
+      margin-top: var(--spacing-lg);
+      
+      button {
+        color: white;
+        
+        mat-icon {
+          margin-right: var(--spacing-sm);
+        }
+        
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: var(--spacing-md);
+    
+    .login-content {
+      .login-header {
+        .app-logo {
+          h1 {
+            font-size: 2rem;
+          }
+          
+          mat-icon {
+            font-size: 2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+        }
+        
+        .login-subtitle {
+          font-size: 1rem;
+        }
+      }
+      
+      .login-card {
+        mat-card-header {
+          padding: var(--spacing-lg);
+          
+          mat-card-title {
+            font-size: 1.3rem;
+          }
+        }
+        
+        mat-card-content {
+          padding: 0 var(--spacing-lg) var(--spacing-lg);
+          
+          .google-signin-section {
+            .google-fallback-button {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

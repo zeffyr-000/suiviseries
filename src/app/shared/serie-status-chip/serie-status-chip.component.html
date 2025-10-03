@@ -1,0 +1,8 @@
+<mat-chip-set>
+    <mat-chip [class]="statusClass()" selected>
+        @if (showIcon) {
+        <mat-icon class="status-icon">{{ statusIcon() }}</mat-icon>
+        }
+        {{ translatedStatus() }}
+    </mat-chip>
+</mat-chip-set>

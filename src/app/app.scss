@@ -1,0 +1,125 @@
+.app-container {
+  height: 100vh;
+  
+  mat-sidenav {
+    width: 280px;
+    
+    mat-nav-list {
+      padding-top: var(--spacing-lg);
+      
+      mat-list-item {
+        margin-bottom: var(--spacing-xs);
+        border-radius: var(--border-radius);
+        transition: background-color 0.3s ease;
+        
+        &:hover {
+          background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+        }
+        
+        &.logout-item {
+          margin-top: var(--spacing-md);
+          
+          &:hover {
+            background-color: rgba(244, 67, 54, 0.1);
+          }
+          
+          mat-icon {
+            color: #f44336;
+          }
+          
+          span {
+            color: #f44336;
+          }
+        }
+      }
+    }
+  }
+}
+
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--elevation-shadow);
+  
+  .app-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .app-title-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .user-menu-trigger {
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+  
+  .login-button {
+    color: white;
+    
+    mat-icon {
+      margin-right: var(--spacing-xs);
+    }
+  }
+}
+
+::ng-deep .mat-mdc-menu-panel {
+  .user-info {
+    padding: var(--spacing-md) var(--spacing-lg);
+    
+    .user-name {
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--mat-sys-on-surface);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .user-email {
+      font-size: 0.875rem;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+  
+  .mat-mdc-menu-item {
+    min-height: 48px;
+    
+    mat-icon {
+      margin-right: var(--spacing-md);
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
+
+.app-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+@media (max-width: 480px) {
+  .app-toolbar .app-title {
+    font-size: 1.2rem;
+  }
+}

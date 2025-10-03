@@ -1,0 +1,157 @@
+mat-chip {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    
+    .status-icon {
+        margin-right: 2px;
+    }
+    
+    &.size-small {
+        font-size: 10px;
+        border-radius: 6px;
+        padding: 0 8px;
+        height: 22px;
+        
+        .status-icon {
+            font-size: 12px !important;
+            width: 12px !important;
+            height: 12px !important;
+        }
+    }
+    
+    &.size-medium {
+        font-size: 12px;
+        border-radius: 8px;
+        padding: 0 12px;
+        height: 28px;
+        
+        .status-icon {
+            font-size: 14px !important;
+            width: 14px !important;
+            height: 14px !important;
+        }
+    }
+    
+    &.size-large {
+        font-size: 14px;
+        border-radius: 10px;
+        padding: 0 16px;
+        height: 36px;
+        
+        .status-icon {
+            font-size: 16px !important;
+            width: 16px !important;
+            height: 16px !important;
+        }
+    }
+    
+    &.status-default {
+        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+        color: #374151;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    &.status-returning {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+    }
+    
+    &.status-ended {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+        box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+    }
+    
+    &.status-canceled {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    }
+    
+    &.status-production {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+    }
+    
+    &.status-planned {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        color: white;
+        box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+    }
+    
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+
+.dark-theme {
+    mat-chip {
+        &.status-returning {
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            box-shadow: 0 2px 4px rgba(6, 95, 70, 0.4);
+        }
+        
+        &.status-ended {
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            box-shadow: 0 2px 4px rgba(55, 65, 81, 0.4);
+        }
+        
+        &.status-canceled {
+            background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
+            box-shadow: 0 2px 4px rgba(153, 27, 27, 0.4);
+        }
+        
+        &.status-production {
+            background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+            box-shadow: 0 2px 4px rgba(146, 64, 14, 0.4);
+        }
+        
+        &.status-planned {
+            background: linear-gradient(135deg, #5b21b6 0%, #6d28d9 100%);
+            box-shadow: 0 2px 4px rgba(91, 33, 182, 0.4);
+        }
+
+        &.status-default {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            color: #e5e7eb;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    mat-chip {
+        &.size-medium {
+            font-size: 11px;
+            height: 26px;
+            padding: 0 10px;
+            
+            .status-icon {
+                font-size: 13px !important;
+                width: 13px !important;
+                height: 13px !important;
+            }
+        }
+        
+        &.size-large {
+            font-size: 13px;
+            height: 32px;
+            padding: 0 14px;
+            
+            .status-icon {
+                font-size: 15px !important;
+                width: 15px !important;
+                height: 15px !important;
+            }
+        }
+    }
+}
