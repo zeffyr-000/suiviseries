@@ -1,3 +1,5 @@
+@use '../styles/mixins' as *;
+
 .app-container {
   height: 100vh;
   
@@ -10,7 +12,7 @@
       mat-list-item {
         margin-bottom: var(--spacing-xs);
         border-radius: var(--border-radius);
-        transition: background-color 0.3s ease;
+        transition: background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
         
         &:hover {
           background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
@@ -41,6 +43,7 @@
   top: 0;
   z-index: 100;
   box-shadow: var(--elevation-shadow);
+  background-color: var(--primary-color) !important;
   
   .app-title {
     font-size: 1.5rem;
@@ -48,14 +51,33 @@
   }
 
   .app-title-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
     text-decoration: none;
     color: inherit;
     cursor: pointer;
-    transition: opacity 0.2s ease;
+    transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 
     &:hover {
       opacity: 0.8;
     }
+
+    .app-title-icon {
+      font-size: 1.8rem;
+      margin-right: var(--spacing-xs);
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Material Icons' !important;
+      font-weight: normal;
+      font-style: normal;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+
 
     .app-title {
       font-size: 1.5rem;
@@ -118,8 +140,13 @@
   padding: 0;
 }
 
-@media (max-width: 480px) {
+@include respond-below(sm) {
   .app-toolbar .app-title {
     font-size: 1.2rem;
+  }
+  
+  .app-toolbar .app-title-icon {
+    font-size: 1.5rem;
+    line-height: 1;
   }
 }

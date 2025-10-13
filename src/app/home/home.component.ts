@@ -2,7 +2,7 @@ import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -13,9 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
+import { MetadataService } from '../services/metadata.service';
 import { Serie } from '../models/serie.model';
 import { LoginComponent } from '../login/login.component';
 import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-home',
@@ -42,11 +44,22 @@ export class HomeComponent implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly dialog = inject(MatDialog);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly metadataService = inject(MetadataService);
+    private readonly translocoService = inject(TranslocoService);
     protected readonly authService = inject(AuthService);
 
     ngOnInit() {
+        this.updateMetadata();
         this.loadSeriesData();
         this.checkForAutoLogin();
+    }
+
+    private updateMetadata(): void {
+        this.metadataService.updatePageMetadata({
+            title: this.translocoService.translate('seo.home.title'),
+            description: this.translocoService.translate('seo.home.description'),
+            canonicalUrl: `${environment.siteUrl}/`
+        });
     }
 
     private loadSeriesData() {

@@ -54,6 +54,7 @@ export interface Serie {
     popularity: number;
     vote_average: number;
     vote_count: number;
+    data_complete: boolean;
     created_at?: string;
     updated_at?: string;
     poster_url?: string;
@@ -68,7 +69,7 @@ export interface SerieDetailResponse {
         seasons: Season[];
         user_data?: SerieUserData;
     };
-    stats: {
+    stats?: {
         seasons_count: number;
         episodes_count: number;
     };

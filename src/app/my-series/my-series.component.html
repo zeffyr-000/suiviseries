@@ -9,12 +9,8 @@
         </div>
 
         <div class="header-actions">
-            <button mat-raised-button color="primary" (click)="onRefresh()">
-                <mat-icon>refresh</mat-icon>
-                {{ 'my_series.refresh' | transloco }}
-            </button>
-            <button mat-stroked-button color="primary" (click)="goToSearch()">
-                <mat-icon>search</mat-icon>
+            <button mat-flat-button color="primary" (click)="goToSearch()">
+                <mat-icon>add</mat-icon>
                 {{ 'my_series.add_series' | transloco }}
             </button>
         </div>
@@ -32,9 +28,9 @@
         <mat-icon color="warn">error</mat-icon>
         <h2>{{ 'my_series.error_title' | transloco }}</h2>
         <p>{{ error() }}</p>
-        <button mat-raised-button color="primary" (click)="onRefresh()">
-            <mat-icon>refresh</mat-icon>
-            {{ 'my_series.retry' | transloco }}
+        <button mat-flat-button color="primary" (click)="goToSearch()">
+            <mat-icon>search</mat-icon>
+            {{ 'my_series.go_to_search' | transloco }}
         </button>
     </div>
     }
@@ -44,7 +40,7 @@
         <mat-icon class="empty-icon">tv_off</mat-icon>
         <h2>{{ 'my_series.empty_title' | transloco }}</h2>
         <p>{{ 'my_series.empty_message' | transloco }}</p>
-        <button mat-raised-button color="primary" (click)="goToSearch()">
+        <button mat-flat-button color="primary" (click)="goToSearch()">
             <mat-icon>search</mat-icon>
             {{ 'my_series.start_exploring' | transloco }}
         </button>
@@ -53,12 +49,11 @@
 
     @else {
     <div class="series-stats">
-        <mat-chip-set>
-            <mat-chip selected>
-                <mat-icon matChipTrailingIcon>tv</mat-icon>
-                {{ 'my_series.total_series' | transloco: {count: mySeries().length} }}
-            </mat-chip>
-        </mat-chip-set>
+        <div class="stats-badge">
+            <mat-icon>tv</mat-icon>
+            <span class="stats-count">{{ mySeries().length }}</span>
+            <span class="stats-label">{{ 'my_series.series_followed' | transloco }}</span>
+        </div>
     </div>
 
     <div class="series-grid">

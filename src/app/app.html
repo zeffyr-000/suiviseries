@@ -24,7 +24,8 @@
         <button mat-icon-button (click)="toggleMenu()" aria-label="Menu">
           <mat-icon>menu</mat-icon>
         </button>
-        <a routerLink="/" class="app-title-link">
+        <a routerLink="/" class="app-title-link" [attr.aria-label]="'app.title' | transloco">
+          <mat-icon class="app-title-icon" aria-hidden="true">live_tv</mat-icon>
           <span class="app-title">{{ 'app.title' | transloco }}</span>
         </a>
         <span class="spacer"></span>

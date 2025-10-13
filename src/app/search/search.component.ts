@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -15,8 +15,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { SeriesService } from '../services/series.service';
+import { MetadataService } from '../services/metadata.service';
 import { Serie } from '../models/serie.model';
 import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-search',
@@ -41,6 +43,8 @@ import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
 export class SearchComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly metadataService = inject(MetadataService);
+    private readonly translocoService = inject(TranslocoService);
 
     protected readonly searchControl = new FormControl('', [
         Validators.minLength(2)
@@ -58,7 +62,16 @@ export class SearchComponent implements OnInit {
     );
 
     ngOnInit() {
+        this.updateMetadata();
         this.setupSearchSubscription();
+    }
+
+    private updateMetadata(): void {
+        this.metadataService.updatePageMetadata({
+            title: this.translocoService.translate('seo.search.title'),
+            description: this.translocoService.translate('seo.search.description'),
+            canonicalUrl: `${environment.siteUrl}/search`
+        });
     }
 
     private setupSearchSubscription(): void {
@@ -96,8 +109,6 @@ export class SearchComponent implements OnInit {
             return;
         }
 
-        // Trigger search via valueChanges stream to avoid duplicate requests
-        // Force re-trigger even if value is the same by setting empty then actual value
         this.searchControl.setValue('', { emitEvent: false });
         this.searchControl.setValue(query);
     }

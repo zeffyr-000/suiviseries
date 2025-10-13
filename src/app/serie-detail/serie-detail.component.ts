@@ -18,8 +18,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
+import { MetadataService } from '../services/metadata.service';
 import { Serie, SerieStats, getTmdbImageUrl, formatRating } from '../models/serie.model';
 import { SerieStatusChipComponent } from '../shared/serie-status-chip/serie-status-chip.component';
+import { environment } from '../../environments/environment';
+import { getSerieCanonicalUrl } from '../utils/url.utils';
 
 @Component({
     selector: 'app-serie-detail',
@@ -122,13 +125,13 @@ export class SerieDetailComponent implements OnInit {
         return loadingStates.get(episodeId) || false;
     }
 
-    private buildSerieStats(serie: Serie, stats: { seasons_count: number; episodes_count: number }, isReallyFollowed: boolean): SerieStats {
+    private buildSerieStats(serie: Serie, stats: { seasons_count: number; episodes_count: number } | undefined, isReallyFollowed: boolean): SerieStats {
         return {
             followedByCurrentUser: isReallyFollowed,
             watchedByCurrentUser: serie.user_data?.is_watched || false,
             totalFollowers: 0, // Will be provided by backend later
-            seasons_count: stats.seasons_count,
-            episodes_count: stats.episodes_count
+            seasons_count: stats?.seasons_count || 0,
+            episodes_count: stats?.episodes_count || 0
         };
     }
 
@@ -137,6 +140,7 @@ export class SerieDetailComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);
     private readonly authService = inject(AuthService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly metadataService = inject(MetadataService);
 
     ngOnInit() {
         this.route.params.pipe(
@@ -168,6 +172,7 @@ export class SerieDetailComponent implements OnInit {
             next: ({ serie, stats, isReallyFollowed }) => {
                 const serieStats = this.buildSerieStats(serie, stats, isReallyFollowed);
                 this.stats.set(serieStats);
+                this.updateMetadataForSerie(serie);
                 this.loading.set(false);
             },
             error: (err) => {
@@ -214,6 +219,23 @@ export class SerieDetailComponent implements OnInit {
 
     protected goBack() {
         this.router.navigate(['/']);
+    }
+
+    private updateMetadataForSerie(serie: Serie): void {
+        const title = serie.name;
+        const description = serie.overview
+            ? `${serie.overview.substring(0, 155)}${serie.overview.length > 155 ? '...' : ''}`
+            : `Découvrez ${serie.name}, une série TV captivante. Suivez les épisodes et gérez votre progression.`;
+
+        const imageUrl = serie.poster_path ? getTmdbImageUrl(serie.poster_path, 'w500') : undefined;
+        const canonicalUrl = getSerieCanonicalUrl(serie.id, serie.name, environment.siteUrl);
+
+        this.metadataService.updatePageMetadata({
+            title,
+            description,
+            image: imageUrl,
+            canonicalUrl
+        });
     }
 
     protected onToggleFollow() {
