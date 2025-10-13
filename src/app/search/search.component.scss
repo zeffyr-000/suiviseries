@@ -1,9 +1,11 @@
+@use '../../styles/mixins' as *;
+
 .search-page {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
+  @include respond-below(md) {
     padding: 1rem;
   }
 }
@@ -32,7 +34,7 @@
   margin-bottom: 2rem;
   align-items: flex-start;
 
-  @media (max-width: 768px) {
+  @include respond-below(md) {
     flex-direction: column;
   }
 
@@ -40,7 +42,7 @@
     flex: 1;
     min-width: 300px;
 
-    @media (max-width: 768px) {
+    @include respond-below(md) {
       min-width: 100%;
     }
   }
@@ -49,7 +51,7 @@
     height: 56px; // Match mat-form-field height
     min-width: 140px;
 
-    @media (max-width: 768px) {
+    @include respond-below(md) {
       width: 100%;
     }
   }
@@ -78,7 +80,7 @@
   text-align: center;
   background: var(--mat-sys-error-container);
   color: var(--mat-sys-on-error-container);
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
 
   mat-icon {
     font-size: 3rem;
@@ -99,7 +101,7 @@
     align-items: center;
     margin-bottom: 1.5rem;
 
-    @media (max-width: 768px) {
+    @include respond-below(md) {
       flex-direction: column;
       gap: 1rem;
       align-items: flex-start;
@@ -117,7 +119,7 @@
       align-items: flex-end;
       gap: 0.5rem;
 
-      @media (max-width: 768px) {
+      @include respond-below(md) {
         align-items: flex-start;
       }
 
@@ -135,20 +137,20 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
 
-    @media (max-width: 768px) {
+    @include respond-below(md) {
       grid-template-columns: 1fr;
     }
   }
 }
 
 .serie-card {
-  transition: all 0.3s ease;
+  transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
   background: var(--mat-sys-surface-container);
   position: relative;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--md-sys-elevation-level3);
   }
 
   .serie-link {
@@ -162,7 +164,7 @@
     position: relative;
     padding-bottom: 150%; // 2:3 aspect ratio
     overflow: hidden;
-    border-radius: 8px 8px 0 0;
+    border-radius: var(--md-sys-shape-corner-small) var(--md-sys-shape-corner-small) 0 0;
 
     img {
       position: absolute;
@@ -277,7 +279,7 @@
 .search-instructions {
   background: var(--mat-sys-surface-variant);
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
   text-align: center;
 
   .instructions-icon {

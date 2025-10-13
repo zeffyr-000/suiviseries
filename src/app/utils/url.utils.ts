@@ -25,3 +25,9 @@ export function sanitizeText(text: string): string {
         .replace(/\s+/g, ' ') // Normalize whitespace
         .trim();
 }
+
+export function getSerieCanonicalUrl(serieId: number, serieName: string, baseUrl?: string): string {
+    const slug = createSlug(serieName);
+    const base = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
+    return `${base}/serie/${serieId}/${slug}`;
+}

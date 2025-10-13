@@ -16,6 +16,7 @@ import {
     providedIn: 'root'
 })
 export class AuthService {
+    private readonly http = inject(HttpClient);
     private readonly apiUrl = environment.apiUrl;
     private readonly storageKey = 'suiviseries_auth_token';
     private readonly userStorageKey = 'suiviseries_user_data';
@@ -42,8 +43,6 @@ export class AuthService {
         const user = this._currentUser();
         return user?.photo_url || '';
     });
-
-    private readonly http = inject(HttpClient);
 
     private setStorageItem(key: string, value: string): void {
         localStorage.setItem(key, value);

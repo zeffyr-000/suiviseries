@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://suivi-series.zeffyr.com/sitemap.xml
+
+# Optimization
+Crawl-delay: 1

@@ -2,6 +2,20 @@ export const frTranslations = {
     "app": {
         "title": "Suivi Séries"
     },
+    "seo": {
+        "home": {
+            "title": "Accueil",
+            "description": "Découvrez les séries TV les plus populaires et gérez votre collection personnelle. Trouvez votre prochaine série à regarder parmi notre sélection."
+        },
+        "search": {
+            "title": "Recherche de Séries",
+            "description": "Recherchez parmi des milliers de séries TV. Trouvez votre prochaine série préférée grâce à notre moteur de recherche avancé."
+        },
+        "my_series": {
+            "title": "Mes Séries",
+            "description": "Gérez votre collection personnelle de séries TV. Suivez votre progression et ne ratez jamais un épisode."
+        }
+    },
     "navigation": {
         "home": "Accueil",
         "my_series": "Mes Séries",
@@ -70,7 +84,9 @@ export const frTranslations = {
         "season_title": "Saison",
         "episodes_count": "{count, plural, =0 {Aucun épisode} one {# épisode} other {# épisodes}}",
         "no_description": "Aucune description disponible.",
-        "no_episode_description": "Aucune description disponible pour cet épisode."
+        "no_episode_description": "Aucune description disponible pour cet épisode.",
+        "incomplete_data_title": "Données incomplètes",
+        "incomplete_data_message": "Les informations concernant les saisons et les épisodes de cette série ne sont pas disponibles actuellement."
     },
     "auth": {
         "welcome_title": "Bienvenue",
@@ -115,11 +131,11 @@ export const frTranslations = {
     "my_series": {
         "title": "Mes Séries",
         "subtitle": "Retrouvez toutes les séries que vous suivez",
-        "refresh": "Actualiser",
         "add_series": "Ajouter des séries",
+        "series_followed": "séries suivies",
         "loading": "Chargement de vos séries...",
         "error_title": "Erreur",
-        "retry": "Réessayer",
+        "go_to_search": "Aller à la recherche",
         "empty_title": "Aucune série suivie",
         "empty_message": "Vous ne suivez aucune série pour le moment. Découvrez notre catalogue pour commencer !",
         "start_exploring": "Explorer les séries",

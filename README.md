@@ -40,7 +40,8 @@
 ## 📚 Documentation
 
 - 📖 **[Installation Guide](docs/SETUP.md)** - Complete project setup
-- 🏗️ **[Technical Architecture](docs/ARCHITECTURE.md)** - Code patterns and structure
+- 🎨 **[Design System](DESIGN_SYSTEM.md)** - Material Design 3 tokens and usage guide
+- �️ **[Technical Architecture](docs/ARCHITECTURE.md)** - Code patterns and structure
 - 🚀 **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment options
 - 🤝 **[Contributing Guide](docs/CONTRIBUTING.md)** - Development standards and workflow
 - 📡 **[API Documentation](docs/API.md)** - Backend API specifications

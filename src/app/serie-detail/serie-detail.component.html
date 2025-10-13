@@ -11,7 +11,7 @@
         <mat-icon color="warn">error</mat-icon>
         <h2>{{ 'serie_detail.error_title' | transloco }}</h2>
         <p>{{ error() }}</p>
-        <button mat-raised-button color="primary" (click)="goBack()">
+        <button mat-stroked-button color="primary" (click)="goBack()">
             <mat-icon>arrow_back</mat-icon>
             {{ 'serie_detail.go_back' | transloco }}
         </button>
@@ -115,6 +115,22 @@
                     <p class="overview-text">{{ serie()!.overview }}</p>
                 </mat-card-content>
             </mat-card>
+
+            @if (!serie()!.data_complete) {
+            <mat-card class="incomplete-data-card">
+                <mat-card-content>
+                    <div class="incomplete-data-content">
+                        <mat-icon class="warning-icon">info</mat-icon>
+                        <div class="incomplete-data-text">
+                            <h4 class="incomplete-data-title">{{ 'serie_detail.incomplete_data_title' | transloco }}
+                            </h4>
+                            <p class="incomplete-data-message">{{ 'serie_detail.incomplete_data_message' | transloco }}
+                            </p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            }
 
             @if (seasons().length > 0) {
             <mat-card class="seasons-card">
