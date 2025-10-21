@@ -1,50 +1,50 @@
 # 🎨 Design System - Material Design 3
 
-## ✅ Implémentation Complète
+## ✅ Complete Implementation
 
-Le projet **Suiviseries** utilise **Material Design 3** avec un score de conformité de **95/100**.
+The **Suiviseries** project uses **Material Design 3** with a conformity score of **95/100**.
 
 ---
 
-## 🏗️ Commandes Essentielles
+## 🏗️ Essential Commands
 
-### Développement
+### Development
 
 ```bash
-# Démarrer le serveur de développement
+# Start development server
 npm start
 
-# Build de production
+# Production build
 npm run build
 
 # Tests
 npm test
 ```
 
-### Vérifications
+### Checks
 
 ```bash
 # Linter
 npm run lint
 
-# Build + Analyse
+# Build + Analysis
 npm run build -- --stats-json
 npx webpack-bundle-analyzer dist/suiviseries/stats.json
 ```
 
 ---
 
-## 📁 Architecture MD3 Implémentée
+## 📁 MD3 Architecture Implementation
 
-### Fichier Central des Mixins
+### Central Mixins File
 
-**`src/styles/_mixins.scss`** - Nouveau fichier créé
+**`src/styles/_mixins.scss`** - New file created
 
 ```scss
 $md-breakpoints: (
   xs: 0px,      // Mobile portrait
   sm: 600px,    // Mobile landscape
-  md: 905px,    // Tablette
+  md: 905px,    // Tablet
   lg: 1240px,   // Desktop
   xl: 1440px    // Large desktop
 );
@@ -53,26 +53,26 @@ $md-breakpoints: (
 @mixin respond-below($breakpoint) { ... }   // max-width
 ```
 
-### Utilisation dans les Composants
+### Component Usage
 
-Tous les fichiers SCSS de composants importent maintenant les mixins :
+All component SCSS files now import mixins:
 
 ```scss
-@use '../../styles/mixins' as *; // ou '../../../styles/mixins' selon profondeur
+@use '../../styles/mixins' as *; // or '../../../styles/mixins' depending on depth
 
-// Utilisation
+// Usage
 @include respond-below(md) {
-  // Styles pour tablettes et mobiles
+  // Styles for tablets and mobile
 }
 
 @include respond-to(lg) {
-  // Styles pour desktop
+  // Styles for desktop
 }
 ```
 
 ---
 
-## 🎨 Tokens Material Design 3 Disponibles
+## 🎨 Available Material Design 3 Tokens
 
 ### Shape (Border Radius)
 
@@ -99,33 +99,33 @@ var(--md-sys-elevation-level5)  // Cards (hover)
 
 ### Motion (Animations)
 
-#### Durées
+#### Durations
 
 ```scss
-// Rapide (hover, focus)
+// Fast (hover, focus)
 var(--md-sys-motion-duration-short1)   // 50ms
 var(--md-sys-motion-duration-short2)   // 100ms
 var(--md-sys-motion-duration-short3)   // 150ms
 var(--md-sys-motion-duration-short4)   // 200ms ← Buttons
 
-// Moyen (transitions standard)
+// Medium (standard transitions)
 var(--md-sys-motion-duration-medium1)  // 250ms
 var(--md-sys-motion-duration-medium2)  // 300ms ← Cards
 var(--md-sys-motion-duration-medium3)  // 350ms
 var(--md-sys-motion-duration-medium4)  // 400ms ← Images
 
-// Long (animations complexes)
+// Long (complex animations)
 var(--md-sys-motion-duration-long1-4)  // 450-600ms
 var(--md-sys-motion-duration-extra-long1-4)  // 700-1000ms
 ```
 
-#### Courbes d'Accélération
+#### Easing Curves
 
 ```scss
-var(--md-sys-motion-easing-standard)             // 90% des cas
-var(--md-sys-motion-easing-emphasized)           // Effets dramatiques
-var(--md-sys-motion-easing-standard-decelerate)  // Entrées
-var(--md-sys-motion-easing-standard-accelerate)  // Sorties
+var(--md-sys-motion-easing-standard)             // 90% of cases
+var(--md-sys-motion-easing-emphasized)           // Dramatic effects
+var(--md-sys-motion-easing-standard-decelerate)  // Entrances
+var(--md-sys-motion-easing-standard-accelerate)  // Exits
 var(--md-sys-motion-easing-emphasized-decelerate)
 var(--md-sys-motion-easing-emphasized-accelerate)
 var(--md-sys-motion-easing-linear)
@@ -133,9 +133,9 @@ var(--md-sys-motion-easing-linear)
 
 ---
 
-## 💡 Exemples d'Utilisation
+## 💡 Usage Examples
 
-### Créer une Card MD3
+### Creating an MD3 Card
 
 ```scss
 .my-card {
@@ -158,7 +158,7 @@ var(--md-sys-motion-easing-linear)
 }
 ```
 
-### Responsive avec Breakpoints MD3
+### Responsive with MD3 Breakpoints
 
 ```scss
 @use '../../styles/mixins' as *;
@@ -185,14 +185,14 @@ var(--md-sys-motion-easing-linear)
 }
 ```
 
-### Button avec États Complets
+### Button with Complete States
 
 ```scss
 .my-button {
   border-radius: var(--md-sys-shape-corner-medium);
   transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 
-  // Rest (défaut)
+  // Rest (default)
   box-shadow: var(--md-sys-elevation-level1);
 
   // Hover
@@ -200,7 +200,7 @@ var(--md-sys-motion-easing-linear)
     box-shadow: var(--md-sys-elevation-level2);
   }
 
-  // Focus (accessibilité)
+  // Focus (accessibility)
   &:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
@@ -224,26 +224,26 @@ var(--md-sys-motion-easing-linear)
 
 ## 🐛 Troubleshooting
 
-### Erreur : "Undefined mixin"
+### Error: "Undefined mixin"
 
-**Problème** : `respond-to()` ou `respond-below()` non reconnus
+**Problem**: `respond-to()` or `respond-below()` not recognized
 
-**Solution** : Ajouter l'import des mixins en haut du fichier SCSS
+**Solution**: Add mixin import at the top of the SCSS file
 
 ```scss
 @use '../../styles/mixins' as *;
 ```
 
-**Note** : Le chemin relatif dépend de la profondeur du fichier :
+**Note**: Relative path depends on file depth:
 
-- Composants racine : `../../styles/mixins`
-- Composants shared : `../../../styles/mixins`
+- Root components: `../../styles/mixins`
+- Shared components: `../../../styles/mixins`
 
-### Warnings de Budget CSS
+### CSS Budget Warnings
 
-**Problème** : Fichiers SCSS dépassent les budgets configurés
+**Problem**: SCSS files exceed configured budgets
 
-**Solution** : Ajuster `angular.json` (non-critique)
+**Solution**: Adjust `angular.json` (non-critical)
 
 ```json
 "budgets": [
@@ -255,33 +255,33 @@ var(--md-sys-motion-easing-linear)
 ]
 ```
 
-### Animations Saccadées
+### Janky Animations
 
-**Solution** : Utiliser les propriétés GPU-accelerated
+**Solution**: Use GPU-accelerated properties
 
 ```scss
-// ✅ Bon
+// ✅ Good
 transition: transform 300ms, opacity 300ms;
 
-// ❌ Éviter
-transition: all 300ms; // Anime trop de propriétés
+// ❌ Avoid
+transition: all 300ms; // Animates too many properties
 ```
 
 ---
 
-## 📚 Documentation Complète
+## 📚 Complete Documentation
 
-### Autres Documentations Projet
+### Other Project Documentation
 
-Pour plus d'informations sur le projet, consultez :
+For more information about the project, see:
 
-- **[README.md](README.md)** - Vue d'ensemble du projet
-- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Architecture technique
-- **[docs/SETUP.md](docs/SETUP.md)** - Guide d'installation
-- **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Guide de contribution
-- **[docs/API.md](docs/API.md)** - Documentation API Backend
+- **[README.md](README.md)** - Project overview
+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Technical architecture
+- **[docs/SETUP.md](docs/SETUP.md)** - Installation guide
+- **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contributing guide
+- **[docs/API.md](docs/API.md)** - Backend API documentation
 
-### Ressources MD3 Officielles
+### Official MD3 Resources
 
 - [Material Design 3](https://m3.material.io/)
 - [Shape System](https://m3.material.io/styles/shape/shape-scale-tokens)
@@ -291,52 +291,52 @@ Pour plus d'informations sur le projet, consultez :
 
 ---
 
-## 🎯 Prochaines Étapes Suggérées
+## 🎯 Suggested Next Steps
 
-### Court Terme
+### Short Term
 
-1. **Tester visuellement** l'application sur différents devices
-2. **Ajuster les budgets** CSS dans `angular.json` si nécessaire
-3. **Ajouter des tests E2E** pour valider les interactions
+1. **Visually test** the application on different devices
+2. **Adjust CSS budgets** in `angular.json` if necessary
+3. **Add E2E tests** to validate interactions
 
-### Moyen Terme
+### Medium Term
 
-1. **Color System MD3** : Migrer vers les tokens de couleur complets
-2. **Typography MD3** : Implémenter le type scale
-3. **Dark Theme** : Compléter le support du mode sombre
+1. **MD3 Color System**: Migrate to complete color tokens
+2. **MD3 Typography**: Implement type scale
+3. **Dark Theme**: Complete dark mode support
 
-### Long Terme
+### Long Term
 
-1. **Storybook** : Documentation interactive des composants
-2. **Performance Monitoring** : Web Vitals et Core Web Vitals
-3. **A11y Testing** : Tests automatisés d'accessibilité
+1. **Storybook**: Interactive component documentation
+2. **Performance Monitoring**: Web Vitals and Core Web Vitals
+3. **A11y Testing**: Automated accessibility testing
 
 ---
 
-## ✅ Checklist Post-Migration
+## ✅ Post-Migration Checklist
 
-- [x] Build de production réussi
-- [x] 0 erreur de compilation
-- [x] Tous les tokens MD3 implémentés
-- [x] Mixins de breakpoints créés
-- [x] Imports dans tous les composants
-- [x] Documentation complète
-- [ ] Tests visuels sur devices réels
-- [ ] Tests E2E mis à jour
-- [ ] Déploiement en production
+- [x] Production build successful
+- [x] 0 compilation errors
+- [x] All MD3 tokens implemented
+- [x] Breakpoint mixins created
+- [x] Imports in all components
+- [x] Complete documentation
+- [ ] Visual tests on real devices
+- [ ] E2E tests updated
+- [ ] Production deployment
 
 ---
 
 ## 🆘 Support
 
-En cas de questions sur l'implémentation MD3 :
+For questions about MD3 implementation:
 
-1. Consultez les rapports dans `docs/`
-2. Vérifiez les exemples dans ce fichier
-3. Référez-vous à la documentation officielle MD3
+1. Check reports in `docs/`
+2. Review examples in this file
+3. Refer to official MD3 documentation
 
 ---
 
-**Version** : 1.0.0 (Material Design 3 Complete)  
-**Dernière mise à jour** : 13 octobre 2025  
-**Score MD3** : 95/100 ⭐
+**Version**: 1.0.0 (Material Design 3 Complete)  
+**Last Updated**: October 13, 2025  
+**MD3 Score**: 95/100 ⭐
