@@ -2,6 +2,7 @@ import { Injectable, inject, RendererFactory2, DOCUMENT } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { Router } from '@angular/router';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
     providedIn: 'root'
@@ -13,9 +14,15 @@ export class MetadataService {
     private readonly router = inject(Router);
     private readonly document = inject(DOCUMENT);
     private readonly renderer = inject(RendererFactory2).createRenderer(null, null);
+    private readonly transloco = inject(TranslocoService);
 
-    private readonly defaultTitle = 'Suivi Séries';
-    private readonly defaultDescription = 'Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode.';
+    private get defaultTitle(): string {
+        return this.transloco.translate('app.title');
+    }
+
+    private get defaultDescription(): string {
+        return this.transloco.translate('app.description');
+    }
 
     setTitle(title: string): void {
         const fullTitle = title ? `${title} - ${this.defaultTitle}` : this.defaultTitle;
@@ -29,12 +36,16 @@ export class MetadataService {
         });
     }
 
-    setOpenGraphData(title: string, description: string, image?: string): void {
+    setOpenGraphData(title: string, description: string, image?: string, url?: string): void {
         const fullTitle = title ? `${title} - ${this.defaultTitle}` : this.defaultTitle;
 
         this.metaService.updateTag({ property: 'og:title', content: fullTitle });
         this.metaService.updateTag({ property: 'og:description', content: description || this.defaultDescription });
         this.metaService.updateTag({ property: 'og:type', content: 'website' });
+
+        if (url) {
+            this.metaService.updateTag({ property: 'og:url', content: url });
+        }
 
         if (image) {
             this.metaService.updateTag({ property: 'og:image', content: image });
@@ -92,7 +103,7 @@ export class MetadataService {
         }
 
         if (includeOpenGraph) {
-            this.setOpenGraphData(title, description, image);
+            this.setOpenGraphData(title, description, image, canonicalUrl);
         }
 
         if (includeTwitter) {
@@ -123,7 +134,7 @@ export class MetadataService {
     resetToDefaults(): void {
         this.setTitle('');
         this.setDescription('');
-        this.setOpenGraphData('', '');
+        this.setOpenGraphData('', '', undefined, undefined);
         this.setTwitterCard('', '');
     }
 }

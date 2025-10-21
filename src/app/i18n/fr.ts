@@ -1,6 +1,7 @@
 export const frTranslations = {
     "app": {
-        "title": "Suivi Séries"
+        "title": "Suivi Séries",
+        "description": "Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode."
     },
     "seo": {
         "home": {

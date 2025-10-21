@@ -7,6 +7,12 @@
 [![Material](https://img.shields.io/badge/Material-20.0-purple.svg)](https://material.angular.io)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+## 🌐 Live Application
+
+**Try the production application:** [https://suivi-series.zeffyr.com/](https://suivi-series.zeffyr.com/)
+
+Track your favorite TV series, discover new content, and never miss an episode. The application provides a complete experience with Google authentication, hierarchical series/season/episode tracking, and a modern responsive Material Design 3 interface.
+
 ## ✨ Features
 
 ### 🎯 Smart Tracking
