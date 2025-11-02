@@ -1,8 +1,11 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://suivi-series.zeffyr.com/sitemap.xml
-
-# Optimization
-Crawl-delay: 1
+# Sitemaps
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap.xml
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap-series/1
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap-series/2
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap-series/3
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap-series/4
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap-series/5
+Sitemap: https://suivi-series.zeffyr.com/api/sitemap-series/6
