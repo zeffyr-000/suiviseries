@@ -38,6 +38,10 @@ import { environment } from '../../environments/environment';
 export class HomeComponent implements OnInit {
     protected popularSeries = signal<Serie[]>([]);
     protected loading = signal(true);
+    protected loadingMore = signal(false);
+    protected hasMore = signal(true);
+    private currentPage = 1;
+    private readonly pageSize = 12;
 
     private readonly seriesService = inject(SeriesService);
     private readonly router = inject(Router);
@@ -65,7 +69,7 @@ export class HomeComponent implements OnInit {
     private loadSeriesData() {
         this.loading.set(true);
 
-        this.seriesService.getPopularSeries(12).pipe(
+        this.seriesService.getPopularSeries(this.pageSize, this.currentPage).pipe(
             catchError(() => {
                 return of([]);
             }),
@@ -73,6 +77,29 @@ export class HomeComponent implements OnInit {
         ).subscribe(series => {
             this.popularSeries.set(series);
             this.loading.set(false);
+            this.hasMore.set(series.length === this.pageSize);
+        });
+    }
+
+    protected loadMoreSeries() {
+        if (this.loadingMore() || !this.hasMore()) return;
+
+        this.loadingMore.set(true);
+        const nextPage = this.currentPage + 1;
+
+        this.seriesService.getPopularSeries(this.pageSize, nextPage).pipe(
+            catchError(() => {
+                return of([]);
+            }),
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(series => {
+            if (series.length > 0) {
+                this.currentPage = nextPage;
+                this.popularSeries.set([...this.popularSeries(), ...series]);
+            }
+
+            this.hasMore.set(series.length === this.pageSize);
+            this.loadingMore.set(false);
         });
     }
 

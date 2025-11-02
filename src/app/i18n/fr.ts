@@ -5,8 +5,8 @@ export const frTranslations = {
     },
     "seo": {
         "home": {
-            "title": "Accueil",
-            "description": "Découvrez les séries TV les plus populaires et gérez votre collection personnelle. Trouvez votre prochaine série à regarder parmi notre sélection."
+            "title": "Suivi de Séries TV en Ligne - Gestion, Statistiques et Recommandations Gratuit",
+            "description": "Gérez facilement votre collection de séries TV, suivez votre progression, découvrez les tendances et recevez des recommandations personnalisées. Suivi Séries vous aide à ne jamais rater un épisode et à explorer de nouvelles séries populaires, le tout gratuitement et sans publicité."
         },
         "search": {
             "title": "Recherche de Séries",
@@ -33,7 +33,9 @@ export const frTranslations = {
     },
     "sections": {
         "popular_right_now": "Populaires en ce Moment",
-        "view_all": "Voir Tout"
+        "view_all": "Voir Tout",
+        "load_more": "Charger plus",
+        "loading_more": "Chargement..."
     },
     "series": {
         "seasons": "{count, plural, =0 {Aucune saison} one {# saison} other {# saisons}}",

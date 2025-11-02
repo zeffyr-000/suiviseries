@@ -22,8 +22,8 @@ export class SeriesService {
         );
     }
 
-    getPopularSeries(limit = 6): Observable<Serie[]> {
-        return this.http.get<SearchResponse>(`${this.apiUrl}/series/popular?limit=${limit}`).pipe(
+    getPopularSeries(limit = 6, page = 1): Observable<Serie[]> {
+        return this.http.get<SearchResponse>(`${this.apiUrl}/series/popular?limit=${limit}&page=${page}`).pipe(
             map(response => response.success && response.results ? response.results : []),
             catchError(() => {
                 return of([]);

@@ -38,6 +38,22 @@
             <app-serie-card [serie]="serie"></app-serie-card>
             }
         </div>
+
+        @if (hasMore() && !loadingMore()) {
+        <div class="load-more-container">
+            <button mat-flat-button color="primary" (click)="loadMoreSeries()" class="load-more-button">
+                <mat-icon>expand_more</mat-icon>
+                {{ 'sections.load_more' | transloco }}
+            </button>
+        </div>
+        }
+
+        @if (loadingMore()) {
+        <div class="load-more-container">
+            <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+            <span>{{ 'sections.loading_more' | transloco }}</span>
+        </div>
+        }
         }
     </section>
 </div>
