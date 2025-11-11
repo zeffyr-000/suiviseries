@@ -98,7 +98,7 @@ export const frTranslations = {
         "google_signin_explanation": "Utilisez votre compte Google pour vous connecter instantanément ou créer un nouveau compte.",
         "simple_explanation": "Connectez-vous avec Google pour accéder à votre espace personnel.",
         "automatic_account": "Création automatique de compte lors de votre première visite",
-        "secure_connection": "Connexion sécurisée via Google OAuth",
+        "secure_connection": "Connexion sécurisée avec votre compte Google",
         "quick_access": "Accès rapide à toutes vos séries favorites",
         "continue_with_google": "Continuer avec Google",
         "first_time_creates_account": "Première fois ? Un compte sera créé automatiquement",

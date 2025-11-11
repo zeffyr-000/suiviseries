@@ -1,8 +1,9 @@
 <div>
     <section class="hero-section">
+        <div class="hero-background-shapes"></div>
         <div class="hero-content">
-            <h1>{{ 'hero.title' | transloco }}</h1>
-            <p>{{ 'hero.subtitle' | transloco }}</p>
+            <h1 class="display-large">{{ 'hero.title' | transloco }}</h1>
+            <p class="body-large">{{ 'hero.subtitle' | transloco }}</p>
             <div class="hero-actions">
                 <button mat-flat-button color="primary" class="hero-button" routerLink="/search">
                     <mat-icon>search</mat-icon>
@@ -14,7 +15,7 @@
 
     <section class="series-section">
         <div class="section-header">
-            <h2>
+            <h2 class="headline-medium">
                 <mat-icon>local_fire_department</mat-icon>
                 {{ 'sections.popular_right_now' | transloco }}
             </h2>
@@ -51,7 +52,7 @@
         @if (loadingMore()) {
         <div class="load-more-container">
             <mat-icon class="loading-icon">hourglass_empty</mat-icon>
-            <span>{{ 'sections.loading_more' | transloco }}</span>
+            <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
         </div>
         }
         }
@@ -59,7 +60,7 @@
 
     <section class="series-section">
         <div class="section-header">
-            <h2>
+            <h2 class="headline-medium">
                 <mat-icon>star</mat-icon>
                 {{ 'sections.top_rated' | transloco }}
             </h2>
@@ -96,7 +97,7 @@
         @if (topRatedLoadingMore()) {
         <div class="load-more-container">
             <mat-icon class="loading-icon">hourglass_empty</mat-icon>
-            <span>{{ 'sections.loading_more' | transloco }}</span>
+            <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
         </div>
         }
         }

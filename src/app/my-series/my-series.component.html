@@ -1,11 +1,11 @@
 <div class="my-series-container">
     <div class="page-header">
         <div class="header-content">
-            <h1 class="page-title">
+            <h1 class="page-title display-small">
                 <mat-icon>favorite</mat-icon>
                 {{ 'my_series.title' | transloco }}
             </h1>
-            <p class="page-subtitle">{{ 'my_series.subtitle' | transloco }}</p>
+            <p class="page-subtitle body-large">{{ 'my_series.subtitle' | transloco }}</p>
         </div>
 
         <div class="header-actions">
@@ -19,15 +19,15 @@
     @if (loading()) {
     <div class="loading-container">
         <mat-spinner diameter="50"></mat-spinner>
-        <p>{{ 'my_series.loading' | transloco }}</p>
+        <p class="body-medium">{{ 'my_series.loading' | transloco }}</p>
     </div>
     }
 
     @else if (error()) {
     <div class="error-container">
         <mat-icon color="warn">error</mat-icon>
-        <h2>{{ 'my_series.error_title' | transloco }}</h2>
-        <p>{{ error() }}</p>
+        <h2 class="headline-small">{{ 'my_series.error_title' | transloco }}</h2>
+        <p class="body-large">{{ error() }}</p>
         <button mat-flat-button color="primary" (click)="goToSearch()">
             <mat-icon>search</mat-icon>
             {{ 'my_series.go_to_search' | transloco }}
@@ -38,8 +38,8 @@
     @else if (mySeries().length === 0) {
     <div class="empty-container">
         <mat-icon class="empty-icon">tv_off</mat-icon>
-        <h2>{{ 'my_series.empty_title' | transloco }}</h2>
-        <p>{{ 'my_series.empty_message' | transloco }}</p>
+        <h2 class="headline-small">{{ 'my_series.empty_title' | transloco }}</h2>
+        <p class="body-large">{{ 'my_series.empty_message' | transloco }}</p>
         <button mat-flat-button color="primary" (click)="goToSearch()">
             <mat-icon>search</mat-icon>
             {{ 'my_series.start_exploring' | transloco }}
@@ -51,8 +51,8 @@
     <div class="series-stats">
         <div class="stats-badge">
             <mat-icon>tv</mat-icon>
-            <span class="stats-count">{{ mySeries().length }}</span>
-            <span class="stats-label">{{ 'my_series.series_followed' | transloco }}</span>
+            <span class="stats-count headline-medium">{{ mySeries().length }}</span>
+            <span class="stats-label body-medium">{{ 'my_series.series_followed' | transloco }}</span>
         </div>
     </div>
 

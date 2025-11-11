@@ -74,6 +74,7 @@ html {
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
+  --spacing-xxl: 48px;
 }
 
 body {
@@ -97,6 +98,57 @@ body {
   border-radius: var(--border-radius) !important;
 }
 
+/* M3 Button Icon Alignment Fix */
+/*
+ * Force vertical alignment for buttons with icons and text
+ * Tested with: Angular Material v20.2.12
+ * 
+ * Note: !important declarations are required to override Material's internal 
+ * .mdc-button__label styles. This targets Material's internal structure which
+ * may change in future versions. Review and test after Material upgrades.
+ * 
+ * Related issue: Angular Material buttons don't properly center icons with text
+ */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button,
+.mat-mdc-flat-button {
+  .mdc-button__label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    
+    mat-icon {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 !important;
+      vertical-align: middle !important;
+    }
+  }
+  
+  // For buttons with leading icons
+  mat-icon:first-child {
+    margin-right: 0 !important;
+  }
+  
+  // For buttons with trailing icons
+  mat-icon:last-child {
+    margin-left: 0 !important;
+  }
+}
+
+// Icon button specific fix
+.mat-mdc-icon-button {
+  mat-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
 /* Material Design 3 Component Overrides */
 /* !important is required to override Angular Material's inline and high-specificity styles */
 .mat-mdc-card {
@@ -106,6 +158,63 @@ body {
 .mat-mdc-form-field {
   .mdc-text-field {
     border-radius: var(--border-radius) !important;
+  }
+}
+
+/* M3 Chips - Distinct from buttons */
+/* Chips are for displaying selections/filters, not primary actions */
+.mat-mdc-chip {
+  font-weight: 500 !important;
+  letter-spacing: 0.1px !important;
+  border: 1px solid currentColor !important;
+  
+  // Chips have more padding and rounder corners than buttons
+  &.mat-mdc-standard-chip {
+    border-radius: 12px !important; // Rounder than buttons
+    min-height: 32px !important;
+    padding: 0 14px !important;
+  }
+  
+  // Chips are non-interactive by default
+  &:not(.mat-mdc-chip-highlighted):not(.mat-mdc-chip-selected) {
+    background: color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) !important;
+    color: var(--mat-sys-on-surface-variant) !important;
+    border-color: color-mix(in srgb, var(--mat-sys-outline) 30%, transparent) !important;
+  }
+}
+
+/* M3 Buttons - Clear interactive elements */
+/* Buttons are for primary actions with clear elevation and color */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button,
+.mat-mdc-flat-button {
+  font-weight: 500 !important;
+  letter-spacing: 0.1px !important;
+  
+  // Buttons have less rounding than chips
+  border-radius: 20px !important; // M3 full rounding for buttons
+  min-height: 40px !important;
+  
+  // Clear elevation for raised buttons
+  &.mat-mdc-raised-button,
+  &.mat-mdc-unelevated-button {
+    box-shadow: var(--md-sys-elevation-level1) !important;
+    
+    &:hover {
+      box-shadow: var(--md-sys-elevation-level2) !important;
+    }
+    
+    &:active {
+      box-shadow: var(--md-sys-elevation-level1) !important;
+    }
+  }
+  
+  // Outlined buttons have distinct borders
+  &.mat-mdc-outlined-button {
+    border: 1px solid var(--mat-sys-outline) !important;
+    border-width: 1px !important;
   }
 }
 
