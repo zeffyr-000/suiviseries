@@ -43,6 +43,13 @@ export class HomeComponent implements OnInit {
     private currentPage = 1;
     private readonly pageSize = 12;
 
+    protected topRatedSeries = signal<Serie[]>([]);
+    protected topRatedLoading = signal(true);
+    protected topRatedLoadingMore = signal(false);
+    protected topRatedHasMore = signal(true);
+    private topRatedCurrentPage = 1;
+    private readonly topRatedPageSize = 12;
+
     private readonly seriesService = inject(SeriesService);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
@@ -55,6 +62,7 @@ export class HomeComponent implements OnInit {
     ngOnInit() {
         this.updateMetadata();
         this.loadSeriesData();
+        this.loadTopRatedData();
         this.checkForAutoLogin();
     }
 
@@ -81,6 +89,21 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    private loadTopRatedData() {
+        this.topRatedLoading.set(true);
+
+        this.seriesService.getTopRatedSeries(this.topRatedPageSize, this.topRatedCurrentPage).pipe(
+            catchError(() => {
+                return of([]);
+            }),
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(series => {
+            this.topRatedSeries.set(series);
+            this.topRatedLoading.set(false);
+            this.topRatedHasMore.set(series.length === this.topRatedPageSize);
+        });
+    }
+
     protected loadMoreSeries() {
         if (this.loadingMore() || !this.hasMore()) return;
 
@@ -100,6 +123,28 @@ export class HomeComponent implements OnInit {
 
             this.hasMore.set(series.length === this.pageSize);
             this.loadingMore.set(false);
+        });
+    }
+
+    protected loadMoreTopRated() {
+        if (this.topRatedLoadingMore() || !this.topRatedHasMore()) return;
+
+        this.topRatedLoadingMore.set(true);
+        const nextPage = this.topRatedCurrentPage + 1;
+
+        this.seriesService.getTopRatedSeries(this.topRatedPageSize, nextPage).pipe(
+            catchError(() => {
+                return of([]);
+            }),
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(series => {
+            if (series.length > 0) {
+                this.topRatedCurrentPage = nextPage;
+                this.topRatedSeries.set([...this.topRatedSeries(), ...series]);
+            }
+
+            this.topRatedHasMore.set(series.length === this.topRatedPageSize);
+            this.topRatedLoadingMore.set(false);
         });
     }
 
