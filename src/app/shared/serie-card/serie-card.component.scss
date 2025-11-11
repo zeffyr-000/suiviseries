@@ -1,32 +1,33 @@
 @use '../../../styles/mixins' as *;
 
 .series-card {
-    transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    transition: all 300ms cubic-bezier(0.2, 0, 0, 1); // M3 emphasized easing
     height: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
-    border-radius: var(--md-sys-shape-corner-large);
+    border-radius: 16px; // M3 large shape
     overflow: hidden;
-    box-shadow: var(--md-sys-elevation-level2);
-    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: var(--md-sys-elevation-level1); // M3 resting elevation
+    background: var(--mat-sys-surface);
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 12%, transparent);
 
     &:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: var(--md-sys-elevation-level5);
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        transform: translateY(-8px);
+        box-shadow: var(--md-sys-elevation-level3); // M3 hover elevation
+        border-color: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
     }
 
     &:focus-within {
         outline: 3px solid var(--primary-color);
         outline-offset: 2px;
-        box-shadow: var(--md-sys-elevation-level4);
+        box-shadow: var(--md-sys-elevation-level2);
     }
 
     &:active {
-        transform: translateY(-4px) scale(1.01);
-        box-shadow: var(--md-sys-elevation-level3);
+        transform: translateY(-4px);
+        box-shadow: var(--md-sys-elevation-level2);
+        transition-duration: 150ms; // M3 micro duration for press
     }
 
     .series-card-link {
@@ -47,7 +48,7 @@
         &:focus-visible {
             outline: 2px solid var(--primary-color);
             outline-offset: -2px;
-            border-radius: var(--md-sys-shape-corner-large);
+            border-radius: 16px;
         }
     }
 
@@ -56,7 +57,7 @@
         width: 100%;
         padding-top: 150%; // Ratio 2:3 pour les posters
         overflow: hidden;
-        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
 
         .series-poster {
             position: absolute;
@@ -65,13 +66,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: all var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized);
-            filter: brightness(1) saturate(1.1);
+            transition: transform 500ms cubic-bezier(0.2, 0, 0, 1); // M3 emphasized duration
+            filter: brightness(1) saturate(1.05);
+        }
 
-            &:hover {
-                transform: scale(1.08);
-                filter: brightness(1.05) saturate(1.2);
-            }
+        &:hover .series-poster {
+            transform: scale(1.06); // Agrandissement subtil
+            filter: brightness(1.03) saturate(1.1);
         }
 
         &::before {
@@ -82,14 +83,14 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(
-                135deg,
-                rgba(0, 0, 0, 0.1) 0%,
-                rgba(0, 0, 0, 0.05) 50%,
-                rgba(0, 0, 0, 0.2) 100%
+                180deg,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(0, 0, 0, 0.02) 50%,
+                rgba(0, 0, 0, 0.1) 100%
             );
             z-index: 1;
             opacity: 0;
-            transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+            transition: opacity 300ms cubic-bezier(0.2, 0, 0, 1);
         }
 
         &:hover::before {
@@ -100,26 +101,27 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
-            backdrop-filter: blur(10px);
-            color: white;
+            background: color-mix(in srgb, var(--mat-sys-surface) 95%, transparent);
+            backdrop-filter: blur(12px);
+            color: var(--mat-sys-on-surface);
             padding: 6px 12px;
-            border-radius: var(--md-sys-shape-corner-large);
+            border-radius: 20px; // M3 full rounding
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 0.8125rem; // M3 label-medium
+            font-weight: 500;
+            letter-spacing: 0.5px;
             z-index: 2;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
 
             mat-icon {
                 font-size: 16px;
                 width: 16px;
                 height: 16px;
                 color: #fbbf24;
-                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
             }
         }
     }
@@ -128,33 +130,35 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        padding: 20px;
-        background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+        padding: var(--spacing-lg);
+        background: var(--mat-sys-surface);
 
         .series-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0 0 12px 0;
-            line-height: 1.3;
+            font-size: 1.125rem; // M3 title-medium
+            font-weight: 500;
+            line-height: 1.4;
+            letter-spacing: 0.15px;
+            margin: 0 0 var(--spacing-sm) 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: #1f2937;
-            letter-spacing: -0.025em;
+            color: var(--mat-sys-on-surface);
         }
 
         .series-info {
-            margin-bottom: 16px;
+            margin-bottom: var(--spacing-md);
 
             .series-meta {
                 display: flex;
-                gap: 16px;
-                font-size: 13px;
-                color: #6b7280;
-                font-weight: 500;
+                gap: var(--spacing-md);
+                font-size: 0.8125rem; // M3 body-small
+                font-weight: 400;
+                line-height: 1.43;
+                letter-spacing: 0.4px;
+                color: var(--mat-sys-on-surface-variant);
 
                 .seasons,
                 .episodes {
@@ -165,11 +169,12 @@
 
                     &::before {
                         content: '';
-                        width: 4px;
-                        height: 4px;
-                        background: #d1d5db;
+                        width: 3px;
+                        height: 3px;
+                        background: var(--mat-sys-on-surface-variant);
                         border-radius: 50%;
                         display: inline-block;
+                        opacity: 0.5;
                     }
 
                     &:first-child::before {
@@ -180,9 +185,11 @@
         }
 
         .series-overview {
-            font-size: 14px;
-            line-height: 1.5;
-            color: #4b5563;
+            font-size: 0.875rem; // M3 body-medium
+            font-weight: 400;
+            line-height: 1.43;
+            letter-spacing: 0.25px;
+            color: var(--mat-sys-on-surface-variant);
             margin: 0;
             flex: 1;
             display: -webkit-box;
@@ -191,50 +198,50 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-weight: 400;
         }
     }
 
     mat-card-actions {
-        padding: 0 20px 20px 20px;
+        padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
         display: flex;
         justify-content: flex-end;
         position: relative;
         z-index: 1;
-        background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+        background: var(--mat-sys-surface);
         
         button {
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.025em;
+            font-size: 0.875rem; // M3 label-large
+            font-weight: 500;
+            letter-spacing: 0.1px;
             position: relative;
             z-index: 2;
-            border-radius: var(--md-sys-shape-corner-medium);
-            padding: 8px 16px;
-            height: auto;
-            min-height: 36px;
-            transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            border-radius: 20px; // M3 full rounding
+            padding: 10px var(--spacing-lg);
+            height: 40px;
+            min-height: 40px;
+            transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
+            background: var(--primary-color);
+            color: var(--mat-sys-on-primary);
             border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 
             &:hover {
                 transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-                background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+                background: color-mix(in srgb, var(--primary-color) 92%, black);
             }
 
             &:focus,
             &:focus-visible {
-                outline: 2px solid #667eea;
+                outline: 2px solid var(--primary-color);
                 outline-offset: 2px;
-                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
             }
 
             &:active {
-                transform: translateY(0);
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                transform: scale(0.96);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+                transition-duration: 100ms;
             }
 
             &:disabled,
@@ -252,124 +259,58 @@
 
             mat-icon {
                 margin-right: 6px;
-                font-size: 16px;
-                width: 16px;
-                height: 16px;
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
             }
         }
     }
 }
 
+// Dark theme support (if needed)
 .dark-theme {
     .series-card {
-        background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--mat-sys-surface);
+        border-color: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
 
         &:hover {
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
         }
 
         mat-card-content {
-            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+            background: var(--mat-sys-surface);
 
             .series-title {
-                color: #f9fafb;
+                color: var(--mat-sys-on-surface);
             }
 
             .series-overview {
-                color: #d1d5db;
+                color: var(--mat-sys-on-surface-variant);
             }
 
             .series-meta {
-                color: #9ca3af;
+                color: var(--mat-sys-on-surface-variant);
 
                 .seasons,
                 .episodes {
                     &::before {
-                        background: #6b7280;
+                        background: var(--mat-sys-on-surface-variant);
                     }
                 }
             }
         }
 
         mat-card-actions {
-            background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+            background: var(--mat-sys-surface);
         }
     }
 }
 
-@include respond-below(md) {
-    .series-card {
-        border-radius: var(--md-sys-shape-corner-medium);
-
-        .poster-container {
-            padding-top: 130%; // Ratio légèrement plus petit sur mobile
-
-            .rating-badge {
-                top: 8px;
-                right: 8px;
-                padding: 4px 8px;
-                font-size: 12px;
-
-                mat-icon {
-                    font-size: 14px;
-                    width: 14px;
-                    height: 14px;
-                }
-            }
-        }
-
-        mat-card-content {
-            padding: 16px;
-
-            .series-title {
-                font-size: 16px;
-                margin-bottom: 10px;
-            }
-
-            .series-info {
-                margin-bottom: 12px;
-
-                .series-meta {
-                    font-size: 12px;
-                    gap: 12px;
-                }
-            }
-
-            .series-overview {
-                font-size: 13px;
-                -webkit-line-clamp: 2;
-                line-clamp: 2;
-            }
-        }
-
-        mat-card-actions {
-            padding: 0 16px 16px 16px;
-
-            button {
-                font-size: 12px;
-                padding: 6px 12px;
-                min-height: 32px;
-
-                mat-icon {
-                    font-size: 14px;
-                    width: 14px;
-                    height: 14px;
-                }
-            }
-        }
-
-        &:hover {
-            transform: translateY(-4px) scale(1.01);
-        }
-    }
-}
-
+// M3 Animation: Emphasized entrance
 @keyframes cardFadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
     }
     to {
         opacity: 1;
@@ -378,22 +319,75 @@
 }
 
 .series-card {
-    animation: cardFadeIn 0.6s ease-out;
+    animation: cardFadeIn 400ms cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-.series-card {
-    .series-card-link {
-        &:focus {
-            outline: 2px solid #667eea;
-            outline-offset: 2px;
-            border-radius: var(--md-sys-shape-corner-large);
-        }
-    }
+// Mobile responsive
+@include respond-below(md) {
+    .series-card {
+        border-radius: 12px; // M3 medium shape on mobile
 
-    mat-card-actions button {
-        &:focus {
-            outline: 2px solid #667eea;
-            outline-offset: 2px;
+        .poster-container {
+            padding-top: 140%; // Ratio légèrement plus carré sur mobile
+
+            .rating-badge {
+                top: 8px;
+                right: 8px;
+                padding: 4px 10px;
+                font-size: 0.75rem;
+                border-radius: 16px;
+
+                mat-icon {
+                    font-size: 14px;
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
+
+        mat-card-content {
+            padding: var(--spacing-md);
+
+            .series-title {
+                font-size: 1rem; // M3 title-small
+                margin-bottom: var(--spacing-xs);
+            }
+
+            .series-info {
+                margin-bottom: var(--spacing-sm);
+
+                .series-meta {
+                    font-size: 0.75rem;
+                    gap: var(--spacing-sm);
+                }
+            }
+
+            .series-overview {
+                font-size: 0.8125rem;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+            }
+        }
+
+        mat-card-actions {
+            padding: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
+
+            button {
+                font-size: 0.8125rem;
+                padding: 8px var(--spacing-md);
+                height: 36px;
+                min-height: 36px;
+
+                mat-icon {
+                    font-size: 16px;
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+
+        &:hover {
+            transform: translateY(-4px);
         }
     }
 }

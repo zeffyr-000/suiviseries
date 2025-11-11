@@ -1,37 +1,49 @@
 @use '../../../styles/mixins' as *;
 
+// Status semantic colors (fixed, theme-independent)
+:host {
+    --status-returning-base: #10b981;
+    --status-returning-text: #047857;
+    --status-returning-icon: #059669;
+    
+    --status-canceled-base: #ef4444;
+    --status-canceled-text: #b91c1c;
+    --status-canceled-icon: #dc2626;
+    
+    --status-production-base: #f59e0b;
+    --status-production-text: #b45309;
+    --status-production-icon: #d97706;
+    
+    --status-planned-base: #8b5cf6;
+    --status-planned-text: #6d28d9;
+    --status-planned-icon: #7c3aed;
+}
+
+// M3 Status Chip Design
 mat-chip {
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-weight: 500; // M3 label-medium weight
+    letter-spacing: 0.1px; // M3 tracking
+    text-transform: none; // M3 uses normal casing (removes uppercase transformation)
     border: none;
-    transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-    display: flex;
+    transition: all 150ms cubic-bezier(0.2, 0, 0, 1); // M3 emphasized easing
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px; // M3 spacing
     
     .status-icon {
-        margin-right: 2px;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
     
+    // Size variants with M3 specs
     &.size-small {
-        font-size: 10px;
-        border-radius: var(--md-sys-shape-corner-small);
-        padding: 0 8px;
-        height: 22px;
-        
-        .status-icon {
-            font-size: 12px !important;
-            width: 12px !important;
-            height: 12px !important;
-        }
-    }
-    
-    &.size-medium {
-        font-size: 12px;
-        border-radius: var(--md-sys-shape-corner-small);
-        padding: 0 12px;
-        height: 28px;
+        font-size: 0.6875rem; // 11px - M3 body-small
+        border-radius: 8px; // M3 extra-small shape
+        padding: 0 10px;
+        height: 24px;
+        line-height: 1.43;
         
         .status-icon {
             font-size: 14px !important;
@@ -40,11 +52,12 @@ mat-chip {
         }
     }
     
-    &.size-large {
-        font-size: 14px;
-        border-radius: var(--md-sys-shape-corner-small);
-        padding: 0 16px;
-        height: 36px;
+    &.size-medium {
+        font-size: 0.8125rem; // 13px - M3 body-medium
+        border-radius: 12px; // M3 medium shape
+        padding: 0 14px;
+        height: 32px;
+        line-height: 1.43;
         
         .status-icon {
             font-size: 16px !important;
@@ -53,131 +66,180 @@ mat-chip {
         }
     }
     
+    &.size-large {
+        font-size: 0.875rem; // 14px - M3 body-large
+        border-radius: 16px; // M3 large shape
+        padding: 0 18px;
+        height: 40px;
+        line-height: 1.43;
+        
+        .status-icon {
+            font-size: 18px !important;
+            width: 18px !important;
+            height: 18px !important;
+        }
+    }
+    
+    // Status variants with M3 color system
     &.status-default {
-        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-        color: #374151;
-        box-shadow: var(--md-sys-elevation-level1);
+        background: color-mix(in srgb, var(--mat-sys-surface-variant) 90%, transparent);
+        color: var(--mat-sys-on-surface-variant);
+        border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
     }
     
     &.status-returning {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        box-shadow: var(--md-sys-elevation-level1);
+        background: color-mix(in srgb, var(--status-returning-base) 12%, transparent);
+        color: var(--status-returning-text);
+        border: 1px solid color-mix(in srgb, var(--status-returning-base) 25%, transparent);
+        
+        .status-icon {
+            color: var(--status-returning-icon);
+        }
     }
     
     &.status-ended {
-        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-        color: white;
-        box-shadow: var(--md-sys-elevation-level1);
+        background: color-mix(in srgb, var(--mat-sys-surface-variant) 85%, transparent);
+        color: var(--mat-sys-on-surface-variant);
+        border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
+        
+        .status-icon {
+            color: var(--mat-sys-on-surface-variant);
+        }
     }
     
     &.status-canceled {
-        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-        color: white;
-        box-shadow: var(--md-sys-elevation-level1);
+        background: color-mix(in srgb, var(--status-canceled-base) 12%, transparent);
+        color: var(--status-canceled-text);
+        border: 1px solid color-mix(in srgb, var(--status-canceled-base) 25%, transparent);
+        
+        .status-icon {
+            color: var(--status-canceled-icon);
+        }
     }
     
     &.status-production {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
-        box-shadow: var(--md-sys-elevation-level1);
+        background: color-mix(in srgb, var(--status-production-base) 12%, transparent);
+        color: var(--status-production-text);
+        border: 1px solid color-mix(in srgb, var(--status-production-base) 25%, transparent);
+        
+        .status-icon {
+            color: var(--status-production-icon);
+        }
     }
     
     &.status-planned {
-        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-        color: white;
-        box-shadow: var(--md-sys-elevation-level1);
+        background: color-mix(in srgb, var(--status-planned-base) 12%, transparent);
+        color: var(--status-planned-text);
+        border: 1px solid color-mix(in srgb, var(--status-planned-base) 25%, transparent);
+        
+        .status-icon {
+            color: var(--status-planned-icon);
+        }
     }
     
-    &:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--md-sys-elevation-level2);
-        cursor: pointer;
-    }
-    
-    &:focus,
-    &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 2px;
-        box-shadow: var(--md-sys-elevation-level2);
-    }
-    
-    &:active {
-        transform: translateY(0);
-        box-shadow: var(--md-sys-elevation-level1);
-    }
+    // Non-interactive chips (display only)
+    cursor: default;
     
     &.mat-mdc-chip-disabled,
     &:disabled {
         opacity: 0.38;
         cursor: not-allowed;
-        box-shadow: none;
-        
-        &:hover {
-            transform: none;
-            box-shadow: none;
-        }
     }
 }
 
+// Dark theme adjustments
 .dark-theme {
+    --status-returning-text: #6ee7b7;
+    --status-returning-icon: #34d399;
+    
+    --status-canceled-text: #fca5a5;
+    --status-canceled-icon: #f87171;
+    
+    --status-production-text: #fcd34d;
+    --status-production-icon: #fbbf24;
+    
+    --status-planned-text: #c4b5fd;
+    --status-planned-icon: #a78bfa;
+    
     mat-chip {
         &.status-returning {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            box-shadow: var(--md-sys-elevation-level1);
-        }
-        
-        &.status-ended {
-            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-            box-shadow: var(--md-sys-elevation-level1);
-        }
-        
-        &.status-canceled {
-            background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%);
-            box-shadow: var(--md-sys-elevation-level1);
-        }
-        
-        &.status-production {
-            background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
-            box-shadow: var(--md-sys-elevation-level1);
-        }
-        
-        &.status-planned {
-            background: linear-gradient(135deg, #5b21b6 0%, #6d28d9 100%);
-            box-shadow: var(--md-sys-elevation-level1);
-        }
-
-        &.status-default {
-            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
-            color: #e5e7eb;
-            box-shadow: var(--md-sys-elevation-level1);
-        }
-    }
-}
-
-@include respond-below(md) {
-    mat-chip {
-        &.size-medium {
-            font-size: 11px;
-            height: 26px;
-            padding: 0 10px;
+            background: color-mix(in srgb, var(--status-returning-base) 20%, transparent);
+            color: var(--status-returning-text);
+            border-color: color-mix(in srgb, var(--status-returning-base) 40%, transparent);
             
             .status-icon {
-                font-size: 13px !important;
-                width: 13px !important;
-                height: 13px !important;
+                color: var(--status-returning-icon);
             }
         }
         
-        &.size-large {
-            font-size: 13px;
-            height: 32px;
-            padding: 0 14px;
+        &.status-ended {
+            background: color-mix(in srgb, var(--mat-sys-surface-variant) 70%, transparent);
+            color: var(--mat-sys-on-surface-variant);
+        }
+        
+        &.status-canceled {
+            background: color-mix(in srgb, var(--status-canceled-base) 20%, transparent);
+            color: var(--status-canceled-text);
+            border-color: color-mix(in srgb, var(--status-canceled-base) 40%, transparent);
+            
+            .status-icon {
+                color: var(--status-canceled-icon);
+            }
+        }
+        
+        &.status-production {
+            background: color-mix(in srgb, var(--status-production-base) 20%, transparent);
+            color: var(--status-production-text);
+            border-color: color-mix(in srgb, var(--status-production-base) 40%, transparent);
+            
+            .status-icon {
+                color: var(--status-production-icon);
+            }
+        }
+        
+        &.status-planned {
+            background: color-mix(in srgb, var(--status-planned-base) 20%, transparent);
+            color: var(--status-planned-text);
+            border-color: color-mix(in srgb, var(--status-planned-base) 40%, transparent);
+            
+            .status-icon {
+                color: var(--status-planned-icon);
+            }
+        }
+
+        &.status-default {
+            background: color-mix(in srgb, var(--mat-sys-surface-variant) 60%, transparent);
+            color: var(--mat-sys-on-surface-variant);
+        }
+    }
+}
+
+// Responsive adjustments
+@include respond-below(md) {
+    mat-chip {
+        &.size-medium {
+            font-size: 0.75rem; // 12px
+            height: 28px;
+            padding: 0 12px;
+            border-radius: 10px;
             
             .status-icon {
                 font-size: 15px !important;
                 width: 15px !important;
                 height: 15px !important;
+            }
+        }
+        
+        &.size-large {
+            font-size: 0.8125rem; // 13px
+            height: 36px;
+            padding: 0 16px;
+            border-radius: 14px;
+            
+            .status-icon {
+                font-size: 17px !important;
+                width: 17px !important;
+                height: 17px !important;
             }
         }
     }

@@ -116,10 +116,6 @@ export class SerieDetailComponent implements OnInit {
         return watchedEpisodes.includes(episodeId);
     }
 
-    protected refreshSerieData(): void {
-        this.loadSerieDetails();
-    }
-
     protected isEpisodeLoading(episodeId: number): boolean {
         const loadingStates = this.episodeLoadingStates();
         return loadingStates.get(episodeId) || false;
@@ -265,13 +261,10 @@ export class SerieDetailComponent implements OnInit {
                         };
                         this.stats.set(newStats);
                     }
-                } else {
-                    this.loadSerieDetails();
                 }
                 this.followLoading.set(false);
             },
             error: () => {
-                this.loadSerieDetails();
                 this.followLoading.set(false);
             }
         });

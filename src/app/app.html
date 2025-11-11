@@ -2,17 +2,18 @@
   <mat-sidenav-container class="app-container">
     <mat-sidenav #sidenav mode="over" [opened]="menuOpen()">
       <mat-nav-list>
-        <mat-list-item routerLink="/" (click)="toggleMenu()">
+        <mat-list-item routerLink="/" (click)="toggleMenu()" routerLinkActive="mat-mdc-list-item-active"
+          [routerLinkActiveOptions]="{exact: true}">
           <mat-icon matListItemIcon>home</mat-icon>
           <span matListItemTitle>{{ 'navigation.home' | transloco }}</span>
         </mat-list-item>
         @if (currentUser()) {
-        <mat-list-item routerLink="/mes-series" (click)="toggleMenu()">
+        <mat-list-item routerLink="/mes-series" (click)="toggleMenu()" routerLinkActive="mat-mdc-list-item-active">
           <mat-icon matListItemIcon>tv</mat-icon>
           <span matListItemTitle>{{ 'navigation.my_series' | transloco }}</span>
         </mat-list-item>
         }
-        <mat-list-item routerLink="/search" (click)="toggleMenu()">
+        <mat-list-item routerLink="/search" (click)="toggleMenu()" routerLinkActive="mat-mdc-list-item-active">
           <mat-icon matListItemIcon>search</mat-icon>
           <span matListItemTitle>{{ 'navigation.search' | transloco }}</span>
         </mat-list-item>
@@ -26,7 +27,7 @@
         </button>
         <a routerLink="/" class="app-title-link" [attr.aria-label]="'app.title' | transloco">
           <mat-icon class="app-title-icon" aria-hidden="true">live_tv</mat-icon>
-          <span class="app-title">{{ 'app.title' | transloco }}</span>
+          <span class="app-title title-large">{{ 'app.title' | transloco }}</span>
         </a>
         <span class="spacer"></span>
 
@@ -34,7 +35,7 @@
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger"
           [attr.aria-label]="'app.user_menu' | transloco">
           @if (user.photo_url) {
-          <img [src]="user.photo_url" [alt]="user.display_name" class="user-avatar">
+          <img [src]="user.photo_url" [alt]="user.display_name" class="user-avatar" crossorigin="anonymous">
           } @else {
           <mat-icon>account_circle</mat-icon>
           }
@@ -42,8 +43,8 @@
 
         <mat-menu #userMenu="matMenu">
           <div class="user-info">
-            <div class="user-name">{{ user.display_name }}</div>
-            <div class="user-email">{{ user.email }}</div>
+            <div class="user-name body-large">{{ user.display_name }}</div>
+            <div class="user-email body-medium">{{ user.email }}</div>
           </div>
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="logout()">

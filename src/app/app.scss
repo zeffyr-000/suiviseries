@@ -5,17 +5,35 @@
   
   mat-sidenav {
     width: 280px;
+    border-radius: 0 16px 16px 0; // M3 large shape on trailing edge
     
     mat-nav-list {
-      padding-top: var(--spacing-lg);
+      padding: var(--spacing-lg) var(--spacing-sm);
       
       mat-list-item {
-        margin-bottom: var(--spacing-xs);
-        border-radius: var(--border-radius);
-        transition: background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+        margin: 0 var(--spacing-xs) var(--spacing-xs);
+        border-radius: 28px; // M3 full rounding for nav items
+        min-height: 56px;
+        transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); // M3 emphasized easing, micro duration
         
         &:hover {
           background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+        }
+        
+        // État actif (route courante)
+        &[aria-current="page"],
+        &.mat-mdc-list-item-active,
+        &.mdc-list-item--activated {
+          background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
+          
+          mat-icon {
+            color: var(--primary-color);
+          }
+          
+          span {
+            font-weight: 600;
+            color: var(--primary-color);
+          }
         }
         
         &.logout-item {
@@ -33,6 +51,14 @@
             color: #f44336;
           }
         }
+        
+        mat-icon {
+          transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
+        }
+        
+        &:hover mat-icon {
+          transform: scale(1.08);
+        }
       }
     }
   }
@@ -44,10 +70,20 @@
   z-index: 100;
   box-shadow: var(--elevation-shadow);
   background-color: var(--primary-color) !important;
+  height: 64px; // M3 standard app bar height
+  
+  button[mat-icon-button] {
+    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
+    
+    &:active {
+      transform: scale(0.92);
+    }
+  }
   
   .app-title {
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.375rem; // M3 title-large (22px)
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
   .app-title-link {
@@ -57,15 +93,19 @@
     text-decoration: none;
     color: inherit;
     cursor: pointer;
-    transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1); // M3 micro duration
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.85;
+    }
+    
+    &:active {
+      opacity: 0.7;
+      transform: scale(0.98);
     }
 
     .app-title-icon {
-      font-size: 1.8rem;
-      margin-right: var(--spacing-xs);
+      font-size: 1.75rem;
       line-height: 1;
       display: flex;
       align-items: center;
@@ -76,12 +116,11 @@
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
     }
-    
-
 
     .app-title {
-      font-size: 1.5rem;
-      font-weight: 500;
+      font-size: 1.375rem; // M3 title-large
+      font-weight: 400;
+      letter-spacing: 0;
     }
   }
   
@@ -90,47 +129,112 @@
   }
   
   .user-menu-trigger {
+    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
+    
+    &:active {
+      transform: scale(0.92);
+    }
+    
     .user-avatar {
       width: 32px;
       height: 32px;
       border-radius: 50%;
       object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: border-color 150ms cubic-bezier(0.2, 0, 0, 1);
+    }
+    
+    &:hover .user-avatar {
+      border-color: rgba(255, 255, 255, 0.4);
     }
   }
   
   .login-button {
     color: white;
+    height: 40px;
+    border-radius: 20px; // M3 full rounding
+    font-size: 0.875rem; // M3 label-large
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
+    
+    &:active {
+      transform: scale(0.95);
+    }
     
     mat-icon {
       margin-right: var(--spacing-xs);
+      font-size: 1.125rem;
     }
   }
 }
 
+// M3 Menu (popover) styling
 ::ng-deep .mat-mdc-menu-panel {
+  border-radius: 12px; // M3 medium shape for menus
+  box-shadow: 
+    0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12); // M3 elevation level 2
+  min-width: 280px;
+  
   .user-info {
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-lg);
+    border-radius: 12px 12px 0 0;
+    background-color: color-mix(in srgb, var(--primary-color) 5%, transparent);
     
     .user-name {
       font-weight: 500;
-      font-size: 1rem;
+      font-size: 1rem; // M3 body-large
+      line-height: 1.5;
+      letter-spacing: 0.5px;
       color: var(--mat-sys-on-surface);
       margin-bottom: var(--spacing-xs);
     }
     
     .user-email {
-      font-size: 0.875rem;
+      font-size: 0.875rem; // M3 body-medium
+      line-height: 1.43;
+      letter-spacing: 0.25px;
       color: var(--mat-sys-on-surface-variant);
+      opacity: 0.8;
     }
   }
   
   .mat-mdc-menu-item {
     min-height: 48px;
+    border-radius: 8px;
+    margin: 0 var(--spacing-xs);
+    transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
+    
+    &:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    }
+    
+    &:active {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+      transform: scale(0.98);
+    }
     
     mat-icon {
       margin-right: var(--spacing-md);
       color: var(--mat-sys-on-surface-variant);
+      transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
     }
+    
+    &:hover mat-icon {
+      transform: scale(1.08);
+    }
+    
+    span {
+      font-size: 0.875rem; // M3 label-large
+      font-weight: 500;
+      letter-spacing: 0.1px;
+    }
+  }
+  
+  mat-divider {
+    margin: var(--spacing-xs) 0;
   }
 }
 
@@ -141,12 +245,20 @@
 }
 
 @include respond-below(sm) {
-  .app-toolbar .app-title {
-    font-size: 1.2rem;
+  .app-toolbar {
+    height: 56px; // M3 mobile app bar height
+    
+    .app-title {
+      font-size: 1.25rem; // M3 title-medium for mobile
+      letter-spacing: 0.15px;
+    }
+    
+    .app-title-icon {
+      font-size: 1.5rem;
+    }
   }
   
-  .app-toolbar .app-title-icon {
-    font-size: 1.5rem;
-    line-height: 1;
+  .app-container mat-sidenav {
+    width: 260px;
   }
 }

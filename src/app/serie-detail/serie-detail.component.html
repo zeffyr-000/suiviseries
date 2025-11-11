@@ -2,15 +2,15 @@
     @if (loading()) {
     <div class="loading-container">
         <mat-spinner diameter="50"></mat-spinner>
-        <p>{{ 'serie_detail.loading' | transloco }}</p>
+        <p class="body-medium">{{ 'serie_detail.loading' | transloco }}</p>
     </div>
     }
 
     @else if (error()) {
     <div class="error-container">
         <mat-icon color="warn">error</mat-icon>
-        <h2>{{ 'serie_detail.error_title' | transloco }}</h2>
-        <p>{{ error() }}</p>
+        <h2 class="headline-small">{{ 'serie_detail.error_title' | transloco }}</h2>
+        <p class="body-medium">{{ error() }}</p>
         <button mat-stroked-button color="primary" (click)="goBack()">
             <mat-icon>arrow_back</mat-icon>
             {{ 'serie_detail.go_back' | transloco }}
@@ -38,9 +38,9 @@
                         </div>
 
                         <div class="serie-info">
-                            <h1 class="serie-title">{{ serie()!.name }}</h1>
+                            <h1 class="serie-title display-small">{{ serie()!.name }}</h1>
                             @if (serie()!.original_name !== serie()!.name) {
-                            <h2 class="original-title">{{ serie()!.original_name }}</h2>
+                            <h2 class="original-title title-medium">{{ serie()!.original_name }}</h2>
                             }
 
                             <div class="serie-meta">
@@ -90,14 +90,6 @@
                                     </ng-container>
                                     }
                                 </button>
-                                <button mat-icon-button [attr.aria-label]="'series.share_button' | transloco">
-                                    <mat-icon>share</mat-icon>
-                                </button>
-                                <button mat-icon-button matTooltip="{{ 'series.refresh_data' | transloco }}"
-                                    [disabled]="loading()" (click)="refreshSerieData()"
-                                    [attr.aria-label]="'series.refresh_data' | transloco">
-                                    <mat-icon>refresh</mat-icon>
-                                </button>
                             </div>
                             }
                         </div>
@@ -109,10 +101,10 @@
         <div class="content-container">
             <mat-card class="overview-card">
                 <mat-card-header>
-                    <mat-card-title>{{ 'serie_detail.overview' | transloco }}</mat-card-title>
+                    <mat-card-title class="headline-small">{{ 'serie_detail.overview' | transloco }}</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <p class="overview-text">{{ serie()!.overview }}</p>
+                    <p class="overview-text body-large">{{ serie()!.overview }}</p>
                 </mat-card-content>
             </mat-card>
 
@@ -135,7 +127,8 @@
             @if (seasons().length > 0) {
             <mat-card class="seasons-card">
                 <mat-card-header>
-                    <mat-card-title>{{ 'serie_detail.seasons' | transloco }} ({{ seasons().length }})</mat-card-title>
+                    <mat-card-title class="headline-small">{{ 'serie_detail.seasons' | transloco }} ({{ seasons().length
+                        }})</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <mat-accordion class="seasons-accordion">
@@ -269,7 +262,7 @@
 
             <mat-card class="details-card">
                 <mat-card-header>
-                    <mat-card-title>{{ 'serie_detail.details' | transloco }}</mat-card-title>
+                    <mat-card-title class="headline-small">{{ 'serie_detail.details' | transloco }}</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <div class="details-grid">

@@ -1,17 +1,17 @@
 <div class="login-modal">
-    <h2 mat-dialog-title>
+    <h2 mat-dialog-title class="headline-small">
         <mat-icon>tv</mat-icon>
         {{ 'auth.sign_in_title' | transloco }}
     </h2>
 
     <mat-dialog-content>
         <div class="login-content">
-            <p class="login-subtitle">{{ 'auth.sign_in_subtitle' | transloco }}</p>
+            <p class="login-subtitle body-medium">{{ 'auth.sign_in_subtitle' | transloco }}</p>
 
             @if (loading()) {
             <div class="loading-state">
                 <mat-spinner diameter="40"></mat-spinner>
-                <p>{{ 'auth.connecting' | transloco }}</p>
+                <p class="body-medium">{{ 'auth.connecting' | transloco }}</p>
             </div>
             }
 
@@ -19,9 +19,9 @@
             <div class="google-signin-section">
                 <div #googleButton class="google-button-container"></div>
 
-                <div class="signin-hint">
+                <div class="signin-hint body-small">
                     <mat-icon class="info-icon">info</mat-icon>
-                    <span>Connexion sécurisée avec votre compte Google</span>
+                    <span>{{ 'auth.secure_connection' | transloco }}</span>
                 </div>
             </div>
             }

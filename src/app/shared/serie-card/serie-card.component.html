@@ -8,15 +8,16 @@
             </div>
         </div>
         <mat-card-content>
-            <h3 class="series-title">{{ serie.name }}</h3>
+            <h3 class="series-title title-medium">{{ serie.name }}</h3>
             <div class="series-info">
                 <app-serie-status-chip [status]="serie.status" size="small" />
-                <div class="series-meta">
+                <div class="series-meta body-small">
                     <span class="seasons">{{ 'series.seasons' | transloco: {count: serie.number_of_seasons} }}</span>
                     <span class="episodes">{{ 'series.episodes' | transloco: {count: serie.number_of_episodes} }}</span>
                 </div>
             </div>
-            <p class="series-overview">{{ serie.overview.length > 100 ? serie.overview.substring(0, 100) + '...'
+            <p class="series-overview body-medium">{{ serie.overview.length > 100 ? serie.overview.substring(0, 100) +
+                '...'
                 : serie.overview }}</p>
         </mat-card-content>
     </a>
