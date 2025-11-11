@@ -31,6 +31,15 @@ export class SeriesService {
         );
     }
 
+    getTopRatedSeries(limit = 6, page = 1): Observable<Serie[]> {
+        return this.http.get<SearchResponse>(`${this.apiUrl}/series/top-rated?limit=${limit}&page=${page}`).pipe(
+            map(response => response.success && response.results ? response.results : []),
+            catchError(() => {
+                return of([]);
+            })
+        );
+    }
+
     getSerieById(id: number): Observable<Serie | undefined> {
         return this.http.get<SerieDetailResponse>(`${this.apiUrl}/series/${id}`).pipe(
             map(response => response.success && response.serie ? response.serie : undefined),

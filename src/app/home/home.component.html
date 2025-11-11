@@ -56,4 +56,49 @@
         }
         }
     </section>
+
+    <section class="series-section">
+        <div class="section-header">
+            <h2>
+                <mat-icon>star</mat-icon>
+                {{ 'sections.top_rated' | transloco }}
+            </h2>
+        </div>
+
+        @if (topRatedLoading()) {
+        <div class="loading-grid">
+            @for (item of [1,2,3,4,5,6]; track item) {
+            <mat-card class="series-card loading">
+                <div class="poster-placeholder"></div>
+                <mat-card-content>
+                    <div class="title-placeholder"></div>
+                    <div class="info-placeholder"></div>
+                </mat-card-content>
+            </mat-card>
+            }
+        </div>
+        } @else {
+        <div class="series-grid">
+            @for (serie of topRatedSeries(); track serie.id) {
+            <app-serie-card [serie]="serie"></app-serie-card>
+            }
+        </div>
+
+        @if (topRatedHasMore() && !topRatedLoadingMore()) {
+        <div class="load-more-container">
+            <button mat-flat-button color="primary" (click)="loadMoreTopRated()" class="load-more-button">
+                <mat-icon>expand_more</mat-icon>
+                {{ 'sections.load_more' | transloco }}
+            </button>
+        </div>
+        }
+
+        @if (topRatedLoadingMore()) {
+        <div class="load-more-container">
+            <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+            <span>{{ 'sections.loading_more' | transloco }}</span>
+        </div>
+        }
+        }
+    </section>
 </div>

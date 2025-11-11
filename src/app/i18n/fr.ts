@@ -33,6 +33,7 @@ export const frTranslations = {
     },
     "sections": {
         "popular_right_now": "Populaires en ce Moment",
+        "top_rated": "Meilleures Notes",
         "view_all": "Voir Tout",
         "load_more": "Charger plus",
         "loading_more": "Chargement..."
