@@ -8,40 +8,42 @@ export function createSlug(text: string): string {
         .toLowerCase()
         .trim()
         .normalize('NFD') // Decompose accented characters
-        .replace(/[\u0300-\u036f]/g, '') // Remove accent marks
-        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except whitespace and hyphens
-        .replace(/\s+/g, '-') // Replace whitespace with hyphens
-        .replace(/-+/g, '-') // Replace multiple hyphens with single
-        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+        .replaceAll(/[\u0300-\u036f]/g, '') // Remove accent marks
+        .replaceAll(/[^a-z0-9\s-]/g, '') // Remove special characters except whitespace and hyphens
+        .replaceAll(/\s+/g, '-') // Replace whitespace with hyphens
+        .replaceAll(/-+/g, '-') // Replace multiple hyphens with single
+        .replaceAll(/^-+/g, '') // Remove leading hyphens
+        .replaceAll(/-+$/g, ''); // Remove trailing hyphens
 
     // If Latin slug is empty (e.g., Asian characters), use Unicode-safe approach
-    if (!latinSlug) {
-        return text
-            .toLowerCase()
-            .trim()
-            .replace(/[^\p{L}\p{N}\s-]/gu, '') // Keep letters, numbers, whitespace, and hyphens (Unicode-aware)
-            .replace(/\s+/g, '-') // Replace whitespace with hyphens
-            .replace(/-+/g, '-') // Replace multiple hyphens with single
-            .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    if (latinSlug) {
+        return latinSlug;
     }
 
-    return latinSlug;
+    return text
+        .toLowerCase()
+        .trim()
+        .replaceAll(/[^\p{L}\p{N}\s-]/gu, '') // Keep letters, numbers, whitespace, and hyphens (Unicode-aware)
+        .replaceAll(/\s+/g, '-') // Replace whitespace with hyphens
+        .replaceAll(/-+/g, '-') // Replace multiple hyphens with single
+        .replaceAll(/^-+/g, '') // Remove leading hyphens
+        .replaceAll(/-+$/g, ''); // Remove trailing hyphens
 }
 
 export function extractIdFromParam(param: string): number {
-    const id = parseInt(param, 10);
-    return isNaN(id) ? 0 : id;
+    const id = Number.parseInt(param, 10);
+    return Number.isNaN(id) ? 0 : id;
 }
 
 export function sanitizeText(text: string): string {
     return text
-        .replace(/<[^>]*>/g, '') // Remove HTML tags
-        .replace(/\s+/g, ' ') // Normalize whitespace
+        .replaceAll(/<[^>]*>/g, '') // Remove HTML tags
+        .replaceAll(/\s+/g, ' ') // Normalize whitespace
         .trim();
 }
 
 export function getSerieCanonicalUrl(serieId: number, serieName: string, baseUrl?: string): string {
     const slug = createSlug(serieName);
-    const base = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '');
+    const base = baseUrl || (globalThis.window === undefined ? '' : globalThis.window.location.origin);
     return `${base}/serie/${serieId}/${slug}`;
 }

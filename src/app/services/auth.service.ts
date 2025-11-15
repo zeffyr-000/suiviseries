@@ -57,10 +57,15 @@ export class AuthService {
     }
 
     constructor() {
-        this.initializeAuth();
+        // L'initialisation asynchrone est déléguée à Angular via runAppInitializer
+        // Voir app.config.ts pour la configuration de provideAppInitializer
     }
 
-    private async initializeAuth(): Promise<void> {
+    /**
+     * Initialise l'authentification de manière asynchrone.
+     * Cette méthode doit être appelée via provideAppInitializer dans app.config.ts
+     */
+    async initializeAuth(): Promise<void> {
         this._loading.set(true);
 
         try {
@@ -96,8 +101,9 @@ export class AuthService {
                 this.clearAuthData();
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
+            // En cas d'échec de l'appel API, on charge les données depuis le storage local
+            console.warn('Failed to initialize app from API, loading from storage:', error);
             this.loadUserFromStorage();
         }
     }
@@ -121,14 +127,14 @@ export class AuthService {
             'connect.sid'
         ];
 
-        cookiesToClear.forEach(cookieName => {
+        for (const cookieName of cookiesToClear) {
             document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-            if (window.location.hostname.includes('.')) {
-                const parentDomain = window.location.hostname.substring(window.location.hostname.indexOf('.'));
+            document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${globalThis.location.hostname};`;
+            if (globalThis.location.hostname.includes('.')) {
+                const parentDomain = globalThis.location.hostname.substring(globalThis.location.hostname.indexOf('.'));
                 document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
             }
-        });
+        }
     }
 
     private async waitAndConfigureGoogleSignIn(): Promise<void> {
@@ -143,7 +149,7 @@ export class AuthService {
     }
 
     private configureGoogleSignIn(): void {
-        if (!window.google?.accounts?.id) {
+        if (!globalThis.window?.google?.accounts?.id) {
             return;
         }
 
@@ -155,7 +161,7 @@ export class AuthService {
         };
 
         try {
-            window.google.accounts.id.initialize(config);
+            globalThis.window.google.accounts.id.initialize(config);
         } catch { /* empty */ }
     }
 
@@ -173,7 +179,7 @@ export class AuthService {
         };
 
         try {
-            window.google!.accounts.id.renderButton(element, buttonConfig);
+            globalThis.window.google!.accounts.id.renderButton(element, buttonConfig);
         } catch { /* empty */ }
     }
 
@@ -182,7 +188,7 @@ export class AuthService {
             return;
         }
 
-        window.google!.accounts.id.prompt();
+        globalThis.window.google!.accounts.id.prompt();
     }
 
     private handleGoogleResponse(response: CredentialResponse): void {
@@ -242,7 +248,9 @@ export class AuthService {
 
     private parseJwt(token: string): TokenPayload {
         const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/');
+        // charCodeAt is intentionally used here (not codePointAt) because JWT parsing
+        // requires byte values (0-255) for proper URL encoding, not Unicode code points
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
@@ -279,8 +287,8 @@ export class AuthService {
             } catch { /* empty */ }
         }
 
-        if (window.google?.accounts?.id) {
-            window.google.accounts.id.disableAutoSelect();
+        if (globalThis.window?.google?.accounts?.id) {
+            globalThis.window.google.accounts.id.disableAutoSelect();
         }
     }
 

@@ -14,16 +14,12 @@ import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { frTranslations } from './i18n/fr';
 import { AnalyticsRouterService } from './services/analytics-router.service';
+import { AuthService } from './services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoInlineLoader implements TranslocoLoader {
-  getTranslation(lang: string): Observable<Translation> {
-    switch (lang) {
-      case 'fr':
-        return of(frTranslations);
-      default:
-        return of(frTranslations);
-    }
+  getTranslation(): Observable<Translation> {
+    return of(frTranslations);
   }
 }
 
@@ -54,6 +50,10 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => {
       const analyticsRouter = inject(AnalyticsRouterService);
       analyticsRouter.initialize();
+    }),
+    provideAppInitializer(() => {
+      const authService = inject(AuthService);
+      return authService.initializeAuth();
     })
   ]
 };
