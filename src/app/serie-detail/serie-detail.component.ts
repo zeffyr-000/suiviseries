@@ -46,8 +46,8 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SerieDetailComponent implements OnInit {
-    private serieId = signal<number>(0);
-    private serieName = signal<string>('');
+    private readonly serieId = signal<number>(0);
+    private readonly serieName = signal<string>('');
 
     protected serie = signal<Serie | null>(null);
     protected stats = signal<SerieStats | null>(null);
@@ -149,7 +149,7 @@ export class SerieDetailComponent implements OnInit {
                 return this.seriesService.getSerieDetails(this.serieId());
             }),
             switchMap((response) => {
-                if (response && response.success) {
+                if (response?.success) {
                     const { serie, stats } = response;
                     this.serie.set(serie);
 
@@ -157,7 +157,7 @@ export class SerieDetailComponent implements OnInit {
                     return this.seriesService.isSerieReallyFollowed(serie.id)
                         .pipe(
                             map((isReallyFollowed) => ({ serie, stats, isReallyFollowed })),
-                            catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following || false }))
+                            catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following ?? false }))
                         );
                 } else {
                     throw new Error('Serie not found');
@@ -185,14 +185,14 @@ export class SerieDetailComponent implements OnInit {
         this.seriesService.getSerieDetails(this.serieId())
             .pipe(
                 switchMap((response) => {
-                    if (response && response.success) {
+                    if (response?.success) {
                         const { serie, stats } = response;
                         this.serie.set(serie);
 
                         return this.seriesService.isSerieReallyFollowed(serie.id)
                             .pipe(
                                 map((isReallyFollowed) => ({ serie, stats, isReallyFollowed })),
-                                catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following || false }))
+                                catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following ?? false }))
                             );
                     } else {
                         throw new Error('Serie not found');
@@ -219,9 +219,15 @@ export class SerieDetailComponent implements OnInit {
 
     private updateMetadataForSerie(serie: Serie): void {
         const title = serie.name;
-        const description = serie.overview
-            ? `${serie.overview.substring(0, 155)}${serie.overview.length > 155 ? '...' : ''}`
-            : `Découvrez ${serie.name}, une série TV captivante. Suivez les épisodes et gérez votre progression.`;
+
+        let truncatedOverview: string | null = null;
+        if (serie.overview) {
+            truncatedOverview = serie.overview.length > 155
+                ? `${serie.overview.substring(0, 155)}...`
+                : serie.overview;
+        }
+
+        const description = truncatedOverview ?? `Découvrez ${serie.name}, une série TV captivante. Suivez les épisodes et gérez votre progression.`;
 
         const imageUrl = serie.poster_path ? getTmdbImageUrl(serie.poster_path, 'w500') : undefined;
         const canonicalUrl = getSerieCanonicalUrl(serie.id, serie.name, environment.siteUrl);
@@ -589,14 +595,14 @@ export class SerieDetailComponent implements OnInit {
         const allSeasonIds: number[] = [];
         const allEpisodeIds: number[] = [];
 
-        allSeasons.forEach(season => {
+        for (const season of allSeasons) {
             allSeasonIds.push(season.id);
             if (season.episodes) {
-                season.episodes.forEach((episode: { id: number }) => {
+                for (const episode of season.episodes) {
                     allEpisodeIds.push(episode.id);
-                });
+                }
             }
-        });
+        }
 
         const updatedUserData = {
             ...currentSerie.user_data,

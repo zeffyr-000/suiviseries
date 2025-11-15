@@ -134,7 +134,7 @@ export class MetadataService {
     resetToDefaults(): void {
         this.setTitle('');
         this.setDescription('');
-        this.setOpenGraphData('', '', undefined, undefined);
+        this.setOpenGraphData('', '');
         this.setTwitterCard('', '');
     }
 }

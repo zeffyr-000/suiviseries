@@ -98,13 +98,14 @@ body {
   border-radius: var(--border-radius) !important;
 }
 
-/* M3 Button Icon Alignment Fix */
-/*
- * Force vertical alignment for buttons with icons and text
- * Tested with: Angular Material v20.2.12
+/**
+ * Button icon alignment fix for Angular Material v20.2.12
  * 
- * Note: !important declarations are required to override Material's internal 
- * .mdc-button__label styles. This targets Material's internal structure which
+ * IMPORTANT: This fix uses !important to override internal .mdc-button__label styles.
+ * This is a workaround for a known Material Design Components issue where icons
+ * and text don't align properly in buttons by default.
+ * 
+ * WARNING: This relies on internal MDC class structure (.mdc-button__label) which
  * may change in future versions. Review and test after Material upgrades.
  * 
  * Related issue: Angular Material buttons don't properly center icons with text
@@ -114,6 +115,7 @@ body {
 .mat-mdc-unelevated-button,
 .mat-mdc-outlined-button,
 .mat-mdc-flat-button {
+  // Icon alignment fix
   .mdc-button__label {
     display: flex !important;
     align-items: center !important;
@@ -137,6 +139,32 @@ body {
   // For buttons with trailing icons
   mat-icon:last-child {
     margin-left: 0 !important;
+  }
+
+  // M3 Button styles
+  font-weight: 500 !important;
+  letter-spacing: 0.1px !important;
+  border-radius: 20px !important; // M3 full rounding for buttons
+  min-height: 40px !important;
+  
+  // Clear elevation for raised buttons
+  &.mat-mdc-raised-button,
+  &.mat-mdc-unelevated-button {
+    box-shadow: var(--md-sys-elevation-level1) !important;
+    
+    &:hover {
+      box-shadow: var(--md-sys-elevation-level2) !important;
+    }
+    
+    &:active {
+      box-shadow: var(--md-sys-elevation-level1) !important;
+    }
+  }
+  
+  // Outlined buttons have distinct borders
+  &.mat-mdc-outlined-button {
+    border: 1px solid var(--mat-sys-outline) !important;
+    border-width: 1px !important;
   }
 }
 
@@ -180,41 +208,6 @@ body {
     background: color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) !important;
     color: var(--mat-sys-on-surface-variant) !important;
     border-color: color-mix(in srgb, var(--mat-sys-outline) 30%, transparent) !important;
-  }
-}
-
-/* M3 Buttons - Clear interactive elements */
-/* Buttons are for primary actions with clear elevation and color */
-.mat-mdc-button,
-.mat-mdc-raised-button,
-.mat-mdc-unelevated-button,
-.mat-mdc-outlined-button,
-.mat-mdc-flat-button {
-  font-weight: 500 !important;
-  letter-spacing: 0.1px !important;
-  
-  // Buttons have less rounding than chips
-  border-radius: 20px !important; // M3 full rounding for buttons
-  min-height: 40px !important;
-  
-  // Clear elevation for raised buttons
-  &.mat-mdc-raised-button,
-  &.mat-mdc-unelevated-button {
-    box-shadow: var(--md-sys-elevation-level1) !important;
-    
-    &:hover {
-      box-shadow: var(--md-sys-elevation-level2) !important;
-    }
-    
-    &:active {
-      box-shadow: var(--md-sys-elevation-level1) !important;
-    }
-  }
-  
-  // Outlined buttons have distinct borders
-  &.mat-mdc-outlined-button {
-    border: 1px solid var(--mat-sys-outline) !important;
-    border-width: 1px !important;
   }
 }
 
