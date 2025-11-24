@@ -325,7 +325,7 @@ Authorization: Bearer {token}
 }
 ```
 
-### Ajouter une série à la bibliothèque
+### Add Series to Library
 
 ```http
 POST /user/library
@@ -337,11 +337,11 @@ Content-Type: application/json
   "status": "watching",
   "rating": null,
   "isFavorite": false,
-  "notes": "Recommandée par un ami"
+  "notes": "Recommended by a friend"
 }
 ```
 
-### Mettre à jour le statut d'une série
+### Update Series Status
 
 ```http
 PATCH /user/library/{serieId}
@@ -353,11 +353,11 @@ Content-Type: application/json
   "rating": 9,
   "isFavorite": true,
   "completedAt": "2024-01-18T22:30:00Z",
-  "notes": "Absolument brillant !"
+  "notes": "Absolutely brilliant!"
 }
 ```
 
-### Supprimer une série de la bibliothèque
+### Remove Series from Library
 
 ```http
 DELETE /user/library/{serieId}
@@ -387,7 +387,7 @@ POST /user/library/{serieId}/episodes/{episodeId}/unwatched
 Authorization: Bearer {token}
 ```
 
-### Marquer une saison entière comme vue
+### Mark Entire Season as Watched
 
 ```http
 POST /user/library/{serieId}/seasons/{seasonNumber}/watched
@@ -399,14 +399,14 @@ Content-Type: application/json
 }
 ```
 
-### Marquer une saison entière comme non-vue
+### Mark Entire Season as Unwatched
 
 ```http
 POST /user/library/{serieId}/seasons/{seasonNumber}/unwatched
 Authorization: Bearer {token}
 ```
 
-### Marquer une série entière comme vue
+### Mark Entire Series as Watched
 
 ```http
 POST /user/library/{serieId}/watched
@@ -419,14 +419,14 @@ Content-Type: application/json
 }
 ```
 
-### Marquer une série entière comme non-vue
+### Mark Entire Series as Unwatched
 
 ```http
 POST /user/library/{serieId}/unwatched
 Authorization: Bearer {token}
 ```
 
-### Historique de visionnage
+### Watch History
 
 ```http
 GET /user/history?limit={limit}&offset={offset}&fromDate={fromDate}&toDate={toDate}
@@ -466,7 +466,7 @@ Authorization: Bearer {token}
 
 ## 📈 Statistiques
 
-### Statistiques générales
+### General Statistics
 
 ```http
 GET /user/stats
@@ -513,7 +513,7 @@ Authorization: Bearer {token}
 }
 ```
 
-### Statistiques détaillées par période
+### Detailed Statistics by Period
 
 ```http
 GET /user/stats/timeline?period={period}&limit={limit}
@@ -527,7 +527,7 @@ Authorization: Bearer {token}
 
 ## 🔍 Recommandations
 
-### Obtenir des recommandations
+### Get Recommendations
 
 ```http
 GET /recommendations?type={type}&limit={limit}
@@ -564,69 +564,31 @@ Authorization: Bearer {token}
 }
 ```
 
-## 🔔 Notifications
+## 🚨 Error Codes
 
-### Liste des notifications
-
-```http
-GET /notifications?unread={unread}&limit={limit}&offset={offset}
-Authorization: Bearer {token}
-```
-
-**Response:**
-
-```json
-{
-  "notifications": [
-    {
-      "id": "notif_123",
-      "type": "new_episode",
-      "title": "Nouvel épisode disponible",
-      "message": "L'épisode S6E13 de Better Call Saul est maintenant disponible",
-      "data": {
-        "serieId": "serie_better_call_saul",
-        "episodeId": "episode_s6e13"
-      },
-      "isRead": false,
-      "createdAt": "2024-01-20T09:00:00Z"
-    }
-  ],
-  "unreadCount": 5
-}
-```
-
-### Marquer comme lu
-
-```http
-PATCH /notifications/{notificationId}/read
-Authorization: Bearer {token}
-```
-
-## 🚨 Codes d'erreur
-
-### Erreurs d'authentification
+### Authentication Errors
 
 - `401` - Token invalide ou expiré
 - `403` - Accès interdit
 - `419` - Token CSRF invalide
 
-### Erreurs de validation
+### Validation Errors
 
 - `400` - Données invalides
 - `422` - Erreur de validation des champs
 
-### Erreurs de ressources
+### Resource Errors
 
 - `404` - Ressource non trouvée
 - `409` - Conflit (ex: série déjà dans la bibliothèque)
 
-### Erreurs serveur
+### Server Errors
 
 - `500` - Erreur interne du serveur
 - `502` - Service indisponible
 - `503` - Maintenance en cours
 
-### Format des erreurs
+### Error Format
 
 ```json
 {

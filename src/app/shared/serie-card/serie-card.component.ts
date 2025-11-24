@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { TranslocoModule } from '@jsverse/transloco';
 
 import { MatCardModule } from '@angular/material/card';
@@ -13,9 +13,7 @@ import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip
 
 @Component({
     selector: 'app-serie-card',
-    standalone: true,
     imports: [
-        CommonModule,
         RouterModule,
         TranslocoModule,
         MatCardModule,
@@ -24,16 +22,17 @@ import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip
         SerieStatusChipComponent
     ],
     templateUrl: './serie-card.component.html',
-    styleUrl: './serie-card.component.scss'
+    styleUrl: './serie-card.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SerieCardComponent {
-    @Input() serie!: Serie;
+    readonly serie = input.required<Serie>();
 
     protected getTmdbImageUrl = getTmdbImageUrl;
     protected formatRating = formatRating;
 
-    protected get serieRoute(): string[] {
-        const slug = createSlug(this.serie.name || this.serie.original_name || '');
-        return ['/serie', this.serie.id.toString(), slug];
-    }
+    protected readonly serieRoute = computed(() => {
+        const slug = createSlug(this.serie().name || this.serie().original_name || '');
+        return ['/serie', this.serie().id.toString(), slug];
+    });
 }

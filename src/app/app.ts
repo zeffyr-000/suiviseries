@@ -1,6 +1,6 @@
-import { Component, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject } from '@angular/core';
 import { RouterOutlet, Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { TranslocoModule } from '@jsverse/transloco';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,7 +20,6 @@ import { LoginComponent } from './login/login.component';
   imports: [
     RouterOutlet,
     RouterModule,
-    CommonModule,
     TranslocoModule,
     MatToolbarModule,
     MatButtonModule,
@@ -32,7 +31,8 @@ import { LoginComponent } from './login/login.component';
     MatDialogModule
   ],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class App {
   protected readonly menuOpen = signal(false);
@@ -41,9 +41,7 @@ export class App {
   private readonly router: Router = inject(Router);
   private readonly dialog: MatDialog = inject(MatDialog);
 
-  protected get currentUser() {
-    return this.authService.currentUser;
-  }
+  protected readonly currentUser = computed(() => this.authService.currentUser());
 
   toggleMenu() {
     this.menuOpen.set(!this.menuOpen());

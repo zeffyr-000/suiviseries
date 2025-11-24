@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -21,9 +21,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-home',
-    standalone: true,
     imports: [
-        CommonModule,
         TranslocoModule,
         RouterModule,
         MatButtonModule,

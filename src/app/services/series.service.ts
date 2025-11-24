@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Serie, SearchResponse, SerieDetailResponse, UserSeriesResponse } from '../models/serie.model';
 import { environment } from '../../environments/environment';
+import { NotificationService } from './notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,11 +13,13 @@ export class SeriesService {
 
     private readonly apiUrl = environment.apiUrl;
     private readonly http = inject(HttpClient);
+    private readonly notificationService = inject(NotificationService);
 
     getAllSeries(): Observable<Serie[]> {
         return this.http.get<SearchResponse>(`${this.apiUrl}/series`).pipe(
             map(response => response.success && response.results ? response.results : []),
             catchError(() => {
+                this.notificationService.error('notifications.errors.load_series');
                 return of([]);
             })
         );
@@ -26,6 +29,7 @@ export class SeriesService {
         return this.http.get<SearchResponse>(`${this.apiUrl}/series/popular?limit=${limit}&page=${page}`).pipe(
             map(response => response.success && response.results ? response.results : []),
             catchError(() => {
+                this.notificationService.error('notifications.errors.load_popular');
                 return of([]);
             })
         );
@@ -35,6 +39,7 @@ export class SeriesService {
         return this.http.get<SearchResponse>(`${this.apiUrl}/series/top-rated?limit=${limit}&page=${page}`).pipe(
             map(response => response.success && response.results ? response.results : []),
             catchError(() => {
+                this.notificationService.error('notifications.errors.load_top_rated');
                 return of([]);
             })
         );
@@ -44,6 +49,7 @@ export class SeriesService {
         return this.http.get<SerieDetailResponse>(`${this.apiUrl}/series/${id}`).pipe(
             map(response => response.success && response.serie ? response.serie : undefined),
             catchError(() => {
+                this.notificationService.error('notifications.errors.load_serie');
                 return of(undefined);
             })
         );
@@ -52,6 +58,7 @@ export class SeriesService {
     getSerieDetails(id: number): Observable<SerieDetailResponse | null> {
         return this.http.get<SerieDetailResponse>(`${this.apiUrl}/series/${id}`).pipe(
             catchError(() => {
+                this.notificationService.error('notifications.errors.load_details');
                 return of(null);
             })
         );
@@ -62,6 +69,7 @@ export class SeriesService {
         return this.http.get<SearchResponse>(`${this.apiUrl}/series/search?q=${encodeURIComponent(query)}`).pipe(
             map(response => response.success && response.results ? response.results : []),
             catchError(() => {
+                this.notificationService.error('notifications.errors.search');
                 return of([]);
             })
         );
@@ -71,6 +79,7 @@ export class SeriesService {
         return this.http.get<UserSeriesResponse>(`${this.apiUrl}/users/me/series`).pipe(
             map(response => response.success && response.results ? response.results.map(item => item.serie) : []),
             catchError(() => {
+                this.notificationService.error('notifications.errors.load_user_series');
                 return of([]);
             })
         );
@@ -90,7 +99,11 @@ export class SeriesService {
                 }
                 return response.success;
             }),
+            tap(success => {
+                if (success) this.notificationService.success('notifications.success.serie_added');
+            }),
             catchError((error) => {
+                this.notificationService.error('notifications.errors.add_serie');
                 return throwError(() => error);
             })
         );
@@ -104,7 +117,11 @@ export class SeriesService {
                 }
                 return response.success;
             }),
+            tap(success => {
+                if (success) this.notificationService.success('notifications.success.serie_removed');
+            }),
             catchError((error) => {
+                this.notificationService.error('notifications.errors.remove_serie');
                 return throwError(() => error);
             })
         );
@@ -114,6 +131,7 @@ export class SeriesService {
         return this.http.post<{ success: boolean }>(`${this.apiUrl}/users/me/series/${serieId}/watched`, {}).pipe(
             map(response => response.success),
             catchError(() => {
+                this.notificationService.error('notifications.errors.mark_serie');
                 return of(false);
             })
         );
@@ -123,6 +141,7 @@ export class SeriesService {
         return this.http.post<{ success: boolean }>(`${this.apiUrl}/users/me/series/${serieId}/unwatched`, {}).pipe(
             map(response => response.success),
             catchError(() => {
+                this.notificationService.error('notifications.errors.mark_serie');
                 return of(false);
             })
         );
@@ -132,6 +151,7 @@ export class SeriesService {
         return this.http.post<{ success: boolean }>(`${this.apiUrl}/users/me/series/${serieId}/seasons/${seasonId}/watched`, {}).pipe(
             map(response => response.success),
             catchError(() => {
+                this.notificationService.error('notifications.errors.mark_season');
                 return of(false);
             })
         );
@@ -141,6 +161,7 @@ export class SeriesService {
         return this.http.post<{ success: boolean }>(`${this.apiUrl}/users/me/series/${serieId}/seasons/${seasonId}/unwatched`, {}).pipe(
             map(response => response.success),
             catchError(() => {
+                this.notificationService.error('notifications.errors.mark_season');
                 return of(false);
             })
         );
@@ -150,6 +171,7 @@ export class SeriesService {
         return this.http.post<{ success: boolean }>(`${this.apiUrl}/users/me/series/${serieId}/episodes/${episodeId}/watched`, {}).pipe(
             map(response => response.success),
             catchError(() => {
+                this.notificationService.error('notifications.errors.mark_episode');
                 return of(false);
             })
         );
@@ -159,6 +181,7 @@ export class SeriesService {
         return this.http.post<{ success: boolean }>(`${this.apiUrl}/users/me/series/${serieId}/episodes/${episodeId}/unwatched`, {}).pipe(
             map(response => response.success),
             catchError(() => {
+                this.notificationService.error('notifications.errors.mark_episode');
                 return of(false);
             })
         );

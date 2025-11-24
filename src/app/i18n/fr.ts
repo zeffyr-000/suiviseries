@@ -15,6 +15,9 @@ export const frTranslations = {
         "my_series": {
             "title": "Mes Séries",
             "description": "Gérez votre collection personnelle de séries TV. Suivez votre progression et ne ratez jamais un épisode."
+        },
+        "serie_detail": {
+            "default_description": "Découvrez une série TV captivante. Suivez les épisodes et gérez votre progression."
         }
     },
     "navigation": {
@@ -144,5 +147,32 @@ export const frTranslations = {
         "empty_message": "Vous ne suivez aucune série pour le moment. Découvrez notre catalogue pour commencer !",
         "start_exploring": "Explorer les séries",
         "total_series": "{count, plural, =0 {Aucune série suivie} one {# série suivie} other {# séries suivies}}"
+    },
+    "notifications": {
+        "errors": {
+            "load_series": "Erreur lors du chargement des séries",
+            "load_popular": "Erreur lors du chargement des séries populaires",
+            "load_top_rated": "Erreur lors du chargement des séries les mieux notées",
+            "load_serie": "Erreur lors du chargement de la série",
+            "load_details": "Erreur lors du chargement des détails",
+            "search": "Erreur lors de la recherche",
+            "load_user_series": "Erreur lors du chargement de vos séries",
+            "add_serie": "Erreur lors de l'ajout de la série",
+            "remove_serie": "Erreur lors du retrait de la série",
+            "mark_serie": "Erreur lors du marquage",
+            "mark_season": "Erreur lors du marquage de la saison",
+            "mark_episode": "Erreur lors du marquage de l'épisode",
+            "serie_not_found": "Série introuvable",
+            "loading_serie": "Erreur lors du chargement de la série"
+        },
+        "success": {
+            "serie_added": "Série ajoutée à votre liste",
+            "serie_removed": "Série retirée de votre liste"
+        },
+        "close": "Fermer la notification"
+    },
+    "common": {
+        "user": "Utilisateur",
+        "app_user_menu": "Menu utilisateur"
     }
 } as const;
