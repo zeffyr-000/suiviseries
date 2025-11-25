@@ -2,15 +2,15 @@
 
 ## 🏗️ Overview
 
-Suiviseries is a modern Angular 20 application built with current best practices and scalable modular architecture.
+Suiviseries is a modern Angular 21 application built with current best practices and scalable modular architecture.
 
 ## 📱 Technology Stack
 
 ### Frontend
 
-- **Angular 20** - Main framework with standalone components
-- **TypeScript 5+** - Strict typing and modern features
-- **Angular Material 20** - UI components with Material Design 3
+- **Angular 21** - Main framework with standalone components
+- **TypeScript 5.9** - Strict typing and modern features
+- **Angular Material 21** - UI components with Material Design 3
 - **RxJS 7** - Reactive programming and state management
 - **Signals** - Angular's new reactivity API
 - **Transloco** - Internationalization with MessageFormat

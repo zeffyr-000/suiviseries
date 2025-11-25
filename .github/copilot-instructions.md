@@ -19,6 +19,9 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Keep comments concise and inline when possible
 - Use `console.error()` in error handlers, NOT empty functions `() => {}`
 - Follow ESLint rule `@typescript-eslint/no-empty-function`
+- **Write all comments in English**, never in French or other languages
+- Only comment when necessary; prefer self-documenting code
+- Avoid redundant comments that simply restate what the code does
 
 ### Material Design Integration
 

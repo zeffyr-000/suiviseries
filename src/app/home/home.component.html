@@ -5,7 +5,8 @@
             <h1 class="display-large">{{ 'hero.title' | transloco }}</h1>
             <p class="body-large">{{ 'hero.subtitle' | transloco }}</p>
             <div class="hero-actions">
-                <button mat-flat-button color="primary" class="hero-button" routerLink="/search">
+                <button mat-flat-button color="primary" class="hero-button" routerLink="/search"
+                    [attr.aria-label]="'hero.browse_series' | transloco">
                     <mat-icon>search</mat-icon>
                     {{ 'hero.browse_series' | transloco }}
                 </button>
@@ -16,7 +17,7 @@
     <section class="series-section">
         <div class="section-header">
             <h2 class="headline-medium">
-                <mat-icon>local_fire_department</mat-icon>
+                <mat-icon aria-hidden="true">local_fire_department</mat-icon>
                 {{ 'sections.popular_right_now' | transloco }}
             </h2>
         </div>
@@ -61,7 +62,7 @@
     <section class="series-section">
         <div class="section-header">
             <h2 class="headline-medium">
-                <mat-icon>star</mat-icon>
+                <mat-icon aria-hidden="true">star</mat-icon>
                 {{ 'sections.top_rated' | transloco }}
             </h2>
         </div>

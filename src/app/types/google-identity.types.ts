@@ -65,26 +65,3 @@ export interface RevocationResponse {
     successful: boolean;
     error?: string;
 }
-
-export const isGoogleLibraryLoaded = (): boolean => {
-    return typeof window !== 'undefined' && Boolean(window.google?.accounts?.id);
-};
-
-export const waitForGoogleLibrary = (): Promise<void> => {
-    return new Promise((resolve) => {
-        if (isGoogleLibraryLoaded()) {
-            resolve();
-            return;
-        }
-
-        const checkLoaded = () => {
-            if (isGoogleLibraryLoaded()) {
-                resolve();
-            } else {
-                setTimeout(checkLoaded, 100);
-            }
-        };
-
-        checkLoaded();
-    });
-};

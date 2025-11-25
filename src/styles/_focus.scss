@@ -1,0 +1,90 @@
+// M3 Focus States - WCAG 2.1 AAA Compliant
+// These styles ensure keyboard navigation is highly visible
+// Requirements: 2px minimum perimeter, 3:1 contrast ratio, high contrast mode support
+
+// Global fallback for all interactive elements
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+// Specific focus styles for common interactive elements
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+// Links focus (default)
+a:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+// Button focus (additional ring for emphasis)
+.mat-mdc-button:focus-visible,
+.mat-mdc-raised-button:focus-visible,
+.mat-mdc-unelevated-button:focus-visible,
+.mat-mdc-outlined-button:focus-visible,
+.mat-mdc-flat-button:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+
+// Icon button focus
+.mat-mdc-icon-button:focus-visible {
+  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+// Card/Link focus (enhanced visibility for clickable cards)
+.series-card-link:focus-visible,
+a.card-link:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+// Form field focus
+.mat-mdc-form-field:focus-within {
+  .mat-mdc-form-field-focus-overlay {
+    opacity: 0.12;
+  }
+}
+
+// Navigation items focus
+mat-list-item:focus-visible {
+  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
+}
+
+// Remove default focus for mouse users (only in browsers supporting :focus-visible)
+// Fallback: older browsers will keep default focus styling
+@supports selector(:focus-visible) {
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  *:focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+}
+
+// Reduced motion support
+// Note: Using 1ms (not 0s) ensures animationend events fire reliably across browsers
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

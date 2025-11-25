@@ -83,16 +83,17 @@
     
     .hero-button {
       min-width: 200px;
-      height: 56px;
-      font-size: 1rem;
+      height: 40px;  // M3 standard button height
+      font-size: 0.875rem;  // M3 label-large
       font-weight: 500;
-      border-radius: 28px; // M3 full rounding for primary actions
+      border-radius: 20px; // M3 full rounding (adapted to 40px height)
+      letter-spacing: 0.1px;
       
       mat-icon {
         margin-right: var(--spacing-xs);
-        font-size: 1.3rem;
-        width: 1.3rem;
-        height: 1.3rem;
+        font-size: 1.125rem;
+        width: 1.125rem;
+        height: 1.125rem;
       }
     }
   }
@@ -308,8 +309,8 @@
   
   .load-more-button {
     min-width: 200px;
-    height: 48px;
-    border-radius: 24px; // M3 full rounding
+    height: 40px;  // M3 standard button height
+    border-radius: 20px; // M3 full rounding
     font-size: 0.875rem; // M3 label-large
     font-weight: 500;
     letter-spacing: 0.1px;

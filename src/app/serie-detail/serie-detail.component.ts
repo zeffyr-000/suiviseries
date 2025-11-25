@@ -21,6 +21,7 @@ import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
 import { Serie, Season, SerieStats, getTmdbImageUrl, formatRating } from '../models/serie.model';
 import { SerieStatusChipComponent } from '../shared/serie-status-chip/serie-status-chip.component';
+import { ButtonLoadingDirective } from '../shared/directives/button-loading.directive';
 import { environment } from '../../environments/environment';
 import { getSerieCanonicalUrl } from '../utils/url.utils';
 
@@ -39,7 +40,8 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
         MatExpansionModule,
         MatTabsModule,
         MatTooltipModule,
-        SerieStatusChipComponent
+        SerieStatusChipComponent,
+        ButtonLoadingDirective
     ],
     templateUrl: './serie-detail.component.html',
     styleUrl: './serie-detail.component.scss',

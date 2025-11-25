@@ -79,9 +79,9 @@
   }
 
   .search-button {
-    height: 56px; // Match mat-form-field height
+    height: 40px;  // M3 standard button height
     min-width: 140px;
-    border-radius: 28px; // M3 full rounding
+    border-radius: 20px; // M3 full rounding
     transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
     
     // Fix text size issue

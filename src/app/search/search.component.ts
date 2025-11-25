@@ -18,6 +18,7 @@ import { SeriesService } from '../services/series.service';
 import { MetadataService } from '../services/metadata.service';
 import { Serie } from '../models/serie.model';
 import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
+import { ButtonLoadingDirective } from '../shared/directives/button-loading.directive';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -32,7 +33,8 @@ import { environment } from '../../environments/environment';
         MatIconModule,
         MatProgressSpinnerModule,
         MatChipsModule,
-        SerieCardComponent
+        SerieCardComponent,
+        ButtonLoadingDirective
     ],
     templateUrl: './search.component.html',
     styleUrl: './search.component.scss',

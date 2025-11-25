@@ -1,7 +1,8 @@
 <mat-card class="series-card">
     <a [routerLink]="serieRoute()" class="series-card-link">
         <div class="poster-container">
-            <img [src]="getTmdbImageUrl(serie().poster_path, 'w500')" [alt]="serie().name" class="series-poster">
+            <img [src]="getTmdbImageUrl(serie().poster_path, 'w500')" [alt]="serie().name" class="series-poster"
+                loading="lazy">
             <div class="rating-badge">
                 <mat-icon>star</mat-icon>
                 {{ formatRating(serie().vote_average) }}
