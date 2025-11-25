@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, effect, Signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, effect, Signal, inject, viewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { TranslocoModule } from '@jsverse/transloco';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -12,9 +12,7 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'app-login-modal',
-    standalone: true,
     imports: [
-        CommonModule,
         TranslocoModule,
         MatButtonModule,
         MatIconModule,
@@ -22,10 +20,11 @@ import { AuthService } from '../services/auth.service';
         MatDialogModule
     ],
     templateUrl: './login.component.html',
-    styleUrl: './login.component.scss'
+    styleUrl: './login.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-    @ViewChild('googleButton', { static: false }) googleButton!: ElementRef<HTMLDivElement>;
+    readonly googleButton = viewChild<ElementRef<HTMLDivElement>>('googleButton');
 
     loading: Signal<boolean>;
 
@@ -49,15 +48,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.authService.initGoogleSignIn().catch(error => {
-            console.error('Failed to initialize Google Sign-In:', error);
-        });
+        this.authService.initGoogleSignIn().catch((err) => console.error('Failed to initialize Google Sign-In:', err));
     }
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            if (this.googleButton?.nativeElement) {
-                this.authService.renderGoogleButton(this.googleButton.nativeElement);
+            const buttonEl = this.googleButton();
+            if (buttonEl?.nativeElement) {
+                this.authService.renderGoogleButton(buttonEl.nativeElement);
             }
         }, 100);
     }

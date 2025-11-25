@@ -1,4 +1,4 @@
-import { Injectable, inject, RendererFactory2, DOCUMENT } from '@angular/core';
+import { Injectable, inject, RendererFactory2, DOCUMENT, computed } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { Router } from '@angular/router';
@@ -16,31 +16,26 @@ export class MetadataService {
     private readonly renderer = inject(RendererFactory2).createRenderer(null, null);
     private readonly transloco = inject(TranslocoService);
 
-    private get defaultTitle(): string {
-        return this.transloco.translate('app.title');
-    }
-
-    private get defaultDescription(): string {
-        return this.transloco.translate('app.description');
-    }
+    private readonly defaultTitle = computed(() => this.transloco.translate('app.title'));
+    private readonly defaultDescription = computed(() => this.transloco.translate('app.description'));
 
     setTitle(title: string): void {
-        const fullTitle = title ? `${title} - ${this.defaultTitle}` : this.defaultTitle;
+        const fullTitle = title ? `${title} - ${this.defaultTitle()}` : this.defaultTitle();
         this.titleService.setTitle(fullTitle);
     }
 
     setDescription(description: string): void {
         this.metaService.updateTag({
             name: 'description',
-            content: description || this.defaultDescription
+            content: description || this.defaultDescription()
         });
     }
 
     setOpenGraphData(title: string, description: string, image?: string, url?: string): void {
-        const fullTitle = title ? `${title} - ${this.defaultTitle}` : this.defaultTitle;
+        const fullTitle = title ? `${title} - ${this.defaultTitle()}` : this.defaultTitle();
 
         this.metaService.updateTag({ property: 'og:title', content: fullTitle });
-        this.metaService.updateTag({ property: 'og:description', content: description || this.defaultDescription });
+        this.metaService.updateTag({ property: 'og:description', content: description || this.defaultDescription() });
         this.metaService.updateTag({ property: 'og:type', content: 'website' });
 
         if (url) {
@@ -53,11 +48,11 @@ export class MetadataService {
     }
 
     setTwitterCard(title: string, description: string, image?: string): void {
-        const fullTitle = title ? `${title} - ${this.defaultTitle}` : this.defaultTitle;
+        const fullTitle = title ? `${title} - ${this.defaultTitle()}` : this.defaultTitle();
 
         this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
         this.metaService.updateTag({ name: 'twitter:title', content: fullTitle });
-        this.metaService.updateTag({ name: 'twitter:description', content: description || this.defaultDescription });
+        this.metaService.updateTag({ name: 'twitter:description', content: description || this.defaultDescription() });
 
         if (image) {
             this.metaService.updateTag({ name: 'twitter:image', content: image });
@@ -117,18 +112,7 @@ export class MetadataService {
             const currentTitle = this.titleService.getTitle();
 
             this.googleAnalytics.pageView(currentPath, currentTitle);
-        } catch (error) {
-            // Fail silently - analytics should never break the application
-            if (error instanceof Error) {
-                console.warn('Google Analytics tracking failed:', {
-                    message: error.message,
-                    name: error.name,
-                    path: this.router.url
-                });
-            } else {
-                console.warn('Google Analytics tracking failed with non-Error:', error);
-            }
-        }
+        } catch { /* empty */ }
     }
 
     resetToDefaults(): void {

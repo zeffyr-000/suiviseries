@@ -1,6 +1,7 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, provideAppInitializer, isDevMode, Injectable, inject } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, provideAppInitializer, isDevMode, Injectable, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideTransloco, TranslocoLoader, Translation } from '@jsverse/transloco';
 import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat';
 import { Observable, of } from 'rxjs';
@@ -15,6 +16,10 @@ import { routes } from './app.routes';
 import { frTranslations } from './i18n/fr';
 import { AnalyticsRouterService } from './services/analytics-router.service';
 import { AuthService } from './services/auth.service';
+import { UpdateService } from './services/update.service';
+import { KeepAliveService } from './services/keep-alive.service';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoInlineLoader implements TranslocoLoader {
@@ -26,9 +31,10 @@ export class TranslocoInlineLoader implements TranslocoLoader {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimationsAsync(),
     provideTransloco({
       config: {
         availableLangs: ['fr'],
@@ -54,6 +60,18 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => {
       const authService = inject(AuthService);
       return authService.initializeAuth();
+    }),
+    provideAppInitializer(() => {
+      const updateService = inject(UpdateService);
+      updateService.checkForUpdates();
+    }),
+    provideAppInitializer(() => {
+      const keepAliveService = inject(KeepAliveService);
+      keepAliveService.startKeepAlive();
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
     })
   ]
 };

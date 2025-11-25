@@ -1,10 +1,10 @@
 import { Component, OnInit, computed, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,16 +19,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
-import { Serie, SerieStats, getTmdbImageUrl, formatRating } from '../models/serie.model';
+import { Serie, Season, SerieStats, getTmdbImageUrl, formatRating } from '../models/serie.model';
 import { SerieStatusChipComponent } from '../shared/serie-status-chip/serie-status-chip.component';
 import { environment } from '../../environments/environment';
 import { getSerieCanonicalUrl } from '../utils/url.utils';
 
 @Component({
     selector: 'app-serie-detail',
-    standalone: true,
     imports: [
-        CommonModule,
+        DatePipe,
+        DecimalPipe,
         TranslocoModule,
         MatButtonModule,
         MatIconModule,
@@ -135,6 +135,7 @@ export class SerieDetailComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly seriesService = inject(SeriesService);
     private readonly authService = inject(AuthService);
+    private readonly transloco = inject(TranslocoService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly metadataService = inject(MetadataService);
 
@@ -160,7 +161,7 @@ export class SerieDetailComponent implements OnInit {
                             catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following ?? false }))
                         );
                 } else {
-                    throw new Error('Serie not found');
+                    throw new Error(this.transloco.translate('notifications.errors.serie_not_found'));
                 }
             }),
             takeUntilDestroyed(this.destroyRef)
@@ -172,45 +173,10 @@ export class SerieDetailComponent implements OnInit {
                 this.loading.set(false);
             },
             error: (err) => {
-                this.error.set(err?.message || 'Error loading serie');
+                this.error.set(err?.message || this.transloco.translate('notifications.errors.loading_serie'));
                 this.loading.set(false);
             }
         });
-    }
-
-    private loadSerieDetails() {
-        this.loading.set(true);
-        this.error.set(null);
-
-        this.seriesService.getSerieDetails(this.serieId())
-            .pipe(
-                switchMap((response) => {
-                    if (response?.success) {
-                        const { serie, stats } = response;
-                        this.serie.set(serie);
-
-                        return this.seriesService.isSerieReallyFollowed(serie.id)
-                            .pipe(
-                                map((isReallyFollowed) => ({ serie, stats, isReallyFollowed })),
-                                catchError(() => of({ serie, stats, isReallyFollowed: serie.user_data?.is_following ?? false }))
-                            );
-                    } else {
-                        throw new Error('Serie not found');
-                    }
-                }),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe({
-                next: ({ serie, stats, isReallyFollowed }) => {
-                    const serieStats = this.buildSerieStats(serie, stats, isReallyFollowed);
-                    this.stats.set(serieStats);
-                    this.loading.set(false);
-                },
-                error: (err) => {
-                    this.error.set(err?.message || 'Error loading serie');
-                    this.loading.set(false);
-                }
-            });
     }
 
     protected goBack() {
@@ -220,14 +186,14 @@ export class SerieDetailComponent implements OnInit {
     private updateMetadataForSerie(serie: Serie): void {
         const title = serie.name;
 
-        let truncatedOverview: string | null = null;
+        let description: string;
         if (serie.overview) {
-            truncatedOverview = serie.overview.length > 155
+            description = serie.overview.length > 155
                 ? `${serie.overview.substring(0, 155)}...`
                 : serie.overview;
+        } else {
+            description = this.transloco.translate('seo.serie_detail.default_description');
         }
-
-        const description = truncatedOverview ?? `Découvrez ${serie.name}, une série TV captivante. Suivez les épisodes et gérez votre progression.`;
 
         const imageUrl = serie.poster_path ? getTmdbImageUrl(serie.poster_path, 'w500') : undefined;
         const canonicalUrl = getSerieCanonicalUrl(serie.id, serie.name, environment.siteUrl);
@@ -410,9 +376,9 @@ export class SerieDetailComponent implements OnInit {
         const isCurrentlyWatched = this.isEpisodeWatched(episodeId);
 
         const currentSeasons = this.seasons();
-        let episodeSeason: { id: number, episodes?: { id: number }[] } | null = null;
+        let episodeSeason: Season | null = null;
         for (const season of currentSeasons) {
-            if (season.episodes?.some((ep: { id: number }) => ep.id === episodeId)) {
+            if (season.episodes?.some(ep => ep.id === episodeId)) {
                 episodeSeason = season;
                 break;
             }
@@ -493,7 +459,7 @@ export class SerieDetailComponent implements OnInit {
         }
 
         const currentWatchedEpisodes = [...this.watchedEpisodes()];
-        const seasonEpisodeIds = season.episodes.map((ep: { id: number }) => ep.id);
+        const seasonEpisodeIds = season.episodes.map(ep => ep.id);
 
         let updatedWatchedEpisodes: number[];
 
@@ -513,7 +479,7 @@ export class SerieDetailComponent implements OnInit {
             ...currentSerie,
             user_data: updatedUserData
         });
-    } private checkAndUpdateSeasonStatus(season: { id: number, episodes?: { id: number }[] }) {
+    } private checkAndUpdateSeasonStatus(season: Season) {
         if (!season.episodes || season.episodes.length === 0) {
             return;
         }

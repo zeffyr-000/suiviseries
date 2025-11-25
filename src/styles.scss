@@ -383,3 +383,28 @@ html, body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* MatSnackBar custom styles for notification types */
+.snackbar-error {
+  --mdc-snackbar-container-color: #d32f2f !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mat-snack-bar-button-color: white !important;
+}
+
+.snackbar-success {
+  --mdc-snackbar-container-color: #388e3c !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mat-snack-bar-button-color: white !important;
+}
+
+.snackbar-warning {
+  --mdc-snackbar-container-color: #f57c00 !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mat-snack-bar-button-color: white !important;
+}
+
+.snackbar-info {
+  --mdc-snackbar-container-color: #1976d2 !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mat-snack-bar-button-color: white !important;
+}

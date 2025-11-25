@@ -20,7 +20,7 @@
           background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
         }
         
-        // État actif (route courante)
+        // Active state (current route)
         &[aria-current="page"],
         &.mat-mdc-list-item-active,
         &.mdc-list-item--activated {

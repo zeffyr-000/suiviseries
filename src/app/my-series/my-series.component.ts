@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
@@ -17,9 +17,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-my-series',
-    standalone: true,
     imports: [
-        CommonModule,
         TranslocoModule,
         MatButtonModule,
         MatIconModule,

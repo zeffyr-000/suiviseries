@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -22,9 +22,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-search',
-    standalone: true,
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         RouterModule,
         TranslocoModule,

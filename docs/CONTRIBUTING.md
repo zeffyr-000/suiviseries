@@ -481,7 +481,7 @@ npm install nouvelle-lib
 # Dépendances de développement
 npm install -D nouvelle-dev-lib
 
-# Vérification des vulnérabilités
+# Vulnerability check
 npm audit
 npm audit fix
 ```
@@ -507,61 +507,61 @@ npm run test -- --watch=false
 npm run lint
 npm run build
 
-# Vérification des commits
+# Commit verification
 npm run commitlint
 ```
 
 ### 2. Convention de commits
 
 ```bash
-# Format : type(scope): description
+# Format: type(scope): description
 
-# Types acceptés :
-feat(auth): ajout de l'authentification Google
-fix(ui): correction du bug d'affichage des séries
-docs(readme): mise à jour du guide d'installation
-style(lint): correction des erreurs ESLint
-refactor(service): simplification du code des séries
+# Accepted types:
+feat(auth): add Google authentication
+fix(ui): fix series display bug
+docs(readme): update installation guide
+style(lint): fix ESLint errors
+refactor(service): simplify series service code
 test(unit): add tests for SerieService
-chore(deps): mise à jour d'Angular vers la v20
+chore(deps): update Angular to v20
 ```
 
-### 3. Template de PR
+### 3. PR Template
 
 ```markdown
-## 🎯 Objectif
+## 🎯 Objective
 
 Clear description of what this PR does
 
-## 🔧 Changements
+## 🔧 Changes
 
-- [ ] Fonctionnalité A ajoutée
-- [ ] Bug B corrigé
-- [ ] Tests ajoutés
+- [ ] Feature A added
+- [ ] Bug B fixed
+- [ ] Tests added
 
 ## 🧪 Tests
 
-- [ ] Tests unitaires passent
-- [ ] Tests E2E passent
-- [ ] Tests manuels effectués
+- [ ] Unit tests pass
+- [ ] E2E tests pass
+- [ ] Manual tests performed
 
 ## 📱 Screenshots
 
-(Si changements UI)
+(If UI changes)
 
-## 🔗 Issue liée
+## 🔗 Related Issue
 
 Fixes #123
 ```
 
-### 4. Checklist de review
+### 4. Review Checklist
 
-- [ ] Code respecte les standards du projet
-- [ ] Tests ajoutés/mis à jour
-- [ ] Documentation mise à jour si nécessaire
-- [ ] Performance impact évalué
-- [ ] Pas de breaking changes non documentées
-- [ ] Sécurité vérifiée
+- [ ] Code follows project standards
+- [ ] Tests added/updated
+- [ ] Documentation updated if necessary
+- [ ] Performance impact evaluated
+- [ ] No undocumented breaking changes
+- [ ] Security verified
 
 ## 🐛 Debugging et outils
 
@@ -649,43 +649,43 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 ```
 
-## 📈 Métriques de qualité du projet
+## 📈 Project Quality Metrics
 
-### Standards de code atteints
+### Code Standards Achieved
 
-- **Coverage des tests** : > 85% (ligne, branches, fonctions)
+- **Test Coverage**: > 85% (line, branch, function)
 - **ESLint**: 0 errors, 0 warnings with strict Angular config
-- **Bundle size** : < 250 KB initial, < 50 KB par lazy chunk
-- **Lighthouse Score** : Performance 98/100, A11y 100/100
+- **Bundle size**: < 250 KB initial, < 50 KB per lazy chunk
+- **Lighthouse Score**: Performance 98/100, A11y 100/100
 - **TypeScript**: Complete strict mode with `exactOptionalPropertyTypes`
 
-### Architecture patterns démontrés
+### Demonstrated Architecture Patterns
 
 - **Reactive Programming**: RxJS with Signals for optimal state
-- **Hierarchical State Management** : Synchronisation série → saison → épisode
-- **Performance Optimization** : Fonts locales, lazy loading intelligent
-- **Security Best Practices** : CSP stricte, validation d'entrées, tokens sécurisés
-- **Accessibility A11y** : Support complet lecteurs d'écran, navigation clavier
+- **Hierarchical State Management**: Series → season → episode synchronization
+- **Performance Optimization**: Local fonts, intelligent lazy loading
+- **Security Best Practices**: Strict CSP, input validation, secure tokens
+- **Accessibility A11y**: Full screen reader support, keyboard navigation
 - **Internationalization**: Transloco with MessageFormat for pluralization
 
-### Innovations techniques mises en œuvre
+### Implemented Technical Innovations
 
-#### 1. Système de synchronisation hiérarchique
+#### 1. Hierarchical Synchronization System
 
 ```typescript
-// Synchronisation automatique série ↔ saisons ↔ épisodes
+// Automatic synchronization series ↔ seasons ↔ episodes
 private updateAllEpisodesInSeason(seasonNumber: number, watched: boolean): void {
   this.serie.update(serie => {
     const season = serie.seasons.find(s => s.number === seasonNumber);
     if (!season) return serie;
 
-    // Mise à jour de tous les épisodes
+    // Update all episodes
     season.episodes.forEach(episode => episode.watched = watched);
 
-    // Recalcul automatique du statut de la saison
+    // Automatic recalculation of season status
     season.watched = season.episodes.every(e => e.watched);
 
-    // Propagation vers le niveau série si nécessaire
+    // Propagate to series level if necessary
     this.checkAndUpdateSerieStatus();
 
     return { ...serie };
@@ -693,7 +693,7 @@ private updateAllEpisodesInSeason(seasonNumber: number, watched: boolean): void 
 }
 ```
 
-#### 2. Cache intelligent avec TTL
+#### 2. Intelligent Cache with TTL
 
 ```typescript
 // API call optimization with automatic caching

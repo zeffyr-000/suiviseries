@@ -1,5 +1,5 @@
-import { Component, Input, inject, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input, inject, computed } from '@angular/core';
+
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 import { MatChipsModule } from '@angular/material/chips';
@@ -9,36 +9,21 @@ import { SerieStatus } from '../../models/serie.model';
 
 @Component({
     selector: 'app-serie-status-chip',
-    standalone: true,
     imports: [
-        CommonModule,
         TranslocoModule,
         MatChipsModule,
         MatIconModule
     ],
     templateUrl: './serie-status-chip.component.html',
-    styleUrl: './serie-status-chip.component.scss'
+    styleUrl: './serie-status-chip.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SerieStatusChipComponent {
-    @Input() set status(value: SerieStatus) {
-        this.statusSignal.set(value);
-    }
-    get status(): SerieStatus {
-        return this.statusSignal();
-    }
-
-    @Input() set size(value: 'small' | 'medium' | 'large') {
-        this.sizeSignal.set(value);
-    }
-    get size(): 'small' | 'medium' | 'large' {
-        return this.sizeSignal();
-    }
-
-    @Input() showIcon = true;
+    readonly status = input<SerieStatus>(SerieStatus.PLANNED);
+    readonly size = input<'small' | 'medium' | 'large'>('small');
+    readonly showIcon = input(true);
 
     private readonly translocoService = inject(TranslocoService);
-    private readonly statusSignal = signal<SerieStatus>(SerieStatus.PLANNED);
-    private readonly sizeSignal = signal<'small' | 'medium' | 'large'>('small');
 
     // Computed properties for optimal performance
     protected readonly statusClass = computed(() => {
@@ -49,7 +34,7 @@ export class SerieStatusChipComponent {
             [SerieStatus.IN_PRODUCTION]: 'status-production',
             [SerieStatus.PLANNED]: 'status-planned'
         };
-        return `${statusMap[this.statusSignal()] || 'status-default'} size-${this.sizeSignal()}`;
+        return `${statusMap[this.status()] || 'status-default'} size-${this.size()}`;
     });
 
     protected readonly statusIcon = computed(() => {
@@ -60,7 +45,7 @@ export class SerieStatusChipComponent {
             [SerieStatus.IN_PRODUCTION]: 'work',
             [SerieStatus.PLANNED]: 'schedule'
         };
-        return iconMap[this.statusSignal()] || 'info';
+        return iconMap[this.status()] || 'info';
     });
 
     protected readonly translatedStatus = computed(() => {
@@ -71,6 +56,6 @@ export class SerieStatusChipComponent {
             [SerieStatus.IN_PRODUCTION]: 'status.in_production',
             [SerieStatus.PLANNED]: 'status.planned'
         };
-        return this.translocoService.translate(statusMap[this.statusSignal()]);
+        return this.translocoService.translate(statusMap[this.status()]);
     });
 }

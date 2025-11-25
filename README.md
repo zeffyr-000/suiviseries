@@ -47,7 +47,9 @@ Track your favorite TV series, discover new content, and never miss an episode. 
 
 - 📖 **[Installation Guide](docs/SETUP.md)** - Complete project setup
 - 🎨 **[Design System](DESIGN_SYSTEM.md)** - Material Design 3 tokens and usage guide
-- �️ **[Technical Architecture](docs/ARCHITECTURE.md)** - Code patterns and structure
+- 🧪 **[Testing Guide](docs/TESTING.md)** - Vitest best practices and common pitfalls
+- 🎨 **[Material Design Guide](docs/MATERIAL-DESIGN.md)** - Material components integration
+- 🏗️ **[Technical Architecture](docs/ARCHITECTURE.md)** - Code patterns and structure
 - 🚀 **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment options
 - 🤝 **[Contributing Guide](docs/CONTRIBUTING.md)** - Development standards and workflow
 - 📡 **[API Documentation](docs/API.md)** - Backend API specifications
@@ -215,7 +217,7 @@ npm run build:prod          # Production build with optimizations
 ```bash
 npm run lint                # ESLint with strict rules
 npm run lint:fix           # Auto-fix ESLint issues
-npm test                   # Unit tests with Karma
+npm test                   # Unit tests with Vitest
 npm run test:coverage      # Tests with coverage report
 ```
 
@@ -232,17 +234,90 @@ The production build automatically applies:
 
 ## 🧪 Testing
 
-```bash
-ng test
+### Testing Framework: Vitest
+
+This project uses **Vitest** (NOT Jasmine/Karma) for unit testing. This is a critical distinction that affects all test code.
+
+#### Vitest API Reference
+
+```typescript
+// Mocking
+import { vi } from 'vitest';
+
+// Create mocks
+const mockFn = vi.fn();
+const spy = vi.spyOn(object, 'method');
+
+// Mock manipulation
+mockFn.mockReturnValue(42);
+mockFn.mockResolvedValue(Promise.resolve(data));
+mockFn.mockImplementation(() => {
+  /* custom logic */
+});
+mockFn.mockClear();
+
+// Access mock calls
+mockFn.mock.calls[0]; // NOT .calls.allArgs() (Jasmine)
+
+// Timers
+vi.useFakeTimers();
+vi.advanceTimersByTime(1000); // NOT tick(1000) (Jasmine)
+vi.restoreAllMocks();
 ```
 
-## Running end-to-end tests
+#### Common Migration Pitfalls
 
-For end-to-end (e2e) testing, run:
+**❌ INCORRECT (Jasmine API)**
+
+```typescript
+const spy = jasmine.createSpyObj('ServiceName', ['method']);
+tick(1000);
+spy.calls.allArgs();
+```
+
+**✅ CORRECT (Vitest API)**
+
+```typescript
+const spy = vi.fn();
+vi.advanceTimersByTime(1000);
+spy.mock.calls;
+```
+
+#### Testing Best Practices
+
+1. **Transloco Testing**
+
+   - Use shared `getTranslocoTestingModule()` helper
+   - Assert against translation **keys**, NOT translated strings
+   - Example: `expect(text).toBe('notifications.success.serie_added')`
+
+2. **Material Design Components**
+
+   - Import Material modules in test configuration
+   - Use `provideAnimationsAsync()` for components with animations
+   - Mock Material services (MatSnackBar, MatDialog) with `vi.spyOn()`
+
+3. **Async Testing**
+
+   - NO `fakeAsync()` or `tick()` - use `vi.useFakeTimers()` + `vi.advanceTimersByTime()`
+   - Clean up with `vi.restoreAllMocks()` in `afterEach()`
+
+4. **Type Safety**
+   - Avoid `any` - use `unknown` with type assertions
+   - Example: `(spy as unknown as ReturnType<typeof vi.fn>).mock.calls`
+
+### Run Tests
 
 ```bash
-ng e2e
+npm test                    # Run all unit tests
+npm run test:coverage      # Run tests with coverage report
 ```
+
+### Coverage Goals
+
+- **Overall Target**: 80% coverage
+- **Services**: 70%+ (critical business logic)
+- **Components**: Template testing optional (focus on logic)
 
 ## 🌐 Internationalization & Pluralization
 

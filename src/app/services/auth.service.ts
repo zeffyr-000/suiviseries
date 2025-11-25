@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { throwError, firstValueFrom, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { TranslocoService } from '@jsverse/transloco';
 import { environment } from '../../environments/environment';
 import { User, AuthResponse, AuthRequest, TokenPayload, InitResponse } from '../models/user.model';
 import {
@@ -17,6 +18,7 @@ import {
 })
 export class AuthService {
     private readonly http = inject(HttpClient);
+    private readonly transloco = inject(TranslocoService);
     private readonly apiUrl = environment.apiUrl;
     private readonly storageKey = 'suiviseries_auth_token';
     private readonly userStorageKey = 'suiviseries_user_data';
@@ -36,7 +38,7 @@ export class AuthService {
 
     public readonly userDisplayName = computed(() => {
         const user = this._currentUser();
-        return user?.display_name || 'Utilisateur';
+        return user?.display_name || this.transloco.translate('common.user');
     });
 
     public readonly userPhotoUrl = computed(() => {
@@ -56,15 +58,6 @@ export class AuthService {
         localStorage.removeItem(key);
     }
 
-    constructor() {
-        // L'initialisation asynchrone est déléguée à Angular via runAppInitializer
-        // Voir app.config.ts pour la configuration de provideAppInitializer
-    }
-
-    /**
-     * Initialise l'authentification de manière asynchrone.
-     * Cette méthode doit être appelée via provideAppInitializer dans app.config.ts
-     */
     async initializeAuth(): Promise<void> {
         this._loading.set(true);
 
@@ -78,6 +71,13 @@ export class AuthService {
     }
 
     private async initializeApp(): Promise<void> {
+        try {
+            await this.refreshSession();
+        } catch {
+            this.loadUserFromStorage();
+        }
+    }
+    async refreshSession(): Promise<void> {
         const token = this.getStorageItem(this.storageKey);
         const headers: Record<string, string> = {};
 
@@ -85,26 +85,19 @@ export class AuthService {
             headers['Authorization'] = `Bearer ${token}`;
         }
 
-        try {
-            const response = await firstValueFrom(
-                this.http.get<InitResponse>(`${this.apiUrl}/init`, { headers }).pipe(
-                    catchError(error => {
-                        throw error;
-                    })
-                )
-            );
+        const response = await firstValueFrom(
+            this.http.get<InitResponse>(`${this.apiUrl}/init`, { headers }).pipe(
+                catchError(error => {
+                    throw error;
+                })
+            )
+        );
 
-            if (response.authenticated && response.user) {
-                this._currentUser.set(response.user);
-                this.updateStoredUserData(response.user);
-            } else {
-                this.clearAuthData();
-            }
-
-        } catch (error) {
-            // En cas d'échec de l'appel API, on charge les données depuis le storage local
-            console.warn('Failed to initialize app from API, loading from storage:', error);
-            this.loadUserFromStorage();
+        if (response.authenticated && response.user) {
+            this._currentUser.set(response.user);
+            this.updateStoredUserData(response.user);
+        } else {
+            this.clearAuthData();
         }
     }
 
