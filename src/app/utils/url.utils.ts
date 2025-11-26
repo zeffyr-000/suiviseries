@@ -35,9 +35,17 @@ export function extractIdFromParam(param: string): number {
     return Number.isNaN(id) ? 0 : id;
 }
 
-export function sanitizeText(text: string): string {
-    return text
-        .replaceAll(/<[^>]*>/g, '') // Remove HTML tags
+// Strip HTML tags from text for display purposes only
+// WARNING: This is NOT a security sanitizer - does not protect against XSS attacks
+// Only use with trusted API data (TMDB) - never with user-generated content
+// For security-critical sanitization, use Angular's DOMSanitizer or DOMPurify
+export function stripHtmlTags(text: string): string {
+    // Limit input length to prevent ReDoS on extremely long strings
+    const maxLength = 10000;
+    const safeText = text.length > maxLength ? text.substring(0, maxLength) : text;
+
+    return safeText
+        .replaceAll(/<[^>]{0,100}>/g, '') // Remove HTML tags with max 100 chars (prevents ReDoS)
         .replaceAll(/\s+/g, ' ') // Normalize whitespace
         .trim();
 }

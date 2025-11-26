@@ -1,11 +1,13 @@
 # 📺 Suiviseries
 
-> Modern and performant Angular 20 application for personalized TV series tracking
+> Modern and performant Angular 21 application for personalized TV series tracking
 
-[![Angular](https://img.shields.io/badge/Angular-20.3-red.svg)](https://angular.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org)
-[![Material](https://img.shields.io/badge/Material-20.0-purple.svg)](https://material.angular.io)
+[![Angular](https://img.shields.io/badge/Angular-21.0-red.svg)](https://angular.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org)
+[![Material](https://img.shields.io/badge/Material-21.0-purple.svg)](https://material.angular.io)
+[![Vitest](https://img.shields.io/badge/Vitest-4.0-yellow.svg)](https://vitest.dev)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=zeffyr-000_suiviseries&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=zeffyr-000_suiviseries)
 
 ## 🌐 Live Application
 
@@ -113,10 +115,10 @@ The `AuthService` handles:
 
 ### Core Stack
 
-- **Angular 20** with standalone components and modern control flow (`@if`, `@for`)
-- **Angular Material 20** with Material Design 3
-- **TypeScript 5+** with strict ESLint configuration
-- **RxJS 7** for reactive programming
+- **Angular 21** with standalone components and modern control flow (`@if`, `@for`)
+- **Angular Material 21** with Material Design 3
+- **TypeScript 5.9** with strict ESLint configuration
+- **RxJS 7.8** for reactive programming
 - **Signals** for reactive state management
 
 ### Project Structure
@@ -179,7 +181,7 @@ src/app/
 npm install
 
 # Start development server with API proxy
-npm start
+ng serve
 ```
 
 The application launches with automatic proxy configuration to the backend API. Routes are protected by authentication guards.
@@ -207,18 +209,18 @@ The `auth.guard.ts` guard protects sensitive routes:
 ### Development
 
 ```bash
-npm start                    # Start dev server with proxy (port 4200)
-npm run build               # Development build
-npm run build:prod          # Production build with optimizations
+ng serve                    # Start dev server with proxy (port 4200)
+ng build                    # Development build
+ng build --configuration production  # Production build with optimizations
 ```
 
 ### Code Quality
 
 ```bash
-npm run lint                # ESLint with strict rules
-npm run lint:fix           # Auto-fix ESLint issues
-npm test                   # Unit tests with Vitest
-npm run test:coverage      # Tests with coverage report
+ng lint                     # ESLint with strict rules
+ng lint --fix               # Auto-fix ESLint issues
+ng test                     # Unit tests with Vitest
+ng test --coverage          # Tests with coverage report
 ```
 
 ### Production Build Optimizations
@@ -309,8 +311,8 @@ spy.mock.calls;
 ### Run Tests
 
 ```bash
-npm test                    # Run all unit tests
-npm run test:coverage      # Run tests with coverage report
+ng test                     # Run all unit tests
+ng test --coverage          # Run tests with coverage report
 ```
 
 ### Coverage Goals
@@ -350,17 +352,17 @@ The application uses **Transloco** with **MessageFormat** for plural management 
 Execute tests with coverage:
 
 ```bash
-npm run test:coverage
+ng test --coverage
 ```
 
 ## 🏗️ Technical Highlights
 
-### Modern Angular 20 Architecture
+### Modern Angular 21 Architecture
 
 - **Standalone Components**: Full migration from NgModule pattern
 - **Modern Control Flow**: `@if`, `@for`, `@switch` syntax
 - **Signals API**: Reactive state management
-- **Strict TypeScript**: Enhanced type safety and performance
+- **Strict TypeScript 5.9**: Enhanced type safety and performance
 
 ### Advanced Series Tracking
 
@@ -378,4 +380,6 @@ npm run test:coverage
 
 ---
 
-**Modern Angular 20 application built with TypeScript 5+, Material Design 3, and current best practices.**
+**Modern Angular 21 application built with TypeScript 5.9, Material Design 3, Vitest 4.0, and current best practices.**
+
+📊 **[View SonarCloud Quality Report](https://sonarcloud.io/summary/new_code?id=zeffyr-000_suiviseries)**

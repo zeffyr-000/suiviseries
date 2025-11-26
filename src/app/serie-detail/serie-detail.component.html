@@ -11,7 +11,8 @@
         <mat-icon color="warn">error</mat-icon>
         <h2 class="headline-small">{{ 'serie_detail.error_title' | transloco }}</h2>
         <p class="body-medium">{{ error() }}</p>
-        <button mat-stroked-button color="primary" (click)="goBack()">
+        <button mat-stroked-button color="primary" (click)="goBack()"
+            [attr.aria-label]="'serie_detail.go_back' | transloco">
             <mat-icon>arrow_back</mat-icon>
             {{ 'serie_detail.go_back' | transloco }}
         </button>
@@ -30,7 +31,7 @@
 
                     <div class="serie-hero-info">
                         <div class="poster-container">
-                            <img [src]="posterUrl()" [alt]="serie()!.name" class="serie-poster">
+                            <img [src]="posterUrl()" [alt]="serie()!.name" class="serie-poster" loading="eager">
                             <div class="rating-badge">
                                 <mat-icon>star</mat-icon>
                                 {{ formatRating(serie()!.vote_average) }}
@@ -66,29 +67,17 @@
                             @if (isAuthenticated()) {
                             <div class="action-buttons">
                                 <button mat-raised-button [color]="isFollowing() ? 'accent' : 'primary'"
-                                    [disabled]="followLoading()" (click)="onToggleFollow()">
-                                    @if (followLoading()) {
-                                    <mat-spinner diameter="16"></mat-spinner>
-                                    } @else {
-                                    <ng-container>
-                                        <mat-icon>{{ isFollowing() ? 'favorite' : 'favorite_border' }}</mat-icon>
-                                        {{ isFollowing() ? ('series.following' | transloco) : ('series.follow' |
-                                        transloco) }}
-                                    </ng-container>
-                                    }
+                                    [appButtonLoading]="followLoading()" (click)="onToggleFollow()">
+                                    <mat-icon>{{ isFollowing() ? 'favorite' : 'favorite_border' }}</mat-icon>
+                                    {{ isFollowing() ? ('series.following' | transloco) : ('series.follow' |
+                                    transloco) }}
                                 </button>
                                 <button mat-raised-button [color]="isWatched() ? 'accent' : 'primary'"
-                                    [disabled]="watchedLoading()" (click)="onToggleWatched()">
-                                    @if (watchedLoading()) {
-                                    <mat-spinner diameter="16"></mat-spinner>
-                                    } @else {
-                                    <ng-container>
-                                        <mat-icon>{{ isWatched() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-                                        {{ isWatched() ? ('series.mark_unwatched' | transloco) : ('series.mark_watched'
-                                        | transloco)
-                                        }}
-                                    </ng-container>
-                                    }
+                                    [appButtonLoading]="watchedLoading()" (click)="onToggleWatched()">
+                                    <mat-icon>{{ isWatched() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+                                    {{ isWatched() ? ('series.mark_unwatched' | transloco) : ('series.mark_watched'
+                                    | transloco)
+                                    }}
                                 </button>
                             </div>
                             }
@@ -172,7 +161,7 @@
                             <div class="season-content">
                                 <div class="season-header">
                                     <img [src]="season.poster_path ? 'https://image.tmdb.org/t/p/w300' + season.poster_path : '/assets/placeholder-poster.jpg'"
-                                        [alt]="season.name" class="season-poster">
+                                        [alt]="season.name" class="season-poster" loading="lazy">
                                     <div class="season-info">
                                         <div class="season-header-content">
                                             <h3>{{ season.name }}</h3>
@@ -234,7 +223,7 @@
                                                     <div class="episode-info">
                                                         @if (episode.still_path) {
                                                         <img [src]="'https://image.tmdb.org/t/p/w500' + episode.still_path"
-                                                            [alt]="episode.name" class="episode-still">
+                                                            [alt]="episode.name" class="episode-still" loading="lazy">
                                                         }
                                                         <p class="episode-overview">{{ episode.overview ||
                                                             ('serie_detail.no_episode_description' | transloco) }}</p>

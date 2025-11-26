@@ -8,10 +8,9 @@ import { User, AuthResponse, AuthRequest, TokenPayload, InitResponse } from '../
 import {
     GoogleIdConfiguration,
     CredentialResponse,
-    GsiButtonConfiguration,
-    waitForGoogleLibrary,
-    isGoogleLibraryLoaded
+    GsiButtonConfiguration
 } from '../types/google-identity.types';
+import { waitForGoogleLibrary, isGoogleLibraryLoaded } from '../utils/google-identity.utils';
 
 @Injectable({
     providedIn: 'root'

@@ -29,7 +29,7 @@ This guide helps you contribute effectively to the Suiviseries project.
 
 ## 🚀 Implemented Technical Architecture
 
-### Modern Angular 20 Technology Stack
+### Modern Angular 21 Technology Stack
 
 ```json
 // package.json - Key project dependencies
@@ -113,7 +113,7 @@ npm run lint -- --fix
 
 ## 📝 Code Standards
 
-### Angular 20 Architecture
+### Angular 21 Architecture
 
 #### 1. Standalone Components
 
@@ -172,7 +172,7 @@ private seriesSubject = new BehaviorSubject<Serie[]>([]);
 #### 3. Modern Control Flow
 
 ```html
-<!-- ✅ CORRECT - New Angular 20 syntax -->
+<!-- ✅ CORRECT - New Angular 21 syntax -->
 @if (isLoading) {
 <app-spinner />
 } @else if (series.length > 0) { @for (serie of series; track serie.id) {
@@ -313,7 +313,7 @@ describe('SerieDetailComponent - Hierarchical Watch Management', () => {
 
 ## 🎨 Standards UI/UX
 
-### Angular Material 20 with Material Design 3
+### Angular Material 21 with Material Design 3
 
 ```typescript
 // ✅ Theme configuration
@@ -741,4 +741,4 @@ export class SeriesLibraryService {
 
 ---
 
-**This architecture demonstrates advanced mastery of Angular 20** and **modern web development patterns**, with a **focus on performance**, **maintainability**, and **user experience**.
+**This architecture demonstrates advanced mastery of Angular 21** and **modern web development patterns**, with a **focus on performance**, **maintainability**, and **user experience**.

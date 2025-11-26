@@ -19,13 +19,9 @@
             }
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="onSearch()" [disabled]="!searchControl.valid || loading()"
-            class="search-button">
-            @if (loading()) {
-            <mat-icon>refresh</mat-icon>
-            } @else {
+        <button mat-raised-button color="primary" (click)="onSearch()" [appButtonLoading]="loading()"
+            [disabled]="!searchControl.valid || loading()" class="search-button">
             <mat-icon>search</mat-icon>
-            }
             {{ 'search.search_button' | transloco }}
         </button>
     </div>
