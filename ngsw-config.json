@@ -31,8 +31,8 @@
       "urls": ["https://image.tmdb.org/**"],
       "cacheConfig": {
         "strategy": "performance",
-        "maxSize": 100,
-        "maxAge": "7d",
+        "maxSize": 200,
+        "maxAge": "30d",
         "timeout": "5s"
       }
     },
