@@ -55,3 +55,18 @@ export function getSerieCanonicalUrl(serieId: number, serieName: string, baseUrl
     const base = baseUrl || (globalThis.window === undefined ? '' : globalThis.window.location.origin);
     return `${base}/serie/${serieId}/${slug}`;
 }
+export function formatRelativeDate(dateString: string, translateFn: (key: string, params?: Record<string, number>) => string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return translateFn('notification.date.just_now');
+    if (diffMins < 60) return translateFn('notification.date.minutes_ago', { count: diffMins });
+    if (diffHours < 24) return translateFn('notification.date.hours_ago', { count: diffHours });
+    if (diffDays < 7) return translateFn('notification.date.days_ago', { count: diffDays });
+
+    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+}

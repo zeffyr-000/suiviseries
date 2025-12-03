@@ -1,6 +1,23 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { isGoogleLibraryLoaded, waitForGoogleLibrary } from './google-identity.utils';
 
+const createGoogleMock = () => ({
+    google: {
+        accounts: {
+            id: {
+                initialize: vi.fn(),
+                prompt: vi.fn(),
+                renderButton: vi.fn(),
+                disableAutoSelect: vi.fn(),
+                storeCredential: vi.fn(),
+                cancel: vi.fn(),
+                onGoogleLibraryLoad: vi.fn(),
+                revoke: vi.fn()
+            }
+        }
+    }
+});
+
 describe('google-identity.utils', () => {
     let originalWindow: typeof globalThis.window;
 
@@ -9,9 +26,7 @@ describe('google-identity.utils', () => {
     });
 
     afterEach(() => {
-        if (originalWindow) {
-            (globalThis as { window: typeof globalThis.window }).window = originalWindow;
-        }
+        (globalThis as { window: typeof globalThis.window }).window = originalWindow;
         vi.restoreAllMocks();
     });
 
@@ -43,52 +58,28 @@ describe('google-identity.utils', () => {
         });
 
         it('should return true when google.accounts.id is defined', () => {
-            (globalThis as { window: unknown }).window = {
-                google: {
-                    accounts: {
-                        id: {
-                            initialize: vi.fn(),
-                            prompt: vi.fn(),
-                            renderButton: vi.fn(),
-                            disableAutoSelect: vi.fn(),
-                            storeCredential: vi.fn(),
-                            cancel: vi.fn(),
-                            onGoogleLibraryLoad: vi.fn(),
-                            revoke: vi.fn()
-                        }
-                    }
-                }
-            } as unknown as Window;
+            (globalThis as { window: unknown }).window = createGoogleMock() as unknown as Window;
             expect(isGoogleLibraryLoaded()).toBe(true);
         });
     });
 
     describe('waitForGoogleLibrary', () => {
         it('should resolve immediately when library is already loaded', async () => {
-            (globalThis as { window: unknown }).window = {
-                google: {
-                    accounts: {
-                        id: {
-                            initialize: vi.fn(),
-                            prompt: vi.fn(),
-                            renderButton: vi.fn(),
-                            disableAutoSelect: vi.fn(),
-                            storeCredential: vi.fn(),
-                            cancel: vi.fn(),
-                            onGoogleLibraryLoad: vi.fn(),
-                            revoke: vi.fn()
-                        }
-                    }
-                }
-            } as unknown as Window;
+            (globalThis as { window: unknown }).window = createGoogleMock() as unknown as Window;
 
             await expect(waitForGoogleLibrary(1000)).resolves.toBeUndefined();
         });
 
         it('should reject after timeout when library does not load', async () => {
+            vi.useFakeTimers();
             (globalThis as { window: unknown }).window = {} as unknown as Window;
 
-            await expect(waitForGoogleLibrary(100)).rejects.toThrow('Google Identity Services library failed to load');
+            const promise = waitForGoogleLibrary(100);
+
+            await vi.advanceTimersByTimeAsync(150);
+
+            await expect(promise).rejects.toThrow('Google Identity Services library failed to load');
+            vi.useRealTimers();
         });
 
         it('should resolve when library loads during wait', async () => {
@@ -97,26 +88,9 @@ describe('google-identity.utils', () => {
 
             const promise = waitForGoogleLibrary(500);
 
-            // Set up library to load after 50ms
             await vi.advanceTimersByTimeAsync(50);
-            (globalThis as { window: unknown }).window = {
-                google: {
-                    accounts: {
-                        id: {
-                            initialize: vi.fn(),
-                            prompt: vi.fn(),
-                            renderButton: vi.fn(),
-                            disableAutoSelect: vi.fn(),
-                            storeCredential: vi.fn(),
-                            cancel: vi.fn(),
-                            onGoogleLibraryLoad: vi.fn(),
-                            revoke: vi.fn()
-                        }
-                    }
-                }
-            } as unknown as Window;
+            (globalThis as { window: unknown }).window = createGoogleMock() as unknown as Window;
 
-            // Advance timers to trigger the next setInterval check
             await vi.advanceTimersByTimeAsync(100);
 
             await expect(promise).resolves.toBeUndefined();

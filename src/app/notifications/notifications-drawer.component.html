@@ -1,0 +1,56 @@
+<button mat-icon-button (click)="toggleDrawer()" [matBadge]="userNotificationService.unreadCount()"
+    [matBadgeHidden]="userNotificationService.unreadCount() === 0" matBadgeColor="warn" matBadgeSize="medium"
+    [attr.aria-label]="'notification.open' | transloco">
+    <mat-icon>notifications</mat-icon>
+</button>
+
+@if (drawerOpen()) {
+<button type="button" class="drawer-backdrop" (click)="closeDrawer()" (keydown.escape)="closeDrawer()"
+    (keydown.enter)="closeDrawer()" (keydown.space)="closeDrawer(); $event.preventDefault()"
+    [attr.aria-label]="'notification.close_drawer' | transloco"></button>
+<div class="notifications-drawer">
+    <div class="drawer-header">
+        <h2>{{ 'notification.title' | transloco }}</h2>
+        <button mat-icon-button (click)="closeDrawer()" [attr.aria-label]="'notification.close' | transloco">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="drawer-content">
+        @if (userNotificationService.notifications().length === 0) {
+        <div class="no-notifications">
+            <mat-icon>notifications_none</mat-icon>
+            <p>{{ 'notification.no_notifications' | transloco }}</p>
+        </div>
+        } @else {
+        @for (notification of userNotificationService.notifications(); track notification.user_notification_id) {
+        <button type="button" class="notification-item" [class.unread]="notification.status === 'unread'"
+            [class.new-season]="notification.type === 'new_season'"
+            [class.new-episodes]="notification.type === 'new_episodes'"
+            [class.status-update]="notification.type === 'status_canceled' || notification.type === 'status_ended'"
+            (click)="onNotificationClick(notification)">
+            <div class="notification-content">
+                @if (notification.serie_poster) {
+                <img [src]="userNotificationService.getTmdbPosterUrl(notification.serie_poster, 'w200')"
+                    [alt]="notification.serie_name" class="notification-poster" />
+                } @else {
+                <div class="notification-icon-fallback">
+                    <mat-icon>tv</mat-icon>
+                </div>
+                }
+                <div class="notification-text">
+                    <div class="notification-title">{{ notification.serie_name }}</div>
+                    <div class="notification-message">{{ getNotificationMessage(notification) }}</div>
+                    <div class="notification-date">{{ getFormattedDate(notification.created_at) }}</div>
+                </div>
+            </div>
+            <button mat-icon-button type="button" class="delete-button" (click)="onDeleteClick($event, notification)"
+                [matTooltip]="'notification.delete' | transloco">
+                <mat-icon>close</mat-icon>
+            </button>
+        </button>
+        }
+        }
+    </div>
+</div>
+}

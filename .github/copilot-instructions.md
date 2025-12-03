@@ -30,6 +30,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Leverage Material's built-in accessibility features
 - Use Material typography and theming system
 - Import `provideAnimationsAsync()` in app config for Material components
+- **MatMenu has a hardcoded max-width of 280px** - use `MatSidenav` with `position="end"` for wider panels (e.g., notifications)
+- For side panels with rich content: use `mat-sidenav-container` with `mode="over"` and sync state with `(openedChange)` event
 
 ### Transloco i18n
 
@@ -37,6 +39,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Example: `expect(...).toBe('notifications.success.serie_added')` NOT `'Série ajoutée'`
 - Create reusable `getTranslocoTestingModule()` helper for tests
 - Never inline `TranslocoTestingModule.forRoot()` in individual test files
+- All user-facing text MUST use Transloco translation keys
+- Never hardcode display strings in templates or components
 
 ## TypeScript Best Practices
 
@@ -67,11 +71,11 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `input()` and `output()` functions instead of decorators
 - Use `computed()` for derived state
 - Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- Prefer inline templates for small components
+- **ALWAYS use separate files for templates and styles** - never inline `template` or `styles` in `@Component` decorator
+- Use `templateUrl: './component.html'` and `styleUrl: './component.scss'` (relative paths)
 - Prefer Reactive forms instead of Template-driven ones
 - Do NOT use `ngClass`, use `class` bindings instead
 - Do NOT use `ngStyle`, use `style` bindings instead
-- When using external templates/styles, use paths relative to the component TS file.
 
 ## State Management
 
@@ -79,6 +83,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `computed()` for derived state
 - Keep state transformations pure and predictable
 - Do NOT use `mutate` on signals, use `update` or `set` instead
+- When using Material components with two-way binding (`[opened]`), sync with `(openedChange)` event to avoid stale state
 
 ## Templates
 
@@ -87,6 +92,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use the async pipe to handle observables
 - Do not assume globals like (`new Date()`) are available.
 - Do not write arrow functions in templates (they are not supported).
+- When integrating multiple `mat-sidenav` in a container, use unique template references (`#sidenav`, `#notificationsSidenav`)
 
 ## Services
 

@@ -4,6 +4,7 @@ import { ApplicationRef } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { Subject } from 'rxjs';
 import { UpdateService } from './update.service';
+import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 
 describe('UpdateService', () => {
     let service: UpdateService;
@@ -33,6 +34,7 @@ describe('UpdateService', () => {
         originalLocation = globalThis.location;
 
         TestBed.configureTestingModule({
+            imports: [getTranslocoTestingModule()],
             providers: [
                 UpdateService,
                 { provide: SwUpdate, useValue: mockSwUpdate },
@@ -100,7 +102,7 @@ describe('UpdateService', () => {
                 latestVersion: { hash: 'v2' }
             } as VersionReadyEvent);
 
-            expect(mockConfirm).toHaveBeenCalledWith('New version available. Reload now?');
+            expect(mockConfirm).toHaveBeenCalledWith('Une nouvelle version est disponible. Recharger maintenant ?');
         });
 
         it('should reload page when user confirms update', () => {

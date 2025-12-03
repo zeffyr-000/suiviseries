@@ -1,0 +1,35 @@
+@if (shouldShowPrompt()) {
+<div class="push-prompt">
+    <div class="push-prompt-content">
+        @if (isBlocked()) {
+        <mat-icon color="warn">notifications_off</mat-icon>
+        <div class="push-prompt-text">
+            <h3>{{ 'push_notifications.blocked_title' | transloco }}</h3>
+            <p>{{ 'push_notifications.blocked_message' | transloco }}</p>
+        </div>
+        <div class="push-prompt-actions">
+            <button mat-button (click)="dismiss()">
+                {{ 'push_notifications.not_now' | transloco }}
+            </button>
+        </div>
+        } @else {
+        <mat-icon>notifications_active</mat-icon>
+        <div class="push-prompt-text">
+            <h3>{{ 'push_notifications.prompt_title' | transloco }}</h3>
+            <p>{{ 'push_notifications.prompt_message' | transloco }}</p>
+        </div>
+        <div class="push-prompt-actions">
+            <button mat-button (click)="dismiss()">
+                {{ 'push_notifications.not_now' | transloco }}
+            </button>
+            <button mat-raised-button color="primary" (click)="enableNotifications()" [disabled]="isLoading()">
+                @if (isLoading()) {
+                <mat-icon class="spinner">sync</mat-icon>
+                }
+                {{ 'push_notifications.enable' | transloco }}
+            </button>
+        </div>
+        }
+    </div>
+</div>
+}

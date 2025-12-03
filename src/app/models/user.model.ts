@@ -1,3 +1,5 @@
+import { Notification } from './notification.model';
+
 export interface User {
     id: number;
     google_id: string;
@@ -7,6 +9,8 @@ export interface User {
     status: UserStatus;
     created_at: string;
     last_login: string;
+    notifications?: Notification[];
+    notifications_count?: number;
 }
 
 export enum UserStatus {

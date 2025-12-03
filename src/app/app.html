@@ -23,6 +23,53 @@
       </mat-nav-list>
     </mat-sidenav>
 
+    <mat-sidenav #notificationsSidenav mode="over" position="end" [opened]="notificationsOpen()"
+      (openedChange)="notificationsOpen.set($event)">
+      <div class="notifications-header">
+        <h2>{{ 'notification.title' | transloco }}</h2>
+        <button mat-icon-button (click)="toggleNotifications()" [attr.aria-label]="'notification.close' | transloco">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="notifications-content">
+        @if (userNotificationService.notifications().length === 0) {
+        <div class="no-notifications">
+          <mat-icon>notifications_none</mat-icon>
+          <p>{{ 'notification.no_notifications' | transloco }}</p>
+        </div>
+        } @else {
+        @for (notification of userNotificationService.notifications(); track notification.user_notification_id) {
+        <button type="button" class="notification-item" [class.unread]="notification.status === 'unread'"
+          [class.new-season]="notification.type === 'new_season'"
+          [class.new-episodes]="notification.type === 'new_episodes'"
+          [class.status-update]="notification.type === 'status_canceled' || notification.type === 'status_ended'"
+          (click)="onNotificationClick(notification)">
+          <div class="notification-content">
+            @if (notification.serie_poster) {
+            <img [src]="userNotificationService.getTmdbPosterUrl(notification.serie_poster, 'w200')"
+              [alt]="notification.serie_name" class="notification-poster" />
+            } @else {
+            <div class="notification-icon-fallback">
+              <mat-icon>tv</mat-icon>
+            </div>
+            }
+            <div class="notification-text">
+              <div class="notification-title">{{ notification.serie_name }}</div>
+              <div class="notification-message">{{ getNotificationMessage(notification) }}</div>
+              <div class="notification-date">{{ getFormattedDate(notification.created_at) }}</div>
+            </div>
+          </div>
+          <button mat-icon-button type="button" class="delete-button"
+            (click)="onNotificationDelete($event, notification)" [matTooltip]="'notification.delete' | transloco">
+            <mat-icon>close</mat-icon>
+          </button>
+        </button>
+        }
+        }
+      </div>
+    </mat-sidenav>
+
     <mat-sidenav-content>
       <mat-toolbar color="primary" class="app-toolbar">
         <button mat-icon-button (click)="toggleMenu()" aria-label="Menu">
@@ -35,6 +82,11 @@
         <span class="spacer"></span>
 
         @if (currentUser(); as user) {
+        <button mat-icon-button (click)="toggleNotifications()" [matBadge]="userNotificationService.unreadCount()"
+          [matBadgeHidden]="userNotificationService.unreadCount() === 0" matBadgeColor="warn" matBadgeSize="medium"
+          [attr.aria-label]="'notification.open' | transloco">
+          <mat-icon>notifications</mat-icon>
+        </button>
         <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger"
           [attr.aria-label]="'app.user_menu' | transloco">
           @if (user.photo_url) {
@@ -49,6 +101,30 @@
           <div class="user-info">
             <div class="user-name body-large">{{ user.display_name }}</div>
             <div class="user-email body-medium">{{ user.email }}</div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="push-notification-settings" [class.disabled]="!pushService.isSupported()">
+            <div class="push-settings-header">
+              <div class="push-settings-text">
+                <div class="push-settings-title">{{ 'push_notifications.settings_title' | transloco }}</div>
+                @if (!pushService.isSupported()) {
+                <div class="push-settings-subtitle error">{{ 'push_notifications.not_available_dev' | transloco }}</div>
+                } @else if (pushService.permission() === 'denied') {
+                <div class="push-settings-subtitle error">{{ 'push_notifications.status_blocked' | transloco }}</div>
+                } @else {
+                <div class="push-settings-subtitle">{{ 'push_notifications.settings_description' | transloco }}</div>
+                }
+              </div>
+              @if (!pushService.isSupported()) {
+              <mat-slide-toggle disabled></mat-slide-toggle>
+              } @else if (pushService.permission() === 'denied') {
+              <mat-slide-toggle disabled></mat-slide-toggle>
+              } @else {
+              <mat-slide-toggle [checked]="pushService.permission() === 'granted' && pushService.isSubscribed()"
+                [disabled]="pushLoading()" (change)="togglePushNotifications()" color="primary">
+              </mat-slide-toggle>
+              }
+            </div>
           </div>
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="logout()">
@@ -68,6 +144,10 @@
       <main class="app-content">
         <router-outlet></router-outlet>
       </main>
+
+      @if (currentUser()) {
+      <app-push-notification-prompt />
+      }
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

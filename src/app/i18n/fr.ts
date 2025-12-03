@@ -1,7 +1,11 @@
 export const frTranslations = {
     "app": {
         "title": "Suivi Séries",
-        "description": "Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode."
+        "description": "Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode.",
+        "user_menu": "Menu utilisateur",
+        "update": {
+            "new_version_available": "Une nouvelle version est disponible. Recharger maintenant ?"
+        }
     },
     "seo": {
         "home": {
@@ -57,6 +61,7 @@ export const frTranslations = {
         "mark_episode_unwatched": "Marquer comme non vu",
         "details": "Détails",
         "refresh_data": "Actualiser les données",
+        "back_button": "Retour",
         "tooltip_mark_watched": "Marquer toute la série comme regardée",
         "tooltip_mark_unwatched": "Marquer toute la série comme non regardée",
         "tooltip_mark_season_watched": "Marquer cette saison comme regardée",
@@ -171,8 +176,55 @@ export const frTranslations = {
         },
         "close": "Fermer la notification"
     },
+    "notification": {
+        "title": "Notifications",
+        "open": "Ouvrir les notifications",
+        "close": "Fermer",
+        "close_drawer": "Fermer le tiroir de notifications",
+        "new_season": "Nouvelle saison {season_number} disponible",
+        "new_seasons": "{count, plural, =1 {Une nouvelle saison disponible} other {# nouvelles saisons disponibles}}",
+        "new_episodes": "{episode_count, plural, =1 {Un nouvel épisode disponible} other {# nouveaux épisodes disponibles}}",
+        "status_canceled": "La série a été annulée",
+        "status_ended": "La série est terminée",
+        "mark_as_read": "Marquer comme lue",
+        "delete": "Supprimer",
+        "no_notifications": "Aucune notification",
+        "view_serie": "Voir la série",
+        "date": {
+            "just_now": "À l'instant",
+            "minutes_ago": "{count, plural, =1 {Il y a # min} other {Il y a # min}}",
+            "hours_ago": "{count, plural, =1 {Il y a #h} other {Il y a #h}}",
+            "days_ago": "{count, plural, =1 {Il y a #j} other {Il y a #j}}"
+        }
+    },
+    "push_notifications": {
+        "prompt_title": "Activez les notifications",
+        "prompt_message": "Recevez des alertes pour les nouvelles saisons et épisodes de vos séries préférées, même lorsque l'application est fermée.",
+        "enable": "Activer",
+        "not_now": "Plus tard",
+        "enabled_success": "Notifications push activées",
+        "error_generic": "Erreur lors de l'activation des notifications",
+        "error_denied": "Permission de notifications refusée. Modifiez les paramètres de votre navigateur pour les activer.",
+        "error_not_supported": "Votre navigateur ne prend pas en charge les notifications push",
+        "error_dialog_closed": "Veuillez accepter les notifications dans le dialogue du navigateur",
+        "error_service_worker": "Les notifications push nécessitent un Service Worker (disponible en production)",
+        "settings_title": "Notifications push",
+        "settings_description": "Recevez des alertes sur votre appareil",
+        "status_enabled": "Activées",
+        "status_disabled": "Désactivées",
+        "status_blocked": "Bloquées",
+        "disable": "Désactiver",
+        "disabled_success": "Notifications push désactivées",
+        "blocked_title": "Vous avez bloqué les notifications",
+        "blocked_message": "Activez-les dans les paramètres de votre navigateur pour les recevoir.",
+        "open_settings": "Voir comment activer",
+        "confirmation_enabled_title": "Notifications activées !",
+        "confirmation_enabled_body": "Vous recevrez désormais des alertes pour vos séries préférées.",
+        "confirmation_disabled_title": "Notifications désactivées",
+        "confirmation_disabled_body": "Vous ne recevrez plus d'alertes push.",
+        "not_available_dev": "Non disponible en mode développement (build production requis)"
+    },
     "common": {
-        "user": "Utilisateur",
-        "app_user_menu": "Menu utilisateur"
+        "user": "Utilisateur"
     }
 } as const;
