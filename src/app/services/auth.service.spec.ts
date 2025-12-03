@@ -145,7 +145,7 @@ describe('AuthService', () => {
 
             expect(service.initialized()).toBe(true);
             expect(service.loading()).toBe(false);
-        }, 10000);
+        });
 
         it('should load from storage on API error', async () => {
             const token = createMockJwt();
@@ -160,7 +160,7 @@ describe('AuthService', () => {
             await promise;
 
             expect(service.currentUser()).toEqual(mockUser);
-        }, 10000);
+        });
     });
 
     describe('logout', () => {

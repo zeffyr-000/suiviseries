@@ -70,10 +70,12 @@ export class AuthService {
     }
 
     private async initializeApp(): Promise<void> {
+        this.loadUserFromStorage();
+
         try {
             await this.refreshSession();
         } catch {
-            this.loadUserFromStorage();
+            // Sync failed, local session maintained
         }
     }
     async refreshSession(): Promise<void> {
@@ -221,7 +223,7 @@ export class AuthService {
         const token = this.getStorageItem(this.storageKey);
         const userData = this.getStorageItem(this.userStorageKey);
 
-        if (!token || !userData) {
+        if (!userData) {
             return;
         }
 
@@ -229,9 +231,11 @@ export class AuthService {
             const user: User = JSON.parse(userData);
             this._currentUser.set(user);
 
-            const payload = this.parseJwt(token);
-            if (!this.isTokenValid(payload)) {
-                this.clearAuthData();
+            if (token) {
+                const payload = this.parseJwt(token);
+                if (!this.isTokenValid(payload)) {
+                    this.clearAuthData();
+                }
             }
         } catch {
             this.clearAuthData();

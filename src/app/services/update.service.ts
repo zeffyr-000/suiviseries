@@ -1,5 +1,6 @@
 import { Injectable, inject, ApplicationRef } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { TranslocoService } from '@jsverse/transloco';
 import { filter, interval, concat } from 'rxjs';
 
 @Injectable({
@@ -8,6 +9,7 @@ import { filter, interval, concat } from 'rxjs';
 export class UpdateService {
     private readonly swUpdate = inject(SwUpdate);
     private readonly appRef = inject(ApplicationRef);
+    private readonly transloco = inject(TranslocoService);
 
     checkForUpdates(): void {
         if (!this.swUpdate.isEnabled) {
@@ -31,7 +33,7 @@ export class UpdateService {
         this.swUpdate.versionUpdates
             .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
             .subscribe(() => {
-                if (confirm('New version available. Reload now?')) {
+                if (confirm(this.transloco.translate('app.update.new_version_available'))) {
                     globalThis.location.reload();
                 }
             });

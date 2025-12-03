@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { createSlug, extractIdFromParam, getSerieCanonicalUrl, stripHtmlTags } from './url.utils';
+import { describe, it, expect, vi } from 'vitest';
+import { createSlug, extractIdFromParam, formatRelativeDate, getSerieCanonicalUrl, stripHtmlTags } from './url.utils';
 
 describe('url.utils', () => {
     describe('createSlug', () => {
@@ -232,6 +232,207 @@ describe('url.utils', () => {
             // Known limitation: "< 5 >" is matched as a tag (basic regex tradeoff for performance)
             // Acceptable for TMDB API metadata which doesn't contain mathematical notation
             expect(stripHtmlTags('<div>Math: 2 < 5 > 1</div>')).toBe('Math: 2 1');
+        });
+    });
+
+    describe('formatRelativeDate', () => {
+        it('should return "just now" for times less than 1 minute ago', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string) => key);
+
+            expect(formatRelativeDate(now.toISOString(), translate)).toBe('notification.date.just_now');
+            expect(translate).toHaveBeenCalledWith('notification.date.just_now');
+        });
+
+        it('should return minutes ago for times between 1 and 59 minutes', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string, params?: Record<string, unknown>) =>
+                params ? `${key}:${params['count']}` : key
+            );
+
+            // 5 minutes ago
+            const fiveMinAgo = new Date(now.getTime() - 5 * 60 * 1000);
+            expect(formatRelativeDate(fiveMinAgo.toISOString(), translate)).toBe('notification.date.minutes_ago:5');
+            expect(translate).toHaveBeenCalledWith('notification.date.minutes_ago', { count: 5 });
+
+            translate.mockClear();
+
+            // 59 minutes ago
+            const fiftyNineMinAgo = new Date(now.getTime() - 59 * 60 * 1000);
+            expect(formatRelativeDate(fiftyNineMinAgo.toISOString(), translate)).toBe('notification.date.minutes_ago:59');
+            expect(translate).toHaveBeenCalledWith('notification.date.minutes_ago', { count: 59 });
+        });
+
+        it('should return hours ago for times between 1 and 23 hours', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string, params?: Record<string, unknown>) =>
+                params ? `${key}:${params['count']}` : key
+            );
+
+            // 3 hours ago
+            const threeHoursAgo = new Date(now.getTime() - 3 * 60 * 60 * 1000);
+            expect(formatRelativeDate(threeHoursAgo.toISOString(), translate)).toBe('notification.date.hours_ago:3');
+            expect(translate).toHaveBeenCalledWith('notification.date.hours_ago', { count: 3 });
+
+            translate.mockClear();
+
+            // 23 hours ago
+            const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
+            expect(formatRelativeDate(twentyThreeHoursAgo.toISOString(), translate)).toBe('notification.date.hours_ago:23');
+            expect(translate).toHaveBeenCalledWith('notification.date.hours_ago', { count: 23 });
+        });
+
+        it('should return days ago for times between 1 and 6 days', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string, params?: Record<string, unknown>) =>
+                params ? `${key}:${params['count']}` : key
+            );
+
+            // 2 days ago
+            const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+            expect(formatRelativeDate(twoDaysAgo.toISOString(), translate)).toBe('notification.date.days_ago:2');
+            expect(translate).toHaveBeenCalledWith('notification.date.days_ago', { count: 2 });
+
+            translate.mockClear();
+
+            // 6 days ago
+            const sixDaysAgo = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
+            expect(formatRelativeDate(sixDaysAgo.toISOString(), translate)).toBe('notification.date.days_ago:6');
+            expect(translate).toHaveBeenCalledWith('notification.date.days_ago', { count: 6 });
+        });
+
+        it('should return formatted date for times 7 days ago or older', () => {
+            const translate = vi.fn();
+
+            // 7 days ago
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            const result7 = formatRelativeDate(sevenDaysAgo.toISOString(), translate);
+            // French format: "26 nov."
+            expect(result7).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(translate).not.toHaveBeenCalled();
+
+            translate.mockClear();
+
+            // 30 days ago
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const result30 = formatRelativeDate(thirtyDaysAgo.toISOString(), translate);
+            expect(result30).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(translate).not.toHaveBeenCalled();
+
+            translate.mockClear();
+
+            // 1 year ago
+            const oneYearAgo = new Date();
+            oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+            const resultYear = formatRelativeDate(oneYearAgo.toISOString(), translate);
+            expect(resultYear).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(translate).not.toHaveBeenCalled();
+        });
+
+        it('should handle boundary conditions correctly', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string, params?: Record<string, unknown>) =>
+                params ? `${key}:${params['count']}` : key
+            );
+
+            // 59.9 seconds (should round to "just now")
+            const almostOneMin = new Date(now.getTime() - 59 * 1000 - 900);
+            expect(formatRelativeDate(almostOneMin.toISOString(), translate)).toBe('notification.date.just_now');
+
+            translate.mockClear();
+
+            // 60 seconds (should be "1 minute ago")
+            const exactlyOneMin = new Date(now.getTime() - 60 * 1000);
+            expect(formatRelativeDate(exactlyOneMin.toISOString(), translate)).toBe('notification.date.minutes_ago:1');
+
+            translate.mockClear();
+
+            // 59.9 minutes (should be "59 minutes ago")
+            const almostOneHour = new Date(now.getTime() - 59 * 60 * 1000 - 59 * 1000);
+            expect(formatRelativeDate(almostOneHour.toISOString(), translate)).toBe('notification.date.minutes_ago:59');
+
+            translate.mockClear();
+
+            // 60 minutes (should be "1 hour ago")
+            const exactlyOneHour = new Date(now.getTime() - 60 * 60 * 1000);
+            expect(formatRelativeDate(exactlyOneHour.toISOString(), translate)).toBe('notification.date.hours_ago:1');
+
+            translate.mockClear();
+
+            // 23.9 hours (should be "23 hours ago")
+            const almostOneDay = new Date(now.getTime() - 23 * 60 * 60 * 1000 - 59 * 60 * 1000);
+            expect(formatRelativeDate(almostOneDay.toISOString(), translate)).toBe('notification.date.hours_ago:23');
+
+            translate.mockClear();
+
+            // 24 hours (should be "1 day ago")
+            const exactlyOneDay = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            expect(formatRelativeDate(exactlyOneDay.toISOString(), translate)).toBe('notification.date.days_ago:1');
+
+            translate.mockClear();
+
+            // 6.9 days (should be "6 days ago")
+            const almostSevenDays = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000 - 23 * 60 * 60 * 1000);
+            expect(formatRelativeDate(almostSevenDays.toISOString(), translate)).toBe('notification.date.days_ago:6');
+
+            translate.mockClear();
+
+            // 7 days (should return formatted date)
+            const exactlySevenDays = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const result = formatRelativeDate(exactlySevenDays.toISOString(), translate);
+            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(translate).not.toHaveBeenCalled();
+        });
+
+        it('should handle future dates (negative time difference)', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string) => key);
+
+            // 1 hour in the future
+            const futureDate = new Date(now.getTime() + 60 * 60 * 1000);
+            const result = formatRelativeDate(futureDate.toISOString(), translate);
+
+            // Negative diffMins will be < 1, so returns "just now"
+            expect(result).toBe('notification.date.just_now');
+        });
+
+        it('should handle different date string formats', () => {
+            const now = new Date();
+            const translate = vi.fn((key: string) => key);
+
+            // ISO 8601 format
+            const isoDate = new Date(now.getTime() - 5 * 60 * 1000);
+            expect(formatRelativeDate(isoDate.toISOString(), translate)).toBeTruthy();
+
+            // Date object toString
+            const dateString = new Date(now.getTime() - 5 * 60 * 1000).toString();
+            expect(formatRelativeDate(dateString, translate)).toBeTruthy();
+        });
+
+        it('should handle very old dates correctly', () => {
+            const translate = vi.fn();
+
+            // 10 years ago
+            const veryOldDate = new Date();
+            veryOldDate.setFullYear(veryOldDate.getFullYear() - 10);
+
+            const result = formatRelativeDate(veryOldDate.toISOString(), translate);
+            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(translate).not.toHaveBeenCalled();
+        });
+
+        it('should use fr-FR locale for date formatting', () => {
+            const translate = vi.fn();
+
+            // Create a specific date for consistent testing
+            const oldDate = new Date('2020-01-15T12:00:00Z');
+            const result = formatRelativeDate(oldDate.toISOString(), translate);
+
+            // French date format: "15 janv."
+            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(result).toContain('janv.');
         });
     });
 });

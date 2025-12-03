@@ -41,6 +41,11 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
 # Backup files
 *.backup
 *.bak
