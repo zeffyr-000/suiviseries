@@ -1,0 +1,65 @@
+<div class="hero-backdrop" [style.background-image]="'url(' + backdropUrl() + ')'">
+    <div class="hero-overlay">
+        <div class="hero-content">
+            <button mat-icon-button class="back-button" (click)="onGoBack()"
+                [attr.aria-label]="'series.back_button' | transloco">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+
+            <div class="serie-hero-info">
+                <div class="poster-container">
+                    <img [src]="posterUrl()" [alt]="serie().name" class="serie-poster" loading="eager">
+                    <div class="rating-badge">
+                        <mat-icon>star</mat-icon>
+                        {{ formatRating()(serie().vote_average) }}
+                    </div>
+                </div>
+
+                <div class="serie-info">
+                    <h1 class="serie-title display-small">{{ serie().name }}</h1>
+                    @if (serie().original_name !== serie().name) {
+                    <h2 class="original-title title-medium">{{ serie().original_name }}</h2>
+                    }
+
+                    <div class="serie-meta">
+                        <app-serie-status-chip [status]="serie().status" size="medium" />
+
+                        <div class="meta-info">
+                            <span class="seasons">{{ 'series.seasons' | transloco: {count:
+                                serie().number_of_seasons} }}</span>
+                            <span class="separator">•</span>
+                            <span class="episodes">{{ 'series.episodes' | transloco: {count:
+                                serie().number_of_episodes} }}</span>
+                            <span class="separator">•</span>
+                            <span class="first-air">{{ serie().first_air_date | date:'yyyy' }}</span>
+                        </div>
+
+                        <div class="vote-info">
+                            <span class="vote-average">{{ serie().vote_average }}/10</span>
+                            <span class="vote-count">({{ 'serie_detail.votes' | transloco: {count:
+                                serie().vote_count} }})</span>
+                        </div>
+                    </div>
+
+                    @if (isAuthenticated()) {
+                    <div class="action-buttons">
+                        <button mat-raised-button [color]="isFollowing() ? 'accent' : 'primary'"
+                            [appButtonLoading]="followLoading()" (click)="onToggleFollow()">
+                            <mat-icon>{{ isFollowing() ? 'favorite' : 'favorite_border' }}</mat-icon>
+                            {{ isFollowing() ? ('series.following' | transloco) : ('series.follow' |
+                            transloco) }}
+                        </button>
+                        <button mat-raised-button [color]="isWatched() ? 'accent' : 'primary'"
+                            [appButtonLoading]="watchedLoading()" (click)="onToggleWatched()">
+                            <mat-icon>{{ isWatched() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+                            {{ isWatched() ? ('series.mark_unwatched' | transloco) : ('series.mark_watched'
+                            | transloco)
+                            }}
+                        </button>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+@if (videos().length > 0) {
+<mat-card class="videos-card" itemscope itemtype="https://schema.org/VideoGallery">
+    <mat-card-header>
+        <mat-card-title class="headline-small">
+            <mat-icon aria-hidden="true">play_circle</mat-icon>
+            <span itemprop="name">{{ 'serie_detail.videos' | transloco }}</span>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        @if (selectedVideo()) {
+        <section class="video-player-container" aria-label="Lecteur vidéo">
+            @for (video of videos(); track video.key) {
+            @if (video.key === selectedVideo() && getVideoEmbedUrl(video); as embedUrl) {
+            <iframe [src]="embedUrl" [title]="video.name" class="video-player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen loading="lazy">
+            </iframe>
+            }
+            }
+        </section>
+        }
+
+        <nav class="video-list" aria-label="Liste des vidéos disponibles">
+            @for (video of videos(); track video.key) {
+            <button class="video-item" [class.selected]="selectedVideo() === video.key" (click)="selectVideo(video.key)"
+                [attr.aria-label]="'Lire ' + video.name" [attr.aria-pressed]="selectedVideo() === video.key"
+                itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
+                @if (getVideoThumbnail(video); as thumbnail) {
+                <div class="video-thumbnail">
+                    <img [src]="thumbnail"
+                        [alt]="'serie_detail.video_thumbnail_alt' | transloco: { videoName: video.name }" loading="lazy"
+                        itemprop="thumbnailUrl" width="320" height="180">
+                    <div class="play-overlay" aria-hidden="true">
+                        <mat-icon aria-hidden="true">play_circle_filled</mat-icon>
+                    </div>
+                </div>
+                }
+                <div class="video-info">
+                    <h4 class="video-name body-medium" itemprop="name">{{ video.name }}</h4>
+                    <meta itemprop="uploadDate" [content]="video.published_at">
+                    <div class="video-meta">
+                        <span class="video-type label-small">
+                            @if (video.type === 'Trailer') {
+                            {{ 'serie_detail.video_type_trailer' | transloco }}
+                            } @else if (video.type === 'Teaser') {
+                            {{ 'serie_detail.video_type_teaser' | transloco }}
+                            } @else if (video.type === 'Clip') {
+                            {{ 'serie_detail.video_type_clip' | transloco }}
+                            } @else if (video.type === 'Behind the Scenes') {
+                            {{ 'serie_detail.video_type_behind_the_scenes' | transloco }}
+                            } @else if (video.type === 'Featurette') {
+                            {{ 'serie_detail.video_type_featurette' | transloco }}
+                            } @else if (video.type === 'Bloopers') {
+                            {{ 'serie_detail.video_type_bloopers' | transloco }}
+                            } @else {
+                            {{ video.type }}
+                            }
+                        </span>
+                        @if (video.official) {
+                        <span class="official-badge label-small" itemprop="isAccessibleForFree" content="true">{{
+                            'serie_detail.official' | transloco
+                            }}</span>
+                        }
+                    </div>
+                </div>
+            </button>
+            }
+        </nav>
+    </mat-card-content>
+</mat-card>
+}

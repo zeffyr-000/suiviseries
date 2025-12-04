@@ -69,6 +69,7 @@
     "at-rule-empty-line-before": null,
     "rule-empty-line-before": null,
     "declaration-empty-line-before": null,
-    "no-duplicate-selectors": null
+    "no-duplicate-selectors": null,
+    "no-invalid-position-at-import-rule": null
   }
 }
