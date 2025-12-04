@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.angular/
+coverage/
+
+# Test outputs
+playwright-report/
+test-results/
+
+# Generated files
+**/*.css.map
+**/*.scss.map
+
+# Vendor/external styles
+src/styles/_reset.scss
+src/styles/_normalize.scss

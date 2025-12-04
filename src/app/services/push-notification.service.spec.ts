@@ -4,60 +4,48 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 import { SwPush } from '@angular/service-worker';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, firstValueFrom } from 'rxjs';
 import { PushNotificationService, PushSubscriptionData } from './push-notification.service';
 import { environment } from '../../environments/environment';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// Helper functions to reduce nesting
-function expectSubscribeError(service: PushNotificationService, expectedStatus: number): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        service.subscribeToPush().subscribe({
-            next: () => reject(new Error('Should not succeed')),
-            error: (error) => {
-                expect(error.status).toBe(expectedStatus);
-                resolve();
-            }
-        });
-    });
+// Helper functions to reduce nesting - using firstValueFrom to avoid nested callbacks
+async function expectSubscribeError(service: PushNotificationService, expectedStatus: number): Promise<void> {
+    try {
+        await firstValueFrom(service.subscribeToPush());
+        throw new Error('Should not succeed');
+    } catch (error: any) {
+        expect(error.status).toBe(expectedStatus);
+    }
 }
 
-function expectSubscribeNotSupported(service: PushNotificationService): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        service.subscribeToPush().subscribe({
-            next: () => reject(new Error('Should not succeed')),
-            error: (error) => {
-                expect(error.message).toContain('not supported');
-                resolve();
-            }
-        });
-    });
+async function expectSubscribeNotSupported(service: PushNotificationService): Promise<void> {
+    try {
+        await firstValueFrom(service.subscribeToPush());
+        throw new Error('Should not succeed');
+    } catch (error: any) {
+        expect(error.message).toContain('not supported');
+    }
 }
 
-function expectUnsubscribeSuccess(service: PushNotificationService, mockSwPush: any): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        service.unsubscribeFromPush().subscribe({
-            next: () => {
-                expect(mockSwPush.unsubscribe).toHaveBeenCalled();
-                expect(service.isSubscribed()).toBe(false);
-                resolve();
-            },
-            error: reject
-        });
-    });
+async function expectUnsubscribeSuccess(service: PushNotificationService, mockSwPush: any, mockSubscription: any): Promise<void> {
+    // Mock subscription with unsubscribe method
+    mockSwPush.subscription = of(mockSubscription);
+    mockSubscription.unsubscribe.mockResolvedValue(true);
+
+    await firstValueFrom(service.unsubscribeFromPush());
+    expect(mockSubscription.unsubscribe).toHaveBeenCalled();
+    expect(service.isSubscribed()).toBe(false);
 }
 
-function expectUnsubscribeNotSupported(service: PushNotificationService): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        service.unsubscribeFromPush().subscribe({
-            next: () => reject(new Error('Should not succeed')),
-            error: (error) => {
-                expect(error.message).toContain('not supported');
-                resolve();
-            }
-        });
-    });
+async function expectUnsubscribeNotSupported(service: PushNotificationService): Promise<void> {
+    try {
+        await firstValueFrom(service.unsubscribeFromPush());
+        throw new Error('Should not succeed');
+    } catch (error: any) {
+        expect(error.message).toContain('not supported');
+    }
 }
 
 describe('PushNotificationService', () => {
@@ -227,14 +215,27 @@ describe('PushNotificationService', () => {
 
     describe('unsubscribeFromPush', () => {
         it('should unsubscribe from push notifications successfully', async () => {
-            const promise = expectUnsubscribeSuccess(service, mockSwPush);
+            const promise = expectUnsubscribeSuccess(service, mockSwPush, mockSubscription);
 
             await Promise.resolve();
             const req = httpMock.expectOne(`${environment.apiUrl}/push/unsubscribe`);
-            expect(req.request.method).toBe('GET');
-            req.flush({});
+            expect(req.request.method).toBe('POST');
+            expect(req.request.body).toEqual({ endpoint: mockSubscription.endpoint });
+            expect(req.request.withCredentials).toBe(true);
+            req.flush({ success: true, message: 'Device unsubscribed successfully' });
 
             await promise;
+        });
+
+        it('should handle error when no subscription exists', async () => {
+            mockSwPush.subscription = of(null);
+
+            try {
+                await firstValueFrom(service.unsubscribeFromPush());
+                throw new Error('Should have thrown an error');
+            } catch (error: any) {
+                expect(error.message).toContain('No subscription found');
+            }
         });
 
         it('should throw error when SwPush is not enabled', async () => {

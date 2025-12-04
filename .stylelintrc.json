@@ -1,0 +1,75 @@
+{
+  "extends": "stylelint-config-standard-scss",
+  "rules": {
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9-]*(__[a-z0-9-]+)?(--[a-z0-9-]+)?$",
+      {
+        "message": "Use kebab-case for class names (BEM notation allowed)"
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["ng-deep"]
+      }
+    ],
+    "no-descending-specificity": null,
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["use", "forward", "include", "mixin", "function", "extend"]
+      }
+    ],
+    "scss/dollar-variable-pattern": [
+      "^[a-z][a-zA-Z0-9-]*$",
+      {
+        "message": "Use kebab-case or camelCase for SCSS variables"
+      }
+    ],
+    "custom-property-pattern": null,
+    "declaration-property-value-no-unknown": true,
+    "color-hex-length": "long",
+    "color-named": null,
+    "length-zero-no-unit": true,
+    "shorthand-property-no-redundant-values": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "max-nesting-depth": [
+      5,
+      {
+        "ignore": ["pseudo-classes"],
+        "ignoreAtRules": ["media", "supports", "include"]
+      }
+    ],
+    "selector-max-compound-selectors": null,
+    "selector-max-id": 0,
+    "selector-no-qualifying-type": [
+      true,
+      {
+        "ignore": ["attribute", "class"]
+      }
+    ],
+    "declaration-no-important": null,
+    "declaration-block-single-line-max-declarations": null,
+    "font-weight-notation": null,
+    "value-keyword-case": [
+      "lower",
+      {
+        "ignoreKeywords": ["Material", "Roboto"]
+      }
+    ],
+    "keyframes-name-pattern": null,
+    "alpha-value-notation": null,
+    "color-function-notation": null,
+    "color-function-alias-notation": null,
+    "media-feature-range-notation": null,
+    "selector-not-notation": null,
+    "font-family-name-quotes": null,
+    "custom-property-empty-line-before": null,
+    "comment-empty-line-before": null,
+    "at-rule-empty-line-before": null,
+    "rule-empty-line-before": null,
+    "declaration-empty-line-before": null,
+    "no-duplicate-selectors": null,
+    "no-invalid-position-at-import-rule": null
+  }
+}

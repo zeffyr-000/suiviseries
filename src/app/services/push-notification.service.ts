@@ -135,11 +135,22 @@ export class PushNotificationService {
             return throwError(() => new Error('Push notifications are not supported'));
         }
 
-        return from(this.swPush.unsubscribe()).pipe(
-            switchMap(() => {
-                this.isSubscribed.set(false);
-                return this.deleteSubscriptionFromServer();
-            }),
+        return from(this.swPush.subscription.pipe(
+            switchMap((subscription) => {
+                if (!subscription) {
+                    return throwError(() => new Error('No subscription found'));
+                }
+
+                const endpoint = subscription.endpoint;
+
+                return from(subscription.unsubscribe()).pipe(
+                    switchMap(() => {
+                        this.isSubscribed.set(false);
+                        return this.deleteSubscriptionFromServer(endpoint);
+                    })
+                );
+            })
+        )).pipe(
             catchError(error => {
                 console.error('Error unsubscribing from push notifications:', error);
                 return throwError(() => error);
@@ -147,8 +158,12 @@ export class PushNotificationService {
         );
     }
 
-    private deleteSubscriptionFromServer(): Observable<void> {
-        return this.http.get<void>(`${environment.apiUrl}/push/unsubscribe`);
+    private deleteSubscriptionFromServer(endpoint: string): Observable<void> {
+        return this.http.post<void>(
+            `${environment.apiUrl}/push/unsubscribe`,
+            { endpoint },
+            { withCredentials: true }
+        );
     }
 
     async showNotification(title: string, options?: NotificationOptions): Promise<void> {

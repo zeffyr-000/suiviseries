@@ -1,0 +1,43 @@
+@if (providers().length > 0) {
+<mat-card class="watch-providers-card" itemscope itemtype="https://schema.org/BroadcastService">
+    <mat-card-header>
+        <mat-card-title class="headline-small">
+            <mat-icon aria-hidden="true">tv</mat-icon>
+            {{ 'serie_detail.watch_providers' | transloco }}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <nav class="watch-provider-list" aria-label="Plateformes de streaming disponibles">
+            @for (provider of providers(); track provider.provider_id) {
+            <article class="watch-provider-item" itemprop="potentialAction" itemscope
+                itemtype="https://schema.org/WatchAction">
+                @if (provider.logo_path) {
+                <img [src]="provider.logo_path"
+                    [alt]="'serie_detail.watch_provider_logo_alt' | transloco: { provider: provider.provider_name }"
+                    class="provider-logo" loading="lazy" itemprop="image" width="64" height="64">
+                } @else {
+                <div class="provider-placeholder">
+                    <span>{{ provider.provider_name }}</span>
+                </div>
+                }
+                <div class="provider-info">
+                    <span class="provider-name body-small" itemprop="name">{{ provider.provider_name }}</span>
+                    <span class="provider-type label-small" itemprop="actionOption">
+                        @if (provider.type === 'flatrate') {
+                        {{ 'serie_detail.type_streaming' | transloco }}
+                        } @else if (provider.type === 'buy') {
+                        {{ 'serie_detail.type_buy' | transloco }}
+                        } @else if (provider.type === 'rent') {
+                        {{ 'serie_detail.type_rent' | transloco }}
+                        }
+                    </span>
+                </div>
+            </article>
+            }
+        </nav>
+        <footer class="justwatch-attribution">
+            <span class="label-small">{{ 'serie_detail.justwatch_attribution' | transloco }}</span>
+        </footer>
+    </mat-card-content>
+</mat-card>
+}

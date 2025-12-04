@@ -1,0 +1,138 @@
+@if (seasons().length > 0) {
+<mat-card class="seasons-card">
+    <mat-card-header>
+        <mat-card-title class="headline-small">{{ 'serie_detail.seasons' | transloco }} ({{ seasons().length
+            }})</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-accordion class="seasons-accordion">
+            @for (season of seasons(); track season.season_number) {
+            <mat-expansion-panel class="season-panel">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="season-title-container">
+                            <span class="season-title">{{ 'serie_detail.season_title' | transloco }} {{
+                                season.season_number }}</span>
+                            <span class="season-subtitle">{{ season.name }}</span>
+                        </div>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <div class="season-description">
+                            <span>{{ 'serie_detail.episodes_count' | transloco: {count:
+                                season.episode_count} }}</span>
+                            @if (season.air_date) {
+                            <span class="separator">•</span>
+                            <span>{{ season.air_date | date:'yyyy' }}</span>
+                            }
+                            @if (isAuthenticated()) {
+                            <button mat-icon-button [color]="isSeasonWatched(season.id) ? 'accent' : 'primary'"
+                                [disabled]="isSeasonLoading(season.id)"
+                                (click)="onToggleSeasonWatched(season.id, $event)"
+                                [matTooltip]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
+                                [attr.aria-label]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
+                                matTooltipPosition="right" class="season-watched-button">
+                                @if (isSeasonLoading(season.id)) {
+                                <mat-spinner diameter="16"></mat-spinner>
+                                } @else {
+                                <mat-icon>{{ isSeasonWatched(season.id) ? 'check_box' :
+                                    'check_box_outline_blank' }}</mat-icon>
+                                }
+                            </button>
+                            }
+                        </div>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="season-content">
+                    <div class="season-header">
+                        @if (season.poster_path) {
+                        <img [src]="'https://image.tmdb.org/t/p/w300' + season.poster_path" [alt]="season.name"
+                            class="season-poster" loading="lazy">
+                        } @else {
+                        <div class="season-poster season-poster-placeholder" [attr.aria-label]="season.name"></div>
+                        }
+                        <div class="season-info">
+                            <div class="season-header-content">
+                                <h3>{{ season.name }}</h3>
+                            </div>
+                            <p class="season-overview">{{ season.overview || ('serie_detail.no_description'
+                                | transloco) }}</p>
+                            <div class="season-meta">
+                                <span>{{ 'serie_detail.episodes_count' | transloco: {count:
+                                    season.episode_count} }}</span>
+                                @if (season.air_date) {
+                                <span class="separator">•</span>
+                                <span>{{ season.air_date | date:'yyyy' }}</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (season.episodes && season.episodes.length > 0) {
+                    <mat-divider></mat-divider>
+                    <div class="episodes-section">
+                        <h4>{{ 'serie_detail.episodes' | transloco }}</h4>
+                        <mat-accordion>
+                            @for (episode of season.episodes; track episode.episode_number) {
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <span class="episode-number">{{ episode.episode_number }}.</span>
+                                        <span class="episode-name">{{ episode.name }}</span>
+                                    </mat-panel-title>
+                                    <mat-panel-description>
+                                        @if (episode.air_date) {
+                                        <span>{{ episode.air_date | date:'dd/MM/yyyy' }}</span>
+                                        }
+                                        @if (episode.runtime) {
+                                        <span class="separator">•</span>
+                                        <span>{{ episode.runtime }} min</span>
+                                        }
+                                        @if (isAuthenticated()) {
+                                        <button mat-icon-button
+                                            [color]="isEpisodeWatched(episode.id) ? 'accent' : 'primary'"
+                                            [disabled]="isEpisodeLoading(episode.id)"
+                                            (click)="onToggleEpisodeWatched(episode.id, $event)"
+                                            [matTooltip]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
+                                            [attr.aria-label]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
+                                            matTooltipPosition="right" class="episode-watched-button">
+                                            @if (isEpisodeLoading(episode.id)) {
+                                            <mat-spinner diameter="16"></mat-spinner>
+                                            } @else {
+                                            <mat-icon>{{ isEpisodeWatched(episode.id) ? 'check_box'
+                                                : 'check_box_outline_blank' }}</mat-icon>
+                                            }
+                                        </button>
+                                        }
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+
+                                <div class="episode-content">
+                                    <div class="episode-header">
+                                        <div class="episode-info">
+                                            @if (episode.still_path) {
+                                            <img [src]="'https://image.tmdb.org/t/p/w500' + episode.still_path"
+                                                [alt]="episode.name" class="episode-still" loading="lazy">
+                                            }
+                                            <p class="episode-overview">{{ episode.overview ||
+                                                ('serie_detail.no_episode_description' | transloco) }}</p>
+                                            @if (episode.vote_average > 0) {
+                                            <div class="episode-rating">
+                                                <mat-icon>star</mat-icon>
+                                                <span>{{ episode.vote_average }}/10</span>
+                                            </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                            }
+                        </mat-accordion>
+                    </div>
+                    }
+                </div>
+            </mat-expansion-panel>
+            }
+        </mat-accordion>
+    </mat-card-content>
+</mat-card>
+}

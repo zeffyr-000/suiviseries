@@ -9,7 +9,7 @@ import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
-import { Serie, SerieStatus } from '../models/serie.model';
+import { Serie, SerieStatus, WatchProvider, Video } from '../models/serie.model';
 
 describe('SerieDetailComponent', () => {
     let component: SerieDetailComponent;
@@ -204,6 +204,141 @@ describe('SerieDetailComponent', () => {
 
             expect(component['loading']()).toBe(false);
             expect(component['error']()).toBeTruthy();
+        });
+    });
+
+    describe('Watch Providers', () => {
+        const mockWatchProviders: WatchProvider[] = [
+            {
+                provider_id: 8,
+                provider_name: 'Netflix',
+                logo_path: 'https://image.tmdb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg',
+                type: 'flatrate'
+            },
+            {
+                provider_id: 119,
+                provider_name: 'Amazon Prime Video',
+                logo_path: 'https://image.tmdb.org/t/p/original/emthp39XA2YScoYL1p0sdbAH2WA.jpg',
+                type: 'flatrate'
+            },
+            {
+                provider_id: 2,
+                provider_name: 'Apple TV',
+                logo_path: 'https://image.tmdb.org/t/p/original/peURlLlr8jggOwK53fJ5wdQl05y.jpg',
+                type: 'buy'
+            },
+            {
+                provider_id: 3,
+                provider_name: 'Google Play Movies',
+                logo_path: 'https://image.tmdb.org/t/p/original/tbEdFQDwx5LEVr8WpSeXQSIirVq.jpg',
+                type: 'rent'
+            }
+        ];
+
+        it('should compute watch providers from serie data', () => {
+            const serieWithProviders = {
+                ...mockSerie,
+                watch_providers: mockWatchProviders
+            };
+
+            component['serie'].set(serieWithProviders);
+
+            expect(component['watchProviders']()).toEqual(mockWatchProviders);
+        });
+
+        it('should return empty array when no watch providers', () => {
+            component['serie'].set(mockSerie);
+
+            expect(component['watchProviders']()).toEqual([]);
+        });
+
+        it('should compute hasWatchProviders correctly', () => {
+            component['serie'].set(mockSerie);
+            expect(component['hasWatchProviders']()).toBe(false);
+
+            const serieWithProviders = {
+                ...mockSerie,
+                watch_providers: mockWatchProviders
+            };
+            component['serie'].set(serieWithProviders);
+            expect(component['hasWatchProviders']()).toBe(true);
+        });
+    });
+
+    describe('Videos', () => {
+        const mockVideos: Video[] = [
+            {
+                key: 'dQw4w9WgXcQ',
+                name: 'Official Trailer',
+                type: 'Trailer',
+                site: 'YouTube',
+                size: 1080,
+                official: true,
+                published_at: '2024-01-15T10:00:00.000Z'
+            },
+            {
+                key: 'abc123xyz',
+                name: 'Behind the Scenes',
+                type: 'Behind the Scenes',
+                site: 'YouTube',
+                size: 720,
+                official: false,
+                published_at: '2024-01-10T08:30:00.000Z'
+            },
+            {
+                key: 'xyz456abc',
+                name: 'Season Teaser',
+                type: 'Teaser',
+                site: 'YouTube',
+                size: 1080,
+                official: true,
+                published_at: '2024-01-05T12:00:00.000Z'
+            }
+        ];
+
+        it('should compute videos from serie data', () => {
+            const serieWithVideos = {
+                ...mockSerie,
+                videos: mockVideos
+            };
+
+            component['serie'].set(serieWithVideos);
+
+            expect(component['videos']()).toEqual(mockVideos);
+            expect(component['videos']()).toHaveLength(3);
+        });
+
+        it('should return empty array when no videos', () => {
+            component['serie'].set(mockSerie);
+
+            expect(component['videos']()).toEqual([]);
+        });
+
+        it('should compute hasVideos correctly', () => {
+            component['serie'].set(mockSerie);
+            expect(component['hasVideos']()).toBe(false);
+
+            const serieWithVideos = {
+                ...mockSerie,
+                videos: mockVideos
+            };
+            component['serie'].set(serieWithVideos);
+            expect(component['hasVideos']()).toBe(true);
+        });
+
+        it('should filter official trailers', () => {
+            const serieWithVideos = {
+                ...mockSerie,
+                videos: mockVideos
+            };
+
+            component['serie'].set(serieWithVideos);
+
+            const trailers = component['officialTrailers']();
+            expect(trailers).toHaveLength(1);
+            expect(trailers[0].type).toBe('Trailer');
+            expect(trailers[0].official).toBe(true);
+            expect(trailers[0].name).toBe('Official Trailer');
         });
     });
 });

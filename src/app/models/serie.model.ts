@@ -1,3 +1,20 @@
+export interface WatchProvider {
+    provider_id: number;
+    provider_name: string;
+    logo_path: string | null;
+    type: 'flatrate' | 'buy' | 'rent';
+}
+
+export interface Video {
+    key: string;
+    name: string;
+    type: 'Trailer' | 'Teaser' | 'Clip' | 'Behind the Scenes' | 'Featurette' | 'Bloopers';
+    site: string;
+    size: number;
+    official: boolean;
+    published_at: string | null;
+}
+
 export interface Episode {
     id: number;
     episode_number: number;
@@ -55,6 +72,8 @@ export interface Serie {
     vote_average: number;
     vote_count: number;
     data_complete: boolean;
+    watch_providers?: WatchProvider[];
+    videos?: Video[];
     created_at?: string;
     updated_at?: string;
     poster_url?: string;

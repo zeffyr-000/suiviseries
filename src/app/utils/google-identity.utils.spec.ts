@@ -27,6 +27,8 @@ describe('google-identity.utils', () => {
 
     afterEach(() => {
         (globalThis as { window: typeof globalThis.window }).window = originalWindow;
+        vi.clearAllTimers();
+        vi.useRealTimers();
         vi.restoreAllMocks();
     });
 
@@ -76,10 +78,13 @@ describe('google-identity.utils', () => {
 
             const promise = waitForGoogleLibrary(100);
 
+            // Wait for the rejection to be properly caught
+            const result = promise.catch(error => error);
+
             await vi.advanceTimersByTimeAsync(150);
 
-            await expect(promise).rejects.toThrow('Google Identity Services library failed to load');
-            vi.useRealTimers();
+            const error = await result;
+            expect(error.message).toBe('Google Identity Services library failed to load');
         });
 
         it('should resolve when library loads during wait', async () => {
@@ -94,7 +99,6 @@ describe('google-identity.utils', () => {
             await vi.advanceTimersByTimeAsync(100);
 
             await expect(promise).resolves.toBeUndefined();
-            vi.useRealTimers();
         });
     });
 });

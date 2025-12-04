@@ -20,8 +20,10 @@ import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
 import { Serie, Season, SerieStats, getTmdbImageUrl, formatRating } from '../models/serie.model';
-import { SerieStatusChipComponent } from '../shared/serie-status-chip/serie-status-chip.component';
-import { ButtonLoadingDirective } from '../shared/directives/button-loading.directive';
+import { SerieWatchProvidersComponent } from './serie-watch-providers/serie-watch-providers.component';
+import { SerieVideosComponent } from './serie-videos/serie-videos.component';
+import { SerieSeasonsComponent } from './serie-seasons/serie-seasons.component';
+import { SerieHeaderComponent } from './serie-header/serie-header.component';
 import { environment } from '../../environments/environment';
 import { getSerieCanonicalUrl } from '../utils/url.utils';
 
@@ -40,8 +42,10 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
         MatExpansionModule,
         MatTabsModule,
         MatTooltipModule,
-        SerieStatusChipComponent,
-        ButtonLoadingDirective
+        SerieWatchProvidersComponent,
+        SerieVideosComponent,
+        SerieSeasonsComponent,
+        SerieHeaderComponent
     ],
     templateUrl: './serie-detail.component.html',
     styleUrl: './serie-detail.component.scss',
@@ -101,6 +105,28 @@ export class SerieDetailComponent implements OnInit {
     protected watchedSeasons = computed(() => {
         const userData = this.userSerieData();
         return userData?.watched_seasons || [];
+    });
+
+    protected watchProviders = computed(() => {
+        const currentSerie = this.serie();
+        return currentSerie?.watch_providers || [];
+    });
+
+    protected hasWatchProviders = computed(() => {
+        return this.watchProviders().length > 0;
+    });
+
+    protected videos = computed(() => {
+        const currentSerie = this.serie();
+        return currentSerie?.videos || [];
+    });
+
+    protected hasVideos = computed(() => {
+        return this.videos().length > 0;
+    });
+
+    protected officialTrailers = computed(() => {
+        return this.videos().filter(v => v.type === 'Trailer' && v.official);
     });
 
     protected isSeasonWatched(seasonId: number): boolean {
