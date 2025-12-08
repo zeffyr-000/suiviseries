@@ -1,6 +1,18 @@
 @use '../../../styles/mixins';
 
 .watch-providers-card {
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+      }
+    }
+  }
+
   .watch-provider-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));

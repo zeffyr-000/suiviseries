@@ -114,7 +114,10 @@ export const frTranslations = {
         "video_type_bloopers": "Bêtisier",
         "official": "Officiel",
         "watch_provider_logo_alt": "Regarder sur {{provider}}",
-        "video_thumbnail_alt": "Miniature de {{videoName}}"
+        "video_thumbnail_alt": "Miniature de {{videoName}}",
+        "recommendations": "Recommandations",
+        "recommendations_description": "Séries recommandées qui pourraient vous plaire",
+        "view_recommendation": "Voir les détails de {{name}}"
     },
     "auth": {
         "welcome_title": "Bienvenue",

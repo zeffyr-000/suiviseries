@@ -15,6 +15,19 @@ export interface Video {
     published_at: string | null;
 }
 
+export interface Recommendation {
+    id: number;
+    tmdb_id: number;
+    name: string;
+    original_name: string;
+    overview: string;
+    poster_path: string | null;
+    backdrop_path: string | null;
+    first_air_date: string | null;
+    vote_average: number;
+    popularity: number;
+}
+
 export interface Episode {
     id: number;
     episode_number: number;
@@ -74,6 +87,7 @@ export interface Serie {
     data_complete: boolean;
     watch_providers?: WatchProvider[];
     videos?: Video[];
+    recommendations?: Recommendation[];
     created_at?: string;
     updated_at?: string;
     poster_url?: string;

@@ -1,6 +1,18 @@
 @use '../../../styles/mixins';
 
 .seasons-card {
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+      }
+    }
+  }
+
   .mat-mdc-card-header {
     padding-bottom: 1rem;
   }

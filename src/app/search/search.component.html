@@ -47,7 +47,10 @@
     @if (hasResults() && !loading()) {
     <div class="search-results">
         <div class="results-header">
-            <h2 class="headline-medium">{{ 'search.results_title' | transloco }}</h2>
+            <h2 class="headline-medium">
+                <mat-icon aria-hidden="true">search</mat-icon>
+                {{ 'search.results_title' | transloco }}
+            </h2>
             <div class="results-info">
                 @if (lastQuery()) {
                 <p class="search-query body-medium">{{ 'search.results_for' | transloco }} "{{ lastQuery() }}"</p>

@@ -1,0 +1,43 @@
+@if (recommendations().length > 0) {
+<mat-card class="recommendations-card">
+    <mat-card-header>
+        <mat-card-title class="headline-small">
+            <mat-icon aria-hidden="true">recommend</mat-icon>
+            {{ 'serie_detail.recommendations' | transloco }}
+        </mat-card-title>
+        <mat-card-subtitle class="body-medium">
+            {{ 'serie_detail.recommendations_description' | transloco }}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="recommendations-grid">
+            @for (recommendation of recommendations(); track recommendation.id) {
+            <a class="recommendation-card" [routerLink]="getSerieRoute(recommendation)"
+                [attr.aria-label]="'serie_detail.view_recommendation' | transloco: { name: recommendation.name }">
+                @if (recommendation.poster_path) {
+                <div class="recommendation-poster">
+                    <img [src]="recommendation.poster_path" [alt]="recommendation.name" loading="lazy" width="200"
+                        height="300">
+                    <div class="rating-badge">
+                        <mat-icon aria-hidden="true">star</mat-icon>
+                        <span>{{ formatRating(recommendation.vote_average) }}</span>
+                    </div>
+                </div>
+                } @else {
+                <div class="recommendation-poster-placeholder">
+                    <mat-icon aria-hidden="true">movie</mat-icon>
+                </div>
+                }
+                <div class="recommendation-info">
+                    <h4 class="recommendation-title body-medium">{{ recommendation.name }}</h4>
+                    @if (recommendation.first_air_date) {
+                    <span class="recommendation-year label-small">{{ recommendation.first_air_date | date:'yyyy'
+                        }}</span>
+                    }
+                </div>
+            </a>
+            }
+        </div>
+    </mat-card-content>
+</mat-card>
+}

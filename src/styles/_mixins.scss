@@ -30,3 +30,36 @@ $md-breakpoints: (
     @warn "Breakpoint '#{$breakpoint}' not found in $md-breakpoints.";
   }
 }
+
+// Rating badge for posters
+@mixin rating-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: color-mix(in srgb, var(--mat-sys-surface) 95%, transparent);
+  backdrop-filter: blur(12px);
+  color: var(--mat-sys-on-surface);
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #fbbf24;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  }
+
+  span {
+    line-height: 1;
+  }
+}
