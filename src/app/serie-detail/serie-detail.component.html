@@ -29,16 +29,23 @@
         <div class="content-container">
             <mat-card class="overview-card">
                 <mat-card-header>
-                    <mat-card-title class="headline-small">{{ 'serie_detail.overview' | transloco }}</mat-card-title>
+                    <mat-card-title class="headline-small">
+                        <mat-icon aria-hidden="true">description</mat-icon>
+                        {{ 'serie_detail.overview' | transloco }}
+                    </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <p class="overview-text body-large">{{ serie()!.overview }}</p>
                 </mat-card-content>
             </mat-card>
 
+            @if (watchProviders().length > 0) {
             <app-serie-watch-providers [providers]="watchProviders()" />
+            }
 
+            @if (videos().length > 0) {
             <app-serie-videos [videos]="videos()" />
+            }
 
             @if (!serie()!.data_complete) {
             <mat-card class="incomplete-data-card">
@@ -62,9 +69,16 @@
                 (toggleSeasonWatched)="onToggleSeasonWatched($event)"
                 (toggleEpisodeWatched)="onToggleEpisodeWatched($event)" />
 
+            @if (recommendations().length > 0) {
+            <app-serie-recommendations [recommendations]="recommendations()" />
+            }
+
             <mat-card class="details-card">
                 <mat-card-header>
-                    <mat-card-title class="headline-small">{{ 'serie_detail.details' | transloco }}</mat-card-title>
+                    <mat-card-title class="headline-small">
+                        <mat-icon aria-hidden="true">info</mat-icon>
+                        {{ 'serie_detail.details' | transloco }}
+                    </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <div class="details-grid">

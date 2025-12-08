@@ -57,7 +57,7 @@ export class MySeriesComponent implements OnInit {
         this.loading.set(true);
         this.error.set(null);
 
-        this.seriesService.getUserSeries().pipe(
+        this.seriesService.getUserSeries(true).pipe(
             takeUntilDestroyed(this.destroyRef)
         ).subscribe({
             next: (series: Serie[]) => {

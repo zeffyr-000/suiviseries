@@ -24,6 +24,7 @@ import { SerieWatchProvidersComponent } from './serie-watch-providers/serie-watc
 import { SerieVideosComponent } from './serie-videos/serie-videos.component';
 import { SerieSeasonsComponent } from './serie-seasons/serie-seasons.component';
 import { SerieHeaderComponent } from './serie-header/serie-header.component';
+import { SerieRecommendationsComponent } from './serie-recommendations/serie-recommendations.component';
 import { environment } from '../../environments/environment';
 import { getSerieCanonicalUrl } from '../utils/url.utils';
 
@@ -45,7 +46,8 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
         SerieWatchProvidersComponent,
         SerieVideosComponent,
         SerieSeasonsComponent,
-        SerieHeaderComponent
+        SerieHeaderComponent,
+        SerieRecommendationsComponent
     ],
     templateUrl: './serie-detail.component.html',
     styleUrl: './serie-detail.component.scss',
@@ -127,6 +129,11 @@ export class SerieDetailComponent implements OnInit {
 
     protected officialTrailers = computed(() => {
         return this.videos().filter(v => v.type === 'Trailer' && v.official);
+    });
+
+    protected recommendations = computed(() => {
+        const currentSerie = this.serie();
+        return currentSerie?.recommendations || [];
     });
 
     protected isSeasonWatched(seasonId: number): boolean {

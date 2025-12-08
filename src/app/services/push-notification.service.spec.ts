@@ -182,6 +182,7 @@ describe('PushNotificationService', () => {
         });
 
         it('should handle HTTP error from server', async () => {
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
             const promise = expectSubscribeError(service, 500);
 
             await Promise.resolve();
@@ -189,6 +190,7 @@ describe('PushNotificationService', () => {
             req.flush({ error: 'Server error' }, { status: 500, statusText: 'Internal Server Error' });
 
             await promise;
+            consoleErrorSpy.mockRestore();
         });
 
         it('should throw error when SwPush is not enabled', async () => {
@@ -228,6 +230,7 @@ describe('PushNotificationService', () => {
         });
 
         it('should handle error when no subscription exists', async () => {
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(vi.fn());
             mockSwPush.subscription = of(null);
 
             try {
@@ -236,6 +239,8 @@ describe('PushNotificationService', () => {
             } catch (error: any) {
                 expect(error.message).toContain('No subscription found');
             }
+
+            consoleErrorSpy.mockRestore();
         });
 
         it('should throw error when SwPush is not enabled', async () => {

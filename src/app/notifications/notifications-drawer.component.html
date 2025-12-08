@@ -10,7 +10,10 @@
     [attr.aria-label]="'notification.close_drawer' | transloco"></button>
 <div class="notifications-drawer">
     <div class="drawer-header">
-        <h2>{{ 'notification.title' | transloco }}</h2>
+        <h2>
+            <mat-icon aria-hidden="true">notifications</mat-icon>
+            {{ 'notification.title' | transloco }}
+        </h2>
         <button mat-icon-button (click)="closeDrawer()" [attr.aria-label]="'notification.close' | transloco">
             <mat-icon>close</mat-icon>
         </button>

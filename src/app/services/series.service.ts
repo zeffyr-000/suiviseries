@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -14,6 +14,7 @@ export class SeriesService {
     private readonly apiUrl = environment.apiUrl;
     private readonly http = inject(HttpClient);
     private readonly notificationService = inject(NotificationService);
+    private readonly userSeriesCache = signal<Serie[] | null>(null);
 
     getAllSeries(): Observable<Serie[]> {
         return this.http.get<SearchResponse>(`${this.apiUrl}/series`).pipe(
@@ -75,9 +76,16 @@ export class SeriesService {
         );
     }
 
-    getUserSeries(): Observable<Serie[]> {
+    getUserSeries(forceRefresh = false): Observable<Serie[]> {
+        // Use cached data if available and not forcing refresh
+        const cachedData = this.userSeriesCache();
+        if (!forceRefresh && cachedData !== null) {
+            return of(cachedData);
+        }
+
         return this.http.get<UserSeriesResponse>(`${this.apiUrl}/users/me/series`).pipe(
             map(response => response.success && response.results ? response.results.map(item => item.serie) : []),
+            tap(series => this.userSeriesCache.set(series)),
             catchError(() => {
                 this.notificationService.error('notifications.errors.load_user_series');
                 return of([]);
@@ -91,6 +99,10 @@ export class SeriesService {
         );
     }
 
+    private invalidateCache(): void {
+        this.userSeriesCache.set(null);
+    }
+
     followSerie(serieId: number): Observable<boolean> {
         return this.http.post<{ success: boolean, error?: string }>(`${this.apiUrl}/users/me/series/${serieId}/follow`, {}).pipe(
             map(response => {
@@ -100,7 +112,10 @@ export class SeriesService {
                 return response.success;
             }),
             tap(success => {
-                if (success) this.notificationService.success('notifications.success.serie_added');
+                if (success) {
+                    this.invalidateCache();
+                    this.notificationService.success('notifications.success.serie_added');
+                }
             }),
             catchError((error) => {
                 this.notificationService.error('notifications.errors.add_serie');
@@ -118,7 +133,10 @@ export class SeriesService {
                 return response.success;
             }),
             tap(success => {
-                if (success) this.notificationService.success('notifications.success.serie_removed');
+                if (success) {
+                    this.invalidateCache();
+                    this.notificationService.success('notifications.success.serie_removed');
+                }
             }),
             catchError((error) => {
                 this.notificationService.error('notifications.errors.remove_serie');

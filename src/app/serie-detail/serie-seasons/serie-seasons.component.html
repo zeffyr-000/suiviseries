@@ -1,8 +1,10 @@
 @if (seasons().length > 0) {
 <mat-card class="seasons-card">
     <mat-card-header>
-        <mat-card-title class="headline-small">{{ 'serie_detail.seasons' | transloco }} ({{ seasons().length
-            }})</mat-card-title>
+        <mat-card-title class="headline-small">
+            <mat-icon aria-hidden="true">movie</mat-icon>
+            {{ 'serie_detail.seasons' | transloco }} ({{ seasons().length }})
+        </mat-card-title>
     </mat-card-header>
     <mat-card-content>
         <mat-accordion class="seasons-accordion">

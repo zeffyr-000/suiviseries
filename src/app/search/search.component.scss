@@ -208,12 +208,19 @@
     }
 
     h2 {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
       margin: 0;
       color: var(--mat-sys-on-surface);
       font-size: 1.75rem; // M3 headline-medium
       font-weight: 400;
       line-height: 1.29;
       letter-spacing: 0;
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+      }
     }
 
     .results-info {

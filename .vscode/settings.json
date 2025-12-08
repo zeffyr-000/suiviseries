@@ -1,14 +1,5 @@
 {
   "git.ignoreLimitWarning": true,
-  "stylelint.enable": true,
-  "stylelint.validate": ["css", "scss"],
-  "css.validate": false,
-  "scss.validate": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": "explicit"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "stylelint.vscode-stylelint",
-    "editor.formatOnSave": true
-  }
+  "css.validate": true,
+  "scss.validate": true
 }

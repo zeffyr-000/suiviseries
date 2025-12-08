@@ -55,6 +55,17 @@ export function getSerieCanonicalUrl(serieId: number, serieName: string, baseUrl
     const base = baseUrl || (globalThis.window === undefined ? '' : globalThis.window.location.origin);
     return `${base}/serie/${serieId}/${slug}`;
 }
+
+export function getSerieRoutePath(serieId: number, serieName: string): string {
+    const slug = createSlug(serieName);
+    return `/serie/${serieId}/${slug}`;
+}
+
+export function getSerieRouteParams(serieId: number, serieName: string): [string, number, string] {
+    const slug = createSlug(serieName);
+    return ['/serie', serieId, slug];
+}
+
 export function formatRelativeDate(dateString: string, translateFn: (key: string, params?: Record<string, number>) => string): string {
     const date = new Date(dateString);
     const now = new Date();

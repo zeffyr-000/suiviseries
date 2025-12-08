@@ -191,6 +191,47 @@ describe('SeriesService', () => {
                 results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
             });
         });
+
+        it('should use cached data on second call', () => {
+            // First call
+            service.getUserSeries().subscribe(series => {
+                expect(series.length).toBe(1);
+            });
+
+            const req1 = httpMock.expectOne('/api/users/me/series');
+            req1.flush({
+                success: true,
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+            });
+
+            // Second call should use cache
+            service.getUserSeries().subscribe(series => {
+                expect(series.length).toBe(1);
+            });
+
+            httpMock.expectNone('/api/users/me/series');
+        });
+
+        it('should refresh cache when forceRefresh is true', () => {
+            // First call
+            service.getUserSeries().subscribe();
+            const req1 = httpMock.expectOne('/api/users/me/series');
+            req1.flush({
+                success: true,
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+            });
+
+            // Second call with forceRefresh
+            service.getUserSeries(true).subscribe(series => {
+                expect(series.length).toBe(1);
+            });
+
+            const req2 = httpMock.expectOne('/api/users/me/series');
+            req2.flush({
+                success: true,
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+            });
+        });
     });
 
     describe('isSerieReallyFollowed', () => {
@@ -231,6 +272,26 @@ describe('SeriesService', () => {
             expect(spy).toHaveBeenCalledWith('notifications.success.serie_added');
         });
 
+        it('should invalidate cache after follow', () => {
+            // First, populate cache
+            service.getUserSeries().subscribe();
+            const req1 = httpMock.expectOne('/api/users/me/series');
+            req1.flush({ success: true, results: [] });
+
+            // Follow a serie
+            service.followSerie(1).subscribe();
+            const req2 = httpMock.expectOne('/api/users/me/series/1/follow');
+            req2.flush({ success: true });
+
+            // Next getUserSeries call should hit API again (cache invalidated)
+            service.getUserSeries().subscribe();
+            const req3 = httpMock.expectOne('/api/users/me/series');
+            req3.flush({
+                success: true,
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+            });
+        });
+
         it('should throw error on failure', () => {
             service.followSerie(1).subscribe({
                 error: (err) => {
@@ -255,6 +316,26 @@ describe('SeriesService', () => {
             req.flush({ success: true });
 
             expect(spy).toHaveBeenCalledWith('notifications.success.serie_removed');
+        });
+
+        it('should invalidate cache after unfollow', () => {
+            // First, populate cache
+            service.getUserSeries().subscribe();
+            const req1 = httpMock.expectOne('/api/users/me/series');
+            req1.flush({
+                success: true,
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+            });
+
+            // Unfollow a serie
+            service.unfollowSerie(1).subscribe();
+            const req2 = httpMock.expectOne('/api/users/me/series/1/unfollow');
+            req2.flush({ success: true });
+
+            // Next getUserSeries call should hit API again (cache invalidated)
+            service.getUserSeries().subscribe();
+            const req3 = httpMock.expectOne('/api/users/me/series');
+            req3.flush({ success: true, results: [] });
         });
     });
 

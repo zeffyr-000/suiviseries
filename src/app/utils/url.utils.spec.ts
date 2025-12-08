@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createSlug, extractIdFromParam, formatRelativeDate, getSerieCanonicalUrl, stripHtmlTags } from './url.utils';
+import { createSlug, extractIdFromParam, formatRelativeDate, getSerieCanonicalUrl, getSerieRoutePath, getSerieRouteParams, stripHtmlTags } from './url.utils';
 
 describe('url.utils', () => {
     describe('createSlug', () => {
@@ -146,6 +146,54 @@ describe('url.utils', () => {
         it('should handle series with numeric IDs', () => {
             expect(getSerieCanonicalUrl(1, 'Test', 'https://example.com')).toBe('https://example.com/serie/1/test');
             expect(getSerieCanonicalUrl(999999, 'Test', 'https://example.com')).toBe('https://example.com/serie/999999/test');
+        });
+    });
+
+    describe('getSerieRoutePath', () => {
+        it('should generate route path with slug', () => {
+            const path = getSerieRoutePath(123, 'Breaking Bad');
+            expect(path).toBe('/serie/123/breaking-bad');
+        });
+
+        it('should handle special characters in serie name', () => {
+            const path = getSerieRoutePath(456, 'Marvel\'s Agents of S.H.I.E.L.D.');
+            expect(path).toBe('/serie/456/marvels-agents-of-shield');
+        });
+
+        it('should handle accented characters', () => {
+            const path = getSerieRoutePath(789, 'Élite');
+            expect(path).toBe('/serie/789/elite');
+        });
+
+        it('should handle unicode characters', () => {
+            const path = getSerieRoutePath(999, '進撃の巨人');
+            expect(path).toBe('/serie/999/進撃の巨人');
+        });
+    });
+
+    describe('getSerieRouteParams', () => {
+        it('should return array of route parameters', () => {
+            const params = getSerieRouteParams(123, 'Breaking Bad');
+            expect(params).toEqual(['/serie', 123, 'breaking-bad']);
+        });
+
+        it('should handle special characters in serie name', () => {
+            const params = getSerieRouteParams(456, 'Game of Thrones');
+            expect(params).toEqual(['/serie', 456, 'game-of-thrones']);
+        });
+
+        it('should handle accented characters', () => {
+            const params = getSerieRouteParams(789, 'Café');
+            expect(params).toEqual(['/serie', 789, 'cafe']);
+        });
+
+        it('should be compatible with router.navigate()', () => {
+            const params = getSerieRouteParams(100, 'Test Serie');
+            expect(Array.isArray(params)).toBe(true);
+            expect(params.length).toBe(3);
+            expect(params[0]).toBe('/serie');
+            expect(typeof params[1]).toBe('number');
+            expect(typeof params[2]).toBe('string');
         });
     });
 
