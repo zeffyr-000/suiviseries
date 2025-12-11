@@ -69,7 +69,7 @@ export const appConfig: ApplicationConfig = {
       const keepAliveService = inject(KeepAliveService);
       keepAliveService.startKeepAlive();
     }),
-    provideServiceWorker('ngsw-worker.js', {
+    provideServiceWorker('custom-sw.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     })

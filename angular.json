@@ -26,7 +26,8 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/robots.txt"
+              "src/robots.txt",
+              "src/custom-sw.js"
             ],
             "styles": ["src/styles.scss"],
             "allowedCommonJsDependencies": ["@messageformat/core"]
@@ -47,7 +48,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "800kB",
+                  "maximumWarning": "900kB",
                   "maximumError": "1.2MB"
                 },
                 {

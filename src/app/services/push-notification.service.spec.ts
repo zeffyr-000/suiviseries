@@ -288,8 +288,12 @@ describe('PushNotificationService', () => {
             });
         });
 
-        it('should throw error when not supported', async () => {
+        it('should throw error when permission granted but service worker not enabled', async () => {
             const disabledSwPush = { ...mockSwPush, isEnabled: false, subscription: of(null), notificationClicks: of(), messages: of() };
+
+            // Ensure permission is granted before creating service
+            (globalThis as any).Notification.permission = 'granted';
+
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
                 providers: [
@@ -302,9 +306,10 @@ describe('PushNotificationService', () => {
             });
             const newService = TestBed.inject(PushNotificationService);
 
-            await expect(
-                newService.showNotification('Test')
-            ).rejects.toThrow('Notifications are not supported');
+            // Manually set permission signal since isSupported is false
+            newService.permission.set('granted');
+
+            await expect(newService.showNotification('Test', { body: 'Test body' })).rejects.toThrow('Notifications are not supported');
 
             TestBed.inject(HttpTestingController).verify();
         });
