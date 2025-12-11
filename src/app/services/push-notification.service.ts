@@ -14,6 +14,18 @@ export interface PushSubscriptionData {
     };
 }
 
+export interface PushMessage {
+    title: string;
+    body: string;
+    icon?: string;
+    badge?: string;
+    tag?: string;
+    requireInteraction?: boolean;
+    url?: string;
+    notification_id?: number;
+    serie_id?: number;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -59,6 +71,10 @@ export class PushNotificationService {
             error: (err) => console.error('Error handling notification click:', err)
         });
 
+        // Note: Push notifications are handled by custom-sw.js.
+        // This allows notifications to work even when the app is closed.
+        // The error handler below is still needed to catch errors in the communication
+        // channel between the service worker and the Angular app (e.g., message deserialization issues).
         this.swPush.messages.subscribe({
             error: (err) => console.error('Error receiving push message:', err)
         });
@@ -167,12 +183,12 @@ export class PushNotificationService {
     }
 
     async showNotification(title: string, options?: NotificationOptions): Promise<void> {
-        if (!this.swPush.isEnabled) {
-            throw new Error('Notifications are not supported');
-        }
-
         if (this.permission() !== 'granted') {
             throw new Error('Notification permission not granted');
+        }
+
+        if (!this.swPush.isEnabled) {
+            throw new Error('Notifications are not supported');
         }
 
         const registration = await navigator.serviceWorker.ready;
