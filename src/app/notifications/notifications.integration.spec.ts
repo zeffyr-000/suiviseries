@@ -120,16 +120,18 @@ describe('Notifications Integration', () => {
             fixture.detectChanges();
         });
 
-        it('should mark notification as read and navigate to serie', () => {
+        it('should mark notification as read and navigate to serie', async () => {
             const navigateSpy = vi.spyOn(router, 'navigate');
             const notification = mockNotifications[0];
 
-            component.onNotificationClick(notification);
+            const promise = component.onNotificationClick(notification);
 
             const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}`);
             expect(req.request.method).toBe('PUT');
             expect(req.request.body).toEqual({ status: 'read' });
             req.flush({});
+
+            await promise;
 
             expect(notificationService.unreadCount()).toBe(1);
             expect(component['notificationsOpen']()).toBe(false);
@@ -187,17 +189,19 @@ describe('Notifications Integration', () => {
             expect(component['notificationsOpen']()).toBe(false);
         });
 
-        it('should close drawer after clicking notification', () => {
+        it('should close drawer after clicking notification', async () => {
             notificationService.setNotifications(mockNotifications, 2);
             component.toggleNotifications();
             fixture.detectChanges();
 
             expect(component['notificationsOpen']()).toBe(true);
 
-            component.onNotificationClick(mockNotifications[0]);
+            const promise = component.onNotificationClick(mockNotifications[0]);
 
             const req = httpMock.expectOne('/api/notifications/1');
             req.flush({});
+
+            await promise;
 
             expect(component['notificationsOpen']()).toBe(false);
         });

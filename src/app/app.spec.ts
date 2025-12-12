@@ -134,36 +134,36 @@ describe('App', () => {
         expect(message.length).toBeGreaterThan(0);
     });
 
-    it('should handle notification click', () => {
+    it('should handle notification click', async () => {
         const fixture = TestBed.createComponent(App);
         const app = fixture.componentInstance;
         const router = TestBed.inject(Router);
         const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
-        app.onNotificationClick(mockNotification);
+        await app.onNotificationClick(mockNotification);
 
         expect(mockUserNotificationService.markAsRead).toHaveBeenCalledWith(1);
         expect(navigateSpy).toHaveBeenCalledWith(['/serie', 101, 'breaking-bad']);
     });
 
-    it('should not mark read notification as read again', () => {
+    it('should not mark read notification as read again', async () => {
         const fixture = TestBed.createComponent(App);
         const app = fixture.componentInstance;
         const readNotification = { ...mockNotification, status: 'read' as const };
 
-        app.onNotificationClick(readNotification);
+        await app.onNotificationClick(readNotification);
 
         expect(mockUserNotificationService.markAsRead).not.toHaveBeenCalled();
     });
 
-    it('should delete notification and stop propagation', () => {
+    it('should delete notification and stop propagation', async () => {
         const fixture = TestBed.createComponent(App);
         const app = fixture.componentInstance;
         const event = {
             stopPropagation: vi.fn()
         } as unknown as Event;
 
-        app.onNotificationDelete(event, mockNotification);
+        await app.onNotificationDelete(event, mockNotification);
 
         expect(event.stopPropagation).toHaveBeenCalled();
         expect(mockUserNotificationService.delete).toHaveBeenCalledWith(1);
