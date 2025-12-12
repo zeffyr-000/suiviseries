@@ -92,9 +92,9 @@ export class App {
     );
   }
 
-  onNotificationClick(notification: Notification): void {
+  async onNotificationClick(notification: Notification): Promise<void> {
     if (notification.status === 'unread') {
-      this.userNotificationService.markAsRead(notification.user_notification_id);
+      await this.userNotificationService.markAsRead(notification.user_notification_id);
     }
     this.notificationsOpen.set(false);
     const slug = createSlug(notification.serie_name);
