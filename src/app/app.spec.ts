@@ -146,14 +146,14 @@ describe('App', () => {
         expect(navigateSpy).toHaveBeenCalledWith(['/serie', 101, 'breaking-bad']);
     });
 
-    it('should not mark read notification as read again', async () => {
+    it('should call markAsRead even for read notifications (service handles idempotence)', async () => {
         const fixture = TestBed.createComponent(App);
         const app = fixture.componentInstance;
         const readNotification = { ...mockNotification, status: 'read' as const };
 
         await app.onNotificationClick(readNotification);
 
-        expect(mockUserNotificationService.markAsRead).not.toHaveBeenCalled();
+        expect(mockUserNotificationService.markAsRead).toHaveBeenCalledWith(1);
     });
 
     it('should delete notification and stop propagation', async () => {
