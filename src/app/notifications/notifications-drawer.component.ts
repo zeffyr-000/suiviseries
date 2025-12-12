@@ -50,16 +50,14 @@ export class NotificationsDrawerComponent {
         );
     }
 
-    onNotificationClick(notification: Notification): void {
-        if (notification.status === 'unread') {
-            this.userNotificationService.markAsRead(notification.user_notification_id);
-        }
+    async onNotificationClick(notification: Notification): Promise<void> {
+        await this.userNotificationService.markAsRead(notification.user_notification_id);
         const slug = createSlug(notification.serie_name);
         this.router.navigate(['/serie', notification.serie_id, slug]);
     }
 
-    onDeleteClick(event: Event, notification: Notification): void {
+    async onDeleteClick(event: Event, notification: Notification): Promise<void> {
         event.stopPropagation();
-        this.userNotificationService.delete(notification.user_notification_id);
+        await this.userNotificationService.delete(notification.user_notification_id);
     }
 }

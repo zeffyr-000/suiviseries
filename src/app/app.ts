@@ -93,9 +93,8 @@ export class App {
   }
 
   async onNotificationClick(notification: Notification): Promise<void> {
-    if (notification.status === 'unread') {
-      await this.userNotificationService.markAsRead(notification.user_notification_id);
-    }
+    // Always call markAsRead - service handles already read notifications
+    await this.userNotificationService.markAsRead(notification.user_notification_id);
     this.notificationsOpen.set(false);
     const slug = createSlug(notification.serie_name);
     this.router.navigate(['/serie', notification.serie_id, slug]);

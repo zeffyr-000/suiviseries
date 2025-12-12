@@ -27,6 +27,13 @@ export class UserNotificationService {
     }
 
     async markAsRead(userNotificationId: number): Promise<void> {
+        const notification = this._notifications().find(n => n.user_notification_id === userNotificationId);
+
+        // Already read, nothing to do
+        if (!notification || notification.status === 'read') {
+            return;
+        }
+
         // Update UI optimistically
         this._notifications.update(notifications =>
             notifications.map(n =>
