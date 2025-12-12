@@ -72,9 +72,13 @@ globalThis.addEventListener('notificationclick', (event) => {
                     }),
                 // Mark notification as read (runs independently)
                 event.notification.data.notification_id
-                    ? fetch(`/api/notifications/${event.notification.data.notification_id}/read`, {
-                        method: 'POST',
-                        credentials: 'include'
+                    ? fetch(`/api/notifications/${event.notification.data.notification_id}`, {
+                        method: 'PUT',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: 'read' })
                     }).then((response) => {
                         if (!response.ok) {
                             throw new Error(`Failed to mark notification as read. Status: ${response.status}`);

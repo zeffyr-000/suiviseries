@@ -60,8 +60,8 @@ export class PushNotificationService {
 
                 if (data?.notification_id) {
                     this.http.put(
-                        `${environment.apiUrl}/notifications/${data.notification_id}/read`,
-                        {},
+                        `${environment.apiUrl}/notifications/${data.notification_id}`,
+                        { status: 'read' },
                         { withCredentials: true }
                     ).subscribe({
                         error: (err) => console.error('Error marking notification as read:', err)

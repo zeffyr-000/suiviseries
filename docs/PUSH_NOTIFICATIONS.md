@@ -66,19 +66,32 @@ Test push notification
 
 ### Mark Notification as Read
 
-**Endpoint:** `POST /api/notifications/:id/read`
+**Endpoint:** `PUT /api/notifications/:id`
 
 **Authentication:** Required
 
 - Angular HttpClient: `withCredentials: true`
 - Service Worker (Fetch API): `credentials: 'include'`
 
+**Request Body:**
+
+```json
+{
+  "status": "read"
+}
+```
+
 **Response:**
 
 ```json
 {
   "success": true,
-  "message": "Notification marked as read"
+  "message": "Notification marked as read",
+  "notification": {
+    "id": 123,
+    "status": "read",
+    "read_at": "2025-12-12 14:30:00"
+  }
 }
 ```
 
@@ -127,7 +140,7 @@ Test push notification
 1. Service worker receives `notificationclick` event
 2. Closes notification
 3. Focuses existing app window or opens new one at `url`
-4. Sends POST to `/api/notifications/:id/read` to mark as read
+4. Sends PUT to `/api/notifications/:id` with `{"status": "read"}` to mark as read
 
 ## Common Issues
 
@@ -163,5 +176,6 @@ To test push notifications in development:
 
 - Push payload must be valid JSON
 - `notification_id` must exist in database
-- `/api/notifications/:id/read` must accept POST requests
-- Endpoint must return 200 for valid IDs, 404 for invalid ones
+- `PUT /api/notifications/:id` must accept status updates with body `{"status": "read"}`
+- `DELETE /api/notifications/:id` must accept notification deletion
+- Endpoints must return 200 for valid IDs, 404 for invalid ones

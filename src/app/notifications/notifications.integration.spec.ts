@@ -126,8 +126,9 @@ describe('Notifications Integration', () => {
 
             component.onNotificationClick(notification);
 
-            const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}/read`);
-            expect(req.request.method).toBe('POST');
+            const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}`);
+            expect(req.request.method).toBe('PUT');
+            expect(req.request.body).toEqual({ status: 'read' });
             req.flush({});
 
             expect(notificationService.unreadCount()).toBe(1);
@@ -141,8 +142,8 @@ describe('Notifications Integration', () => {
 
             component.onNotificationDelete(event, notification);
 
-            const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}/delete`);
-            expect(req.request.method).toBe('POST');
+            const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}`);
+            expect(req.request.method).toBe('DELETE');
             req.flush({});
 
             await Promise.resolve();
@@ -153,15 +154,15 @@ describe('Notifications Integration', () => {
 
         it('should handle multiple notification actions in sequence', async () => {
             component.onNotificationClick(mockNotifications[0]);
-            const readReq = httpMock.expectOne('/api/notifications/1/read');
+            const readReq = httpMock.expectOne('/api/notifications/1');
             readReq.flush({});
 
             expect(notificationService.unreadCount()).toBe(1);
 
             const event = new MouseEvent('click');
             component.onNotificationDelete(event, mockNotifications[1]);
-            const deleteReq = httpMock.expectOne('/api/notifications/2/delete');
-            expect(deleteReq.request.method).toBe('POST');
+            const deleteReq = httpMock.expectOne('/api/notifications/2');
+            expect(deleteReq.request.method).toBe('DELETE');
             deleteReq.flush({});
 
             await Promise.resolve();
@@ -195,7 +196,7 @@ describe('Notifications Integration', () => {
 
             component.onNotificationClick(mockNotifications[0]);
 
-            const req = httpMock.expectOne('/api/notifications/1/read');
+            const req = httpMock.expectOne('/api/notifications/1');
             req.flush({});
 
             expect(component['notificationsOpen']()).toBe(false);
@@ -213,7 +214,7 @@ describe('Notifications Integration', () => {
 
             component.onNotificationClick(mockNotifications[0]);
 
-            const req = httpMock.expectOne('/api/notifications/1/read');
+            const req = httpMock.expectOne('/api/notifications/1');
             req.error(new ProgressEvent('error'), { status: 500, statusText: 'Server Error' });
 
             await Promise.resolve();
@@ -229,8 +230,7 @@ describe('Notifications Integration', () => {
 
             component.onNotificationDelete(event, mockNotifications[0]);
 
-            const req = httpMock.expectOne('/api/notifications/1/delete');
-            expect(req.request.method).toBe('POST');
+            const req = httpMock.expectOne('/api/notifications/1');
             req.error(new ProgressEvent('error'), { status: 404, statusText: 'Not Found' });
 
             await Promise.resolve();
@@ -248,13 +248,13 @@ describe('Notifications Integration', () => {
             expect(notificationService.unreadCount()).toBe(2);
 
             component.onNotificationClick(mockNotifications[0]);
-            const req1 = httpMock.expectOne('/api/notifications/1/read');
+            const req1 = httpMock.expectOne('/api/notifications/1');
             req1.flush({});
 
             expect(notificationService.unreadCount()).toBe(1);
 
             component.onNotificationClick(mockNotifications[1]);
-            const req2 = httpMock.expectOne('/api/notifications/2/read');
+            const req2 = httpMock.expectOne('/api/notifications/2');
             req2.flush({});
 
             expect(notificationService.unreadCount()).toBe(0);
@@ -267,8 +267,7 @@ describe('Notifications Integration', () => {
             const event = new MouseEvent('click');
             component.onNotificationDelete(event, mockNotifications[0]);
 
-            const req = httpMock.expectOne('/api/notifications/1/delete');
-            expect(req.request.method).toBe('POST');
+            const req = httpMock.expectOne('/api/notifications/1');
             req.flush({});
 
             await Promise.resolve();
