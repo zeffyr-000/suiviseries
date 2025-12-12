@@ -26,38 +26,6 @@ export class UserNotificationService {
         }
     }
 
-    async markAllAsRead(): Promise<void> {
-        const unreadNotifications = this._notifications().filter(n => n.status === 'unread');
-
-        if (unreadNotifications.length === 0) {
-            return;
-        }
-
-        // Update UI immediately
-        this._notifications.update(notifications =>
-            notifications.map(n => n.status === 'unread'
-                ? { ...n, status: 'read', read_at: new Date().toISOString() }
-                : n
-            )
-        );
-        this._unreadCount.set(0);
-
-        // Send API calls in parallel
-        const promises = unreadNotifications.map(notification =>
-            firstValueFrom(
-                this.http.post<{ success: boolean; message: string }>(
-                    `${this.apiUrl}/notifications/${notification.user_notification_id}/read`,
-                    {},
-                    { withCredentials: true }
-                )
-            ).catch(error => {
-                console.error(`Failed to mark notification ${notification.user_notification_id} as read`, error);
-            })
-        );
-
-        await Promise.all(promises);
-    }
-
     async markAsRead(userNotificationId: number): Promise<void> {
         // Update UI optimistically
         this._notifications.update(notifications =>
@@ -71,9 +39,9 @@ export class UserNotificationService {
 
         try {
             await firstValueFrom(
-                this.http.post<{ success: boolean; message: string }>(
-                    `${this.apiUrl}/notifications/${userNotificationId}/read`,
-                    {},
+                this.http.put<{ success: boolean; message: string }>(
+                    `${this.apiUrl}/notifications/${userNotificationId}`,
+                    { status: 'read' },
                     { withCredentials: true }
                 )
             );
@@ -95,9 +63,8 @@ export class UserNotificationService {
     async delete(userNotificationId: number): Promise<void> {
         try {
             await firstValueFrom(
-                this.http.post<{ success: boolean; message: string }>(
-                    `${this.apiUrl}/notifications/${userNotificationId}/delete`,
-                    {},
+                this.http.delete<{ success: boolean; message: string }>(
+                    `${this.apiUrl}/notifications/${userNotificationId}`,
                     { withCredentials: true }
                 )
             );

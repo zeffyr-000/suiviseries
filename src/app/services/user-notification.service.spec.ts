@@ -102,8 +102,9 @@ describe('UserNotificationService', () => {
 
             service.markAsRead(notificationId);
 
-            const req = httpMock.expectOne(`/api/notifications/${notificationId}/read`);
-            expect(req.request.method).toBe('POST');
+            const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
+            expect(req.request.method).toBe('PUT');
+            expect(req.request.body).toEqual({ status: 'read' });
             req.flush({});
 
             const updatedNotification = service.notifications().find(n => n.user_notification_id === notificationId);
@@ -118,7 +119,7 @@ describe('UserNotificationService', () => {
 
             const promise = service.markAsRead(notificationId);
 
-            const req = httpMock.expectOne(`/api/notifications/${notificationId}/read`);
+            const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
             req.error(new ProgressEvent('error'), { status: 500, statusText: 'Server Error' });
 
             await promise;
@@ -127,68 +128,6 @@ describe('UserNotificationService', () => {
             expect(notification?.status).toBe('unread');
             expect(service.unreadCount()).toBe(originalUnreadCount);
             expect(consoleSpy).toHaveBeenCalled();
-        });
-    });
-
-    describe('markAllAsRead', () => {
-        it('should mark all unread notifications as read', async () => {
-            const allUnread: Notification[] = [
-                { ...mockNotifications[0], status: 'unread' },
-                { ...mockNotifications[1], status: 'unread', user_notification_id: 3 }
-            ];
-            service.setNotifications(allUnread, 2);
-
-            const promise = service.markAllAsRead();
-
-            await Promise.resolve();
-
-            const req1 = httpMock.expectOne('/api/notifications/1/read');
-            const req2 = httpMock.expectOne('/api/notifications/3/read');
-            expect(req1.request.method).toBe('POST');
-            expect(req2.request.method).toBe('POST');
-            req1.flush({});
-            req2.flush({});
-
-            await promise;
-
-            expect(service.notifications().every(n => n.status === 'read')).toBe(true);
-            expect(service.unreadCount()).toBe(0);
-        });
-
-        it('should handle empty unread notifications list', async () => {
-            const allRead: Notification[] = [
-                { ...mockNotifications[0], status: 'read', read_at: '2025-11-28T10:30:00Z' },
-                { ...mockNotifications[1], status: 'read', read_at: '2025-11-27T16:00:00Z' }
-            ];
-            service.setNotifications(allRead, 0);
-
-            await service.markAllAsRead();
-
-            expect(service.unreadCount()).toBe(0);
-        });
-
-        it('should handle API errors for individual notifications', async () => {
-            const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-            const allUnread: Notification[] = [
-                { ...mockNotifications[0], status: 'unread' },
-                { ...mockNotifications[1], status: 'unread', user_notification_id: 3 }
-            ];
-            service.setNotifications(allUnread, 2);
-
-            const promise = service.markAllAsRead();
-
-            await Promise.resolve();
-
-            const req1 = httpMock.expectOne('/api/notifications/1/read');
-            const req2 = httpMock.expectOne('/api/notifications/3/read');
-            req1.flush({});
-            req2.error(new ProgressEvent('error'), { status: 500, statusText: 'Server Error' });
-
-            await promise;
-
-            expect(consoleSpy).toHaveBeenCalled();
-            expect(service.notifications().every(n => n.status === 'read')).toBe(true);
-            expect(service.unreadCount()).toBe(0);
         });
     });
 
@@ -202,8 +141,8 @@ describe('UserNotificationService', () => {
 
             const promise = service.delete(notificationId);
 
-            const req = httpMock.expectOne(`/api/notifications/${notificationId}/delete`);
-            expect(req.request.method).toBe('POST');
+            const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
+            expect(req.request.method).toBe('DELETE');
             req.flush({});
 
             await promise;
@@ -220,7 +159,7 @@ describe('UserNotificationService', () => {
 
             const promise = service.delete(notificationId);
 
-            const req = httpMock.expectOne(`/api/notifications/${notificationId}/delete`);
+            const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
             req.error(new ProgressEvent('error'), { status: 404, statusText: 'Not Found' });
 
             await promise;
@@ -234,7 +173,7 @@ describe('UserNotificationService', () => {
 
             const promise = service.delete(2);
 
-            const req = httpMock.expectOne('/api/notifications/2/delete');
+            const req = httpMock.expectOne('/api/notifications/2');
             req.flush({});
 
             await promise;
@@ -273,7 +212,7 @@ describe('UserNotificationService', () => {
             expect(notification?.status).toBe('read');
             expect(service.unreadCount()).toBe(0);
 
-            const req = httpMock.expectOne(`/api/notifications/${notificationId}/read`);
+            const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
             req.flush({});
         });
 
@@ -286,7 +225,7 @@ describe('UserNotificationService', () => {
 
             expect(service.notifications().length).toBe(originalLength);
 
-            const req = httpMock.expectOne(`/api/notifications/${notificationId}/delete`);
+            const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
             req.flush({});
 
             await promise;

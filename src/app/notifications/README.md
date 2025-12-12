@@ -19,7 +19,7 @@ This module manages the real-time notification system for the Suivi Séries appl
 
 - Centralized notification management with Angular Signals
 - State: `notifications()` and `unreadCount()`
-- REST API: POST `/api/notifications/{id}/read`, DELETE `/api/notifications/{id}/delete`
+- REST API: PUT `/api/notifications/{id}`, DELETE `/api/notifications/{id}`
 - Optimistic updates for reactive UX
 - TMDB poster URL generation
 
@@ -230,13 +230,44 @@ Returns user with:
 }
 ```
 
-### POST /api/notifications/:id/read
+### PUT /api/notifications/:id
 
-Marks notification as read (no body required).
+Marks notification as read or unread.
 
-### DELETE /api/notifications/:id/delete
+**Request Body:**
+
+```json
+{
+  "status": "read" // or "unread"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Notification marked as read",
+  "notification": {
+    "id": 123,
+    "status": "read",
+    "read_at": "2025-12-12 14:30:00"
+  }
+}
+```
+
+### DELETE /api/notifications/:id
 
 Permanently deletes notification.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Notification deleted"
+}
+```
 
 ## Future Improvements
 
