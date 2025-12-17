@@ -7,32 +7,9 @@
 @import '@fontsource/roboto/500.css';
 @import '@fontsource/roboto/700.css';
 
-@font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('material-icons/iconfont/material-icons.woff2') format('woff2'),
-       url('material-icons/iconfont/material-icons.woff') format('woff');
-}
-
-.material-icons {
-  font-family: 'Material Icons', sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: 'liga';
-}
+// Material Icons with font-display: block (intentional for UX)
+// Prevents icon flash (FOUT), cached by SW after first load (~125KB)
+@import 'material-icons/iconfont/material-icons.css';
 
 html {
   @include mat.theme((
