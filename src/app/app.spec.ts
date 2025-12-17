@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { signal } from '@angular/core';
 import { App } from './app';
@@ -63,10 +63,12 @@ describe('App', () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [App, getTranslocoTestingModule(), MatDialogModule, NoopAnimationsModule],
+            imports: [App, getTranslocoTestingModule(), MatDialogModule],
             providers: [
                 provideRouter([]),
                 provideHttpClient(),
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
+                provideNoopAnimations(),
                 { provide: AuthService, useValue: mockAuthService },
                 { provide: UserNotificationService, useValue: mockUserNotificationService },
                 { provide: PushNotificationService, useValue: mockPushService }
