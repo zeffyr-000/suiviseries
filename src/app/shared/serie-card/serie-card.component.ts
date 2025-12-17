@@ -27,6 +27,7 @@ import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip
 })
 export class SerieCardComponent {
     readonly serie = input.required<Serie>();
+    readonly priority = input<boolean>(false);
 
     protected getTmdbImageUrl = getTmdbImageUrl;
     protected formatRating = formatRating;

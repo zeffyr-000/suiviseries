@@ -36,8 +36,8 @@
         </div>
         } @else {
         <div class="series-grid">
-            @for (serie of popularSeries(); track serie.id) {
-            <app-serie-card [serie]="serie"></app-serie-card>
+            @for (serie of popularSeries(); track serie.id; let idx = $index) {
+            <app-serie-card [serie]="serie" [priority]="idx < 4"></app-serie-card>
             }
         </div>
 
