@@ -1,6 +1,7 @@
-import { Component, OnInit, computed, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, computed, signal, inject, DestroyRef, ChangeDetectionStrategy, Renderer2, DOCUMENT } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Meta } from '@angular/platform-browser';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -25,6 +26,7 @@ import { SerieVideosComponent } from './serie-videos/serie-videos.component';
 import { SerieSeasonsComponent } from './serie-seasons/serie-seasons.component';
 import { SerieHeaderComponent } from './serie-header/serie-header.component';
 import { SerieRecommendationsComponent } from './serie-recommendations/serie-recommendations.component';
+import { SerieImagesComponent } from './serie-images/serie-images.component';
 import { environment } from '../../environments/environment';
 import { getSerieCanonicalUrl } from '../utils/url.utils';
 
@@ -47,7 +49,8 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
         SerieVideosComponent,
         SerieSeasonsComponent,
         SerieHeaderComponent,
-        SerieRecommendationsComponent
+        SerieRecommendationsComponent,
+        SerieImagesComponent
     ],
     templateUrl: './serie-detail.component.html',
     styleUrl: './serie-detail.component.scss',
@@ -136,6 +139,30 @@ export class SerieDetailComponent implements OnInit {
         return currentSerie?.recommendations || [];
     });
 
+    protected images = computed(() => {
+        const currentSerie = this.serie();
+        return currentSerie?.images || null;
+    });
+
+    protected hasImages = computed(() => {
+        const imgs = this.images();
+        return imgs ? (imgs.backdrops.length > 0 || imgs.posters.length > 0 || imgs.logos.length > 0) : false;
+    });
+
+    // Primary backdrop image for Open Graph meta tags (social media sharing and SEO)
+    protected primaryBackdropUrl = computed(() => {
+        const imgs = this.images();
+        const firstBackdrop = imgs?.backdrops[0];
+        return firstBackdrop ? firstBackdrop.file_path : this.backdropUrl();
+    });
+
+    // Primary poster image for Open Graph meta tags
+    protected primaryPosterUrl = computed(() => {
+        const imgs = this.images();
+        const firstPoster = imgs?.posters[0];
+        return firstPoster ? firstPoster.file_path : this.posterUrl();
+    });
+
     protected isSeasonWatched(seasonId: number): boolean {
         const watchedSeasons = this.watchedSeasons();
         return watchedSeasons.includes(seasonId);
@@ -173,6 +200,9 @@ export class SerieDetailComponent implements OnInit {
     private readonly transloco = inject(TranslocoService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly metadataService = inject(MetadataService);
+    private readonly metaService = inject(Meta);
+    private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
 
     ngOnInit() {
         this.route.params.pipe(
@@ -230,8 +260,9 @@ export class SerieDetailComponent implements OnInit {
             description = this.transloco.translate('seo.serie_detail.default_description');
         }
 
-        const imageUrl = serie.poster_path ? getTmdbImageUrl(serie.poster_path, 'w500') : undefined;
+        const imageUrl = this.primaryBackdropUrl() || (serie.poster_path ? getTmdbImageUrl(serie.poster_path, 'w500') : undefined);
         const canonicalUrl = getSerieCanonicalUrl(serie.id, serie.name, environment.siteUrl);
+        const fullUrl = `${environment.siteUrl}/serie/${serie.id}`;
 
         this.metadataService.updatePageMetadata({
             title,
@@ -239,6 +270,60 @@ export class SerieDetailComponent implements OnInit {
             image: imageUrl,
             canonicalUrl
         });
+
+        // Open Graph specific for TV Series
+        this.metadataService.setOpenGraphData(title, description, imageUrl, fullUrl);
+        this.metaService.updateTag({ property: 'og:type', content: 'video.tv_show' });
+
+        // Structured Data for TV Series
+        const images = [imageUrl, this.primaryPosterUrl()].filter(url => url && url.length > 0);
+        const structuredData: Record<string, unknown> = {
+            '@context': 'https://schema.org',
+            '@type': 'TVSeries',
+            name: serie.name,
+            description: serie.overview
+        };
+
+        if (images.length > 0) {
+            structuredData['image'] = images;
+        }
+
+        // Only include rating if valid data exists
+        if (typeof serie.vote_average === 'number' && serie.vote_count > 0) {
+            structuredData['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                ratingValue: serie.vote_average,
+                bestRating: 10,
+                worstRating: 0,
+                ratingCount: serie.vote_count
+            };
+        }
+
+        this.addStructuredData(structuredData);
+    }
+
+    private addStructuredData(data: Record<string, unknown>): void {
+        // Remove existing structured data first to avoid duplicates
+        const existingScripts = this.document.head.querySelectorAll(
+            'script[type="application/ld+json"][data-schema="serie-detail"]'
+        );
+        existingScripts.forEach((existingScript) => {
+            this.renderer.removeChild(this.document.head, existingScript);
+        });
+
+        // Create and add new structured data
+        const script = this.renderer.createElement('script');
+        this.renderer.setAttribute(script, 'type', 'application/ld+json');
+        this.renderer.setAttribute(script, 'data-schema', 'serie-detail');
+
+        // Escape potential script injection vectors
+        const json = JSON.stringify(data)
+            .replaceAll('</script>', String.raw`<\/script>`)
+            .replaceAll('<!--', String.raw`<\!--`);
+
+        const textNode = this.renderer.createText(json);
+        this.renderer.appendChild(script, textNode);
+        this.renderer.appendChild(this.document.head, script);
     }
 
     protected onToggleFollow() {

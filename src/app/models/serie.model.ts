@@ -28,6 +28,22 @@ export interface Recommendation {
     popularity: number;
 }
 
+export interface SerieImage {
+    file_path: string;
+    width: number;
+    height: number;
+    aspect_ratio: number;
+    vote_average: number;
+    vote_count: number;
+    iso_639_1: string | null;
+}
+
+export interface SerieImages {
+    backdrops: SerieImage[];
+    posters: SerieImage[];
+    logos: SerieImage[];
+}
+
 export interface Episode {
     id: number;
     episode_number: number;
@@ -88,6 +104,7 @@ export interface Serie {
     watch_providers?: WatchProvider[];
     videos?: Video[];
     recommendations?: Recommendation[];
+    images?: SerieImages;
     created_at?: string;
     updated_at?: string;
     poster_url?: string;

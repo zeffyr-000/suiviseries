@@ -228,12 +228,8 @@ test.describe('Notifications', () => {
                     await firstItem.hover();
                     await deleteButton.click();
 
-                    // Wait for deletion
-                    await page.waitForTimeout(500);
-
-                    // Item count should decrease
-                    const newCount = await notificationItems.count();
-                    expect(newCount).toBeLessThan(initialCount);
+                    // Wait for item count to decrease
+                    await expect(notificationItems).toHaveCount(initialCount - 1);
                 }
             }
         });
@@ -260,7 +256,7 @@ test.describe('Notifications', () => {
 
                         // Wait for navigation and badge update
                         await page.waitForURL(/\/serie\/\d+\/.+/);
-                        await page.waitForTimeout(500);
+                        await page.waitForLoadState('networkidle');
 
                         // Go back to check badge
                         await page.goBack();

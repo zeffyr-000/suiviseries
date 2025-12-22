@@ -47,6 +47,10 @@
             <app-serie-videos [videos]="videos()" />
             }
 
+            @if (hasImages()) {
+            <app-serie-images [images]="images()!" />
+            }
+
             @if (!serie()!.data_complete) {
             <mat-card class="incomplete-data-card">
                 <mat-card-content>
