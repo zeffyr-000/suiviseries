@@ -21,7 +21,10 @@ describe('SerieDetailComponent', () => {
         isAuthenticated: ReturnType<typeof vi.fn>;
         currentUser: ReturnType<typeof signal>;
     };
-    let mockMetadataService: { updatePageMetadata: ReturnType<typeof vi.fn> };
+    let mockMetadataService: {
+        updatePageMetadata: ReturnType<typeof vi.fn>;
+        setOpenGraphData: ReturnType<typeof vi.fn>;
+    };
 
     const mockSerie: Serie = {
         id: 1,
@@ -69,7 +72,8 @@ describe('SerieDetailComponent', () => {
         };
 
         mockMetadataService = {
-            updatePageMetadata: vi.fn()
+            updatePageMetadata: vi.fn(),
+            setOpenGraphData: vi.fn()
         };
 
         TestBed.configureTestingModule({

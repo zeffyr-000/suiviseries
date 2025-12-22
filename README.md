@@ -37,6 +37,11 @@ Track your favorite TV series, discover new content, and never miss an episode. 
 - **Custom Theme**: Rose/red color palette with dark mode
 - **Responsive Design**: Optimized for mobile, tablet, and desktop
 - **A11y Accessibility**: Full screen reader support
+- **Image Gallery**: High-resolution series images (backdrops, posters, logos) with advanced slideshow
+  - 6 navigation methods: click, keyboard, wheel, touch swipe, buttons, thumbnail list
+  - Fullscreen mode, download, metadata display
+  - Complete WCAG AA keyboard accessibility
+  - Swipe gesture animations with visual feedback
 
 ### 🌍 International & Performance
 
@@ -55,6 +60,8 @@ Track your favorite TV series, discover new content, and never miss an episode. 
 - 🚀 **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment options
 - 🤝 **[Contributing Guide](docs/CONTRIBUTING.md)** - Development standards and workflow
 - 📡 **[API Documentation](docs/API.md)** - Backend API specifications
+- 🖼️ **[Serie Images Component](docs/SERIE_IMAGES_COMPONENT.md)** - Image gallery feature documentation
+- ✅ **[Code Review Checklist](docs/CODE_REVIEW_SERIE_IMAGES.md)** - Serie images feature review checklist
 
 ## API Proxy Configuration
 

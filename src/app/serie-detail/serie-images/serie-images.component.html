@@ -1,0 +1,203 @@
+@if (hasBackdrops() || hasPosters() || hasLogos()) {
+<mat-card class="images-card">
+    <mat-card-header>
+        <mat-card-title class="headline-small">
+            <mat-icon aria-hidden="true">collections</mat-icon>
+            {{ 'serie_detail.images' | transloco }}
+        </mat-card-title>
+        <button mat-icon-button (click)="showAllImages()" [attr.aria-label]="'serie_detail.show_all_images' | transloco"
+            class="show-all-button">
+            <mat-icon>grid_view</mat-icon>
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+            @if (hasBackdrops()) {
+            <mat-tab [label]="'serie_detail.backdrops' | transloco">
+                <section class="image-list" [attr.aria-label]="'serie_detail.backdrops' | transloco">
+                    @for (image of backdrops(); track image.file_path) {
+                    <button #imageItem class="image-item" type="button"
+                        [class.selected]="selectedImage()?.file_path === image.file_path"
+                        (click)="onImageClick(image, 'backdrop')"
+                        [attr.aria-label]="'serie_detail.view_image' | transloco"
+                        [attr.aria-pressed]="selectedImage()?.file_path === image.file_path">
+                        <img [src]="image.file_path" [alt]="'serie_detail.backdrop_alt' | transloco"
+                            class="image-thumbnail" loading="lazy" [width]="image.width" [height]="image.height">
+                        <div class="image-info">
+                            <span class="image-dimensions label-small">{{ image.width }}×{{ image.height }}</span>
+                            @if (image.vote_average > 0) {
+                            <span class="image-rating label-small">
+                                <mat-icon aria-hidden="true">star</mat-icon>
+                                {{ image.vote_average | number:'1.1-1' }}
+                            </span>
+                            }
+                        </div>
+                    </button>
+                    }
+                </section>
+            </mat-tab>
+            }
+
+            @if (hasPosters()) {
+            <mat-tab [label]="'serie_detail.posters' | transloco">
+                <section class="image-list" [attr.aria-label]="'serie_detail.posters' | transloco">
+                    @for (image of posters(); track image.file_path) {
+                    <button #imageItem class="image-item poster" type="button"
+                        [class.selected]="selectedImage()?.file_path === image.file_path"
+                        (click)="onImageClick(image, 'poster')"
+                        [attr.aria-label]="'serie_detail.view_image' | transloco"
+                        [attr.aria-pressed]="selectedImage()?.file_path === image.file_path">
+                        <img [src]="image.file_path" [alt]="'serie_detail.poster_alt' | transloco"
+                            class="image-thumbnail" loading="lazy" [width]="image.width" [height]="image.height">
+                        <div class="image-info">
+                            <span class="image-dimensions label-small">{{ image.width }}×{{ image.height }}</span>
+                            @if (image.iso_639_1) {
+                            <span class="image-language label-small">{{ image.iso_639_1 | uppercase }}</span>
+                            }
+                            @if (image.vote_average > 0) {
+                            <span class="image-rating label-small">
+                                <mat-icon aria-hidden="true">star</mat-icon>
+                                {{ image.vote_average | number:'1.1-1' }}
+                            </span>
+                            }
+                        </div>
+                    </button>
+                    }
+                </section>
+            </mat-tab>
+            }
+
+            @if (hasLogos()) {
+            <mat-tab [label]="'serie_detail.logos' | transloco">
+                <section class="image-list" [attr.aria-label]="'serie_detail.logos' | transloco">
+                    @for (image of logos(); track image.file_path) {
+                    <button #imageItem class="image-item logo" type="button"
+                        [class.selected]="selectedImage()?.file_path === image.file_path"
+                        (click)="onImageClick(image, 'logo')" [attr.aria-label]="'serie_detail.view_image' | transloco"
+                        [attr.aria-pressed]="selectedImage()?.file_path === image.file_path">
+                        <img [src]="image.file_path" [alt]="'serie_detail.logo_alt' | transloco" class="image-thumbnail"
+                            loading="lazy" [width]="image.width" [height]="image.height">
+                        <div class="image-info">
+                            <span class="image-dimensions label-small">{{ image.width }}×{{ image.height }}</span>
+                        </div>
+                    </button>
+                    }
+                </section>
+            </mat-tab>
+            }
+        </mat-tab-group>
+    </mat-card-content>
+</mat-card>
+}
+
+@if (selectedImage()) {
+<!-- Native <dialog> element is inherently focusable with built-in focus trap -->
+<!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+<dialog #dialogOverlay class="image-preview-overlay" (click)="closePreview()" (keydown)="onKeydown($event)"
+    aria-modal="true" [attr.aria-label]="'serie_detail.image_preview' | transloco">
+    <div #imageContainer class="image-preview-container">
+
+        <div class="toolbar-top">
+            <div class="image-type-badge">
+                <mat-icon aria-hidden="true">
+                    @if (selectedImageType() === 'backdrop') { panorama }
+                    @else if (selectedImageType() === 'poster') { portrait }
+                    @else if (selectedImageType() === 'logo') { image }
+                </mat-icon>
+                <span class="label-medium">{{ getImageTypeLabel() | transloco }}</span>
+            </div>
+
+            <div class="toolbar-actions">
+                <button mat-icon-button (click)="toggleFullscreen(); $event.stopPropagation()" type="button"
+                    [attr.aria-label]="'serie_detail.fullscreen' | transloco">
+                    <mat-icon>{{ isFullscreen() ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+                </button>
+                <button mat-icon-button (click)="downloadImage(); $event.stopPropagation()" type="button"
+                    [attr.aria-label]="'serie_detail.download_image' | transloco">
+                    <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button class="close-button" (click)="closePreview(); $event.stopPropagation()"
+                    type="button" [attr.aria-label]="'common.close' | transloco">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        @if (hasPrevious()) {
+        <button mat-icon-button class="nav-button nav-button-prev" (click)="previousImage($event)" type="button"
+            [attr.aria-label]="'serie_detail.previous_image' | transloco">
+            <mat-icon>chevron_left</mat-icon>
+        </button>
+        }
+
+        @if (hasNext()) {
+        <button mat-icon-button class="nav-button nav-button-next" (click)="nextImage($event)" type="button"
+            [attr.aria-label]="'serie_detail.next_image' | transloco">
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+        }
+
+        <!-- sonarqube-disable-next-line: Alt text is a translation key that resolves to descriptive text without redundant "image" word -->
+        <img [src]="selectedImage()!.file_path"
+            [alt]="('serie_detail.' + (selectedImageType() || 'backdrop') + '_alt') | transloco" class="preview-image"
+            [class.logo-preview]="selectedImageType() === 'logo'">
+
+        <div class="image-counter">
+            <span class="label-large">{{ currentImageIndex() }} / {{ totalImages() }}</span>
+        </div>
+
+        <div class="image-preview-info">
+            <div class="info-row">
+                <span class="body-medium">
+                    <mat-icon aria-hidden="true">aspect_ratio</mat-icon>
+                    {{ selectedImage()!.width }}×{{ selectedImage()!.height }}
+                </span>
+                @if (selectedImage()!.iso_639_1) {
+                <span class="body-medium language-badge">
+                    <mat-icon aria-hidden="true">language</mat-icon>
+                    {{ selectedImage()!.iso_639_1 | uppercase }}
+                </span>
+                }
+            </div>
+            @if (selectedImage()!.vote_average > 0) {
+            <div class="info-row">
+                <span class="body-medium popularity-badge">
+                    <mat-icon aria-hidden="true">star</mat-icon>
+                    {{ selectedImage()!.vote_average | number:'1.1-1' }}/10
+                    <span class="vote-count">({{ 'serie_detail.votes' | transloco: { count: selectedImage()!.vote_count
+                        } }})</span>
+                </span>
+            </div>
+            }
+        </div>
+    </div>
+</dialog>
+}
+
+@if (showAllView()) {
+<!-- Native <dialog> element is inherently focusable with built-in focus trap -->
+<!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+<dialog #allImagesDialog class="all-images-view" [attr.aria-label]="'serie_detail.all_images' | transloco"
+    aria-modal="true" (click)="closeAllView()" (keydown.escape)="closeAllView()">
+    <div class="all-images-header">
+        <h2 class="headline-medium">{{ 'serie_detail.all_images' | transloco }}</h2>
+        <button mat-icon-button (click)="closeAllView()"
+            [attr.aria-label]="'serie_detail.close_all_images' | transloco">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="all-images-grid">
+        @for (image of currentImages(); track image.file_path) {
+        <button class="grid-item" type="button" (click)="onImageClick(image, currentTabType()); closeAllView()"
+            [attr.aria-label]="'serie_detail.view_image' | transloco">
+            <!-- sonarqube-disable-next-line: Alt text is a translation key that resolves to descriptive text without redundant "image" word -->
+            <img [src]="image.file_path" [alt]="('serie_detail.' + currentTabType() + '_alt') | transloco"
+                loading="lazy" [width]="image.width" [height]="image.height">
+            <div class="grid-item-overlay">
+                <span class="label-small">{{ image.width }}×{{ image.height }}</span>
+            </div>
+        </button>
+        }
+    </div>
+</dialog>
+}

@@ -117,7 +117,26 @@ export const frTranslations = {
         "video_thumbnail_alt": "Miniature de {{videoName}}",
         "recommendations": "Recommandations",
         "recommendations_description": "Séries recommandées qui pourraient vous plaire",
-        "view_recommendation": "Voir les détails de {{name}}"
+        "view_recommendation": "Voir les détails de {{name}}",
+        "images": "Images",
+        "backdrops": "Arrière-plans",
+        "posters": "Affiches",
+        "logos": "Logos",
+        "image_type_backdrop": "Arrière-plan",
+        "image_type_poster": "Affiche",
+        "image_type_logo": "Logo",
+        "backdrop_alt": "Arrière-plan de la série",
+        "poster_alt": "Affiche de la série",
+        "logo_alt": "Logo de la série",
+        "view_image": "Voir l'image",
+        "image_preview": "Aperçu de l'image",
+        "previous_image": "Image précédente",
+        "next_image": "Image suivante",
+        "fullscreen": "Plein écran",
+        "download_image": "Télécharger l'image",
+        "show_all_images": "Voir toutes les images",
+        "all_images": "Toutes les images",
+        "close_all_images": "Fermer"
     },
     "auth": {
         "welcome_title": "Bienvenue",
@@ -244,6 +263,7 @@ export const frTranslations = {
         "not_available_dev": "Non disponible en mode développement (build production requis)"
     },
     "common": {
-        "user": "Utilisateur"
+        "user": "Utilisateur",
+        "close": "Fermer"
     }
 } as const;
