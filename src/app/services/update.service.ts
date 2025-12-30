@@ -16,6 +16,9 @@ export class UpdateService {
             return;
         }
 
+        // Force Service Worker update on first load
+        this.swUpdate.checkForUpdate().catch(() => { /* ignore errors */ });
+
         // Check for updates every 6 hours
         const appIsStable$ = this.appRef.isStable.pipe(
             filter(isStable => isStable)

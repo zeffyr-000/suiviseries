@@ -220,7 +220,6 @@ export class AuthService {
     }
 
     private loadUserFromStorage(): void {
-        const token = this.getStorageItem(this.storageKey);
         const userData = this.getStorageItem(this.userStorageKey);
 
         if (!userData) {
@@ -230,13 +229,9 @@ export class AuthService {
         try {
             const user: User = JSON.parse(userData);
             this._currentUser.set(user);
-
-            if (token) {
-                const payload = this.parseJwt(token);
-                if (!this.isTokenValid(payload)) {
-                    this.clearAuthData();
-                }
-            }
+            // Token validity will be verified by refreshSession() call
+            // If the backend session is still valid, user will stay authenticated
+            // If not, clearAuthData() will be called by refreshSession()
         } catch {
             this.clearAuthData();
         }
