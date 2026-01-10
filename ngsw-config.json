@@ -6,14 +6,15 @@
       "name": "app",
       "installMode": "prefetch",
       "resources": {
-        "files": [
-          "/favicon.ico",
-          "/index.html",
-          "/manifest.webmanifest",
-          "/*.css",
-          "/*.js",
-          "!/custom-sw.js"
-        ]
+        "files": ["/index.html", "/manifest.webmanifest", "/*.css", "/*.js", "!/custom-sw.js"]
+      }
+    },
+    {
+      "name": "ui-assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": ["/favicon.ico"]
       }
     },
     {
