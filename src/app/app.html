@@ -20,6 +20,11 @@
           <mat-icon matListItemIcon>search</mat-icon>
           <span matListItemTitle>{{ 'navigation.search' | transloco }}</span>
         </mat-list-item>
+        <mat-list-item routerLink="/legal" (click)="toggleMenu()" (keydown.enter)="toggleMenu()"
+          (keydown.space)="$event.preventDefault(); toggleMenu()" routerLinkActive="mat-mdc-list-item-active">
+          <mat-icon matListItemIcon>gavel</mat-icon>
+          <span matListItemTitle>{{ 'navigation.legal' | transloco }}</span>
+        </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
 

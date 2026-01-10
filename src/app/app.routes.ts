@@ -21,6 +21,10 @@ export const routes: Routes = [
         loadComponent: () => import('./serie-detail/serie-detail.component').then(m => m.SerieDetailComponent)
     },
     {
+        path: 'legal',
+        loadComponent: () => import('./legal/legal.component').then(m => m.LegalComponent)
+    },
+    {
         path: '**',
         redirectTo: ''
     }

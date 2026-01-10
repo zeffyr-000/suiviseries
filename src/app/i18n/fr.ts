@@ -23,6 +23,10 @@ export const frTranslations = {
         },
         "serie_detail": {
             "default_description": "Découvrez une série TV captivante. Suivez les épisodes et gérez votre progression."
+        },
+        "legal": {
+            "title": "Mentions légales | Suivi Séries",
+            "description": "Mentions légales, informations sur l'auteur et conditions d'utilisation de Suivi Séries."
         }
     },
     "navigation": {
@@ -31,7 +35,8 @@ export const frTranslations = {
         "search": "Rechercher",
         "trending": "Tendances",
         "top_rated": "Mieux Notées",
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "legal": "Mentions légales"
     },
     "hero": {
         "title": "Découvrez des Séries TV Incroyables",
@@ -262,6 +267,44 @@ export const frTranslations = {
         "confirmation_disabled_title": "Notifications désactivées",
         "confirmation_disabled_body": "Vous ne recevrez plus d'alertes push.",
         "not_available_dev": "Non disponible en mode développement (build production requis)"
+    },
+    "legal": {
+        "title": "Mentions légales",
+        "subtitle": "Informations légales et à propos du projet",
+        "about": {
+            "title": "À propos du projet",
+            "description": "Suivi Séries est une application de démonstration conçue par Christophe Saint-Julien pour illustrer l'ensemble de ses compétences techniques. De l'idée initiale à la mise en production, ce projet couvre tout le cycle de développement d'une application web moderne avec une exigence de qualité professionnelle.",
+            "purpose": "Ce projet démontre la maîtrise des dernières fonctionnalités d'Angular : architecture zoneless, signals, standalone components et progressive web app. Il illustre également les bonnes pratiques en matière de tests, d'accessibilité, de performance et d'expérience utilisateur. Il sert de support pour des candidatures et entretiens techniques.",
+            "technologies_label": "Technologies utilisées"
+        },
+        "highlights": {
+            "title": "Points forts",
+            "zoneless_title": "Architecture Zoneless & Signals",
+            "zoneless_desc": "Performances optimales grâce à l'élimination de Zone.js et l'utilisation des signals Angular.",
+            "a11y_title": "Accessibilité (WCAG AA)",
+            "a11y_desc": "Navigation au clavier, attributs ARIA, contrastes conformes et design responsive.",
+            "tests_title": "Tests automatisés",
+            "tests_desc": "Couverture complète avec Vitest (unitaires) et Playwright (E2E), linting ESLint."
+        },
+        "author": {
+            "title": "Auteur & Développeur",
+            "role": "Développeur Front-End Expert Angular",
+            "github_profile": "Profil GitHub",
+            "github_profile_desc": "Découvrir l'ensemble des projets open source, contributions et expérimentations techniques de l'auteur.",
+            "project_repo": "Code source du projet",
+            "project_repo_desc": "Consulter le code source complet de Suivi Séries : architecture, tests unitaires, bonnes pratiques et documentation technique."
+        },
+        "disclaimer": {
+            "title": "Avertissement",
+            "not_production": "Cette application est un projet personnel de démonstration. Elle n'a pas vocation à être utilisée en production ni à fournir un service pérenne.",
+            "may_disappear": "L'application peut être modifiée, suspendue ou supprimée à tout moment, sans préavis. Les données utilisateur ne sont pas garanties et peuvent être perdues.",
+            "recommendation": "Pour un suivi fiable de vos séries TV, il est recommandé d'utiliser des applications établies et pérennes telles que Trakt, TV Time, SeriesGuide ou d'autres services reconnus."
+        },
+        "data": {
+            "title": "Données",
+            "description": "Les informations sur les séries TV proviennent de sources tierces et sont affichées à titre indicatif uniquement.",
+            "tmdb_attribution": "Les données des séries sont fournies par The Movie Database (TMDB)."
+        }
     },
     "common": {
         "user": "Utilisateur",
