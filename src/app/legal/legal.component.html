@@ -1,0 +1,164 @@
+<article class="legal-container" itemscope itemtype="https://schema.org/AboutPage">
+    <header class="legal-header">
+        <mat-icon class="header-icon" aria-hidden="true">gavel</mat-icon>
+        <h1 itemprop="name">{{ 'legal.title' | transloco }}</h1>
+        <p class="subtitle" itemprop="description">{{ 'legal.subtitle' | transloco }}</p>
+    </header>
+
+    <div class="legal-content">
+        <section class="legal-section" aria-labelledby="about-title">
+            <mat-card class="legal-card" appearance="outlined">
+                <mat-card-header>
+                    <mat-icon mat-card-avatar class="card-icon">info</mat-icon>
+                    <mat-card-title id="about-title">{{ 'legal.about.title' | transloco }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>{{ 'legal.about.description' | transloco }}</p>
+                    <p>{{ 'legal.about.purpose' | transloco }}</p>
+                    <ul class="tech-list" [attr.aria-label]="'legal.about.technologies_label' | transloco">
+                        <li>
+                            <mat-icon aria-hidden="true">code</mat-icon>
+                            <span>Angular 21</span>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">palette</mat-icon>
+                            <span>Material Design 3</span>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">phone_android</mat-icon>
+                            <span>Progressive Web App (PWA)</span>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">bolt</mat-icon>
+                            <span>Zoneless Architecture</span>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">speed</mat-icon>
+                            <span>Signals & OnPush</span>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">science</mat-icon>
+                            <span>Vitest & Playwright</span>
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+        </section>
+
+        <section class="legal-section" aria-labelledby="highlights-title">
+            <mat-card class="legal-card" appearance="outlined">
+                <mat-card-header>
+                    <mat-icon mat-card-avatar class="card-icon">star</mat-icon>
+                    <mat-card-title id="highlights-title">{{ 'legal.highlights.title' | transloco }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <ul class="feature-list">
+                        <li>
+                            <mat-icon aria-hidden="true">memory</mat-icon>
+                            <div>
+                                <strong>{{ 'legal.highlights.zoneless_title' | transloco }}</strong>
+                                <span>{{ 'legal.highlights.zoneless_desc' | transloco }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">accessibility</mat-icon>
+                            <div>
+                                <strong>{{ 'legal.highlights.a11y_title' | transloco }}</strong>
+                                <span>{{ 'legal.highlights.a11y_desc' | transloco }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <mat-icon aria-hidden="true">science</mat-icon>
+                            <div>
+                                <strong>{{ 'legal.highlights.tests_title' | transloco }}</strong>
+                                <span>{{ 'legal.highlights.tests_desc' | transloco }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </mat-card-content>
+            </mat-card>
+        </section>
+
+        <section class="legal-section" aria-labelledby="author-title" itemscope itemtype="https://schema.org/Person">
+            <mat-card class="legal-card author-card" appearance="outlined">
+                <mat-card-header>
+                    <mat-icon mat-card-avatar class="card-icon">person</mat-icon>
+                    <mat-card-title id="author-title">{{ 'legal.author.title' | transloco }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="author-info">
+                        <div class="author-name" itemprop="name">
+                            <mat-icon aria-hidden="true">badge</mat-icon>
+                            <span>{{ authorName }}</span>
+                        </div>
+                        <p class="author-role" itemprop="jobTitle">{{ 'legal.author.role' | transloco }}</p>
+                    </div>
+                    <div class="author-skills">
+                        <span class="skill-tag">Angular</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">RxJS</span>
+                        <span class="skill-tag">Material Design</span>
+                        <span class="skill-tag">PWA</span>
+                        <span class="skill-tag">API REST</span>
+                        <span class="skill-tag">HTML5 / CSS3 / SCSS</span>
+                        <span class="skill-tag">Git</span>
+                    </div>
+                    <div class="author-links">
+                        <div class="link-item">
+                            <a [href]="authorGithub" target="_blank" rel="noopener noreferrer" mat-stroked-button
+                                itemprop="url">
+                                <mat-icon>open_in_new</mat-icon>
+                                {{ 'legal.author.github_profile' | transloco }}
+                            </a>
+                            <p class="link-description">{{ 'legal.author.github_profile_desc' | transloco }}</p>
+                        </div>
+                        <div class="link-item">
+                            <a [href]="projectRepo" target="_blank" rel="noopener noreferrer" mat-stroked-button>
+                                <mat-icon>folder_open</mat-icon>
+                                {{ 'legal.author.project_repo' | transloco }}
+                            </a>
+                            <p class="link-description">{{ 'legal.author.project_repo_desc' | transloco }}</p>
+                        </div>
+                    </div>
+                    <meta itemprop="sameAs" [content]="authorGithub">
+                </mat-card-content>
+            </mat-card>
+        </section>
+
+        <section class="legal-section" aria-labelledby="disclaimer-title">
+            <mat-card class="legal-card warning-card" appearance="outlined">
+                <mat-card-header>
+                    <mat-icon mat-card-avatar class="card-icon warning-icon">warning</mat-icon>
+                    <mat-card-title id="disclaimer-title">{{ 'legal.disclaimer.title' | transloco }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="warning-content">
+                        <p>{{ 'legal.disclaimer.not_production' | transloco }}</p>
+                        <mat-divider></mat-divider>
+                        <p>{{ 'legal.disclaimer.may_disappear' | transloco }}</p>
+                        <mat-divider></mat-divider>
+                        <p class="recommendation">
+                            <mat-icon aria-hidden="true">lightbulb</mat-icon>
+                            <span>{{ 'legal.disclaimer.recommendation' | transloco }}</span>
+                        </p>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </section>
+
+        <section class="legal-section" aria-labelledby="data-title">
+            <mat-card class="legal-card" appearance="outlined">
+                <mat-card-header>
+                    <mat-icon mat-card-avatar class="card-icon">storage</mat-icon>
+                    <mat-card-title id="data-title">{{ 'legal.data.title' | transloco }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>{{ 'legal.data.description' | transloco }}</p>
+                    <p class="tmdb-attribution">
+                        <span>{{ 'legal.data.tmdb_attribution' | transloco }}</span>
+                    </p>
+                </mat-card-content>
+            </mat-card>
+        </section>
+    </div>
+</article>

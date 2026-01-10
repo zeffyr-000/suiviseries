@@ -1,102 +1,188 @@
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
-## Project-Specific Rules
+## Architecture Overview
 
-### Testing Framework
+Suiviseries is an Angular 21 PWA for TV series tracking with Google OAuth authentication. The app uses a zoneless architecture with signals.
 
-- **CRITICAL**: This project uses **Vitest**, NOT Jasmine/Karma
-- Use `vi.fn()` for mocks, NOT `jasmine.createSpyObj()`
-- Use `vi.spyOn()` for spying on methods
-- Use `vi.useFakeTimers()` and `vi.advanceTimersByTime()` for timers, NOT `fakeAsync()` and `tick()`
-- Use `.mockClear()`, `.mockReturnValue()`, `.mockImplementation()` for mock controls
-- Access mock calls with `.mock.calls`, NOT `.calls.allArgs()`
-- Import `expect` from `vitest` when using advanced matchers
-- Use `vi.restoreAllMocks()` in `afterEach()` to clean up
+### Key Service Patterns
 
-### Code Style
+- **AuthService** (`services/auth.service.ts`): Manages Google OAuth, JWT tokens in localStorage, and user state via signals
+- **SeriesService** (`services/series.service.ts`): REST API calls to `/api/*` endpoints, caches user series
+- **NotificationService** (`services/notification.service.ts`): Wrapper around `MatSnackBar` using translation keys
+- **UserNotificationService** (`services/user-notification.service.ts`): Real-time notification state with signals
 
-- Use **simple comments** `//` for documentation, NOT JSDoc `/** */`
-- Keep comments concise and inline when possible
-- Use `console.error()` in error handlers, NOT empty functions `() => {}`
-- Follow ESLint rule `@typescript-eslint/no-empty-function`
-- **Write all comments in English**, never in French or other languages
-- Only comment when necessary; prefer self-documenting code
-- Avoid redundant comments that simply restate what the code does
+### Data Flow
 
-### Material Design Integration
+```
+Google OAuth → AuthService → JWT token → authInterceptor → Backend API (/api/*)
+                                                              ↓
+                          SeriesService ← HTTP responses ←────┘
+```
 
-- **ALWAYS prefer Material Design components** over custom implementations
-- Use `MatSnackBar` for notifications (NOT custom notification components)
-- Leverage Material's built-in accessibility features
-- Use Material typography and theming system
-- Import `provideAnimationsAsync()` in app config for Material components
-- **MatMenu has a hardcoded max-width of 280px** - use `MatSidenav` with `position="end"` for wider panels (e.g., notifications)
-- For side panels with rich content: use `mat-sidenav-container` with `mode="over"` and sync state with `(openedChange)` event
+### API Proxy (Development)
 
-### Transloco i18n
+Calls to `/api/*` are proxied to `http://localhost:8888/suiviseries-api/www/` via `proxy.conf.json`.
 
-- Use translation keys in tests, NOT translated strings
-- Example: `expect(...).toBe('notifications.success.serie_added')` NOT `'Série ajoutée'`
-- Create reusable `getTranslocoTestingModule()` helper for tests
-- Never inline `TranslocoTestingModule.forRoot()` in individual test files
-- All user-facing text MUST use Transloco translation keys
-- Never hardcode display strings in templates or components
+### HTTP Error Handling Pattern
+
+All HTTP calls follow this pattern - return empty/default value on error, notify user:
+
+```typescript
+return this.http.get<Response>(`${this.apiUrl}/endpoint`).pipe(
+  map((response) => (response.success ? response.results : [])),
+  catchError(() => {
+    this.notificationService.error('notifications.errors.your_key');
+    return of([]);
+  })
+);
+```
+
+### Auth Guard
+
+`authGuard` redirects unauthenticated users to home with login dialog:
+
+```typescript
+router.navigate(['/'], { queryParams: { returnUrl: state.url, login: 'true' } });
+```
+
+## Developer Commands
+
+```bash
+npm start          # Dev server with API proxy (http://localhost:4200)
+npm test           # Vitest unit tests
+npm run e2e        # Playwright E2E tests
+npm run e2e:ui     # Playwright with UI mode
+npm run lint       # ESLint
+npm run format     # Prettier
+```
+
+## Testing Framework: Vitest (NOT Jasmine)
+
+**CRITICAL**: This project uses **Vitest**, NOT Jasmine/Karma.
+
+### Vitest Patterns
+
+```typescript
+import { vi, expect } from 'vitest';
+
+// Mock: vi.fn().mockReturnValue(of(data))
+// Timers: vi.useFakeTimers(), vi.advanceTimersByTime(1000)
+// Inspect: mockMethod.mock.calls, mockMethod.mockClear()
+// Cleanup: vi.restoreAllMocks() in afterEach()
+```
+
+### Test Setup with Mocks
+
+Use factory functions from `testing/mocks/` - **NEVER inline TranslocoTestingModule.forRoot()**:
+
+```typescript
+import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
+import { createMockAuthService, createMockSeriesService } from '../testing/mocks';
+
+beforeEach(() => {
+  TestBed.configureTestingModule({
+    imports: [HomeComponent, getTranslocoTestingModule()],
+    providers: [
+      { provide: AuthService, useValue: createMockAuthService() },
+      { provide: SeriesService, useValue: createMockSeriesService() },
+    ],
+  });
+});
+
+afterEach(() => vi.restoreAllMocks());
+```
+
+### Available Mock Factories
+
+- `createMockSerie(overrides?)`, `createMockSeason()`, `createMockEpisode()`
+- `createMockUser()`, `createMockAuthService()`, `createMockAuthenticatedAuthService()`
+- `createMockSeriesService()`, `createMockMetadataService()`, `createMockMatDialog()`
+
+### Translation Keys in Tests
+
+Test against translation keys, NOT translated strings:
+
+```typescript
+expect(notificationService.error).toHaveBeenCalledWith('notifications.errors.load_series');
+```
+
+## Code Style
+
+- **Comments**: Simple `//` in English only, NOT JSDoc `/** */`
+- **Error handlers**: Use `console.error()`, NOT empty functions per `@typescript-eslint/no-empty-function`
 
 ## TypeScript Best Practices
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
-- Use proper type assertions: `(value as Type)` instead of casting with `any`
+- Use strict type checking; prefer type inference when obvious
+- Avoid `any`; use `unknown` when type is uncertain
+- Use `(value as Type)` instead of casting with `any`
 
-## Angular Best Practices
+## Angular Patterns
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
-- Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
-- Use `NgOptimizedImage` for all static images.
-  - `NgOptimizedImage` does not work for inline base64 images.
+### Component Structure
 
-## Accessibility Requirements
+```typescript
+@Component({
+  selector: 'app-example',
+  imports: [TranslocoModule, MatButtonModule], // Standalone by default in v21
+  templateUrl: './example.component.html', // ALWAYS separate files
+  styleUrl: './example.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ExampleComponent {
+  readonly data = input.required<Data>(); // input() not @Input()
+  protected readonly derived = computed(() => this.data().value);
+}
+```
 
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
-- Leverage Material Design's built-in ARIA attributes and keyboard navigation
+### Component Rules
 
-### Components
+- Must NOT set `standalone: true` - it's the default in Angular v21+
+- Use `input()`, `output()` functions instead of decorators; `computed()` for derived state
+- **ALWAYS separate files for templates/styles** - never inline
+- Prefer Reactive forms over Template-driven
+- Use `host` object in decorator instead of `@HostBinding`/`@HostListener`
 
-- Keep components small and focused on a single responsibility
-- Use `input()` and `output()` functions instead of decorators
-- Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
-- **ALWAYS use separate files for templates and styles** - never inline `template` or `styles` in `@Component` decorator
-- Use `templateUrl: './component.html'` and `styleUrl: './component.scss'` (relative paths)
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
+### Services
 
-## State Management
+- Use `providedIn: 'root'` for singletons, `inject()` instead of constructor injection
+- Use signals with `_private` pattern: `private readonly _state = signal<T>()` / `readonly state = this._state.asReadonly()`
+- Use `set()` or `update()` on signals, NOT `mutate()`
 
-- Use signals for local component state
-- Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
-- When using Material components with two-way binding (`[opened]`), sync with `(openedChange)` event to avoid stale state
+## Material Design Integration
+
+- Use `NotificationService` (wraps `MatSnackBar`) with translation keys
+- **MatMenu max-width 280px** - use `MatSidenav` with `position="end"` for wider panels
+- For sidenav: use `mode="over"` and sync state with `(openedChange)` event
+- Multiple sidenav: use unique template references (`#sidenav`, `#notificationsSidenav`)
+
+## Transloco i18n
+
+Translations in `i18n/fr.ts` with MessageFormat:
+
+```typescript
+"seasons": "{count, plural, =0 {Aucune saison} one {# saison} other {# saisons}}"
+```
+
+All user-facing text MUST use translation keys via `TranslocoModule`.
 
 ## Templates
 
-- Keep templates simple and avoid complex logic
-- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
-- Use the async pipe to handle observables
-- Do not assume globals like (`new Date()`) are available.
-- Do not write arrow functions in templates (they are not supported).
-- When integrating multiple `mat-sidenav` in a container, use unique template references (`#sidenav`, `#notificationsSidenav`)
+- Use `@if`, `@for`, `@switch` (NOT `*ngIf`, `*ngFor`)
+- Use `class` bindings (NOT `ngClass`), `style` bindings (NOT `ngStyle`)
+- No arrow functions in templates; no globals like `new Date()`
+- Use `| async` pipe for observables
 
-## Services
+## Accessibility
 
-- Design services around a single responsibility
-- Use the `providedIn: 'root'` option for singleton services
-- Use the `inject()` function instead of constructor injection
-- Prefer Material Design services (MatSnackBar, MatDialog) over custom implementations
+- MUST pass AXE checks and WCAG AA
+- Leverage Material's built-in ARIA and keyboard navigation
+- Use `NgOptimizedImage` for static images (NOT for inline base64)
+
+## Key Files
+
+- `app.config.ts`: Providers (zoneless, router, HTTP, Transloco)
+- `app.routes.ts`: Lazy-loaded routes with `authGuard`
+- `testing/transloco-testing.module.ts`: Transloco test helper
+- `testing/mocks/`: Mock factories for all services
+- `models/`: TypeScript interfaces (`Serie`, `User`, `Notification`)

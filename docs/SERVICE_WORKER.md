@@ -63,19 +63,14 @@ The application uses **three asset groups** with different caching strategies to
       }
     },
     {
-      "name": "ui-assets",
-      "installMode": "lazy",
-      "updateMode": "prefetch",
-      "resources": {
-        "files": ["/favicon.ico"]
-      }
-    },
-    {
       "name": "assets",
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)",
+          "!/favicon.ico"
+        ]
       }
     }
   ]
@@ -96,14 +91,17 @@ The application uses **three asset groups** with different caching strategies to
 | `prefetch` | Updated immediately when a new version is available | Assets that should stay fresh |
 | `lazy`     | Updated only when requested                         | Rarely changing assets        |
 
-#### ⚠️ CRITICAL: Why `favicon.ico` is in a Separate Group
+#### ⚠️ CRITICAL: Why `favicon.ico` is Completely Excluded
 
-The favicon is placed in the `ui-assets` group with `installMode: "lazy"` instead of `prefetch` because:
+The favicon is **completely excluded** from service worker caching (`!/favicon.ico`) because:
 
-1. **Hash validation**: Files in `prefetch` groups are validated with SHA hashes during SW installation
-2. **Build/deploy mismatch**: If the favicon changes between build and deploy (or is served differently by CDN), the hash won't match
-3. **Installation failure**: Hash mismatches cause `VERSION_INSTALLATION_FAILED` errors and block the entire SW update
-4. **Non-critical**: The favicon is not essential for the app to function—lazy loading is acceptable
+1. **CDN/Server transformation**: Many CDNs and servers transform, compress, or optimize favicons, changing their hash
+2. **Hash validation always fails**: Even in `lazy` mode, Angular validates file hashes when caching
+3. **Build/deploy mismatch**: The file served in production may differ from the build artifact
+4. **Installation failure**: Hash mismatches cause `VERSION_INSTALLATION_FAILED` errors blocking SW updates
+5. **Non-critical asset**: The favicon loads fine without SW caching—the browser handles it natively
+
+**Lesson learned**: If any asset consistently causes hash mismatches in production, exclude it entirely rather than trying different cache strategies.
 
 #### ⚠️ CRITICAL: Why `custom-sw.js` Must Be Excluded
 
@@ -119,13 +117,14 @@ The `custom-sw.js` file **MUST NOT** be included in the cached assets because:
 
 To prevent `Hash mismatch (cacheBustedFetchFromNetwork)` errors in production:
 
-| Rule                                      | Explanation                                                                  |
-| ----------------------------------------- | ---------------------------------------------------------------------------- |
-| **Never put volatile assets in prefetch** | Favicons, logos, and assets that might change should use `lazy` install mode |
-| **Exclude the service worker file**       | `!/custom-sw.js` must be in the exclusion list                               |
-| **Use atomic deployments**                | All files should be deployed simultaneously to avoid version mismatches      |
-| **Verify build output**                   | Check `ngsw.json` hashTable matches actual file hashes before deploying      |
-| **Clear CDN cache on deploy**             | Stale cached files at CDN level cause hash mismatches                        |
+| Rule                                    | Explanation                                                             |
+| --------------------------------------- | ----------------------------------------------------------------------- |
+| **Exclude CDN-transformed assets**      | `!/favicon.ico` - assets that CDN may modify must be excluded entirely  |
+| **Exclude the service worker file**     | `!/custom-sw.js` must be in the exclusion list                          |
+| **Use atomic deployments**              | All files should be deployed simultaneously to avoid version mismatches |
+| **Verify build output**                 | Check `ngsw.json` hashTable matches actual file hashes before deploying |
+| **Clear CDN cache on deploy**           | Stale cached files at CDN level cause hash mismatches                   |
+| **Exclude persistently failing assets** | If an asset always fails hash validation, exclude it rather than debug  |
 
 #### Which Assets Go Where?
 
@@ -138,13 +137,15 @@ To prevent `Hash mismatch (cacheBustedFetchFromNetwork)` errors in production:
 │  ✓ *.css                - Stylesheets                           │
 │  ✗ custom-sw.js         - EXCLUDED (updates independently)      │
 ├─────────────────────────────────────────────────────────────────┤
-│                    LAZY (ui-assets group)                       │
-│  ✓ favicon.ico          - Browser tab icon (can change)         │
-├─────────────────────────────────────────────────────────────────┤
 │                    LAZY (assets group)                          │
 │  ✓ *.svg, *.png, *.jpg  - Images                                │
 │  ✓ *.woff, *.woff2      - Fonts                                 │
 │  ✓ icons/*              - PWA icons                             │
+│  ✗ favicon.ico          - EXCLUDED (CDN may transform it)       │
+├─────────────────────────────────────────────────────────────────┤
+│                    NOT CACHED (browser handles)                 │
+│  → favicon.ico          - Loaded directly, no SW caching        │
+│  → custom-sw.js         - Managed by browser SW lifecycle       │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
