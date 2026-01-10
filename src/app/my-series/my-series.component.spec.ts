@@ -7,32 +7,21 @@ import { MySeriesComponent } from './my-series.component';
 import { SeriesService } from '../services/series.service';
 import { MetadataService } from '../services/metadata.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
-import { Serie, SerieStatus } from '../models/serie.model';
+import { createMockSerie, createMockMetadataService } from '../testing/mocks';
 
 describe('MySeriesComponent', () => {
     let component: MySeriesComponent;
     let mockSeriesService: { getUserSeries: ReturnType<typeof vi.fn> };
-    let mockMetadataService: { updatePageMetadata: ReturnType<typeof vi.fn> };
+    let mockMetadataService: ReturnType<typeof createMockMetadataService>;
 
-    const mockSeries: Serie[] = [
-        {
-            id: 1,
-            tmdb_id: 101,
+    const mockSeries = [
+        createMockSerie({
             name: 'My Serie 1',
             original_name: 'My Serie 1',
             overview: 'Description 1',
-            poster_path: '/poster1.jpg',
-            backdrop_path: '/backdrop1.jpg',
-            first_air_date: '2024-01-01',
-            last_air_date: null,
-            vote_average: 8.5,
-            vote_count: 1000,
-            status: SerieStatus.RETURNING,
             number_of_seasons: 3,
-            number_of_episodes: 30,
-            popularity: 100,
-            data_complete: true
-        }
+            number_of_episodes: 30
+        })
     ];
 
     beforeEach(() => {
@@ -40,9 +29,7 @@ describe('MySeriesComponent', () => {
             getUserSeries: vi.fn().mockReturnValue(of(mockSeries))
         };
 
-        mockMetadataService = {
-            updatePageMetadata: vi.fn()
-        };
+        mockMetadataService = createMockMetadataService();
 
         TestBed.configureTestingModule({
             imports: [
@@ -132,11 +119,12 @@ describe('MySeriesComponent', () => {
         });
 
         it('should update series list', () => {
-            const newSeries: Serie[] = [{
-                ...mockSeries[0],
-                id: 2,
-                name: 'New Serie'
-            }];
+            const newSeries = [
+                createMockSerie({
+                    id: 2,
+                    name: 'New Serie'
+                })
+            ];
             mockSeriesService.getUserSeries.mockReturnValue(of(newSeries));
 
             component['onRefresh']();

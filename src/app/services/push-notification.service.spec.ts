@@ -152,6 +152,199 @@ describe('PushNotificationService', () => {
         });
     });
 
+    describe('notification clicks', () => {
+        it('should navigate when notification has url data', () => {
+            const mockNotificationClick = {
+                notification: {
+                    data: {
+                        url: '/my-series'
+                    }
+                }
+            };
+
+            const navigateSpy = vi.fn().mockResolvedValue(true);
+            mockRouter.navigateByUrl = navigateSpy;
+
+            // Create a new service with notification clicks that emit our mock event
+            const clickSwPush = {
+                ...mockSwPush,
+                notificationClicks: of(mockNotificationClick),
+                messages: of()
+            };
+
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [
+                    PushNotificationService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                    { provide: SwPush, useValue: clickSwPush },
+                    { provide: Router, useValue: mockRouter }
+                ]
+            });
+
+            TestBed.inject(PushNotificationService);
+            TestBed.inject(HttpTestingController).verify();
+
+            expect(navigateSpy).toHaveBeenCalledWith('/my-series');
+        });
+
+        it('should mark notification as read when notification has id', () => {
+            const mockNotificationClick = {
+                notification: {
+                    data: {
+                        notification_id: 123
+                    }
+                }
+            };
+
+            const clickSwPush = {
+                ...mockSwPush,
+                notificationClicks: of(mockNotificationClick),
+                messages: of()
+            };
+
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [
+                    PushNotificationService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                    { provide: SwPush, useValue: clickSwPush },
+                    { provide: Router, useValue: mockRouter }
+                ]
+            });
+
+            TestBed.inject(PushNotificationService);
+            const testHttpMock = TestBed.inject(HttpTestingController);
+
+            const req = testHttpMock.expectOne(`${environment.apiUrl}/notifications/123`);
+            expect(req.request.method).toBe('PUT');
+            expect(req.request.body).toEqual({ status: 'read' });
+            req.flush({});
+
+            testHttpMock.verify();
+        });
+
+        it('should handle notification click with both url and notification_id', () => {
+            const mockNotificationClick = {
+                notification: {
+                    data: {
+                        url: '/serie/42',
+                        notification_id: 456
+                    }
+                }
+            };
+
+            const navigateSpy = vi.fn().mockResolvedValue(true);
+            mockRouter.navigateByUrl = navigateSpy;
+
+            const clickSwPush = {
+                ...mockSwPush,
+                notificationClicks: of(mockNotificationClick),
+                messages: of()
+            };
+
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [
+                    PushNotificationService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                    { provide: SwPush, useValue: clickSwPush },
+                    { provide: Router, useValue: mockRouter }
+                ]
+            });
+
+            TestBed.inject(PushNotificationService);
+            const testHttpMock = TestBed.inject(HttpTestingController);
+
+            expect(navigateSpy).toHaveBeenCalledWith('/serie/42');
+
+            const req = testHttpMock.expectOne(`${environment.apiUrl}/notifications/456`);
+            req.flush({});
+
+            testHttpMock.verify();
+        });
+
+        it('should handle notification click without data', () => {
+            const mockNotificationClick = {
+                notification: {
+                    data: null
+                }
+            };
+
+            const navigateSpy = vi.fn();
+            mockRouter.navigateByUrl = navigateSpy;
+
+            const clickSwPush = {
+                ...mockSwPush,
+                notificationClicks: of(mockNotificationClick),
+                messages: of()
+            };
+
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [
+                    PushNotificationService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                    { provide: SwPush, useValue: clickSwPush },
+                    { provide: Router, useValue: mockRouter }
+                ]
+            });
+
+            TestBed.inject(PushNotificationService);
+            TestBed.inject(HttpTestingController).verify();
+
+            expect(navigateSpy).not.toHaveBeenCalled();
+        });
+
+        it('should handle API error when marking notification as read', () => {
+            const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+            const mockNotificationClick = {
+                notification: {
+                    data: {
+                        notification_id: 789
+                    }
+                }
+            };
+
+            const clickSwPush = {
+                ...mockSwPush,
+                notificationClicks: of(mockNotificationClick),
+                messages: of()
+            };
+
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [
+                    PushNotificationService,
+                    provideHttpClient(),
+                    provideHttpClientTesting(),
+                    { provide: SwPush, useValue: clickSwPush },
+                    { provide: Router, useValue: mockRouter }
+                ]
+            });
+
+            TestBed.inject(PushNotificationService);
+            const testHttpMock = TestBed.inject(HttpTestingController);
+
+            const req = testHttpMock.expectOne(`${environment.apiUrl}/notifications/789`);
+            req.error(new ProgressEvent('network error'));
+
+            testHttpMock.verify();
+
+            expect(consoleSpy).toHaveBeenCalledWith(
+                'Error marking notification as read:',
+                expect.anything()
+            );
+
+            consoleSpy.mockRestore();
+        });
+    });
+
     describe('subscribeToPush', () => {
         it('should subscribe to push notifications successfully', async () => {
             const promise = new Promise<PushSubscriptionData>((resolve, reject) => {

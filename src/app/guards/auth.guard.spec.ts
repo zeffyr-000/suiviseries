@@ -1,21 +1,17 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { authGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
+import { createMockAuthService, createMockRouter } from '../testing/mocks';
 
 describe('authGuard', () => {
-    let mockAuthService: { isAuthenticated: ReturnType<typeof vi.fn> };
-    let mockRouter: { navigate: ReturnType<typeof vi.fn> };
+    let mockAuthService: ReturnType<typeof createMockAuthService>;
+    let mockRouter: ReturnType<typeof createMockRouter>;
 
     beforeEach(() => {
-        mockAuthService = {
-            isAuthenticated: vi.fn()
-        };
-
-        mockRouter = {
-            navigate: vi.fn()
-        };
+        mockAuthService = createMockAuthService();
+        mockRouter = createMockRouter();
 
         TestBed.configureTestingModule({
             providers: [

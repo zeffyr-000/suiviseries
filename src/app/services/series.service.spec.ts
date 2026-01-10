@@ -4,32 +4,21 @@ import { provideHttpClient } from '@angular/common/http';
 import { vi } from 'vitest';
 import { SeriesService } from './series.service';
 import { NotificationService } from './notification.service';
-import { Serie, SerieStatus } from '../models/serie.model';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
+import { createMockSerie } from '../testing/mocks';
 
 describe('SeriesService', () => {
     let service: SeriesService;
     let httpMock: HttpTestingController;
     let notificationService: NotificationService;
 
-    const mockSerie: Serie = {
-        id: 1,
+    const mockSerie = createMockSerie({
         tmdb_id: 12345,
-        name: 'Test Serie',
         original_name: 'Test Serie Original',
         overview: 'Test overview',
-        poster_path: '/poster.jpg',
-        backdrop_path: '/backdrop.jpg',
-        first_air_date: '2023-01-01',
-        last_air_date: null,
         number_of_seasons: 3,
-        number_of_episodes: 30,
-        status: SerieStatus.RETURNING,
-        popularity: 100,
-        vote_average: 8.5,
-        vote_count: 1000,
-        data_complete: true
-    };
+        number_of_episodes: 30
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({

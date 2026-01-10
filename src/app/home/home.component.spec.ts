@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
 
@@ -9,65 +9,35 @@ import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
-import { Serie, SerieStatus } from '../models/serie.model';
-import { signal } from '@angular/core';
+import {
+    createMockSerie,
+    createMockAuthService,
+    createMockMetadataService,
+    createMockMatDialog
+} from '../testing/mocks';
+import { LoginComponent } from '../login/login.component';
 
 describe('HomeComponent', () => {
     let component: HomeComponent;
-    let mockSeriesService: {
-        getPopularSeries: ReturnType<typeof vi.fn>;
-        getTopRatedSeries: ReturnType<typeof vi.fn>;
-    };
-    let mockDialog: { open: ReturnType<typeof vi.fn> };
-    let mockAuthService: {
-        isAuthenticated: ReturnType<typeof vi.fn>;
-        currentUser: ReturnType<typeof signal>;
-        loading: ReturnType<typeof signal>;
-    };
-    let mockMetadataService: { updatePageMetadata: ReturnType<typeof vi.fn> };
+    let mockSeriesService: ReturnType<typeof createMockSeriesService>;
+    let mockDialog: ReturnType<typeof createMockMatDialog>;
+    let mockAuthService: ReturnType<typeof createMockAuthService>;
+    let mockMetadataService: ReturnType<typeof createMockMetadataService>;
 
-    const mockSeries: Serie[] = [
-        {
-            id: 1,
-            tmdb_id: 101,
-            name: 'Test Serie 1',
-            original_name: 'Test Serie 1',
-            overview: 'Description 1',
-            poster_path: '/poster1.jpg',
-            backdrop_path: '/backdrop1.jpg',
-            first_air_date: '2024-01-01',
-            last_air_date: null,
-            vote_average: 8.5,
-            vote_count: 1000,
-            status: SerieStatus.RETURNING,
-            number_of_seasons: 1,
-            number_of_episodes: 10,
-            popularity: 100,
-            data_complete: true
-        }
-    ];
+    const mockSeries = [createMockSerie({ name: 'Test Serie 1' })];
 
-    beforeEach(() => {
-        mockSeriesService = {
+    function createMockSeriesService() {
+        return {
             getPopularSeries: vi.fn().mockReturnValue(of(mockSeries)),
             getTopRatedSeries: vi.fn().mockReturnValue(of(mockSeries))
         };
+    }
 
-        mockDialog = {
-            open: vi.fn().mockReturnValue({
-                afterClosed: vi.fn().mockReturnValue(of(null))
-            })
-        };
-
-        mockAuthService = {
-            isAuthenticated: vi.fn().mockReturnValue(false),
-            currentUser: signal(null),
-            loading: signal(false)
-        };
-
-        mockMetadataService = {
-            updatePageMetadata: vi.fn()
-        };
+    beforeEach(() => {
+        mockSeriesService = createMockSeriesService();
+        mockDialog = createMockMatDialog();
+        mockAuthService = createMockAuthService();
+        mockMetadataService = createMockMetadataService();
 
         TestBed.configureTestingModule({
             imports: [
@@ -152,16 +122,160 @@ describe('HomeComponent', () => {
     });
 
     describe('loadMoreSeries', () => {
-        it('should exist and be callable', () => {
+        beforeEach(() => {
+            // Return pageSize items so hasMore remains true
+            const fullPageSeries = new Array(12).fill(null).map((_, i) => ({
+                ...mockSeries[0],
+                id: i + 1,
+                name: `Test Serie ${i + 1}`
+            }));
+            mockSeriesService.getPopularSeries.mockReturnValue(of(fullPageSeries));
             component.ngOnInit();
+        });
+
+        it('should exist and be callable', () => {
             expect(() => component['loadMoreSeries']()).not.toThrow();
+        });
+
+        it('should not load more when already loading', () => {
+            component['loadingMore'].set(true);
+            mockSeriesService.getPopularSeries.mockClear();
+
+            component['loadMoreSeries']();
+
+            expect(mockSeriesService.getPopularSeries).not.toHaveBeenCalled();
+        });
+
+        it('should not load more when no more series available', () => {
+            component['hasMore'].set(false);
+            mockSeriesService.getPopularSeries.mockClear();
+
+            component['loadMoreSeries']();
+
+            expect(mockSeriesService.getPopularSeries).not.toHaveBeenCalled();
+        });
+
+        it('should load next page of series', () => {
+            // After ngOnInit, hasMore should be true
+            expect(component['hasMore']()).toBe(true);
+            mockSeriesService.getPopularSeries.mockClear();
+
+            const nextPageSeries = [{ ...mockSeries[0], id: 100, name: 'Next Page Serie' }];
+            mockSeriesService.getPopularSeries.mockReturnValue(of(nextPageSeries));
+
+            component['loadMoreSeries']();
+
+            expect(mockSeriesService.getPopularSeries).toHaveBeenCalledWith(12, 2);
+        });
+
+        it('should set loadingMore during fetch', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(mockSeries));
+
+            component['loadMoreSeries']();
+
+            // After completion loadingMore should be false
+            expect(component['loadingMore']()).toBe(false);
+        });
+
+        it('should append new series to existing list', () => {
+            const initialCount = component['popularSeries']().length;
+            mockSeriesService.getPopularSeries.mockClear();
+
+            const newSeries = [{
+                ...mockSeries[0],
+                id: 999,
+                name: 'New Serie'
+            }];
+            mockSeriesService.getPopularSeries.mockReturnValue(of(newSeries));
+
+            component['loadMoreSeries']();
+
+            expect(component['popularSeries']()).toHaveLength(initialCount + 1);
+        });
+
+        it('should handle errors gracefully', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(
+                throwError(() => new Error('Network error'))
+            );
+
+            component['loadMoreSeries']();
+
+            expect(component['loadingMore']()).toBe(false);
         });
     });
 
     describe('loadMoreTopRated', () => {
-        it('should exist and be callable', () => {
+        beforeEach(() => {
+            // Return pageSize items so hasMore remains true
+            const fullPageSeries = new Array(12).fill(null).map((_, i) => ({
+                ...mockSeries[0],
+                id: i + 1,
+                name: `Top Rated Serie ${i + 1}`
+            }));
+            mockSeriesService.getPopularSeries.mockReturnValue(of(fullPageSeries));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(fullPageSeries));
             component.ngOnInit();
+        });
+
+        it('should exist and be callable', () => {
             expect(() => component['loadMoreTopRated']()).not.toThrow();
+        });
+
+        it('should not load more when already loading', () => {
+            component['topRatedLoadingMore'].set(true);
+            mockSeriesService.getTopRatedSeries.mockClear();
+
+            component['loadMoreTopRated']();
+
+            expect(mockSeriesService.getTopRatedSeries).not.toHaveBeenCalled();
+        });
+
+        it('should not load more when no more series available', () => {
+            component['topRatedHasMore'].set(false);
+            mockSeriesService.getTopRatedSeries.mockClear();
+
+            component['loadMoreTopRated']();
+
+            expect(mockSeriesService.getTopRatedSeries).not.toHaveBeenCalled();
+        });
+
+        it('should load next page of top rated series', () => {
+            // After ngOnInit, topRatedHasMore should be true
+            expect(component['topRatedHasMore']()).toBe(true);
+            mockSeriesService.getTopRatedSeries.mockClear();
+
+            const nextPageSeries = [{ ...mockSeries[0], id: 100, name: 'Next Top Rated' }];
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(nextPageSeries));
+
+            component['loadMoreTopRated']();
+
+            expect(mockSeriesService.getTopRatedSeries).toHaveBeenCalledWith(12, 2);
+        });
+
+        it('should append new series to existing list', () => {
+            const initialCount = component['topRatedSeries']().length;
+            mockSeriesService.getTopRatedSeries.mockClear();
+
+            const newSeries = [{
+                ...mockSeries[0],
+                id: 999,
+                name: 'Top Rated New'
+            }];
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(newSeries));
+
+            component['loadMoreTopRated']();
+
+            expect(component['topRatedSeries']()).toHaveLength(initialCount + 1);
+        });
+
+        it('should handle errors gracefully', () => {
+            mockSeriesService.getTopRatedSeries.mockReturnValue(
+                throwError(() => new Error('Network error'))
+            );
+
+            component['loadMoreTopRated']();
+
+            expect(component['topRatedLoadingMore']()).toBe(false);
         });
     });
 
@@ -181,6 +295,58 @@ describe('HomeComponent', () => {
                     data: { returnUrl: '/my-series' }
                 })
             );
+        });
+
+        it('should configure dialog with correct options', () => {
+            component['goToLogin']();
+
+            expect(mockDialog.open).toHaveBeenCalledWith(
+                LoginComponent,
+                expect.objectContaining({
+                    width: '400px',
+                    disableClose: false,
+                    autoFocus: true
+                })
+            );
+        });
+    });
+
+    describe('checkForAutoLogin', () => {
+        it('should not open login dialog when not in query params', () => {
+            component.ngOnInit();
+
+            // Default route has no login param
+            expect(mockDialog.open).not.toHaveBeenCalled();
+        });
+
+        it('should not open login dialog when already authenticated', () => {
+            mockAuthService.isAuthenticated.mockReturnValue(true);
+
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [
+                    HomeComponent,
+                    getTranslocoTestingModule()
+                ],
+                providers: [
+                    provideRouter([]),
+                    {
+                        provide: ActivatedRoute,
+                        useValue: {
+                            queryParams: of({ login: 'true' })
+                        }
+                    },
+                    { provide: SeriesService, useValue: mockSeriesService },
+                    { provide: MatDialog, useValue: mockDialog },
+                    { provide: AuthService, useValue: mockAuthService },
+                    { provide: MetadataService, useValue: mockMetadataService }
+                ]
+            });
+
+            const fixture = TestBed.createComponent(HomeComponent);
+            fixture.componentInstance.ngOnInit();
+
+            expect(mockDialog.open).not.toHaveBeenCalled();
         });
     });
 });

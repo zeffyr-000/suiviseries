@@ -4,7 +4,8 @@ export const frTranslations = {
         "description": "Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode.",
         "user_menu": "Menu utilisateur",
         "update": {
-            "new_version_available": "Une nouvelle version est disponible. Recharger maintenant ?"
+            "new_version_available": "Une nouvelle version est disponible. Recharger maintenant ?",
+            "unrecoverable_state": "L'application est dans un état instable. Recharger pour obtenir la dernière version ?"
         }
     },
     "seo": {

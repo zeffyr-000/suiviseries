@@ -4,24 +4,15 @@ import { provideHttpClient } from '@angular/common/http';
 import { vi, beforeEach, afterEach, describe, it, expect } from 'vitest';
 import { AuthService } from './auth.service';
 import { KeepAliveService } from './keep-alive.service';
-import { User, UserStatus } from '../models/user.model';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
+import { createMockUser } from '../testing/mocks';
 
 describe('Session Persistence Integration', () => {
     let authService: AuthService;
     let keepAliveService: KeepAliveService;
     let httpMock: HttpTestingController;
 
-    const mockUser: User = {
-        id: 1,
-        google_id: 'google-123',
-        email: 'test@test.com',
-        display_name: 'Test User',
-        photo_url: 'https://example.com/photo.jpg',
-        status: UserStatus.ACTIVE,
-        created_at: '2023-01-01',
-        last_login: '2023-01-01'
-    };
+    const mockUser = createMockUser();
 
     // Helper function to mock Google Sign-In initialization
     function mockGoogleSignIn(service: AuthService) {

@@ -3,21 +3,19 @@ import { expect } from 'vitest';
 import { ActivatedRoute } from '@angular/router';
 
 import { SerieCardComponent } from './serie-card.component';
-import { Serie, SerieStatus } from '../../models/serie.model';
+import { SerieStatus } from '../../models/serie.model';
 import { getTranslocoTestingModule } from '../../testing/transloco-testing.module';
+import { createMockSerie } from '../../testing/mocks';
 
 describe('SerieCardComponent', () => {
     let component: SerieCardComponent;
     let fixture: ComponentFixture<SerieCardComponent>;
 
-    const mockSerie: Serie = {
-        id: 1,
+    const mockSerie = createMockSerie({
         tmdb_id: 1234,
         name: 'Breaking Bad',
         original_name: 'Breaking Bad',
         overview: 'A chemistry teacher turned meth manufacturer partners with a former student.',
-        poster_path: '/poster.jpg',
-        backdrop_path: '/backdrop.jpg',
         first_air_date: '2008-01-20',
         last_air_date: '2013-09-29',
         number_of_seasons: 5,
@@ -25,9 +23,8 @@ describe('SerieCardComponent', () => {
         status: SerieStatus.ENDED,
         popularity: 95.5,
         vote_average: 9.5,
-        vote_count: 15000,
-        data_complete: true
-    };
+        vote_count: 15000
+    });
 
     beforeEach(() => {
         TestBed.configureTestingModule({
