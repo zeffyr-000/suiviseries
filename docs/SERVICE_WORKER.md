@@ -48,7 +48,9 @@ provideServiceWorker('custom-sw.js', {
 
 ### 2. NGSW Configuration (`ngsw-config.json`)
 
-#### Asset Groups
+#### Asset Groups Architecture
+
+The application uses **three asset groups** with different caching strategies to ensure reliability:
 
 ```json
 {
@@ -57,19 +59,51 @@ provideServiceWorker('custom-sw.js', {
       "name": "app",
       "installMode": "prefetch",
       "resources": {
-        "files": [
-          "/favicon.ico",
-          "/index.html",
-          "/manifest.webmanifest",
-          "/*.css",
-          "/*.js",
-          "!/custom-sw.js" // ⚠️ CRITICAL: Exclude custom-sw.js
-        ]
+        "files": ["/index.html", "/manifest.webmanifest", "/*.css", "/*.js", "!/custom-sw.js"]
+      }
+    },
+    {
+      "name": "ui-assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": ["/favicon.ico"]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
       }
     }
   ]
 }
 ```
+
+#### Install Modes Explained
+
+| Mode       | Behavior                                        | Use For                                        |
+| ---------- | ----------------------------------------------- | ---------------------------------------------- |
+| `prefetch` | Downloaded and cached immediately on SW install | Critical app shell files (index.html, CSS, JS) |
+| `lazy`     | Cached only when first requested by the browser | Non-critical assets (images, icons, fonts)     |
+
+#### Update Modes Explained
+
+| Mode       | Behavior                                            | Use For                       |
+| ---------- | --------------------------------------------------- | ----------------------------- |
+| `prefetch` | Updated immediately when a new version is available | Assets that should stay fresh |
+| `lazy`     | Updated only when requested                         | Rarely changing assets        |
+
+#### ⚠️ CRITICAL: Why `favicon.ico` is in a Separate Group
+
+The favicon is placed in the `ui-assets` group with `installMode: "lazy"` instead of `prefetch` because:
+
+1. **Hash validation**: Files in `prefetch` groups are validated with SHA hashes during SW installation
+2. **Build/deploy mismatch**: If the favicon changes between build and deploy (or is served differently by CDN), the hash won't match
+3. **Installation failure**: Hash mismatches cause `VERSION_INSTALLATION_FAILED` errors and block the entire SW update
+4. **Non-critical**: The favicon is not essential for the app to function—lazy loading is acceptable
 
 #### ⚠️ CRITICAL: Why `custom-sw.js` Must Be Excluded
 
@@ -80,6 +114,39 @@ The `custom-sw.js` file **MUST NOT** be included in the cached assets because:
 2. **Hash conflicts**: Angular's ngsw creates a hash of all cached files. If `custom-sw.js` changes, the hash changes, but the SW might serve the old cached version, causing a hash mismatch.
 
 3. **Unrecoverable state**: Hash mismatches can put the SW into `SAFE_MODE` or `EXISTING_CLIENTS_ONLY` state, breaking the app.
+
+### Hash Mismatch Prevention Rules
+
+To prevent `Hash mismatch (cacheBustedFetchFromNetwork)` errors in production:
+
+| Rule                                      | Explanation                                                                  |
+| ----------------------------------------- | ---------------------------------------------------------------------------- |
+| **Never put volatile assets in prefetch** | Favicons, logos, and assets that might change should use `lazy` install mode |
+| **Exclude the service worker file**       | `!/custom-sw.js` must be in the exclusion list                               |
+| **Use atomic deployments**                | All files should be deployed simultaneously to avoid version mismatches      |
+| **Verify build output**                   | Check `ngsw.json` hashTable matches actual file hashes before deploying      |
+| **Clear CDN cache on deploy**             | Stale cached files at CDN level cause hash mismatches                        |
+
+#### Which Assets Go Where?
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    PREFETCH (app group)                         │
+│  ✓ index.html          - App entry point                        │
+│  ✓ manifest.webmanifest - PWA manifest                          │
+│  ✓ *.js                 - JavaScript bundles                    │
+│  ✓ *.css                - Stylesheets                           │
+│  ✗ custom-sw.js         - EXCLUDED (updates independently)      │
+├─────────────────────────────────────────────────────────────────┤
+│                    LAZY (ui-assets group)                       │
+│  ✓ favicon.ico          - Browser tab icon (can change)         │
+├─────────────────────────────────────────────────────────────────┤
+│                    LAZY (assets group)                          │
+│  ✓ *.svg, *.png, *.jpg  - Images                                │
+│  ✓ *.woff, *.woff2      - Fonts                                 │
+│  ✓ icons/*              - PWA icons                             │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 #### Data Groups (API Caching)
 
@@ -225,19 +292,53 @@ This shows:
 
 #### "Hash mismatch" errors
 
-**Symptoms**: Console errors about hash mismatches, app not updating
+**Symptoms**:
+
+- Console errors: `Hash mismatch (cacheBustedFetchFromNetwork): expected XXX, got YYY`
+- `VERSION_INSTALLATION_FAILED` events in UpdateService
+- Users stuck on old versions
+- Service worker in `EXISTING_CLIENTS_ONLY` state
 
 **Causes**:
 
-1. Files referenced in ngsw-config.json don't exist
-2. CDN or proxy serving stale files
-3. Non-atomic deployment (files updated at different times)
+1. **Volatile asset in prefetch group**: Assets like `favicon.ico` in the `app` group with `prefetch` mode
+2. **Files don't exist**: Files referenced in ngsw-config.json missing from build
+3. **CDN cache mismatch**: CDN serving stale files while ngsw.json has new hashes
+4. **Non-atomic deployment**: Files updated at different times during deploy
+5. **File transformation**: Server or CDN modifying files (compression, optimization)
 
-**Fix**:
+**Immediate Fix for Users**:
 
-- Verify all files in ngsw-config.json exist in the build
-- Clear CDN cache
-- Use atomic deployments
+1. Open DevTools > Application > Storage
+2. Click "Clear site data"
+3. Reload the page
+
+**Permanent Fix**:
+
+1. **Move volatile assets to lazy group**:
+
+   ```json
+   {
+     "name": "ui-assets",
+     "installMode": "lazy",
+     "updateMode": "prefetch",
+     "resources": { "files": ["/favicon.ico"] }
+   }
+   ```
+
+2. **Verify hashes before deploy**:
+
+   ```bash
+   # Check the hash in ngsw.json (base64 SHA-1)
+   cat dist/suiviseries/browser/ngsw.json | jq '.hashTable["/favicon.ico"]'
+
+   # Compare with actual file hash (base64, matching Angular's format)
+   openssl dgst -sha1 -binary dist/suiviseries/browser/favicon.ico | openssl base64
+   ```
+
+3. **Clear CDN cache after every deploy**
+
+4. **Use atomic deployments** (upload all files, then switch)
 
 #### Service worker not updating
 
@@ -302,6 +403,32 @@ this.swUpdate.unrecoverable.subscribe(() => {
    - Make a change and rebuild
    - Reload the page
    - Verify update notification appears
+
+## Production Deployment Checklist
+
+Before every production deployment, verify:
+
+- [ ] **Build completed successfully**: `npm run build` with no errors
+- [ ] **ngsw.json generated**: File exists in `dist/suiviseries/browser/`
+- [ ] **custom-sw.js not in hashTable**: `grep "custom-sw.js" dist/suiviseries/browser/ngsw.json` returns nothing
+- [ ] **favicon.ico not in app group**: Verify it's in `ui-assets` group with `lazy` mode
+- [ ] **All referenced files exist**: Every file in ngsw.json hashTable exists in dist
+- [ ] **Clear CDN cache**: Purge cache for `*.js`, `*.css`, `ngsw.json`, `ngsw-worker.js`
+- [ ] **Atomic deployment**: Upload all files before making them live
+- [ ] **Verify after deploy**: Check `/ngsw/state` shows `NORMAL` driver state
+
+### Post-Deployment Verification
+
+```bash
+# Check service worker state
+curl https://your-app.com/ngsw/state
+
+# Verify ngsw.json is accessible
+curl -I https://your-app.com/ngsw.json
+
+# Check for hash mismatch in browser
+# Open DevTools > Console, reload and look for errors
+```
 
 ## References
 
