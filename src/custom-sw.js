@@ -1,3 +1,26 @@
+/**
+ * Custom Service Worker for Suivi Séries
+ *
+ * This file extends Angular's service worker (ngsw-worker.js) with custom
+ * push notification handling.
+ *
+ * IMPORTANT NOTES:
+ * ================
+ * 1. This file MUST be excluded from ngsw-config.json caching via "!/custom-sw.js"
+ *    Otherwise, service worker updates won't be detected by the browser.
+ *
+ * 2. The importScripts() call MUST be the first executable line.
+ *    Angular's ngsw-worker.js handles all caching logic.
+ *
+ * 3. This file is registered in app.config.ts via:
+ *    provideServiceWorker('custom-sw.js', { ... })
+ *
+ * 4. Changes to this file require a production build to take effect.
+ *
+ * See docs/SERVICE_WORKER.md for full documentation.
+ */
+
+// Import Angular's service worker - MUST be first
 importScripts('./ngsw-worker.js');
 
 globalThis.addEventListener('push', (event) => {

@@ -198,6 +198,106 @@ TestBed.configureTestingModule({
 });
 ```
 
+## Shared Mock Factories
+
+### Overview
+
+To reduce code duplication and improve test maintainability, the project provides a set of **factory functions** for commonly used mock objects. These are located in `src/app/testing/mocks/`.
+
+### Available Mock Factories
+
+| Factory                               | Description                                   |
+| ------------------------------------- | --------------------------------------------- |
+| `createMockSerie()`                   | Creates a mock `Serie` with sensible defaults |
+| `createMockEpisode()`                 | Creates a mock `Episode`                      |
+| `createMockSeason()`                  | Creates a mock `Season` with episodes         |
+| `createMockSerieStats()`              | Creates mock `SerieStats`                     |
+| `createMockSerieUserData()`           | Creates mock user data for a serie            |
+| `createMockSerieWithSeasons()`        | Creates a serie with multiple seasons         |
+| `createMockUser()`                    | Creates a mock `User`                         |
+| `createMockAuthService()`             | Creates a mock `AuthService` with signals     |
+| `createMockMetadataService()`         | Creates a mock `MetadataService`              |
+| `createMockSeriesService()`           | Creates a mock `SeriesService`                |
+| `createMockPushNotificationService()` | Creates a mock `PushNotificationService`      |
+| `createMockMatDialog()`               | Creates a mock `MatDialog`                    |
+| `createMockMatSnackBar()`             | Creates a mock `MatSnackBar`                  |
+| `createMockRouter()`                  | Creates a mock `Router`                       |
+
+### Usage Examples
+
+#### Basic Usage with Overrides
+
+```typescript
+import { createMockSerie, createMockUser, createMockAuthService } from '../testing/mocks';
+
+// Create with default values
+const serie = createMockSerie();
+
+// Create with custom overrides
+const customSerie = createMockSerie({
+  name: 'Breaking Bad',
+  status: SerieStatus.ENDED,
+  number_of_seasons: 5,
+});
+
+// Create a user
+const user = createMockUser({ email: 'custom@test.com' });
+```
+
+#### Using Service Mocks in Tests
+
+```typescript
+import {
+  createMockSerie,
+  createMockAuthService,
+  createMockMetadataService,
+  createMockMatDialog,
+} from '../testing/mocks';
+
+describe('MyComponent', () => {
+  let mockAuthService: ReturnType<typeof createMockAuthService>;
+  let mockMetadataService: ReturnType<typeof createMockMetadataService>;
+
+  const mockSeries = [createMockSerie({ name: 'Test Serie' })];
+
+  beforeEach(() => {
+    mockAuthService = createMockAuthService();
+    mockMetadataService = createMockMetadataService();
+
+    TestBed.configureTestingModule({
+      imports: [MyComponent, getTranslocoTestingModule()],
+      providers: [
+        { provide: AuthService, useValue: mockAuthService },
+        { provide: MetadataService, useValue: mockMetadataService },
+      ],
+    });
+  });
+
+  it('should check authentication', () => {
+    mockAuthService.isAuthenticated.mockReturnValue(true);
+    // ... test logic
+  });
+});
+```
+
+#### Creating Authenticated State
+
+```typescript
+import { createMockAuthenticatedAuthService } from '../testing/mocks';
+
+// Pre-configured authenticated mock
+const authService = createMockAuthenticatedAuthService();
+// isAuthenticated() returns true, currentUser() returns a mock user
+```
+
+### Benefits
+
+- **Consistency**: All tests use the same default values
+- **Maintainability**: Change defaults in one place
+- **Readability**: Tests focus on overrides, not boilerplate
+- **Type Safety**: Factory functions are fully typed
+- **DRY**: Eliminates ~200+ lines of duplicated mock definitions
+
 ### Assertion Strategy
 
 **❌ INCORRECT**: Asserting against translated strings
@@ -354,12 +454,13 @@ it.skip('should do something', () => {
 ## Best Practices Summary
 
 1. ✅ **Use Vitest API** (`vi.fn()`, `vi.spyOn()`, `vi.useFakeTimers()`)
-2. ✅ **Use simple comments** (`//`), not JSDoc (`/** */`)
-3. ✅ **Use translation keys** in assertions, not translated strings
-4. ✅ **Use shared Transloco testing module** (`getTranslocoTestingModule()`)
-5. ✅ **Mock Material services** (MatSnackBar, MatDialog) with `vi.spyOn()`
-6. ✅ **Clean up mocks** with `vi.restoreAllMocks()` in `afterEach()`
-7. ✅ **Use `console.error()`** in error handlers, not empty functions
-8. ✅ **Prefer `unknown`** over `any` for type safety
-9. ✅ **Test business logic** thoroughly, templates optionally
-10. ✅ **Aim for 80% coverage** overall, 70%+ for services
+2. ✅ **Use shared mock factories** from `src/app/testing/mocks/`
+3. ✅ **Use simple comments** (`//`), not JSDoc (`/** */`)
+4. ✅ **Use translation keys** in assertions, not translated strings
+5. ✅ **Use shared Transloco testing module** (`getTranslocoTestingModule()`)
+6. ✅ **Mock Material services** (MatSnackBar, MatDialog) with factory functions
+7. ✅ **Clean up mocks** with `vi.restoreAllMocks()` in `afterEach()`
+8. ✅ **Use `console.error()`** in error handlers, not empty functions
+9. ✅ **Prefer `unknown`** over `any` for type safety
+10. ✅ **Test business logic** thoroughly, templates optionally
+11. ✅ **Aim for 80% coverage** overall, 70%+ for services

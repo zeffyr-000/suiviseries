@@ -6,6 +6,7 @@ import { SearchComponent } from './search.component';
 import { SeriesService } from '../services/series.service';
 import { MetadataService } from '../services/metadata.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
+import { createMockMetadataService } from '../testing/mocks';
 
 describe('SearchComponent', () => {
     let component: SearchComponent;
@@ -13,18 +14,14 @@ describe('SearchComponent', () => {
     let seriesService: {
         searchSeries: ReturnType<typeof vi.fn>;
     };
-    let metadataService: {
-        updatePageMetadata: ReturnType<typeof vi.fn>;
-    };
+    let metadataService: ReturnType<typeof createMockMetadataService>;
 
     beforeEach(() => {
         seriesService = {
             searchSeries: vi.fn().mockReturnValue(of([]))
         };
 
-        metadataService = {
-            updatePageMetadata: vi.fn()
-        };
+        metadataService = createMockMetadataService();
 
         TestBed.configureTestingModule({
             imports: [SearchComponent, getTranslocoTestingModule()],

@@ -1,29 +1,36 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { ApplicationRef } from '@angular/core';
-import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
+import { SwUpdate, VersionReadyEvent, VersionInstallationFailedEvent, UnrecoverableStateEvent } from '@angular/service-worker';
+import { TranslocoService } from '@jsverse/transloco';
 import { Subject } from 'rxjs';
 import { UpdateService } from './update.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 
 describe('UpdateService', () => {
     let service: UpdateService;
+    let translocoService: TranslocoService;
+    let translateSpy: ReturnType<typeof vi.spyOn>;
     let mockSwUpdate: {
         isEnabled: boolean;
         checkForUpdate: ReturnType<typeof vi.fn>;
-        versionUpdates: Subject<VersionReadyEvent>;
+        versionUpdates: Subject<VersionReadyEvent | VersionInstallationFailedEvent>;
+        unrecoverable: Subject<UnrecoverableStateEvent>;
     };
     let mockAppRef: {
         isStable: Subject<boolean>;
     };
     let originalConfirm: typeof globalThis.confirm;
     let originalLocation: typeof globalThis.location;
+    let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+    let consoleInfoSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
         mockSwUpdate = {
             isEnabled: true,
-            checkForUpdate: vi.fn().mockResolvedValue(undefined),
-            versionUpdates: new Subject<VersionReadyEvent>()
+            checkForUpdate: vi.fn().mockResolvedValue(false),
+            versionUpdates: new Subject<VersionReadyEvent | VersionInstallationFailedEvent>(),
+            unrecoverable: new Subject<UnrecoverableStateEvent>()
         };
 
         mockAppRef = {
@@ -32,6 +39,8 @@ describe('UpdateService', () => {
 
         originalConfirm = globalThis.confirm;
         originalLocation = globalThis.location;
+        consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => undefined);
 
         TestBed.configureTestingModule({
             imports: [getTranslocoTestingModule()],
@@ -41,6 +50,9 @@ describe('UpdateService', () => {
                 { provide: ApplicationRef, useValue: mockAppRef }
             ]
         });
+
+        translocoService = TestBed.inject(TranslocoService);
+        translateSpy = vi.spyOn(translocoService, 'translate');
 
         service = TestBed.inject(UpdateService);
     });
@@ -70,11 +82,14 @@ describe('UpdateService', () => {
             });
         });
 
-        it('should not check for updates when app is not stable', () => {
+        it('should not trigger periodic check when app is not stable', () => {
             service.checkForUpdates();
+            // Initial call happens immediately
+            mockSwUpdate.checkForUpdate.mockClear();
 
             mockAppRef.isStable.next(false);
 
+            // Periodic check should not be triggered while app is not stable
             expect(mockSwUpdate.checkForUpdate).not.toHaveBeenCalled();
         });
 
@@ -102,7 +117,8 @@ describe('UpdateService', () => {
                 latestVersion: { hash: 'v2' }
             } as VersionReadyEvent);
 
-            expect(mockConfirm).toHaveBeenCalledWith('Une nouvelle version est disponible. Recharger maintenant ?');
+            expect(translateSpy).toHaveBeenCalledWith('app.update.new_version_available');
+            expect(mockConfirm).toHaveBeenCalled();
         });
 
         it('should reload page when user confirms update', () => {
@@ -178,6 +194,83 @@ describe('UpdateService', () => {
             } as VersionReadyEvent);
 
             expect(mockConfirm).toHaveBeenCalledTimes(2);
+        });
+
+        it('should log update available when checkForUpdate returns true', async () => {
+            mockSwUpdate.checkForUpdate.mockResolvedValue(true);
+
+            service.checkForUpdates();
+            mockAppRef.isStable.next(true);
+
+            await vi.waitFor(() => {
+                expect(consoleInfoSpy).toHaveBeenCalledWith('[UpdateService] Update available');
+            });
+        });
+
+        it('should log error when version installation fails', () => {
+            service.checkForUpdates();
+
+            mockSwUpdate.versionUpdates.next({
+                type: 'VERSION_INSTALLATION_FAILED',
+                version: { hash: 'v2' },
+                error: 'Installation failed'
+            } as VersionInstallationFailedEvent);
+
+            expect(consoleErrorSpy).toHaveBeenCalledWith(
+                '[UpdateService] Version installation failed:',
+                'Installation failed'
+            );
+        });
+
+        it('should prompt user when unrecoverable state is detected', () => {
+            const mockConfirm = vi.fn().mockReturnValue(false);
+            globalThis.confirm = mockConfirm;
+
+            service.checkForUpdates();
+
+            mockSwUpdate.unrecoverable.next({
+                type: 'UNRECOVERABLE_STATE',
+                reason: 'Hash mismatch'
+            } as UnrecoverableStateEvent);
+
+            expect(consoleErrorSpy).toHaveBeenCalledWith(
+                '[UpdateService] Unrecoverable state:',
+                'Hash mismatch'
+            );
+            expect(translateSpy).toHaveBeenCalledWith('app.update.unrecoverable_state');
+            expect(mockConfirm).toHaveBeenCalled();
+        });
+
+        it('should reload page when user confirms unrecoverable state', () => {
+            const mockConfirm = vi.fn().mockReturnValue(true);
+            const mockReload = vi.fn();
+
+            globalThis.confirm = mockConfirm;
+            (globalThis as { location: { reload: () => void } }).location = {
+                reload: mockReload
+            };
+
+            service.checkForUpdates();
+
+            mockSwUpdate.unrecoverable.next({
+                type: 'UNRECOVERABLE_STATE',
+                reason: 'Hash mismatch'
+            } as UnrecoverableStateEvent);
+
+            expect(mockReload).toHaveBeenCalled();
+        });
+
+        it('should log error when initial update check fails', async () => {
+            mockSwUpdate.checkForUpdate.mockRejectedValue(new Error('Network error'));
+
+            service.checkForUpdates();
+
+            await vi.waitFor(() => {
+                expect(consoleErrorSpy).toHaveBeenCalledWith(
+                    '[UpdateService] Initial update check failed:',
+                    expect.any(Error)
+                );
+            });
         });
     });
 });

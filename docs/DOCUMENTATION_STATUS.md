@@ -62,6 +62,12 @@ All documentation has been **fully translated to English** and **cleaned of irre
 - **Content**: Copy-paste templates, common patterns, usage examples
 - **Efficiency**: Streamlined development workflow
 
+### 10. **docs/SERVICE_WORKER.md** ✅ **PWA & CACHING**
+
+- **Status**: Complete service worker configuration guide
+- **Content**: Custom SW architecture, caching strategies, troubleshooting
+- **Critical**: Documents pitfalls to avoid (hash mismatches, cache conflicts)
+
 ## 🎯 Professional Impact
 
 ### For Recruiters
