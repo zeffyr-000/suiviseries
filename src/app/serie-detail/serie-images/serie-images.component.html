@@ -95,7 +95,8 @@
 <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
 <dialog #dialogOverlay class="image-preview-overlay" (click)="closePreview()" (keydown)="onKeydown($event)"
     aria-modal="true" [attr.aria-label]="'serie_detail.image_preview' | transloco">
-    <div #imageContainer class="image-preview-container">
+    <div #imageContainer class="image-preview-container" (pointerdown)="onPointerDown($event)"
+        (pointerup)="onPointerUp($event)" (pointercancel)="onPointerCancel()">
 
         <div class="toolbar-top">
             <div class="image-type-badge">
@@ -138,17 +139,24 @@
         }
 
         @if (imageLoading()) {
-        <div class="image-loading-overlay" role="status" aria-live="polite">
+        <output class="image-loading-overlay" role="status" aria-live="polite">
             <mat-spinner diameter="48"></mat-spinner>
             <span class="visually-hidden">{{ 'common.loading_more' | transloco }}</span>
-        </div>
+        </output>
         }
 
         <!-- sonarqube-disable-next-line: Alt text is a translation key that resolves to descriptive text without redundant "image" word -->
         <img [src]="selectedImage()!.file_path"
             [alt]="('serie_detail.' + (selectedImageType() || 'backdrop') + '_alt') | transloco" class="preview-image"
             [class.logo-preview]="selectedImageType() === 'logo'" [class.loading]="imageLoading()"
-            (load)="onImageLoad()" (error)="onImageLoad()">
+            (load)="onImageLoad()" (error)="onImageLoad()" draggable="false">
+
+        @if (showSwipeHint()) {
+        <output class="swipe-hint" role="status" aria-live="polite">
+            <mat-icon aria-hidden="true">swipe</mat-icon>
+            <span class="body-medium">{{ 'serie_detail.swipe_hint' | transloco }}</span>
+        </output>
+        }
 
         <div class="image-counter">
             <span class="label-large">{{ currentImageIndex() }} / {{ totalImages() }}</span>

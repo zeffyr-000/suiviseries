@@ -1,4 +1,4 @@
-import { Component, input, signal, ChangeDetectionStrategy, viewChild, ElementRef, effect, computed } from '@angular/core';
+import { Component, input, signal, ChangeDetectionStrategy, viewChild, ElementRef, effect, computed, DestroyRef, inject } from '@angular/core';
 import { DecimalPipe, UpperCasePipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -7,6 +7,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SerieImage, SerieImages } from '../../models/serie.model';
+
+interface SwipeState {
+    startX: number;
+    startY: number;
+    startTime: number;
+    pointerId: number;
+}
 
 @Component({
     selector: 'app-serie-images',
@@ -22,9 +29,14 @@ import { SerieImage, SerieImages } from '../../models/serie.model';
     ],
     templateUrl: './serie-images.component.html',
     styleUrl: './serie-images.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '(document:visibilitychange)': 'onVisibilityChange()'
+    }
 })
 export class SerieImagesComponent {
+    private readonly destroyRef = inject(DestroyRef);
+
     images = input.required<SerieImages>();
 
     protected selectedTab = signal<number>(0);
@@ -33,6 +45,14 @@ export class SerieImagesComponent {
     protected isFullscreen = signal<boolean>(false);
     protected showAllView = signal<boolean>(false);
     protected imageLoading = signal<boolean>(false);
+    protected showSwipeHint = signal<boolean>(false);
+
+    // Swipe configuration
+    private readonly SWIPE_THRESHOLD = 50; // minimum distance in pixels
+    private readonly SWIPE_MAX_VERTICAL = 100; // max vertical movement to still count as horizontal swipe
+    private readonly SWIPE_MAX_TIME = 500; // max time in ms for a swipe gesture
+    private swipeState: SwipeState | null = null;
+    private swipeHintTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
     protected dialogOverlay = viewChild<ElementRef<HTMLDialogElement>>('dialogOverlay');
     protected imageContainer = viewChild<ElementRef<HTMLDivElement>>('imageContainer');
@@ -118,6 +138,25 @@ export class SerieImagesComponent {
         this.imageLoading.set(true);
         this.selectedImage.set(image);
         this.selectedImageType.set(type);
+        this.showSwipeHintOnMobile();
+    }
+
+    private showSwipeHintOnMobile(): void {
+        // Show swipe hint only on touch devices and only once per session
+        const hasSeenHint = sessionStorage.getItem('swipeHintSeen');
+        if (!hasSeenHint && 'ontouchstart' in globalThis) {
+            this.showSwipeHint.set(true);
+            sessionStorage.setItem('swipeHintSeen', 'true');
+
+            this.swipeHintTimeoutId = setTimeout(() => this.showSwipeHint.set(false), 2500);
+
+            // Clean up timeout if component is destroyed
+            this.destroyRef.onDestroy(() => {
+                if (this.swipeHintTimeoutId) {
+                    clearTimeout(this.swipeHintTimeoutId);
+                }
+            });
+        }
     }
 
     protected onImageLoad(): void {
@@ -196,6 +235,58 @@ export class SerieImagesComponent {
                 this.closeAllView();
             }
         }
+    }
+
+    // Swipe gesture handlers
+    protected onPointerDown(event: PointerEvent): void {
+        // Only track touch and pen for swipe (not mouse - mouse users have buttons)
+        if (event.pointerType === 'mouse') return;
+
+        // Ignore swipes that start on interactive elements
+        const target = event.target as HTMLElement | null;
+        if (target?.closest('button, [role="button"], a, input, textarea, select')) return;
+
+        this.swipeState = {
+            startX: event.clientX,
+            startY: event.clientY,
+            startTime: Date.now(),
+            pointerId: event.pointerId
+        };
+    }
+
+    protected onPointerUp(event: PointerEvent): void {
+        if (!this.swipeState || event.pointerId !== this.swipeState.pointerId) return;
+
+        const deltaX = event.clientX - this.swipeState.startX;
+        const deltaY = Math.abs(event.clientY - this.swipeState.startY);
+        const deltaTime = Date.now() - this.swipeState.startTime;
+
+        // Check if it's a valid horizontal swipe
+        const isHorizontalSwipe = Math.abs(deltaX) > this.SWIPE_THRESHOLD &&
+            deltaY < this.SWIPE_MAX_VERTICAL &&
+            deltaTime < this.SWIPE_MAX_TIME;
+
+        if (isHorizontalSwipe) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (deltaX > 0) {
+                this.navigateToPrevious(); // Swipe right = previous image
+            } else {
+                this.navigateToNext(); // Swipe left = next image
+            }
+        }
+
+        this.swipeState = null;
+    }
+
+    protected onPointerCancel(): void {
+        this.swipeState = null;
+    }
+
+    protected onVisibilityChange(): void {
+        // Reset swipe state if user switches tabs
+        this.swipeState = null;
     }
 
     protected onTabChange(index: number): void {
