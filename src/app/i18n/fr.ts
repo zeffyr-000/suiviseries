@@ -138,6 +138,7 @@ export const frTranslations = {
         "image_preview": "Aperçu de l'image",
         "previous_image": "Image précédente",
         "next_image": "Image suivante",
+        "swipe_hint": "Glissez pour naviguer",
         "fullscreen": "Plein écran",
         "download_image": "Télécharger l'image",
         "show_all_images": "Voir toutes les images",
@@ -308,6 +309,7 @@ export const frTranslations = {
     },
     "common": {
         "user": "Utilisateur",
-        "close": "Fermer"
+        "close": "Fermer",
+        "loading_more": "Chargement..."
     }
 } as const;
