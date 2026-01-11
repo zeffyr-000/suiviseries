@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SerieImagesComponent } from './serie-images.component';
 import { SerieImages } from '../../models/serie.model';
@@ -79,6 +80,54 @@ describe('SerieImagesComponent', () => {
 
             component['closePreview']();
             expect(component['selectedImage']()).toBeNull();
+        });
+
+        it('should set imageLoading to true when clicking an image', () => {
+            const image = mockImages.backdrops[0];
+            expect(component['imageLoading']()).toBe(false);
+
+            component['onImageClick'](image, 'backdrop');
+            expect(component['imageLoading']()).toBe(true);
+        });
+
+        it('should set imageLoading to false when image loads', () => {
+            const image = mockImages.backdrops[0];
+            component['onImageClick'](image, 'backdrop');
+            expect(component['imageLoading']()).toBe(true);
+
+            component['onImageLoad']();
+            expect(component['imageLoading']()).toBe(false);
+        });
+
+        it('should set imageLoading to true when navigating between images', () => {
+            const backdrops = [
+                mockImages.backdrops[0],
+                {
+                    file_path: 'https://image.tmdb.org/t/p/original/backdrop2.jpg',
+                    width: 1920,
+                    height: 1080,
+                    aspect_ratio: 1.778,
+                    vote_average: 6,
+                    vote_count: 12,
+                    iso_639_1: null
+                }
+            ];
+            fixture.componentRef.setInput('images', { backdrops, posters: [], logos: [] });
+            fixture.detectChanges();
+
+            const mockEvent = new MouseEvent('click');
+            component['onImageClick'](backdrops[0], 'backdrop');
+            component['onImageLoad']();
+            expect(component['imageLoading']()).toBe(false);
+
+            component['nextImage'](mockEvent);
+            expect(component['imageLoading']()).toBe(true);
+
+            component['onImageLoad']();
+            expect(component['imageLoading']()).toBe(false);
+
+            component['previousImage'](mockEvent);
+            expect(component['imageLoading']()).toBe(true);
         });
 
         it('should navigate between images', () => {

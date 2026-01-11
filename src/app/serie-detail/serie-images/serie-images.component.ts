@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SerieImage, SerieImages } from '../../models/serie.model';
 
 @Component({
@@ -16,7 +17,8 @@ import { SerieImage, SerieImages } from '../../models/serie.model';
         MatCardModule,
         MatIconModule,
         MatButtonModule,
-        MatTabsModule
+        MatTabsModule,
+        MatProgressSpinnerModule
     ],
     templateUrl: './serie-images.component.html',
     styleUrl: './serie-images.component.scss',
@@ -30,6 +32,7 @@ export class SerieImagesComponent {
     protected selectedImageType = signal<'backdrop' | 'poster' | 'logo' | null>(null);
     protected isFullscreen = signal<boolean>(false);
     protected showAllView = signal<boolean>(false);
+    protected imageLoading = signal<boolean>(false);
 
     protected dialogOverlay = viewChild<ElementRef<HTMLDialogElement>>('dialogOverlay');
     protected imageContainer = viewChild<ElementRef<HTMLDivElement>>('imageContainer');
@@ -112,8 +115,13 @@ export class SerieImagesComponent {
     });
 
     protected onImageClick(image: SerieImage, type: 'backdrop' | 'poster' | 'logo'): void {
+        this.imageLoading.set(true);
         this.selectedImage.set(image);
         this.selectedImageType.set(type);
+    }
+
+    protected onImageLoad(): void {
+        this.imageLoading.set(false);
     }
 
     protected closePreview(): void {
@@ -155,6 +163,7 @@ export class SerieImagesComponent {
         const images = this.currentImages();
 
         if (newIndex >= 0 && newIndex < images.length) {
+            this.imageLoading.set(true);
             this.selectedImage.set(images[newIndex]);
         }
     }
@@ -167,6 +176,7 @@ export class SerieImagesComponent {
         const images = this.currentImages();
 
         if (newIndex >= 0 && newIndex < images.length) {
+            this.imageLoading.set(true);
             this.selectedImage.set(images[newIndex]);
         }
     }
@@ -229,38 +239,29 @@ export class SerieImagesComponent {
         const image = this.selectedImage();
         if (!image) return;
 
+        // Extract filename from path
+        const pathSegments = image.file_path.split('/');
+        const originalFilename = pathSegments[pathSegments.length - 1]?.split('?')[0] || 'image.jpg';
+
         try {
+            // Try fetch + blob for cross-origin download
             const response = await fetch(image.file_path);
+            if (!response.ok) throw new Error('Fetch failed');
+
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
 
-            // Extract file extension from path or content-type
-            let extension = '.jpg';
-            const pathMatch = image.file_path.match(/\.([a-z0-9]+)(?:\?|$)/i);
-            if (pathMatch) {
-                extension = `.${pathMatch[1]}`;
-            } else {
-                const contentType = response.headers.get('Content-Type');
-                if (contentType?.includes('png')) {
-                    extension = '.png';
-                } else if (contentType?.includes('webp')) {
-                    extension = '.webp';
-                }
-            }
-
-            // Generate descriptive filename with dimensions
-            const filename = `image-${image.width}x${image.height}${extension}`;
-
             const link = document.createElement('a');
             link.href = url;
-            link.download = filename;
+            link.download = originalFilename;
             document.body.appendChild(link);
             link.click();
-            link.remove();
+            document.body.removeChild(link);
 
             URL.revokeObjectURL(url);
-        } catch (err) {
-            console.error('Download failed:', err);
+        } catch {
+            // Fallback: open in new tab if CORS blocks fetch
+            window.open(image.file_path, '_blank', 'noopener,noreferrer');
         }
     }
 

@@ -137,10 +137,18 @@
         </button>
         }
 
+        @if (imageLoading()) {
+        <div class="image-loading-overlay" role="status" aria-live="polite">
+            <mat-spinner diameter="48"></mat-spinner>
+            <span class="visually-hidden">{{ 'common.loading_more' | transloco }}</span>
+        </div>
+        }
+
         <!-- sonarqube-disable-next-line: Alt text is a translation key that resolves to descriptive text without redundant "image" word -->
         <img [src]="selectedImage()!.file_path"
             [alt]="('serie_detail.' + (selectedImageType() || 'backdrop') + '_alt') | transloco" class="preview-image"
-            [class.logo-preview]="selectedImageType() === 'logo'">
+            [class.logo-preview]="selectedImageType() === 'logo'" [class.loading]="imageLoading()"
+            (load)="onImageLoad()" (error)="onImageLoad()">
 
         <div class="image-counter">
             <span class="label-large">{{ currentImageIndex() }} / {{ totalImages() }}</span>
