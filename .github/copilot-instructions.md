@@ -7,9 +7,45 @@ Suiviseries is an Angular 21 PWA for TV series tracking with Google OAuth authen
 ### Key Service Patterns
 
 - **AuthService** (`services/auth.service.ts`): Manages Google OAuth, JWT tokens in localStorage, and user state via signals
-- **SeriesService** (`services/series.service.ts`): REST API calls to `/api/*` endpoints, caches user series
+- **SeriesService** (`services/series.service.ts`): REST API calls to `/api/*` endpoints, caches user series, provides `rxResource` for search
 - **NotificationService** (`services/notification.service.ts`): Wrapper around `MatSnackBar` using translation keys
 - **UserNotificationService** (`services/user-notification.service.ts`): Real-time notification state with signals
+
+### rxResource Pattern (Angular 21.1+)
+
+For reactive data fetching with automatic request cancellation, use `rxResource` in **services**:
+
+```typescript
+// In service - exposes resource factory
+createSearchResource(): SearchResource {
+    const query = signal('');
+    const resource = rxResource<Serie[], string | undefined>({
+        params: () => {
+            const q = query().trim();
+            return q.length >= 2 ? q : undefined; // undefined skips request
+        },
+        stream: ({ params: q }) => q ? this.searchSeries(q) : of([])
+    });
+    return {
+        results: computed(() => resource.value() ?? []),
+        isLoading: resource.isLoading,
+        error: resource.error,
+        hasValue: computed(() => resource.hasValue()),
+        query
+    };
+}
+
+// In component - consumes resource
+private readonly searchResource = this.seriesService.createSearchResource();
+protected readonly results = computed(() => this.searchResource.results());
+protected readonly loading = computed(() => this.searchResource.isLoading());
+```
+
+Key benefits:
+
+- **Automatic cancellation**: Previous requests cancelled when params change (like `switchMap`)
+- **Built-in states**: `isLoading`, `error`, `hasValue` signals
+- **Service responsibility**: Data-fetching logic stays in service
 
 ### Data Flow
 
@@ -140,8 +176,32 @@ export class ExampleComponent {
 - Must NOT set `standalone: true` - it's the default in Angular v21+
 - Use `input()`, `output()` functions instead of decorators; `computed()` for derived state
 - **ALWAYS separate files for templates/styles** - never inline
-- Prefer Reactive forms over Template-driven
 - Use `host` object in decorator instead of `@HostBinding`/`@HostListener`
+
+### Signal Forms (Angular 21.1+)
+
+Use Signal Forms from `@angular/forms/signals` instead of ReactiveFormsModule:
+
+```typescript
+import { form, FormField, minLength } from '@angular/forms/signals';
+
+// In component
+protected readonly model = signal({ query: '' });
+protected readonly searchForm = form(this.model, (schema) => {
+    minLength(schema.query, 2);
+});
+
+// In template
+<input matInput [formField]="searchForm.query" />
+<button [disabled]="searchForm.query().invalid()">Search</button>
+```
+
+Key differences from ReactiveFormsModule:
+
+- Use `form()` instead of `FormGroup`/`FormControl`
+- Use `[formField]` directive instead of `[formControl]`
+- Access value with `.value()` signal, validity with `.invalid()` / `.valid()`
+- Validators are functions like `minLength()`, `required()` applied in form schema
 
 ### Services
 

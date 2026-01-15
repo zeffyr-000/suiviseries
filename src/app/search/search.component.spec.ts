@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { vi, expect } from 'vitest';
-import { of } from 'rxjs';
 
 import { SearchComponent } from './search.component';
 import { SeriesService } from '../services/series.service';
@@ -8,17 +8,27 @@ import { MetadataService } from '../services/metadata.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 import { createMockMetadataService } from '../testing/mocks';
 
+function createMockSearchResource() {
+    return {
+        results: signal([]),
+        isLoading: signal(false),
+        error: signal(undefined),
+        hasValue: signal(false),
+        query: signal('')
+    };
+}
+
 describe('SearchComponent', () => {
     let component: SearchComponent;
     let fixture: ComponentFixture<SearchComponent>;
     let seriesService: {
-        searchSeries: ReturnType<typeof vi.fn>;
+        createSearchResource: ReturnType<typeof vi.fn>;
     };
     let metadataService: ReturnType<typeof createMockMetadataService>;
 
     beforeEach(() => {
         seriesService = {
-            searchSeries: vi.fn().mockReturnValue(of([]))
+            createSearchResource: vi.fn().mockReturnValue(createMockSearchResource())
         };
 
         metadataService = createMockMetadataService();
@@ -47,8 +57,8 @@ describe('SearchComponent', () => {
         it('should display page title and subtitle', () => {
             fixture.detectChanges();
 
-            const title = fixture.nativeElement.querySelector('.display-small');
-            const subtitle = fixture.nativeElement.querySelector('.search-subtitle');
+            const title = fixture.nativeElement.querySelector('.search-header h1');
+            const subtitle = fixture.nativeElement.querySelector('.search-header .subtitle');
 
             expect(title).toBeTruthy();
             expect(subtitle).toBeTruthy();
@@ -76,10 +86,10 @@ describe('SearchComponent', () => {
             fixture.detectChanges();
 
             const instructions = fixture.nativeElement.querySelector('.search-instructions');
-            const instructionsIcon = instructions?.querySelector('mat-icon');
+            const instructionsIcon = instructions?.querySelector('.instructions-icon');
 
             expect(instructions).toBeTruthy();
-            expect(instructionsIcon?.textContent?.trim()).toBe('info');
+            expect(instructionsIcon?.textContent?.trim()).toBe('tips_and_updates');
         });
 
         it('should show 3 instruction items', () => {

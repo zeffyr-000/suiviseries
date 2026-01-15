@@ -293,7 +293,7 @@ export class HeaderComponent {}
 ```html
 <mat-form-field appearance="outline">
   <mat-label>Search series</mat-label>
-  <input matInput [formControl]="searchControl" />
+  <input matInput [formField]="searchForm.query" />
   <mat-icon matPrefix>search</mat-icon>
   <button mat-icon-button matSuffix (click)="clearSearch()">
     <mat-icon>close</mat-icon>
