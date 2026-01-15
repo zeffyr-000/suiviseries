@@ -67,6 +67,7 @@ interface MockSeriesService {
     unmarkSeasonAsWatched: ReturnType<typeof vi.fn>;
     markEpisodeAsWatched: ReturnType<typeof vi.fn>;
     unmarkEpisodeAsWatched: ReturnType<typeof vi.fn>;
+    createSearchResource: ReturnType<typeof vi.fn>;
 }
 
 // Mock SeriesService factory
@@ -91,6 +92,13 @@ export function createMockSeriesService(overrides: Partial<MockSeriesService> = 
         unmarkSeasonAsWatched: vi.fn().mockReturnValue(of(true)),
         markEpisodeAsWatched: vi.fn().mockReturnValue(of(true)),
         unmarkEpisodeAsWatched: vi.fn().mockReturnValue(of(true)),
+        createSearchResource: vi.fn().mockReturnValue({
+            results: signal([]),
+            isLoading: signal(false),
+            error: signal(undefined),
+            hasValue: signal(false),
+            query: signal('')
+        }),
         ...overrides
     };
 }

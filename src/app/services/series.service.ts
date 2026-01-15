@@ -1,8 +1,10 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Serie, SearchResponse, SerieDetailResponse, UserSeriesResponse } from '../models/serie.model';
+import { SearchResource } from '../models/search-resource.model';
 import { environment } from '../../environments/environment';
 import { NotificationService } from './notification.service';
 
@@ -15,6 +17,25 @@ export class SeriesService {
     private readonly http = inject(HttpClient);
     private readonly notificationService = inject(NotificationService);
     private readonly userSeriesCache = signal<Serie[] | null>(null);
+
+    createSearchResource(): SearchResource {
+        const query = signal('');
+        const resource = rxResource<Serie[], string | undefined>({
+            params: () => {
+                const q = query().trim();
+                return q.length >= 2 ? q : undefined;
+            },
+            stream: ({ params: q }) => q ? this.searchSeries(q) : of([])
+        });
+
+        return {
+            results: computed(() => resource.value() ?? []),
+            isLoading: resource.isLoading,
+            error: resource.error,
+            hasValue: computed(() => resource.hasValue()),
+            query
+        };
+    }
 
     getAllSeries(): Observable<Serie[]> {
         return this.http.get<SearchResponse>(`${this.apiUrl}/series`).pipe(

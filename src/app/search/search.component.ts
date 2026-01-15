@@ -1,11 +1,9 @@
-import { Component, OnInit, signal, computed, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, skip } from 'rxjs';
+import { form, FormField, minLength } from '@angular/forms/signals';
 import { RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +14,6 @@ import { MatChipsModule } from '@angular/material/chips';
 
 import { SeriesService } from '../services/series.service';
 import { MetadataService } from '../services/metadata.service';
-import { Serie } from '../models/serie.model';
 import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
 import { ButtonLoadingDirective } from '../shared/directives/button-loading.directive';
 import { environment } from '../../environments/environment';
@@ -24,7 +21,7 @@ import { environment } from '../../environments/environment';
 @Component({
     selector: 'app-search',
     imports: [
-        ReactiveFormsModule,
+        FormField,
         RouterModule,
         TranslocoModule,
         MatFormFieldModule,
@@ -40,89 +37,59 @@ import { environment } from '../../environments/environment';
     styleUrl: './search.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent {
     private readonly seriesService = inject(SeriesService);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly metadataService = inject(MetadataService);
     private readonly translocoService = inject(TranslocoService);
 
-    protected readonly searchControl = new FormControl('', [
-        Validators.minLength(2)
-    ]);
+    protected readonly searchModel = signal({ query: '' });
+    protected readonly searchForm = form(this.searchModel, (schemaPath) => {
+        minLength(schemaPath.query, 2);
+    });
 
-    protected readonly searchResults = signal<Serie[]>([]);
-    protected readonly loading = signal(false);
-    protected readonly hasSearched = signal(false);
-    protected readonly error = signal<string | null>(null);
-    protected readonly lastQuery = signal<string>('');
+    private readonly searchResource = this.seriesService.createSearchResource();
+    private readonly query$ = toObservable(this.searchForm.query().value);
 
+    protected readonly searchResults = computed(() => this.searchResource.results());
+    protected readonly loading = computed(() => this.searchResource.isLoading());
+    protected readonly error = computed(() => {
+        const err = this.searchResource.error();
+        return err ? String(err) : null;
+    });
+    protected readonly hasSearched = computed(
+        () => this.searchResource.hasValue() || this.searchResource.error() !== undefined
+    );
+    protected readonly lastQuery = computed(() => {
+        const query = this.searchResource.query().trim();
+        return query.length >= 2 ? query : '';
+    });
     protected readonly hasResults = computed(() => this.searchResults().length > 0);
-    protected readonly showNoResults = computed(() =>
-        this.hasSearched() && !this.loading() && !this.hasResults() && !this.error()
+    protected readonly showNoResults = computed(
+        () => this.hasSearched() && !this.loading() && !this.hasResults() && !this.error()
     );
 
-    ngOnInit() {
-        this.updateMetadata();
-        this.setupSearchSubscription();
-    }
-
-    private updateMetadata(): void {
+    constructor() {
         this.metadataService.updatePageMetadata({
             title: this.translocoService.translate('seo.search.title'),
             description: this.translocoService.translate('seo.search.description'),
             canonicalUrl: `${environment.siteUrl}/search`
         });
-    }
 
-    private setupSearchSubscription(): void {
-        this.searchControl.valueChanges.pipe(
-            debounceTime(400),
-            distinctUntilChanged(),
-            switchMap(query => {
-                if (!query || query.trim().length < 2) {
-                    this.clearResults();
-                    return of([]);
-                }
-
-                this.loading.set(true);
-                this.error.set(null);
-                this.lastQuery.set(query.trim());
-                return this.seriesService.searchSeries(query.trim());
-            }),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe({
-            next: (results) => {
-                this.searchResults.set(results);
-                this.loading.set(false);
-                this.hasSearched.set(true);
-            },
-            error: () => {
-                this.loading.set(false);
-                this.hasSearched.set(true);
-            }
-        });
+        this.query$
+            .pipe(skip(1), debounceTime(400), distinctUntilChanged())
+            .subscribe((query) => this.searchResource.query.set(query));
     }
 
     protected onSearch(): void {
-        const query = this.searchControl.value?.trim();
+        const query = this.searchForm.query().value().trim();
         if (!query || query.length < 2) {
             return;
         }
-
-        this.searchControl.setValue('', { emitEvent: false });
-        this.searchControl.setValue(query);
+        this.searchResource.query.set(query);
     }
 
     protected clearSearch(): void {
-        this.searchControl.reset();
-        this.clearResults();
-    }
-
-    private clearResults(): void {
-        this.searchResults.set([]);
-        this.loading.set(false);
-        this.hasSearched.set(false);
-        this.error.set(null);
-        this.lastQuery.set('');
+        this.searchForm.query().value.set('');
+        this.searchResource.query.set('');
     }
 }
