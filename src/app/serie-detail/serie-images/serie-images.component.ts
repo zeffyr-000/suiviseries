@@ -163,7 +163,12 @@ export class SerieImagesComponent {
         this.imageLoading.set(false);
     }
 
-    protected closePreview(): void {
+    protected closePreview(event?: MouseEvent): void {
+        // Only close if clicking on the backdrop (dialog element itself), not its content
+        if (event && event.target !== event.currentTarget) {
+            return;
+        }
+
         const overlay = this.dialogOverlay();
 
         if (document.fullscreenElement) {
@@ -297,7 +302,12 @@ export class SerieImagesComponent {
         this.showAllView.set(true);
     }
 
-    protected closeAllView(): void {
+    protected closeAllView(event?: MouseEvent): void {
+        // Only close if clicking on the backdrop (dialog element itself), not its content
+        if (event && event.target !== event.currentTarget) {
+            return;
+        }
+
         const allDialog = this.allImagesDialog();
         if (allDialog?.nativeElement.open) {
             allDialog.nativeElement.close();
