@@ -93,7 +93,7 @@
 @if (selectedImage()) {
 <!-- Native <dialog> element is inherently focusable with built-in focus trap -->
 <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
-<dialog #dialogOverlay class="image-preview-overlay" (click)="closePreview()" (keydown)="onKeydown($event)"
+<dialog #dialogOverlay class="image-preview-overlay" (click)="closePreview($event)" (keydown)="onKeydown($event)"
     aria-modal="true" [attr.aria-label]="'serie_detail.image_preview' | transloco">
     <div #imageContainer class="image-preview-container" (pointerdown)="onPointerDown($event)"
         (pointerup)="onPointerUp($event)" (pointercancel)="onPointerCancel()">
@@ -109,16 +109,16 @@
             </div>
 
             <div class="toolbar-actions">
-                <button mat-icon-button (click)="toggleFullscreen(); $event.stopPropagation()" type="button"
+                <button mat-icon-button (click)="toggleFullscreen()" type="button"
                     [attr.aria-label]="'serie_detail.fullscreen' | transloco">
                     <mat-icon>{{ isFullscreen() ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
                 </button>
-                <button mat-icon-button (click)="downloadImage(); $event.stopPropagation()" type="button"
+                <button mat-icon-button (click)="downloadImage()" type="button"
                     [attr.aria-label]="'serie_detail.download_image' | transloco">
                     <mat-icon>download</mat-icon>
                 </button>
-                <button mat-icon-button class="close-button" (click)="closePreview(); $event.stopPropagation()"
-                    type="button" [attr.aria-label]="'common.close' | transloco">
+                <button mat-icon-button class="close-button" (click)="closePreview()" type="button"
+                    [attr.aria-label]="'common.close' | transloco">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
@@ -194,7 +194,7 @@
 <!-- Native <dialog> element is inherently focusable with built-in focus trap -->
 <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
 <dialog #allImagesDialog class="all-images-view" [attr.aria-label]="'serie_detail.all_images' | transloco"
-    aria-modal="true" (click)="closeAllView()" (keydown.escape)="closeAllView()">
+    aria-modal="true" (click)="closeAllView($event)" (keydown.escape)="closeAllView()">
     <div class="all-images-header">
         <h2 class="headline-medium">{{ 'serie_detail.all_images' | transloco }}</h2>
         <button mat-icon-button (click)="closeAllView()"
