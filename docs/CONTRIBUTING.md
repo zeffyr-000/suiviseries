@@ -316,19 +316,10 @@ describe('SerieDetailComponent - Hierarchical Watch Management', () => {
 ### Angular Material 21 with Material Design 3
 
 ```typescript
-// ✅ Theme configuration
-@Injectable({ providedIn: 'root' })
-export class ThemeService {
-  private readonly darkMode = signal(false);
-
-  readonly isDarkMode = this.darkMode.asReadonly();
-
-  toggleDarkMode(): void {
-    this.darkMode.update((dark) => !dark);
-    // Apply theme to document
-    document.documentElement.classList.toggle('dark-theme');
-  }
-}
+// ✅ Theme configuration — single dark theme ("Nuit & Or")
+// No ThemeService or light/dark toggle: the app ships one dark theme only.
+// html { color-scheme: dark; } in styles.scss resolves all M3 tokens to their
+// dark values automatically. No runtime class switching required.
 ```
 
 ### Responsive Design

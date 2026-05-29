@@ -279,6 +279,40 @@ describe('HomeComponent', () => {
         });
     });
 
+    describe('heroBackdrop', () => {
+        it('should return the backdrop URL of the first popular serie with a backdrop', () => {
+            component['popularSeries'].set([
+                createMockSerie({ backdrop_path: '/backdrop1.jpg', name: 'Serie A' }),
+                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Serie B' })
+            ]);
+
+            expect(component['heroBackdrop']()).toContain('/backdrop1.jpg');
+        });
+
+        it('should skip series without a backdrop and return the first one that has one', () => {
+            component['popularSeries'].set([
+                createMockSerie({ backdrop_path: '', name: 'No Backdrop' }),
+                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Has Backdrop' })
+            ]);
+
+            expect(component['heroBackdrop']()).toContain('/backdrop2.jpg');
+        });
+
+        it('should return null when no popular serie has a backdrop', () => {
+            component['popularSeries'].set([
+                createMockSerie({ backdrop_path: '', name: 'No Backdrop' })
+            ]);
+
+            expect(component['heroBackdrop']()).toBeNull();
+        });
+
+        it('should return null when popularSeries is empty', () => {
+            component['popularSeries'].set([]);
+
+            expect(component['heroBackdrop']()).toBeNull();
+        });
+    });
+
     describe('goToLogin', () => {
         it('should open login dialog', () => {
             component['goToLogin']();

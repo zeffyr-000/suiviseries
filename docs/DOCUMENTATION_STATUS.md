@@ -68,6 +68,12 @@ All documentation has been **fully translated to English** and **cleaned of irre
 - **Content**: Custom SW architecture, caching strategies, troubleshooting
 - **Critical**: Documents pitfalls to avoid (hash mismatches, cache conflicts)
 
+### 11. **docs/DESIGN_HISTORY.md** ✅ **DESIGN EVOLUTION**
+
+- **Status**: Visual history of the app's successive redesigns
+- **Content**: V1 (light rose/coral) → V2 (dark "Nuit & Or"), comparison & key decisions
+- **Value**: Product memory and reference for future design iterations
+
 ## 🎯 Professional Impact
 
 ### For Recruiters

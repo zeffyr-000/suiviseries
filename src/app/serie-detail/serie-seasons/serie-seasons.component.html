@@ -27,12 +27,13 @@
                             <span>{{ season.air_date | date:'yyyy' }}</span>
                             }
                             @if (isAuthenticated()) {
-                            <button mat-icon-button [color]="isSeasonWatched(season.id) ? 'accent' : 'primary'"
+                            <button mat-icon-button class="season-watched-button"
+                                [class.is-watched]="isSeasonWatched(season.id)"
                                 [disabled]="isSeasonLoading(season.id)"
                                 (click)="onToggleSeasonWatched(season.id, $event)"
                                 [matTooltip]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
                                 [attr.aria-label]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
-                                matTooltipPosition="right" class="season-watched-button">
+                                matTooltipPosition="right">
                                 @if (isSeasonLoading(season.id)) {
                                 <mat-spinner diameter="16"></mat-spinner>
                                 } @else {
@@ -90,13 +91,13 @@
                                         <span>{{ episode.runtime }} min</span>
                                         }
                                         @if (isAuthenticated()) {
-                                        <button mat-icon-button
-                                            [color]="isEpisodeWatched(episode.id) ? 'accent' : 'primary'"
+                                        <button mat-icon-button class="episode-watched-button"
+                                            [class.is-watched]="isEpisodeWatched(episode.id)"
                                             [disabled]="isEpisodeLoading(episode.id)"
                                             (click)="onToggleEpisodeWatched(episode.id, $event)"
                                             [matTooltip]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
                                             [attr.aria-label]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
-                                            matTooltipPosition="right" class="episode-watched-button">
+                                            matTooltipPosition="right">
                                             @if (isEpisodeLoading(episode.id)) {
                                             <mat-spinner diameter="16"></mat-spinner>
                                             } @else {

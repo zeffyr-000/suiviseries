@@ -356,8 +356,8 @@ describe('url.utils', () => {
             const sevenDaysAgo = new Date();
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
             const result7 = formatRelativeDate(sevenDaysAgo.toISOString(), translate);
-            // French format: "26 nov."
-            expect(result7).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            // French format: "26 nov." or "29 mai" (short months have no period)
+            expect(result7).toMatch(/^\d{1,2}\s[\wéû]+\.?$/u);
             expect(translate).not.toHaveBeenCalled();
 
             translate.mockClear();
@@ -366,7 +366,7 @@ describe('url.utils', () => {
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
             const result30 = formatRelativeDate(thirtyDaysAgo.toISOString(), translate);
-            expect(result30).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(result30).toMatch(/^\d{1,2}\s[\wéû]+\.?$/u);
             expect(translate).not.toHaveBeenCalled();
 
             translate.mockClear();
@@ -375,7 +375,7 @@ describe('url.utils', () => {
             const oneYearAgo = new Date();
             oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
             const resultYear = formatRelativeDate(oneYearAgo.toISOString(), translate);
-            expect(resultYear).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(resultYear).toMatch(/^\d{1,2}\s[\wéû]+\.?$/u);
             expect(translate).not.toHaveBeenCalled();
         });
 
@@ -430,7 +430,7 @@ describe('url.utils', () => {
             // 7 days (should return formatted date)
             const exactlySevenDays = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
             const result = formatRelativeDate(exactlySevenDays.toISOString(), translate);
-            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.?$/u);
             expect(translate).not.toHaveBeenCalled();
         });
 
@@ -467,7 +467,7 @@ describe('url.utils', () => {
             veryOldDate.setFullYear(veryOldDate.getFullYear() - 10);
 
             const result = formatRelativeDate(veryOldDate.toISOString(), translate);
-            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.?$/u);
             expect(translate).not.toHaveBeenCalled();
         });
 
@@ -479,7 +479,7 @@ describe('url.utils', () => {
             const result = formatRelativeDate(oldDate.toISOString(), translate);
 
             // French date format: "15 janv."
-            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.$/u);
+            expect(result).toMatch(/^\d{1,2}\s[\wéû]+\.?$/u);
             expect(result).toContain('janv.');
         });
     });

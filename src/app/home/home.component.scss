@@ -2,29 +2,55 @@
 
 .hero-section {
   position: relative;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  // Fallback gradient (deep night) shown while the backdrop loads or is missing
+  background: radial-gradient(140% 120% at 50% 0%, #1a1f3a 0%, #0c1024 60%, #080b1c 100%);
   color: white;
-  padding: calc(var(--spacing-xl) * 1.5) var(--spacing-lg);
+  padding: calc(var(--spacing-xl) * 2) var(--spacing-lg) calc(var(--spacing-xl) * 1.75);
   text-align: center;
   margin-bottom: var(--spacing-xl);
   overflow: hidden;
   border-radius: 0 0 28px 28px; // M3 large shape corner
-  
+  box-shadow: var(--md-sys-elevation-level2);
+
+  // Dynamic TMDB backdrop image layer
+  .hero-backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 20%;
+    background-repeat: no-repeat;
+    transform: scale(1.05);
+    animation: hero-backdrop-zoom 24s ease-in-out infinite alternate,
+               hero-backdrop-appear 1.2s cubic-bezier(0.2, 0, 0, 1) both;
+    z-index: 0;
+  }
+
+  // Cinematic overlay: dark gradient for legibility + gold-tinted vignette
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(8, 11, 28, 0.55) 0%, rgba(8, 11, 28, 0.78) 55%, rgba(8, 11, 28, 0.96) 100%),
+      radial-gradient(120% 90% at 50% 35%, rgba(199, 168, 80, 0.18) 0%, rgba(8, 11, 28, 0) 55%);
+  }
+
   // Decorative background shapes (M3 Expressive)
   .hero-background-shapes {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    
+    z-index: 2;
+
     &::before,
     &::after {
       content: '';
       position: absolute;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(199, 168, 80, 0.07);
       animation: float 20s ease-in-out infinite;
     }
-    
+
     &::before {
       width: 400px;
       height: 400px;
@@ -32,7 +58,7 @@
       right: -100px;
       animation-delay: 0s;
     }
-    
+
     &::after {
       width: 300px;
       height: 300px;
@@ -41,51 +67,56 @@
       animation-delay: 10s;
     }
   }
-  
+
   .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 3;
     max-width: 700px;
     margin: 0 auto;
-    
+
     // M3 Typography: Display Large for hero titles
     .display-large {
       font-size: 3.5rem;
-      font-weight: 400; // M3 recommends 400 for display
+      font-weight: 600; // Poppins display weight
       line-height: 1.12; // M3 line-height ratio
-      letter-spacing: -0.25px; // M3 tracking
+      letter-spacing: -0.5px; // tighter tracking for display typeface
       margin: 0 0 var(--spacing-md) 0;
       color: white;
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
       animation: hero-title-appear 0.6s cubic-bezier(0.2, 0, 0, 1) both;
     }
-    
+
     // M3 Typography: Body Large for subtitles
     .body-large {
-      font-size: 1rem;
+      font-size: 1.0625rem;
       font-weight: 400;
       line-height: 1.5; // M3 line-height
       letter-spacing: 0.5px; // M3 tracking
       margin: 0 0 var(--spacing-xl) 0;
-      opacity: 0.9;
+      opacity: 0.92;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
       animation: hero-subtitle-appear 0.6s cubic-bezier(0.2, 0, 0, 1) 0.1s both;
     }
   }
-  
+
   .hero-actions {
+    position: relative;
+    z-index: 3;
     display: flex;
     gap: var(--spacing-md);
     justify-content: center;
     flex-wrap: wrap;
     animation: hero-button-appear 0.6s cubic-bezier(0.2, 0, 0, 1) 0.2s both;
-    
+
     .hero-button {
       min-width: 200px;
-      height: 40px;  // M3 standard button height
-      font-size: 0.875rem;  // M3 label-large
-      font-weight: 500;
-      border-radius: 20px; // M3 full rounding (adapted to 40px height)
-      letter-spacing: 0.1px;
-      
+      height: 44px;  // slightly taller for hero presence
+      font-size: 0.9375rem;
+      font-weight: 600;
+      border-radius: 22px; // M3 full rounding
+      letter-spacing: 0.3px;
+      box-shadow: 0 6px 20px -6px var(--gold-glow);
+
       mat-icon {
         margin-right: var(--spacing-xs);
         font-size: 1.125rem;
@@ -93,6 +124,25 @@
         height: 1.125rem;
       }
     }
+  }
+}
+
+// Backdrop entrance + slow cinematic zoom
+@keyframes hero-backdrop-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-backdrop-zoom {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1.14);
   }
 }
 
@@ -149,24 +199,36 @@
 .series-section {
   margin-bottom: calc(var(--spacing-xl) * 1.5);
   padding: 0 var(--spacing-lg);
-  
+
   .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-xl);
-    
+
     h2 {
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
+      font-family: 'Poppins', 'Roboto', sans-serif; // display typeface for section titles
       font-size: 2rem; // M3 headline-medium
-      font-weight: 400;
+      font-weight: 600;
       line-height: 1.2;
-      letter-spacing: 0;
+      letter-spacing: -0.01em;
       margin: 0;
-      color: var(--primary-color);
-      
+      color: var(--mat-sys-on-surface);
+
+      // Gold accent bar before the title (cinematic identity)
+      &::before {
+        content: '';
+        width: 4px;
+        height: 1.6rem;
+        border-radius: 9999px;
+        background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+        box-shadow: 0 0 12px -2px var(--gold-glow);
+        flex: 0 0 auto;
+      }
+
       mat-icon {
         font-size: 2rem;
         width: 2rem;
@@ -174,7 +236,7 @@
         color: var(--primary-color);
         transition: transform 300ms cubic-bezier(0.2, 0, 0, 1);
       }
-      
+
       &:hover mat-icon {
         transform: rotate(12deg) scale(1.1);
       }
@@ -186,11 +248,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--spacing-lg);
-  
+
   // M3 Staggered animation for cards
   app-serie-card {
     animation: cardFadeInStaggered 400ms cubic-bezier(0.2, 0, 0, 1) backwards;
-    
+
     @for $i from 1 through 12 {
       &:nth-child(#{$i}) {
         animation-delay: #{$i * 50}ms;
@@ -214,11 +276,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--spacing-lg);
-  
+
   // M3 Staggered loading animation
   .series-card.loading {
     animation: skeletonFadeIn 300ms cubic-bezier(0.2, 0, 0, 1) backwards;
-    
+
     @for $i from 1 through 6 {
       &:nth-child(#{$i}) {
         animation-delay: #{$i * 60}ms;
@@ -243,7 +305,7 @@
     border-radius: 16px; // M3 large shape
     background: var(--mat-sys-surface);
     border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 12%, transparent);
-    
+
     .poster-placeholder {
       height: 0;
       padding-top: 150%;
@@ -257,7 +319,7 @@
       animation: loading 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite; // M3 easing
       border-radius: 16px 16px 0 0;
     }
-    
+
     .title-placeholder {
       height: 18px;
       background: linear-gradient(
@@ -271,7 +333,7 @@
       border-radius: 8px;
       margin-bottom: var(--spacing-sm);
     }
-    
+
     .info-placeholder {
       height: 60px;
       background: linear-gradient(
@@ -303,7 +365,7 @@
   gap: var(--spacing-sm);
   margin-top: var(--spacing-xl);
   padding: var(--spacing-lg) 0;
-  
+
   .load-more-button {
     min-width: 200px;
     height: 40px;  // M3 standard button height
@@ -312,27 +374,27 @@
     font-weight: 500;
     letter-spacing: 0.1px;
     transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:active {
       transform: scale(0.95);
     }
-    
+
     mat-icon {
       margin-right: var(--spacing-xs);
       transition: transform 300ms cubic-bezier(0.2, 0, 0, 1);
     }
-    
+
     &:hover mat-icon {
       transform: translateY(3px);
     }
   }
-  
+
   .loading-icon {
     animation: home-loading-rotate 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; // M3 emphasized easing
     color: var(--primary-color);
     font-size: 1.5rem;
   }
-  
+
   span {
     color: var(--mat-sys-on-surface-variant);
     font-size: 0.875rem; // M3 body-medium
@@ -353,48 +415,48 @@
 @include respond-below(md) {
   .hero-section {
     padding: var(--spacing-xl) var(--spacing-md);
-    
+
     .hero-content {
       h1 {
         font-size: 2.5rem;
         line-height: 1.2;
       }
-      
+
       p {
         font-size: 1.1rem;
       }
     }
-    
+
     .hero-actions {
       flex-direction: column;
       align-items: center;
-      
+
       .hero-button {
         width: 100%;
         max-width: 280px;
       }
     }
   }
-  
+
   .series-section {
     padding: 0 var(--spacing-md);
-    
+
     .section-header {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--spacing-sm);
-      
+
       h2 {
         font-size: 1.5rem;
       }
     }
   }
-  
+
   .series-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--spacing-md);
   }
-  
+
   .loading-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--spacing-md);
@@ -402,18 +464,22 @@
 }
 
 .auth-section {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  position: relative;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(199, 168, 80, 0.16) 0%, rgba(8, 11, 28, 0) 55%),
+    linear-gradient(135deg, #161a30 0%, #0c1024 100%);
   color: white;
   padding: var(--spacing-xl) var(--spacing-lg);
   margin: var(--spacing-xl) 0;
-  border-radius: var(--border-radius);
-  
+  border-radius: var(--md-sys-shape-corner-large);
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+
   .auth-content {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
   }
-  
+
   .auth-info {
     .auth-icon {
       font-size: 4rem;
@@ -422,14 +488,14 @@
       margin-bottom: var(--spacing-lg);
       opacity: 0.9;
     }
-    
+
     h2 {
       font-size: 2.2rem;
       font-weight: 600;
       margin-bottom: var(--spacing-md);
       color: white;
     }
-    
+
     p {
       font-size: 1.1rem;
       margin-bottom: var(--spacing-lg);
@@ -437,7 +503,7 @@
       line-height: 1.6;
     }
   }
-  
+
   .auth-benefits {
     list-style: none;
     padding: 0;
@@ -448,13 +514,13 @@
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    
+
     li {
       display: flex;
       align-items: center;
       gap: var(--spacing-md);
       font-size: 1rem;
-      
+
       mat-icon {
         color: var(--success-color, #4caf50);
         font-size: 1.5rem;
@@ -463,22 +529,23 @@
       }
     }
   }
-  
+
   .auth-actions {
     margin-top: var(--spacing-xl);
-    
+
     .auth-button {
       padding: var(--spacing-md) var(--spacing-xl);
       font-size: 1.1rem;
-      font-weight: 500;
-      background: white;
-      color: var(--primary-color);
-      
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+      color: #1a1200;
+      box-shadow: 0 6px 20px -6px var(--gold-glow);
+
       &:hover {
-        background: rgba(255, 255, 255, 0.9);
+        background: linear-gradient(135deg, #f0d27e 0%, var(--gold-bright) 100%);
         transform: translateY(-2px);
       }
-      
+
       mat-icon {
         margin-right: var(--spacing-sm);
       }
@@ -490,19 +557,19 @@
   .auth-section {
     padding: var(--spacing-lg) var(--spacing-md);
     margin: var(--spacing-lg) 0;
-    
+
     .auth-info {
       .auth-icon {
         font-size: 3rem;
         width: 3rem;
         height: 3rem;
       }
-      
+
       h2 {
         font-size: 1.8rem;
       }
     }
-    
+
     .auth-benefits {
       li {
         font-size: 0.9rem;

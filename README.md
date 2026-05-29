@@ -34,7 +34,7 @@ Track your favorite TV series, discover new content, and never miss an episode. 
 ### 🎨 Modern Interface
 
 - **Material Design 3**: Smooth interface with animations and transitions
-- **Custom Theme**: Rose/red color palette with dark mode
+- **Custom Theme**: "Nuit & Or" — single dark cinematic theme (night-blue surfaces + gold accent)
 - **Responsive Design**: Optimized for mobile, tablet, and desktop
 - **A11y Accessibility**: Full screen reader support
 - **Image Gallery**: High-resolution series images (backdrops, posters, logos) with advanced slideshow
@@ -168,10 +168,10 @@ src/app/
 
 ### Material Design 3 Theme
 
-- **Primary Color**: Rose (#FF4081)
-- **Accent Color**: Red (#F44336)
-- **Typography**: Roboto (300, 400, 500, 700)
-- **Icons**: Material Icons via Google CDN
+- **Primary Color**: Gold (`#c7a850` / `#e4c368`)
+- **Surface Color**: Night blue (`#0e1227`)
+- **Typography**: Poppins 600 (headings/hero), Roboto (body)
+- **Icons**: Material Icons loaded locally via the `material-icons` package
 
 ### Performance Optimizations
 

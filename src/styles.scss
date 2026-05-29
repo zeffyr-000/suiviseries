@@ -1,35 +1,48 @@
 @use '@angular/material' as mat;
 @use './styles/mixins' as *;
 @use './styles/focus' as *;
+@use './styles/theme-colors' as theme;
 
 @import '@fontsource/roboto/300.css';
 @import '@fontsource/roboto/400.css';
 @import '@fontsource/roboto/500.css';
 @import '@fontsource/roboto/700.css';
 
+// Poppins: display typeface for headings/hero (cinematic identity)
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+
 // Material Icons with font-display: block (intentional for UX)
 // Prevents icon flash (FOUT), cached by SW after first load (~125KB)
 @import 'material-icons/iconfont/material-icons.css';
 
 html {
+  // Single dark theme ("Nuit & Or"): cinematic dark surfaces + gold accent.
+  color-scheme: dark;
+
   @include mat.theme((
     color: (
-      primary: mat.$rose-palette,
-      tertiary: mat.$red-palette,
+      primary: theme.$primary-palette,
+      tertiary: theme.$tertiary-palette,
     ),
     typography: (
-      brand-family: 'Roboto',
+      brand-family: 'Poppins',
       plain-family: 'Roboto',
     ),
     density: (
       scale: 0,
     )
   ));
-  
-  --primary-color: #e91e63;
-  --accent-color: #ff5722;
-  --warn-color: #f44336;
-  
+
+  // Gold accent (primary) + amber highlight on deep night-blue surfaces
+  --primary-color: #c7a850;
+  --accent-color: #e4c368;
+  --warn-color: #ff5449;
+  --gold: #c7a850;
+  --gold-bright: #e4c368;
+  --gold-glow: rgba(199, 168, 80, 0.35);
+
   --md-sys-shape-corner-none: 0;
   --md-sys-shape-corner-extra-small: 4px;
   --md-sys-shape-corner-small: 8px;
@@ -37,10 +50,10 @@ html {
   --md-sys-shape-corner-large: 16px;
   --md-sys-shape-corner-extra-large: 28px;
   --md-sys-shape-corner-full: 9999px;
-  
+
   --border-radius: var(--md-sys-shape-corner-small);
   --border-radius-lg: var(--md-sys-shape-corner-medium);
-  
+
   --md-sys-motion-duration-short1: 50ms;
   --md-sys-motion-duration-short2: 100ms;
   --md-sys-motion-duration-short3: 150ms;
@@ -57,7 +70,7 @@ html {
   --md-sys-motion-duration-extra-long2: 800ms;
   --md-sys-motion-duration-extra-long3: 900ms;
   --md-sys-motion-duration-extra-long4: 1000ms;
-  
+
   --md-sys-motion-easing-linear: cubic-bezier(0, 0, 1, 1);
   --md-sys-motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
@@ -65,14 +78,14 @@ html {
   --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
   --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
-  
+
   --md-sys-elevation-level0: none;
-  --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
-  --md-sys-elevation-level2: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
-  --md-sys-elevation-level3: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
-  --md-sys-elevation-level4: 0 2px 3px 0 rgba(0, 0, 0, 0.3), 0 6px 10px 4px rgba(0, 0, 0, 0.15);
-  --md-sys-elevation-level5: 0 4px 4px 0 rgba(0, 0, 0, 0.3), 0 8px 12px 6px rgba(0, 0, 0, 0.15);
-  
+  --md-sys-elevation-level1: 0 1px 2px 0 rgba(0, 0, 0, 0.5), 0 1px 3px 1px rgba(0, 0, 0, 0.35);
+  --md-sys-elevation-level2: 0 1px 2px 0 rgba(0, 0, 0, 0.5), 0 2px 6px 2px rgba(0, 0, 0, 0.35);
+  --md-sys-elevation-level3: 0 4px 8px 3px rgba(0, 0, 0, 0.4), 0 1px 3px 0 rgba(0, 0, 0, 0.55);
+  --md-sys-elevation-level4: 0 6px 10px 4px rgba(0, 0, 0, 0.4), 0 2px 3px 0 rgba(0, 0, 0, 0.55);
+  --md-sys-elevation-level5: 0 8px 12px 6px rgba(0, 0, 0, 0.45), 0 4px 4px 0 rgba(0, 0, 0, 0.55);
+
   --spacing-unit: 8px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -80,23 +93,60 @@ html {
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-xxl: 48px;
+
+  // Smooth anchor scrolling (respecting reduced-motion below)
+  scroll-behavior: smooth;
 }
 
 body {
-  color-scheme: light;
+  color-scheme: dark;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
   margin: 0;
+  // Crisper type rendering on dark surfaces
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-.dark-theme {
-  --primary-color: #f48fb1;
-  --accent-color: #ff8a65;
+// Gold-tinted text selection (cinematic identity)
+::selection {
+  background-color: color-mix(in srgb, var(--gold) 35%, transparent);
+  color: var(--mat-sys-on-surface);
 }
 
-.mat-mdc-elevated-button, 
-.mat-mdc-raised-button, 
+// Custom dark scrollbar with subtle gold thumb
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--gold) 45%, transparent) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--gold) 35%, var(--mat-sys-surface-container-highest));
+  border: 3px solid var(--mat-sys-surface);
+  border-radius: 9999px;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--gold) 60%, var(--mat-sys-surface-container-highest));
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.mat-mdc-elevated-button,
+.mat-mdc-raised-button,
 .mat-mdc-outlined-button,
 .mat-mdc-fab,
 .mat-mdc-mini-fab {
@@ -104,15 +154,15 @@ body {
 }
 
 /**
- * Button icon alignment fix for Angular Material v20.2.12
- * 
+ * Button icon alignment fix for Angular Material buttons
+ *
  * IMPORTANT: This fix uses !important to override internal .mdc-button__label styles.
  * This is a workaround for a known Material Design Components issue where icons
  * and text don't align properly in buttons by default.
- * 
+ *
  * WARNING: This relies on internal MDC class structure (.mdc-button__label) which
  * may change in future versions. Review and test after Material upgrades.
- * 
+ *
  * Related issue: Angular Material buttons don't properly center icons with text
  */
 .mat-mdc-button,
@@ -126,7 +176,7 @@ body {
     align-items: center !important;
     justify-content: center !important;
     gap: 8px !important;
-    
+
     mat-icon {
       display: inline-flex !important;
       align-items: center !important;
@@ -135,12 +185,12 @@ body {
       vertical-align: middle !important;
     }
   }
-  
+
   // For buttons with leading icons
   mat-icon:first-child {
     margin-right: 0 !important;
   }
-  
+
   // For buttons with trailing icons
   mat-icon:last-child {
     margin-left: 0 !important;
@@ -152,27 +202,27 @@ body {
   border-radius: 20px !important; // M3 full rounding for buttons
   height: 40px !important;
   padding: 0 24px !important;
-  
+
   // Clear elevation for raised buttons
   &.mat-mdc-raised-button,
   &.mat-mdc-unelevated-button {
     box-shadow: var(--md-sys-elevation-level1) !important;
-    
+
     &:hover {
       box-shadow: var(--md-sys-elevation-level2) !important;
     }
-    
+
     &:active {
       box-shadow: var(--md-sys-elevation-level1) !important;
     }
   }
-  
+
   // Outlined buttons have distinct borders
   &.mat-mdc-outlined-button {
     border: 1px solid var(--mat-sys-outline) !important;
     border-width: 1px !important;
   }
-  
+
   // Disabled state - M3 opacity standard
   &:disabled,
   &[disabled] {
@@ -180,7 +230,7 @@ body {
     cursor: not-allowed !important;
     pointer-events: none !important;
   }
-  
+
   // Active/Press state
   &:active:not(:disabled) {
     transform: scale(0.96);
@@ -215,14 +265,14 @@ body {
   font-weight: 500 !important;
   letter-spacing: 0.1px !important;
   border: 1px solid currentcolor !important;
-  
+
   // Chips have more padding and rounder corners than buttons
   &.mat-mdc-standard-chip {
     border-radius: 12px !important; // Rounder than buttons
     min-height: 32px !important;
     padding: 0 14px !important;
   }
-  
+
   // Chips are non-interactive by default
   &:not(.mat-mdc-chip-highlighted):not(.mat-mdc-chip-selected) {
     background: color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) !important;
@@ -257,9 +307,9 @@ body {
   box-shadow: var(--md-sys-elevation-level5) !important;
 }
 
-html, body { 
-  height: 100%; 
-  margin: 0; 
+html, body {
+  height: 100%;
+  margin: 0;
   font-family: 'Roboto', "Helvetica Neue", sans-serif;
 }
 
@@ -300,49 +350,49 @@ html, body {
 }
 
 .display-large {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 3.5rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.14;
   letter-spacing: -0.02em;
 }
 
 .display-medium {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 2.8rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.16;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 .display-small {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 2.25rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.22;
   letter-spacing: 0;
 }
 
 .headline-large {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.25;
   letter-spacing: 0;
 }
 
 .headline-medium {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 1.75rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.29;
   letter-spacing: 0;
 }
 
 .headline-small {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.33;
   letter-spacing: 0;
 }
@@ -414,12 +464,12 @@ html, body {
     min-height: 48px !important;
     height: 48px !important;
   }
-  
+
   .mat-mdc-icon-button {
     width: 48px !important;
     height: 48px !important;
   }
-  
+
   // Ensure clickable areas
   button,
   a:not(p a),
@@ -431,26 +481,39 @@ html, body {
 }
 
 /* MatSnackBar custom styles for notification types */
+.snackbar-error,
+.snackbar-success,
+.snackbar-warning,
+.snackbar-info {
+  --mdc-snackbar-container-shape: 12px;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+  --mat-snack-bar-button-color: #ffffff !important;
+}
+
 .snackbar-error {
-  --mdc-snackbar-container-color: #d32f2f !important;
-  --mdc-snackbar-supporting-text-color: white !important;
-  --mat-snack-bar-button-color: white !important;
+  --mdc-snackbar-container-color: #b3261e !important;
 }
 
 .snackbar-success {
-  --mdc-snackbar-container-color: #388e3c !important;
-  --mdc-snackbar-supporting-text-color: white !important;
-  --mat-snack-bar-button-color: white !important;
+  --mdc-snackbar-container-color: #2e7d4f !important;
 }
 
 .snackbar-warning {
-  --mdc-snackbar-container-color: #f57c00 !important;
-  --mdc-snackbar-supporting-text-color: white !important;
-  --mat-snack-bar-button-color: white !important;
+  --mdc-snackbar-container-color: #6f4f00 !important;
 }
 
 .snackbar-info {
-  --mdc-snackbar-container-color: #1976d2 !important;
-  --mdc-snackbar-supporting-text-color: white !important;
-  --mat-snack-bar-button-color: white !important;
+  --mdc-snackbar-container-color: #2a4c8c !important;
+}
+
+/* Accessibility: honor users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
