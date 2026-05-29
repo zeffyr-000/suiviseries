@@ -44,17 +44,17 @@
   border-radius: 50%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
-  
+
   mat-icon {
     color: var(--mat-sys-inverse-on-surface);
   }
-  
+
   &:hover {
     background-color: color-mix(in srgb, var(--mat-sys-inverse-surface) 100%, transparent);
     transform: scale(1.08);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
   }
-  
+
   &:active {
     transform: scale(0.92);
   }
@@ -85,12 +85,16 @@
   height: 300px;
   object-fit: cover;
   border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: transform 300ms cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6),
+              0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent);
+  border: 2px solid color-mix(in srgb, var(--gold) 22%, transparent);
+  transition: transform 300ms cubic-bezier(0.2, 0, 0, 1),
+              box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
 
   &:hover {
     transform: scale(1.02);
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.7),
+                0 0 0 1px var(--gold-glow);
   }
 
   @include mixins.respond-below(md) {
@@ -105,11 +109,18 @@
   right: 12px;
   padding: 6px 12px;
   font-size: 0.8125rem;
+  font-weight: 600;
+  // Gold-glass to match serie cards
+  background: color-mix(in srgb, #0e1227 72%, transparent);
+  color: var(--gold-bright);
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 
   mat-icon {
     font-size: 16px;
     width: 16px;
     height: 16px;
+    color: var(--gold-bright);
   }
 }
 
@@ -119,12 +130,13 @@
 }
 
 .serie-title {
-  font-size: 2.5rem;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 2.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   margin: 0 0 var(--spacing-sm) 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
 
   @include mixins.respond-below(md) {
     font-size: 2rem;
@@ -143,7 +155,7 @@
 
 .serie-meta {
   margin-bottom: var(--spacing-xl);
-  
+
   mat-chip-set {
     margin-bottom: var(--spacing-md);
   }
@@ -199,24 +211,59 @@
   gap: var(--spacing-md);
   align-items: center;
 
-  button {
-    border-radius: 20px;
-    transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-    
+  // Self-contained button styling (does not rely on Material color palettes),
+  // so both states always read clearly as buttons against the dark hero.
+  .action-btn {
+    --mdc-filled-button-container-shape: 9999px;
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 9999px; // M3 full pill
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1),
+                box-shadow 150ms cubic-bezier(0.2, 0, 0, 1),
+                background-color 150ms cubic-bezier(0.2, 0, 0, 1),
+                border-color 150ms cubic-bezier(0.2, 0, 0, 1);
+
+    // Inactive state = solid gold filled button (primary call to action)
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%) !important;
+    color: #1a1200 !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 6px 18px -6px var(--gold-glow), var(--md-sys-elevation-level1) !important;
+
+    mat-icon {
+      color: #1a1200;
+    }
+
     &:hover {
       transform: translateY(-2px);
+      box-shadow: 0 10px 24px -6px var(--gold-glow), var(--md-sys-elevation-level2) !important;
     }
-    
+
     &:active {
       transform: scale(0.96);
     }
-  }
-  
-  button[mat-icon-button] {
-    border-radius: 50%;
+
+    // Active state = gold-tinted glass, still unmistakably a button
+    // (strong gold border + gold label) but visually distinct from inactive.
+    &.action-btn--active {
+      background: color-mix(in srgb, var(--gold) 16%, rgba(14, 18, 39, 0.72)) !important;
+      backdrop-filter: blur(12px);
+      color: var(--gold-bright) !important;
+      border: 1.5px solid color-mix(in srgb, var(--gold) 60%, transparent) !important;
+      box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.5),
+                  inset 0 0 0 1px color-mix(in srgb, var(--gold) 14%, transparent) !important;
+
+      mat-icon {
+        color: var(--gold-bright);
+      }
+
+      &:hover {
+        background: color-mix(in srgb, var(--gold) 24%, rgba(14, 18, 39, 0.78)) !important;
+        border-color: color-mix(in srgb, var(--gold) 80%, transparent) !important;
+      }
+    }
   }
 
   @include mixins.respond-below(md) {

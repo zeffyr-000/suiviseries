@@ -1,22 +1,22 @@
 @use '../../../styles/mixins' as *;
 
-// Status semantic colors (fixed, theme-independent)
+// Status semantic colors (tuned for the dark "Nuit & Or" theme)
 :host {
     --status-returning-base: #10b981;
-    --status-returning-text: #047857;
-    --status-returning-icon: #059669;
-    
+    --status-returning-text: #6ee7b7;
+    --status-returning-icon: #34d399;
+
     --status-canceled-base: #ef4444;
-    --status-canceled-text: #b91c1c;
-    --status-canceled-icon: #dc2626;
-    
+    --status-canceled-text: #fca5a5;
+    --status-canceled-icon: #f87171;
+
     --status-production-base: #f59e0b;
-    --status-production-text: #b45309;
-    --status-production-icon: #d97706;
-    
+    --status-production-text: #fcd34d;
+    --status-production-icon: #fbbf24;
+
     --status-planned-base: #8b5cf6;
-    --status-planned-text: #6d28d9;
-    --status-planned-icon: #7c3aed;
+    --status-planned-text: #c4b5fd;
+    --status-planned-icon: #a78bfa;
 }
 
 // M3 Status Chip Design
@@ -29,14 +29,14 @@ mat-chip {
     display: inline-flex;
     align-items: center;
     gap: 6px; // M3 spacing
-    
+
     .status-icon {
         margin: 0;
         display: inline-flex;
         align-items: center;
         justify-content: center;
     }
-    
+
     // Size variants with M3 specs
     &.size-small {
         font-size: 0.6875rem; // 11px - M3 body-small
@@ -44,173 +44,106 @@ mat-chip {
         padding: 0 10px;
         height: 24px;
         line-height: 1.43;
-        
+
         .status-icon {
             font-size: 14px !important;
             width: 14px !important;
             height: 14px !important;
         }
     }
-    
+
     &.size-medium {
         font-size: 0.8125rem; // 13px - M3 body-medium
         border-radius: 12px; // M3 medium shape
         padding: 0 14px;
         height: 32px;
         line-height: 1.43;
-        
+
         .status-icon {
             font-size: 16px !important;
             width: 16px !important;
             height: 16px !important;
         }
     }
-    
+
     &.size-large {
         font-size: 0.875rem; // 14px - M3 body-large
         border-radius: 16px; // M3 large shape
         padding: 0 18px;
         height: 40px;
         line-height: 1.43;
-        
+
         .status-icon {
             font-size: 18px !important;
             width: 18px !important;
             height: 18px !important;
         }
     }
-    
+
     // Status variants with M3 color system
     &.status-default {
         background: color-mix(in srgb, var(--mat-sys-surface-variant) 90%, transparent);
         color: var(--mat-sys-on-surface-variant);
         border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
     }
-    
+
     &.status-returning {
-        background: color-mix(in srgb, var(--status-returning-base) 12%, transparent);
+        background: color-mix(in srgb, var(--status-returning-base) 20%, transparent);
         color: var(--status-returning-text);
-        border: 1px solid color-mix(in srgb, var(--status-returning-base) 25%, transparent);
-        
+        border: 1px solid color-mix(in srgb, var(--status-returning-base) 40%, transparent);
+
         .status-icon {
             color: var(--status-returning-icon);
         }
     }
-    
+
     &.status-ended {
-        background: color-mix(in srgb, var(--mat-sys-surface-variant) 85%, transparent);
+        background: color-mix(in srgb, var(--mat-sys-surface-variant) 70%, transparent);
         color: var(--mat-sys-on-surface-variant);
         border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
-        
+
         .status-icon {
             color: var(--mat-sys-on-surface-variant);
         }
     }
-    
+
     &.status-canceled {
-        background: color-mix(in srgb, var(--status-canceled-base) 12%, transparent);
+        background: color-mix(in srgb, var(--status-canceled-base) 20%, transparent);
         color: var(--status-canceled-text);
-        border: 1px solid color-mix(in srgb, var(--status-canceled-base) 25%, transparent);
-        
+        border: 1px solid color-mix(in srgb, var(--status-canceled-base) 40%, transparent);
+
         .status-icon {
             color: var(--status-canceled-icon);
         }
     }
-    
+
     &.status-production {
-        background: color-mix(in srgb, var(--status-production-base) 12%, transparent);
+        background: color-mix(in srgb, var(--status-production-base) 20%, transparent);
         color: var(--status-production-text);
-        border: 1px solid color-mix(in srgb, var(--status-production-base) 25%, transparent);
-        
+        border: 1px solid color-mix(in srgb, var(--status-production-base) 40%, transparent);
+
         .status-icon {
             color: var(--status-production-icon);
         }
     }
-    
+
     &.status-planned {
-        background: color-mix(in srgb, var(--status-planned-base) 12%, transparent);
+        background: color-mix(in srgb, var(--status-planned-base) 20%, transparent);
         color: var(--status-planned-text);
-        border: 1px solid color-mix(in srgb, var(--status-planned-base) 25%, transparent);
-        
+        border: 1px solid color-mix(in srgb, var(--status-planned-base) 40%, transparent);
+
         .status-icon {
             color: var(--status-planned-icon);
         }
     }
-    
+
     // Non-interactive chips (display only)
     cursor: default;
-    
+
     &.mat-mdc-chip-disabled,
     &:disabled {
         opacity: 0.38;
         cursor: not-allowed;
-    }
-}
-
-// Dark theme adjustments
-.dark-theme {
-    --status-returning-text: #6ee7b7;
-    --status-returning-icon: #34d399;
-    
-    --status-canceled-text: #fca5a5;
-    --status-canceled-icon: #f87171;
-    
-    --status-production-text: #fcd34d;
-    --status-production-icon: #fbbf24;
-    
-    --status-planned-text: #c4b5fd;
-    --status-planned-icon: #a78bfa;
-    
-    mat-chip {
-        &.status-returning {
-            background: color-mix(in srgb, var(--status-returning-base) 20%, transparent);
-            color: var(--status-returning-text);
-            border-color: color-mix(in srgb, var(--status-returning-base) 40%, transparent);
-            
-            .status-icon {
-                color: var(--status-returning-icon);
-            }
-        }
-        
-        &.status-ended {
-            background: color-mix(in srgb, var(--mat-sys-surface-variant) 70%, transparent);
-            color: var(--mat-sys-on-surface-variant);
-        }
-        
-        &.status-canceled {
-            background: color-mix(in srgb, var(--status-canceled-base) 20%, transparent);
-            color: var(--status-canceled-text);
-            border-color: color-mix(in srgb, var(--status-canceled-base) 40%, transparent);
-            
-            .status-icon {
-                color: var(--status-canceled-icon);
-            }
-        }
-        
-        &.status-production {
-            background: color-mix(in srgb, var(--status-production-base) 20%, transparent);
-            color: var(--status-production-text);
-            border-color: color-mix(in srgb, var(--status-production-base) 40%, transparent);
-            
-            .status-icon {
-                color: var(--status-production-icon);
-            }
-        }
-        
-        &.status-planned {
-            background: color-mix(in srgb, var(--status-planned-base) 20%, transparent);
-            color: var(--status-planned-text);
-            border-color: color-mix(in srgb, var(--status-planned-base) 40%, transparent);
-            
-            .status-icon {
-                color: var(--status-planned-icon);
-            }
-        }
-
-        &.status-default {
-            background: color-mix(in srgb, var(--mat-sys-surface-variant) 60%, transparent);
-            color: var(--mat-sys-on-surface-variant);
-        }
     }
 }
 
@@ -222,20 +155,20 @@ mat-chip {
             height: 28px;
             padding: 0 12px;
             border-radius: 10px;
-            
+
             .status-icon {
                 font-size: 15px !important;
                 width: 15px !important;
                 height: 15px !important;
             }
         }
-        
+
         &.size-large {
             font-size: 0.8125rem; // 13px
             height: 36px;
             padding: 0 16px;
             border-radius: 14px;
-            
+
             .status-icon {
                 font-size: 17px !important;
                 width: 17px !important;

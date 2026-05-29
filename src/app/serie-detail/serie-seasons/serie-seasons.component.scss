@@ -67,7 +67,7 @@
   .season-overview {
     margin: 0 0 1rem;
     line-height: 1.5;
-    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.7));
+    color: var(--mat-sys-on-surface-variant);
   }
 
   .season-meta {
@@ -75,7 +75,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.6));
+    color: var(--mat-sys-on-surface-variant);
 
     .separator {
       opacity: 0.6;
@@ -176,4 +176,21 @@
 .season-watched-button,
 .episode-watched-button {
   margin-left: auto;
+  color: var(--mat-sys-on-surface-variant);
+  transition: color 150ms cubic-bezier(0.2, 0, 0, 1),
+              background-color 150ms cubic-bezier(0.2, 0, 0, 1);
+
+  // Watched state = gold, clearly distinct from the neutral unwatched state
+  &.is-watched {
+    color: var(--gold-bright);
+    background-color: color-mix(in srgb, var(--gold) 16%, transparent);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--gold) 24%, transparent);
+    }
+
+    mat-icon {
+      color: var(--gold-bright);
+    }
+  }
 }

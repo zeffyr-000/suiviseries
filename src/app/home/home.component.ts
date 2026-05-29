@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
-import { Serie } from '../models/serie.model';
+import { Serie, getTmdbImageUrl } from '../models/serie.model';
 import { LoginComponent } from '../login/login.component';
 import { SerieCardComponent } from '../shared/serie-card/serie-card.component';
 import { environment } from '../../environments/environment';
@@ -40,6 +40,12 @@ export class HomeComponent implements OnInit {
     protected hasMore = signal(true);
     private currentPage = 1;
     private readonly pageSize = 12;
+
+    // Dynamic hero backdrop: first popular serie with a backdrop image
+    protected readonly heroBackdrop = computed(() => {
+        const withBackdrop = this.popularSeries().find(serie => serie.backdrop_path);
+        return withBackdrop ? getTmdbImageUrl(withBackdrop.backdrop_path, 'w780') : null;
+    });
 
     protected topRatedSeries = signal<Serie[]>([]);
     protected topRatedLoading = signal(true);

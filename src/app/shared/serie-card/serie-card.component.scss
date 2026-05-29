@@ -9,13 +9,13 @@
     border-radius: 16px; // M3 large shape
     overflow: hidden;
     box-shadow: var(--md-sys-elevation-level1); // M3 resting elevation
-    background: var(--mat-sys-surface);
-    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 12%, transparent);
+    background: var(--mat-sys-surface-container-high);
+    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 28%, transparent);
 
     &:hover {
         transform: translateY(-8px);
-        box-shadow: var(--md-sys-elevation-level3); // M3 hover elevation
-        border-color: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+        box-shadow: var(--md-sys-elevation-level3), 0 0 0 1px var(--gold-glow), 0 12px 32px -8px var(--gold-glow); // M3 hover elevation + gold glow
+        border-color: color-mix(in srgb, var(--gold) 45%, transparent);
     }
 
     &:focus-within {
@@ -57,7 +57,7 @@
         width: 100%;
         padding-top: 150%; // Ratio 2:3 for posters
         overflow: hidden;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        background: linear-gradient(135deg, var(--mat-sys-surface-container-high) 0%, var(--mat-sys-surface-container) 100%);
 
         .series-poster {
             position: absolute;
@@ -98,27 +98,27 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            background: color-mix(in srgb, var(--mat-sys-surface) 95%, transparent);
+            background: color-mix(in srgb, #0e1227 72%, transparent);
             backdrop-filter: blur(12px);
-            color: var(--mat-sys-on-surface);
+            color: var(--gold-bright);
             padding: 6px 12px;
             border-radius: 20px; // M3 full rounding
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 0.8125rem; // M3 label-medium
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 0.5px;
             z-index: 2;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
 
             mat-icon {
                 font-size: 16px;
                 width: 16px;
                 height: 16px;
-                color: #fbbf24;
-                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+                color: var(--gold-bright);
+                filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
             }
         }
     }
@@ -128,7 +128,7 @@
         display: flex;
         flex-direction: column;
         padding: var(--spacing-lg);
-        background: var(--mat-sys-surface);
+        background: var(--mat-sys-surface-container-high);
 
         .series-title {
             font-size: 1.125rem; // M3 title-medium
@@ -204,8 +204,8 @@
         justify-content: flex-end;
         position: relative;
         z-index: 1;
-        background: var(--mat-sys-surface);
-        
+        background: var(--mat-sys-surface-container-high);
+
         button {
             font-size: 0.875rem; // M3 label-large
             font-weight: 500;
@@ -247,7 +247,7 @@
                 cursor: not-allowed;
                 transform: none;
                 box-shadow: none;
-                
+
                 &:hover {
                     transform: none;
                     box-shadow: none;
@@ -260,45 +260,6 @@
                 width: 18px;
                 height: 18px;
             }
-        }
-    }
-}
-
-// Dark theme support (if needed)
-.dark-theme {
-    .series-card {
-        background: var(--mat-sys-surface);
-        border-color: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
-
-        &:hover {
-            border-color: color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
-        }
-
-        mat-card-content {
-            background: var(--mat-sys-surface);
-
-            .series-title {
-                color: var(--mat-sys-on-surface);
-            }
-
-            .series-overview {
-                color: var(--mat-sys-on-surface-variant);
-            }
-
-            .series-meta {
-                color: var(--mat-sys-on-surface-variant);
-
-                .seasons,
-                .episodes {
-                    &::before {
-                        background: var(--mat-sys-on-surface-variant);
-                    }
-                }
-            }
-        }
-
-        mat-card-actions {
-            background: var(--mat-sys-surface);
         }
     }
 }

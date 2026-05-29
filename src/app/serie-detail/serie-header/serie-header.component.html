@@ -43,13 +43,15 @@
 
                     @if (isAuthenticated()) {
                     <div class="action-buttons">
-                        <button mat-raised-button [color]="isFollowing() ? 'accent' : 'primary'"
+                        <button mat-flat-button class="action-btn"
+                            [class.action-btn--active]="isFollowing()"
                             [appButtonLoading]="followLoading()" (click)="onToggleFollow()">
                             <mat-icon>{{ isFollowing() ? 'favorite' : 'favorite_border' }}</mat-icon>
                             {{ isFollowing() ? ('series.following' | transloco) : ('series.follow' |
                             transloco) }}
                         </button>
-                        <button mat-raised-button [color]="isWatched() ? 'accent' : 'primary'"
+                        <button mat-flat-button class="action-btn"
+                            [class.action-btn--active]="isWatched()"
                             [appButtonLoading]="watchedLoading()" (click)="onToggleWatched()">
                             <mat-icon>{{ isWatched() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
                             {{ isWatched() ? ('series.mark_unwatched' | transloco) : ('series.mark_watched'

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Suivi Séries">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d4b65f"/>
+      <stop offset="1" stop-color="#bd9d44"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded gold background -->
+  <rect width="512" height="512" rx="112" fill="url(#gold)"/>
+  <!-- Antennas -->
+  <g fill="none" stroke="#f4ecd2" stroke-width="26" stroke-linecap="round">
+    <line x1="256" y1="120" x2="196" y2="64"/>
+    <line x1="256" y1="120" x2="316" y2="64"/>
+  </g>
+  <!-- TV / screen body -->
+  <rect x="96" y="150" width="320" height="236" rx="34"
+        fill="none" stroke="#f4ecd2" stroke-width="30"/>
+  <!-- Play triangle -->
+  <path d="M226 214 L226 322 L312 268 Z" fill="#f4ecd2"/>
+</svg>

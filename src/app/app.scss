@@ -2,69 +2,69 @@
 
 .app-container {
   height: 100vh;
-  
+
   mat-sidenav {
     width: 280px;
-    
+
     &:first-of-type {
       border-radius: 0 16px 16px 0; // M3 large shape on trailing edge (left menu)
     }
-    
+
     &:last-of-type {
       width: 400px;
       max-width: 90vw;
       border-radius: 16px 0 0 16px; // M3 large shape on leading edge (notifications drawer)
     }
-    
+
     mat-nav-list {
       padding: var(--spacing-lg) var(--spacing-sm);
-      
+
       mat-list-item {
         margin: 0 var(--spacing-xs) var(--spacing-xs);
         border-radius: 28px; // M3 full rounding for nav items
         min-height: 56px;
         transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); // M3 emphasized easing, micro duration
-        
+
         &:hover {
-          background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+          background-color: color-mix(in srgb, var(--primary-color) 16%, transparent);
         }
-        
+
         // Active state (current route)
         &[aria-current="page"],
         &.mat-mdc-list-item-active,
         &.mdc-list-item--activated {
-          background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
-          
+          background-color: color-mix(in srgb, var(--primary-color) 24%, transparent);
+
           mat-icon {
             color: var(--primary-color);
           }
-          
+
           span {
             font-weight: 600;
             color: var(--primary-color);
           }
         }
-        
+
         &.logout-item {
           margin-top: var(--spacing-md);
-          
+
           &:hover {
             background-color: rgba(244, 67, 54, 0.1);
           }
-          
+
           mat-icon {
             color: #f44336;
           }
-          
+
           span {
             color: #f44336;
           }
         }
-        
+
         mat-icon {
           transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
         }
-        
+
         &:hover mat-icon {
           transform: scale(1.08);
         }
@@ -79,7 +79,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-lg) var(--spacing-xl);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 
   h2 {
     margin: 0;
@@ -90,7 +90,7 @@
 
   button {
     transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:active {
       transform: scale(0.92);
     }
@@ -131,7 +131,7 @@
   padding: 12px var(--spacing-lg);
   border: none;
   background: transparent;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
   width: 100%;
@@ -182,7 +182,7 @@
   .notification-icon-fallback {
     width: 48px;
     height: 72px;
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: var(--mat-sys-surface-container-highest);
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -193,7 +193,7 @@
       font-size: 28px;
       width: 28px;
       height: 28px;
-      color: rgba(0, 0, 0, 0.4);
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 
@@ -291,23 +291,23 @@
   top: 0;
   z-index: 100;
   box-shadow: var(--elevation-shadow);
-  background-color: var(--primary-color) !important;
+  background-color: var(--mat-sys-surface-container) !important;
   height: 64px; // M3 standard app bar height
-  color: white !important; // Force white text and icons
-  
+  color: var(--mat-sys-on-surface) !important;
+
   button[mat-icon-button] {
-    color: white !important; // Force white icons for all icon buttons
+    color: var(--mat-sys-on-surface) !important; // On-surface icons pass WCAG AA on surface-container
     transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:active {
       transform: scale(0.92);
     }
-    
+
     mat-icon {
-      color: white !important; // Force white for Material icons
+      color: var(--mat-sys-on-surface) !important;
     }
   }
-  
+
   .app-title {
     font-size: 1.375rem; // M3 title-large (22px)
     font-weight: 400;
@@ -319,14 +319,14 @@
     align-items: center;
     gap: var(--spacing-sm);
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.95); // Better contrast on primary background
+    color: var(--mat-sys-on-surface);
     cursor: pointer;
     transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1); // M3 micro duration
 
     &:hover {
       opacity: 0.85;
     }
-    
+
     &:active {
       opacity: 0.7;
       transform: scale(0.98);
@@ -352,21 +352,21 @@
       letter-spacing: 0;
     }
   }
-  
+
   .spacer {
     flex: 1 1 auto;
   }
-  
+
   .user-menu-trigger {
     display: flex;
     align-items: center;
     justify-content: center;
     transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:active {
       transform: scale(0.92);
     }
-    
+
     .user-avatar {
       width: 32px;
       height: 32px;
@@ -376,28 +376,38 @@
       transition: border-color 150ms cubic-bezier(0.2, 0, 0, 1);
       display: block;
     }
-    
+
     &:hover .user-avatar {
       border-color: rgba(255, 255, 255, 0.4);
     }
   }
-  
+
   .login-button {
-    color: white;
+    // Explicit gold fill (independent of Material color palettes) so it always reads as a button
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%) !important;
+    color: #1a1200 !important;
     height: 40px;
     border-radius: 20px; // M3 full rounding
     font-size: 0.875rem; // M3 label-large
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.1px;
-    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+    box-shadow: 0 4px 14px -4px var(--gold-glow) !important;
+    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1),
+                box-shadow 150ms cubic-bezier(0.2, 0, 0, 1);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px -6px var(--gold-glow) !important;
+    }
+
     &:active {
       transform: scale(0.95);
     }
-    
+
     mat-icon {
       margin-right: var(--spacing-xs);
       font-size: 1.125rem;
+      color: #1a1200;
     }
   }
 }
@@ -405,7 +415,7 @@
 // M3 Menu (popover) styling
 ::ng-deep .mat-mdc-menu-panel {
   border-radius: 12px; // M3 medium shape for menus
-  box-shadow: 
+  box-shadow:
     0 2px 4px -1px rgba(0, 0, 0, 0.2),
     0 4px 5px 0 rgba(0, 0, 0, 0.14),
     0 1px 10px 0 rgba(0, 0, 0, 0.12); // M3 elevation level 2
@@ -413,12 +423,12 @@
   max-width: 320px;
   max-height: calc(100vh - 100px);
   overflow: hidden auto;
-  
+
   .user-info {
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: 12px 12px 0 0;
     background-color: color-mix(in srgb, var(--primary-color) 5%, transparent);
-    
+
     .user-name {
       font-weight: 500;
       font-size: 1rem;
@@ -430,7 +440,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    
+
     .user-email {
       font-size: 0.875rem;
       line-height: 1.43;
@@ -494,7 +504,7 @@
 
     mat-slide-toggle {
       flex-shrink: 0;
-      
+
       ::ng-deep {
         .mdc-switch {
           margin: 0;
@@ -502,39 +512,39 @@
       }
     }
   }
-  
+
   .mat-mdc-menu-item {
     min-height: 48px;
     border-radius: 8px;
     margin: 0 var(--spacing-xs);
     transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:hover {
       background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
     }
-    
+
     &:active {
       background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
       transform: scale(0.98);
     }
-    
+
     mat-icon {
       margin-right: var(--spacing-md);
       color: var(--mat-sys-on-surface-variant);
       transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
     }
-    
+
     &:hover mat-icon {
       transform: scale(1.08);
     }
-    
+
     span {
       font-size: 0.875rem; // M3 label-large
       font-weight: 500;
       letter-spacing: 0.1px;
     }
   }
-  
+
   mat-divider {
     margin: var(--spacing-xs) 0;
   }
@@ -549,17 +559,17 @@
 @include respond-below(sm) {
   .app-toolbar {
     height: 56px; // M3 mobile app bar height
-    
+
     .app-title {
       font-size: 1.25rem; // M3 title-medium for mobile
       letter-spacing: 0.15px;
     }
-    
+
     .app-title-icon {
       font-size: 1.5rem;
     }
   }
-  
+
   .app-container mat-sidenav {
     width: 260px;
   }
