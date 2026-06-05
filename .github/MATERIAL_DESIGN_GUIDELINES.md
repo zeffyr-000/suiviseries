@@ -5,7 +5,7 @@
 
 ## 🎯 Project Context
 
-**SuiviSeries** is a professional Angular 21 demo application showcasing:
+**SuiviSeries** is a professional Angular 22 demo application showcasing:
 
 - ✅ Material Design 3 and Angular Material mastery
 - ✅ WCAG 2.1 AAA accessibility compliance

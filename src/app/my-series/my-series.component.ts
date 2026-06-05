@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Router } from '@angular/router';
@@ -26,8 +26,7 @@ import { environment } from '../../environments/environment';
         SerieCardComponent
     ],
     templateUrl: './my-series.component.html',
-    styleUrl: './my-series.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './my-series.component.scss'
 })
 export class MySeriesComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);

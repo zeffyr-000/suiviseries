@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, AfterViewInit, effect, Signal, inject, viewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, effect, Signal, inject, viewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TranslocoModule } from '@jsverse/transloco';
@@ -20,8 +20,7 @@ import { AuthService } from '../services/auth.service';
         MatDialogModule
     ],
     templateUrl: './login.component.html',
-    styleUrl: './login.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit, AfterViewInit {
     readonly googleButton = viewChild<ElementRef<HTMLDivElement>>('googleButton');

@@ -1,4 +1,4 @@
-import { Component, input, signal, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, input, signal, inject } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -21,8 +21,7 @@ export interface Video {
         MatIconModule
     ],
     templateUrl: './serie-videos.component.html',
-    styleUrl: './serie-videos.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-videos.component.scss'
 })
 export class SerieVideosComponent {
     videos = input.required<Video[]>();

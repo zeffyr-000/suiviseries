@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, inject, computed } from '@angular/core';
+import { Component, input, inject, computed } from '@angular/core';
 
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
@@ -15,8 +15,7 @@ import { SerieStatus } from '../../models/serie.model';
         MatIconModule
     ],
     templateUrl: './serie-status-chip.component.html',
-    styleUrl: './serie-status-chip.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-status-chip.component.scss'
 })
 export class SerieStatusChipComponent {
     readonly status = input<SerieStatus>(SerieStatus.PLANNED);

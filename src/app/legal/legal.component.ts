@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 import { MatCardModule } from '@angular/material/card';
@@ -19,8 +19,7 @@ import { environment } from '../../environments/environment';
         MatDividerModule
     ],
     templateUrl: './legal.component.html',
-    styleUrl: './legal.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './legal.component.scss'
 })
 export class LegalComponent {
     private readonly metadataService = inject(MetadataService);

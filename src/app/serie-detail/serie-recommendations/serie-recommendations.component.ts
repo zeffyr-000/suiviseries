@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -17,8 +17,7 @@ import { formatRating, Recommendation } from '../../models/serie.model';
         DatePipe
     ],
     templateUrl: './serie-recommendations.component.html',
-    styleUrl: './serie-recommendations.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-recommendations.component.scss'
 })
 export class SerieRecommendationsComponent {
     recommendations = input.required<Recommendation[]>();

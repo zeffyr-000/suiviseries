@@ -234,7 +234,7 @@ The `UpdateService` handles:
 ### ❌ DON'T: Include non-existent files in ngsw-config.json
 
 ```json
-// BAD - index.csr.html doesn't exist in Angular 21+
+// BAD - index.csr.html doesn't exist in Angular 22+
 "files": ["/index.csr.html", "/index.html"]
 ```
 

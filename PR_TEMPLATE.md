@@ -1,18 +1,18 @@
-# 🚀 Complete Suiviseries Implementation - Angular 21
+# 🚀 Complete Suiviseries Implementation - Angular 22
 
 ## 📋 Pull Request Summary
 
-This PR represents the **complete implementation** of Suiviseries, a modern Angular 21 application for personalized TV series tracking. This is a comprehensive feature delivery that transforms the project from basic setup to production-ready application.
+This PR represents the **complete implementation** of Suiviseries, a modern Angular 22 application for personalized TV series tracking. This is a comprehensive feature delivery that transforms the project from basic setup to production-ready application.
 
 ## ✨ Major Features Delivered
 
-### 🏗️ **Modern Angular 21 Architecture**
+### 🏗️ **Modern Angular 22 Architecture**
 
 - ✅ Standalone components with full NgModule migration
 - ✅ Modern control flow syntax (`@if`, `@for`, `@switch`)
 - ✅ Signals API for reactive state management
-- ✅ TypeScript 5.9 with strict configuration
-- ✅ Angular Material 21 with Material Design 3
+- ✅ TypeScript 6.0 with strict configuration
+- ✅ Angular Material 22 with Material Design 3
 
 ### 🎯 **Core Application Features**
 
@@ -139,7 +139,7 @@ This PR represents the **complete implementation** of Suiviseries, a modern Angu
 
 ### **For Recruiters & Technical Assessment**
 
-- Demonstrates **modern Angular 21** expertise with cutting-edge features
+- Demonstrates **modern Angular 22** expertise with cutting-edge features
 - Shows **architectural thinking** with scalable, maintainable code structure
 - Exhibits **full-stack understanding** with API integration and authentication
 - Proves **attention to detail** with comprehensive documentation and testing
@@ -187,7 +187,7 @@ This PR represents the **complete implementation** of Suiviseries, a modern Angu
 
 ## 💡 **Next Steps**
 
-1. **Review Process**: Code review focusing on Angular 21 patterns and architecture
+1. **Review Process**: Code review focusing on Angular 22 patterns and architecture
 2. **Testing**: Verify authentication flow and hierarchical tracking logic
 3. **Performance**: Validate bundle sizes and optimization settings
 4. **Documentation**: Confirm setup instructions work for new developers

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject, effect } from '@angular/core';
+import { Component, signal, computed, inject, effect } from '@angular/core';
 import { RouterOutlet, Router, RouterModule } from '@angular/router';
 
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -46,8 +46,7 @@ import { getNotificationTranslationKey } from './utils/notification.utils';
     PushNotificationPromptComponent
   ],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './app.scss'
 })
 export class App {
   protected readonly menuOpen = signal(false);

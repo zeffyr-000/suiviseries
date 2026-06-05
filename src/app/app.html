@@ -107,7 +107,7 @@
             <div class="user-name body-large">{{ user.display_name }}</div>
             <div class="user-email body-medium">{{ user.email }}</div>
           </div>
-          <mat-divider></mat-divider>
+          <mat-divider />
           <div class="push-notification-settings" [class.disabled]="!pushService.isSupported()">
             <div class="push-settings-header">
               <div class="push-settings-text">
@@ -121,17 +121,16 @@
                 }
               </div>
               @if (!pushService.isSupported()) {
-              <mat-slide-toggle disabled></mat-slide-toggle>
+              <mat-slide-toggle disabled />
               } @else if (pushService.permission() === 'denied') {
-              <mat-slide-toggle disabled></mat-slide-toggle>
+              <mat-slide-toggle disabled />
               } @else {
               <mat-slide-toggle [checked]="pushService.permission() === 'granted' && pushService.isSubscribed()"
-                [disabled]="pushLoading()" (change)="togglePushNotifications()" color="primary">
-              </mat-slide-toggle>
+                [disabled]="pushLoading()" (change)="togglePushNotifications()" color="primary" />
               }
             </div>
           </div>
-          <mat-divider></mat-divider>
+          <mat-divider />
           <button mat-menu-item (click)="logout()">
             <mat-icon>logout</mat-icon>
             <span>{{ 'auth.logout' | transloco }}</span>
@@ -147,7 +146,7 @@
       </mat-toolbar>
 
       <main class="app-content">
-        <router-outlet></router-outlet>
+        <router-outlet />
       </main>
 
       @if (currentUser()) {

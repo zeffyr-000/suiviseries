@@ -21,7 +21,7 @@ All documentation has been **fully translated to English** and **cleaned of irre
 ### 3. **docs/ARCHITECTURE.md** ✅ **TECHNICAL EXCELLENCE**
 
 - **Status**: Fully translated with focus on advanced patterns
-- **Content**: Angular 21 architecture, Signals, state management
+- **Content**: Angular 22 architecture, Signals, state management
 - **Highlight**: Demonstrates senior-level architectural decisions
 
 ### 4. **docs/DEPLOYMENT.md** ✅ **PERFORMANCE METRICS**
@@ -33,7 +33,7 @@ All documentation has been **fully translated to English** and **cleaned of irre
 ### 5. **docs/CONTRIBUTING.md** ✅ **PROFESSIONAL STANDARDS**
 
 - **Status**: Fully translated, modern development practices
-- **Content**: Angular 21 patterns, TypeScript 5.9 strict, testing strategies
+- **Content**: Angular 22 patterns, TypeScript 6.0 strict, testing strategies
 - **Quality**: Enterprise-level code standards and workflows
 
 ### 6. **docs/API.md** ✅ **COMPLETE SPECIFICATIONS**
@@ -79,7 +79,7 @@ All documentation has been **fully translated to English** and **cleaned of irre
 ### For Recruiters
 
 - **Consistent English documentation** demonstrates international readiness
-- **Technical depth** shows advanced Angular 21 and TypeScript 5.9 expertise
+- **Technical depth** shows advanced Angular 22 and TypeScript 6.0 expertise
 - **Comprehensive coverage** includes architecture, deployment, testing, and i18n
 - **Professional standards** with quality assurance and code review processes
 - **Measurable metrics** (98/100 Lighthouse, -70% bundle size) prove performance focus
@@ -94,12 +94,12 @@ All documentation has been **fully translated to English** and **cleaned of irre
 
 ## 🚀 Key Technical Highlights
 
-### Modern Angular 21 Architecture
+### Modern Angular 22 Architecture
 
 - **Standalone Components**: Full migration from NgModule pattern
 - **Signals API**: Advanced reactive state management
 - **Control Flow Syntax**: New @if, @for, @switch patterns
-- **TypeScript 5.9**: Strict typing with advanced features
+- **TypeScript 6.0**: Strict typing with advanced features
 
 ### Performance Optimizations
 

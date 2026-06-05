@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal, inject, DestroyRef, ChangeDetectionStrategy, Renderer2, DOCUMENT } from '@angular/core';
+import { Component, OnInit, computed, signal, inject, DestroyRef, Renderer2, DOCUMENT } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Meta } from '@angular/platform-browser';
@@ -53,8 +53,7 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
         SerieImagesComponent
     ],
     templateUrl: './serie-detail.component.html',
-    styleUrl: './serie-detail.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-detail.component.scss'
 })
 export class SerieDetailComponent implements OnInit {
     private readonly serieId = signal<number>(0);

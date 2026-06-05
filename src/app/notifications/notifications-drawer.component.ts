@@ -25,11 +25,11 @@ import { getNotificationTranslationKey } from '../utils/notification.utils';
     styleUrl: './notifications-drawer.component.scss'
 })
 export class NotificationsDrawerComponent {
-    public readonly userNotificationService = inject(UserNotificationService);
+    protected readonly userNotificationService = inject(UserNotificationService);
     private readonly router = inject(Router);
     private readonly transloco = inject(TranslocoService);
 
-    drawerOpen = signal(false);
+    protected readonly drawerOpen = signal(false);
 
     toggleDrawer(): void {
         this.drawerOpen.set(!this.drawerOpen());

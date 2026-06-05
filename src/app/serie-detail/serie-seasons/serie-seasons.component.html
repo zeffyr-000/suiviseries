@@ -35,7 +35,7 @@
                                 [attr.aria-label]="isSeasonWatched(season.id) ? ('series.tooltip_mark_season_unwatched' | transloco) : ('series.tooltip_mark_season_watched' | transloco)"
                                 matTooltipPosition="right">
                                 @if (isSeasonLoading(season.id)) {
-                                <mat-spinner diameter="16"></mat-spinner>
+                                <mat-spinner diameter="16" />
                                 } @else {
                                 <mat-icon>{{ isSeasonWatched(season.id) ? 'check_box' :
                                     'check_box_outline_blank' }}</mat-icon>
@@ -71,7 +71,7 @@
                     </div>
 
                     @if (season.episodes && season.episodes.length > 0) {
-                    <mat-divider></mat-divider>
+                    <mat-divider />
                     <div class="episodes-section">
                         <h4>{{ 'serie_detail.episodes' | transloco }}</h4>
                         <mat-accordion>
@@ -99,7 +99,7 @@
                                             [attr.aria-label]="isEpisodeWatched(episode.id) ? ('series.tooltip_mark_episode_unwatched' | transloco) : ('series.tooltip_mark_episode_watched' | transloco)"
                                             matTooltipPosition="right">
                                             @if (isEpisodeLoading(episode.id)) {
-                                            <mat-spinner diameter="16"></mat-spinner>
+                                            <mat-spinner diameter="16" />
                                             } @else {
                                             <mat-icon>{{ isEpisodeWatched(episode.id) ? 'check_box'
                                                 : 'check_box_outline_blank' }}</mat-icon>

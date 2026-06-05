@@ -2,25 +2,25 @@
 
 ## 🏗️ Overview
 
-Suiviseries is a modern Angular 21 application built with current best practices and scalable modular architecture.
+Suiviseries is a modern Angular 22 application built with current best practices and scalable modular architecture.
 
 ## 📱 Technology Stack
 
 ### Frontend
 
-- **Angular 21** - Main framework with standalone components
-- **TypeScript 5.9** - Strict typing and modern features
-- **Angular Material 21** - UI components with Material Design 3
+- **Angular 22** - Main framework with standalone components
+- **TypeScript 6.0** - Strict typing and modern features
+- **Angular Material 22** - UI components with Material Design 3
 - **RxJS 7** - Reactive programming and state management
 - **Signals** - Angular's new reactivity API
 - **Transloco** - Internationalization with MessageFormat
 
 ### Development Tools
 
-- **Angular CLI 20** - Scaffolding and build system (with esbuild & webpack)
+- **Angular CLI 22** - Scaffolding and build system (with esbuild)
 - **ESLint** - Linting with strict configuration
 - **Prettier** - Consistent code formatting
-- **Vitest + Jasmine** - Unit testing
+- **Vitest** - Unit testing
 - **Angular Builder** - Optimized build pipeline with tree-shaking
 
 ## 🏛️ Component Architecture
@@ -299,27 +299,36 @@ html {
 ### Unit Testing Pattern
 
 ```typescript
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { vi } from 'vitest';
+import { SeriesService } from '../services/series.service';
+import { SerieDetailComponent } from './serie-detail.component';
+import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
+import { createMockSeriesService, createMockSerie } from '../testing/mocks';
+
 describe('SerieDetailComponent', () => {
-  let component: SerieDetailComponent;
-  let mockSeriesService: jasmine.SpyObj<SeriesService>;
+  let mockSeriesService: ReturnType<typeof createMockSeriesService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('SeriesService', ['getSerieDetails']);
+    mockSeriesService = createMockSeriesService();
 
     TestBed.configureTestingModule({
-      imports: [SerieDetailComponent], // Standalone component
-      providers: [{ provide: SeriesService, useValue: spy }],
+      imports: [SerieDetailComponent, getTranslocoTestingModule()],
+      providers: [{ provide: SeriesService, useValue: mockSeriesService }],
     });
-
-    mockSeriesService = TestBed.inject(SeriesService) as jasmine.SpyObj<SeriesService>;
   });
 
+  afterEach(() => vi.restoreAllMocks());
+
   it('should load serie on init', () => {
-    mockSeriesService.getSerieDetails.and.returnValue(of(mockSerie));
+    const mockSerie = createMockSerie();
+    mockSeriesService.getSerieDetails.mockReturnValue(of(mockSerie));
 
-    component.ngOnInit();
+    const fixture = TestBed.createComponent(SerieDetailComponent);
+    fixture.componentInstance.ngOnInit();
 
-    expect(component.serie()).toEqual(mockSerie);
+    expect(fixture.componentInstance.serie()).toEqual(mockSerie);
   });
 });
 ```

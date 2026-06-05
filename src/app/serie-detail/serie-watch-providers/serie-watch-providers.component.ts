@@ -1,4 +1,4 @@
-import { Component, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,8 +18,7 @@ export interface WatchProvider {
         MatIconModule
     ],
     templateUrl: './serie-watch-providers.component.html',
-    styleUrl: './serie-watch-providers.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-watch-providers.component.scss'
 })
 export class SerieWatchProvidersComponent {
     providers = input.required<WatchProvider[]>();
