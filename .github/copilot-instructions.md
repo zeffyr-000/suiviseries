@@ -2,7 +2,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ## Architecture Overview
 
-Suiviseries is an Angular 21 PWA for TV series tracking with Google OAuth authentication. The app uses a zoneless architecture with signals.
+Suiviseries is an Angular 22 PWA for TV series tracking with Google OAuth authentication. The app uses a zoneless architecture with signals.
 
 ### Key Service Patterns
 
@@ -11,7 +11,7 @@ Suiviseries is an Angular 21 PWA for TV series tracking with Google OAuth authen
 - **NotificationService** (`services/notification.service.ts`): Wrapper around `MatSnackBar` using translation keys
 - **UserNotificationService** (`services/user-notification.service.ts`): Real-time notification state with signals
 
-### rxResource Pattern (Angular 21.1+)
+### rxResource Pattern (Angular 22+)
 
 For reactive data fetching with automatic request cancellation, use `rxResource` in **services**:
 
@@ -92,6 +92,8 @@ npm run lint       # ESLint
 npm run format     # Prettier
 ```
 
+> Node.js v22.22.3+, v24.15.0+, or v26.0.0+ required.
+
 ## Testing Framework: Vitest (NOT Jasmine)
 
 **CRITICAL**: This project uses **Vitest**, NOT Jasmine/Karma.
@@ -160,10 +162,11 @@ expect(notificationService.error).toHaveBeenCalledWith('notifications.errors.loa
 ```typescript
 @Component({
   selector: 'app-example',
-  imports: [TranslocoModule, MatButtonModule], // Standalone by default in v21
+  imports: [TranslocoModule, MatButtonModule], // Standalone by default in v22+
   templateUrl: './example.component.html', // ALWAYS separate files
   styleUrl: './example.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // In this zoneless app, omitting changeDetection is safe: signal-driven
+  // scheduling handles updates efficiently. Prefer OnPush if setting explicitly.
 })
 export class ExampleComponent {
   readonly data = input.required<Data>(); // input() not @Input()
@@ -173,12 +176,13 @@ export class ExampleComponent {
 
 ### Component Rules
 
-- Must NOT set `standalone: true` - it's the default in Angular v21+
+- Must NOT set `standalone: true` - it's the default in Angular v22+
+- Prefer `changeDetection: ChangeDetectionStrategy.OnPush` when setting explicitly; omitting it is safe in this zoneless app (signal-driven scheduling)
 - Use `input()`, `output()` functions instead of decorators; `computed()` for derived state
 - **ALWAYS separate files for templates/styles** - never inline
 - Use `host` object in decorator instead of `@HostBinding`/`@HostListener`
 
-### Signal Forms (Angular 21.1+)
+### Signal Forms (Angular 22+)
 
 Use Signal Forms from `@angular/forms/signals` instead of ReactiveFormsModule:
 

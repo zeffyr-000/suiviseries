@@ -29,7 +29,7 @@
 
     @if (loading()) {
     <section class="loading-container" aria-live="polite" aria-busy="true">
-        <mat-spinner diameter="50" aria-label="{{ 'search.searching' | transloco }}"></mat-spinner>
+        <mat-spinner diameter="50" aria-label="{{ 'search.searching' | transloco }}" />
         <p>{{ 'search.searching' | transloco }}</p>
     </section>
     }
@@ -63,7 +63,7 @@
         </header>
         <ul class="results-grid">
             @for (serie of searchResults(); track serie.id) {
-            <li><app-serie-card [serie]="serie"></app-serie-card></li>
+            <li><app-serie-card [serie]="serie" /></li>
             }
         </ul>
     </section>

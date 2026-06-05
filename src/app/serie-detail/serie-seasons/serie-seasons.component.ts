@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -24,8 +24,7 @@ import { Season } from '../../models/serie.model';
         MatTooltipModule
     ],
     templateUrl: './serie-seasons.component.html',
-    styleUrl: './serie-seasons.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-seasons.component.scss'
 })
 export class SerieSeasonsComponent {
     seasons = input.required<Season[]>();

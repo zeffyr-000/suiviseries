@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs';
 import { form, FormField, minLength } from '@angular/forms/signals';
@@ -34,8 +34,7 @@ import { environment } from '../../environments/environment';
         ButtonLoadingDirective
     ],
     templateUrl: './search.component.html',
-    styleUrl: './search.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './search.component.scss'
 })
 export class SearchComponent {
     private readonly seriesService = inject(SeriesService);

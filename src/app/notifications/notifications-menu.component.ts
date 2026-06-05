@@ -30,7 +30,7 @@ import { getNotificationTranslationKey } from '../utils/notification.utils';
     styleUrl: './notifications-menu.component.scss'
 })
 export class NotificationsMenuComponent {
-    public readonly userNotificationService = inject(UserNotificationService);
+    protected readonly userNotificationService = inject(UserNotificationService);
     private readonly router = inject(Router);
     private readonly transloco = inject(TranslocoService);
 

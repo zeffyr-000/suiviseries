@@ -2,7 +2,7 @@
 
 > **Purpose**: Verify that all Material Design 3 guidelines are properly implemented in the project.  
 > **Date**: November 25, 2025  
-> **Project**: SuiviSeries (Angular 21 Demo)
+> **Project**: SuiviSeries (Angular 22 Demo)
 
 ---
 

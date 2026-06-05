@@ -8,7 +8,7 @@ This guide helps you contribute effectively to the Suiviseries project.
 
 ### Development Environment
 
-- **Node.js** 18.19+ or 20.9+
+- **Node.js** v22.22.3+ or v24.15.0+ or v26.0.0+
 - **npm** 9+ (or yarn 1.22+)
 - **Git** 2.34+
 - **VS Code** (recommended) with Angular extensions
@@ -29,17 +29,17 @@ This guide helps you contribute effectively to the Suiviseries project.
 
 ## 🚀 Implemented Technical Architecture
 
-### Modern Angular 21 Technology Stack
+### Modern Angular 22 Technology Stack
 
 ```json
 // package.json - Key project dependencies
 {
-  "@angular/core": "^20.3.0",
-  "@angular/material": "^20.0.0",
+  "@angular/core": "^22.0.0",
+  "@angular/material": "^22.0.0",
   "@jsverse/transloco": "^8.0.0",
   "@fontsource/roboto": "^5.1.0",
   "rxjs": "~7.8.0",
-  "typescript": "~5.7.0"
+  "typescript": "~6.0.3"
 }
 ```
 
@@ -113,35 +113,32 @@ npm run lint -- --fix
 
 ## 📝 Code Standards
 
-### Angular 21 Architecture
+### Angular 22 Architecture
 
-#### 1. Standalone Components
+#### 1. Standalone Components (default in v22+)
 
 ```typescript
-// ✅ CORRECT - Modern standalone component
+// ✅ CORRECT - Modern standalone component (Angular 22+)
 @Component({
   selector: 'app-serie-card',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule],
-  template: `
-    @if (serie) {
-      <mat-card>
-        @for (season of serie.seasons; track season.id) {
-          <div>{{ season.name }}</div>
-        }
-      </mat-card>
-    }
-  `
+  // standalone: true is the default — do NOT set it explicitly
+  imports: [MatCardModule, MatButtonModule],
+  templateUrl: './serie-card.component.html',
+  styleUrl: './serie-card.component.scss',
+  // In this zoneless app, omitting changeDetection is safe; set ChangeDetectionStrategy.OnPush explicitly when needed.
 })
 export class SerieCardComponent {
   serie = input<Serie>();
   onSelect = output<Serie>();
 }
 
-// ❌ INCORRECT - Old NgModule pattern
-@NgModule({
-  declarations: [SerieCardComponent],
-  // No longer use NgModule for new components
+// ❌ INCORRECT - Outdated patterns
+@Component({
+  selector: 'app-serie-card',
+  standalone: true,              // Redundant in v22+
+  imports: [CommonModule, ...],  // Use specific imports instead of CommonModule
+  changeDetection: ChangeDetectionStrategy.OnPush, // Optional (not the default) — use when you need to reduce change detection work
+  template: `...`                // Always use separate template files
 })
 ```
 
@@ -172,19 +169,21 @@ private seriesSubject = new BehaviorSubject<Serie[]>([]);
 #### 3. Modern Control Flow
 
 ```html
-<!-- ✅ CORRECT - New Angular 21 syntax -->
+<!-- ✅ CORRECT - Angular 22 control flow syntax -->
 @if (isLoading) {
-<app-spinner />
-} @else if (series.length > 0) { @for (serie of series; track serie.id) {
-<app-serie-card [serie]="serie" />
-} } @else {
-<p>No series found</p>
+  <app-spinner />
+} @else if (series.length > 0) {
+  @for (serie of series; track serie.id) {
+    <app-serie-card [serie]="serie" />
+  }
+} @else {
+  <p>No series found</p>
 }
 
-<!-- ❌ INCORRECT - Old syntax -->
+<!-- ❌ INCORRECT - Old structural directives -->
 <app-spinner *ngIf="isLoading"></app-spinner>
 <div *ngFor="let serie of series; trackBy: trackById">
-  <!-- No longer use structural directives -->
+  <!-- Never use *ngIf / *ngFor -->
 </div>
 ```
 
@@ -260,60 +259,40 @@ interface Serie {
 }
 ```
 
-#### Tests spécifiques au projet Suiviseries
+#### Suiviseries-specific tests
+
+**CRITICAL**: This project uses **Vitest**, NOT Jasmine/Karma.
 
 ```typescript
 // serie-detail.component.spec.ts - Complex business logic tests
+import { vi } from 'vitest';
+import { createMockSeriesService } from '../testing/mocks';
+
 describe('SerieDetailComponent - Hierarchical Watch Management', () => {
-  let component: SerieDetailComponent;
-  let seriesService: jasmine.SpyObj<SeriesService>;
+  let seriesService: ReturnType<typeof createMockSeriesService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('SeriesService', [
-      'markSerieAsWatched',
-      'unmarkSerieAsWatched',
-      'updateEpisodeStatus',
-    ]);
-
+    seriesService = createMockSeriesService();
     TestBed.configureTestingModule({
-      imports: [SerieDetailComponent, NoopAnimationsModule],
-      providers: [{ provide: SeriesService, useValue: spy }],
+      imports: [SerieDetailComponent, getTranslocoTestingModule()],
+      providers: [{ provide: SeriesService, useValue: seriesService }]
     });
-
-    seriesService = TestBed.inject(SeriesService) as jasmine.SpyObj<SeriesService>;
   });
+
+  afterEach(() => vi.restoreAllMocks());
 
   it('should synchronize season status when all episodes are marked watched', () => {
     const mockSerie = createMockSerieWithEpisodes();
     component.serie.set(mockSerie);
-
-    // Mark all episodes of season 1 as watched
     component.markAllEpisodesInSeason(1, true);
-
     expect(component.serie().seasons[0].watched).toBe(true);
-    expect(seriesService.updateEpisodeStatus).toHaveBeenCalledTimes(7);
-  });
-
-  it('should handle partial season watching correctly', () => {
-    const mockSerie = createMockSerieWithEpisodes();
-    component.serie.set(mockSerie);
-
-    // Mark only 3 out of 7 episodes as watched
-    component.toggleEpisodeWatched(1, 1, true);
-    component.toggleEpisodeWatched(1, 2, true);
-    component.toggleEpisodeWatched(1, 3, true);
-
-    const season = component.serie().seasons[0];
-    expect(season.watched).toBe(false);
-    expect(season.partiallyWatched).toBe(true);
-    expect(component.getSeasonProgress(1)).toBe(43); // 3/7 * 100
   });
 });
 ```
 
 ## 🎨 Standards UI/UX
 
-### Angular Material 21 with Material Design 3
+### Angular Material 22 with Material Design 3
 
 ```typescript
 // ✅ Theme configuration — single dark theme ("Nuit & Or")
@@ -394,71 +373,26 @@ src/
 
 ```bash
 # Run with coverage
-npm run test -- --code-coverage
+npm run test:coverage
 
-# Seuils minimum requis :
+# Minimum required thresholds:
 # Branches: 80%
 # Functions: 85%
 # Lines: 85%
 # Statements: 85%
 ```
 
-### Tests E2E spécifiques aux fonctionnalités Suiviseries
+### E2E Tests (Playwright)
 
-```typescript
-// cypress/e2e/hierarchical-watching.cy.ts
-describe('Hierarchical Watching System', () => {
-  beforeEach(() => {
-    cy.mockGoogleAuth();
-    cy.intercept('GET', '/api/series/breaking-bad', { fixture: 'breaking-bad.json' });
-    cy.visit('/series/breaking-bad');
-  });
+```bash
+# Run E2E tests
+npm run e2e
 
-  it('should mark entire serie as watched with cascade effect', () => {
-    // Click "Mark series as watched"
-    cy.get('[data-cy=mark-serie-watched]').click();
-    cy.get('[data-cy=confirm-action]').click();
+# Interactive UI mode
+npm run e2e:ui
 
-    // Verify all seasons are marked
-    cy.get('[data-cy=season-card]').each(($season) => {
-      cy.wrap($season).should('have.class', 'watched');
-    });
-
-    // Verify global counter is correct
-    cy.get('[data-cy=episodes-counter]').should('contain', '62/62 épisodes vus');
-  });
-
-  it('should handle partial season watching with correct progress', () => {
-    // Mark some individual episodes
-    cy.get('[data-cy=episode-1-1] .episode-checkbox').click();
-    cy.get('[data-cy=episode-1-2] .episode-checkbox').click();
-
-    // Verify season progress
-    cy.get('[data-cy=season-1-progress]').should('contain', '2/7 épisodes');
-
-    // Verify season is not marked complete
-    cy.get('[data-cy=season-1]')
-      .should('have.class', 'partially-watched')
-      .should('not.have.class', 'fully-watched');
-  });
-});
-
-// cypress/e2e/search-and-filters.cy.ts
-describe('Advanced Search Features', () => {
-  it('should filter series by genre and status', () => {
-    cy.visit('/search');
-
-    cy.get('[data-cy=search-input]').type('drama');
-    cy.get('[data-cy=genre-filter]').select('Crime');
-    cy.get('[data-cy=status-filter]').select('ended');
-
-    cy.get('[data-cy=search-results] .serie-card')
-      .should('have.length.greaterThan', 0)
-      .each(($card) => {
-        cy.wrap($card).should('contain', 'Crime');
-      });
-  });
-});
+# With browser visible
+npm run e2e:headed
 ```
 
 ## 📦 Dependency Management
@@ -481,9 +415,9 @@ npm audit fix
 
 ```bash
 # Angular update
-ng update @angular/core @angular/cli
+ng update @angular/core @angular/cli @angular/material angular-eslint
 
-# Autres dépendances
+# Other dependencies
 npx npm-check-updates -u
 npm install
 ```
@@ -514,7 +448,7 @@ docs(readme): update installation guide
 style(lint): fix ESLint errors
 refactor(service): simplify series service code
 test(unit): add tests for SerieService
-chore(deps): update Angular to v20
+chore(deps): update Angular to v22
 ```
 
 ### 3. PR Template
@@ -732,4 +666,4 @@ export class SeriesLibraryService {
 
 ---
 
-**This architecture demonstrates advanced mastery of Angular 21** and **modern web development patterns**, with a **focus on performance**, **maintainability**, and **user experience**.
+**This architecture demonstrates advanced mastery of Angular 22** and **modern web development patterns**, with a **focus on performance**, **maintainability**, and **user experience**.

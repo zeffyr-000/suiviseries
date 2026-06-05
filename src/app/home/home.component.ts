@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
@@ -30,8 +30,7 @@ import { environment } from '../../environments/environment';
         SerieCardComponent
     ],
     templateUrl: './home.component.html',
-    styleUrl: './home.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
     protected popularSeries = signal<Serie[]>([]);

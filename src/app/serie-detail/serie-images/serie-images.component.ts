@@ -1,4 +1,4 @@
-import { Component, input, signal, ChangeDetectionStrategy, viewChild, ElementRef, effect, computed, DestroyRef, inject } from '@angular/core';
+import { Component, input, signal, viewChild, ElementRef, effect, computed, DestroyRef, inject } from '@angular/core';
 import { DecimalPipe, UpperCasePipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -29,7 +29,6 @@ interface SwipeState {
     ],
     templateUrl: './serie-images.component.html',
     styleUrl: './serie-images.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '(document:visibilitychange)': 'onVisibilityChange()'
     }

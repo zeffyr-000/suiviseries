@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { TranslocoModule } from '@jsverse/transloco';
@@ -22,8 +22,7 @@ import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip
         SerieStatusChipComponent
     ],
     templateUrl: './serie-card.component.html',
-    styleUrl: './serie-card.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-card.component.scss'
 })
 export class SerieCardComponent {
     readonly serie = input.required<Serie>();

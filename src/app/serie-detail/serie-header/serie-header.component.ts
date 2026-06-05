@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,8 +32,7 @@ export interface SerieHeaderData {
         ButtonLoadingDirective
     ],
     templateUrl: './serie-header.component.html',
-    styleUrl: './serie-header.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './serie-header.component.scss'
 })
 export class SerieHeaderComponent {
     serie = input.required<SerieHeaderData>();

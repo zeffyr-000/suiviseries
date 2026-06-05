@@ -1,6 +1,6 @@
 # 📺 Suiviseries
 
-> Modern and performant Angular 21 application for personalized TV series tracking
+> Modern and performant Angular 22 application for personalized TV series tracking
 
 [![Angular](https://img.shields.io/badge/Angular-21.0-red.svg)](https://angular.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org)
@@ -122,9 +122,9 @@ The `AuthService` handles:
 
 ### Core Stack
 
-- **Angular 21** with standalone components and modern control flow (`@if`, `@for`)
-- **Angular Material 21** with Material Design 3
-- **TypeScript 5.9** with strict ESLint configuration
+- **Angular 22** with standalone components and modern control flow (`@if`, `@for`)
+- **Angular Material 22** with Material Design 3
+- **TypeScript 6.0** with strict ESLint configuration
 - **RxJS 7.8** for reactive programming
 - **Signals** for reactive state management
 
@@ -364,12 +364,12 @@ ng test --coverage
 
 ## 🏗️ Technical Highlights
 
-### Modern Angular 21 Architecture
+### Modern Angular 22 Architecture
 
 - **Standalone Components**: Full migration from NgModule pattern
 - **Modern Control Flow**: `@if`, `@for`, `@switch` syntax
 - **Signals API**: Reactive state management
-- **Strict TypeScript 5.9**: Enhanced type safety and performance
+- **Strict TypeScript 6.0**: Enhanced type safety and performance
 
 ### Advanced Series Tracking
 
@@ -387,6 +387,6 @@ ng test --coverage
 
 ---
 
-**Modern Angular 21 application built with TypeScript 5.9, Material Design 3, Vitest 4.0, and current best practices.**
+**Modern Angular 22 application built with TypeScript 6.0, Material Design 3, Vitest 4.0, and current best practices.**
 
 📊 **[View SonarCloud Quality Report](https://sonarcloud.io/summary/new_code?id=zeffyr-000_suiviseries)**

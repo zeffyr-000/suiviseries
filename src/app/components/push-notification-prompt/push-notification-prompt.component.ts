@@ -1,5 +1,4 @@
 import { Component, computed, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,7 +8,7 @@ import { PushNotificationService } from '../../services/push-notification.servic
 
 @Component({
   selector: 'app-push-notification-prompt',
-  imports: [CommonModule, MatButtonModule, MatIconModule, TranslocoModule],
+  imports: [MatButtonModule, MatIconModule, TranslocoModule],
   templateUrl: './push-notification-prompt.component.html',
   styleUrl: './push-notification-prompt.component.scss'
 })
