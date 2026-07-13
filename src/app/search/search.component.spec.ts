@@ -97,7 +97,7 @@ describe('SearchComponent', () => {
 
             const instructionItems = fixture.nativeElement.querySelectorAll('.search-instructions li');
 
-            expect(instructionItems.length).toBe(3);
+            expect(instructionItems).toHaveLength(3);
         });
     });
 

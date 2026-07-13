@@ -46,7 +46,7 @@ describe('SeriesService', () => {
     describe('getAllSeries', () => {
         it('should return series array on success', () => {
             service.getAllSeries().subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
                 expect(series[0].name).toBe('Test Serie');
             });
 
@@ -72,7 +72,7 @@ describe('SeriesService', () => {
     describe('getPopularSeries', () => {
         it('should return popular series with pagination', () => {
             service.getPopularSeries(10, 2).subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             const req = httpMock.expectOne('/api/series/popular?limit=10&page=2');
@@ -93,7 +93,7 @@ describe('SeriesService', () => {
     describe('getTopRatedSeries', () => {
         it('should return top rated series', () => {
             service.getTopRatedSeries().subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             const req = httpMock.expectOne('/api/series/top-rated?limit=6&page=1');
@@ -153,7 +153,7 @@ describe('SeriesService', () => {
 
         it('should return search results', () => {
             service.searchSeries('test').subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             const req = httpMock.expectOne('/api/series/search?q=test');
@@ -164,6 +164,7 @@ describe('SeriesService', () => {
             service.searchSeries('test query').subscribe();
 
             const req = httpMock.expectOne('/api/series/search?q=test%20query');
+            expect(req.request.url).toContain('q=test%20query');
             req.flush({ success: true, results: [] });
         });
     });
@@ -171,7 +172,7 @@ describe('SeriesService', () => {
     describe('getUserSeries', () => {
         it('should return user series', () => {
             service.getUserSeries().subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             const req = httpMock.expectOne('/api/users/me/series');
@@ -184,7 +185,7 @@ describe('SeriesService', () => {
         it('should use cached data on second call', () => {
             // First call
             service.getUserSeries().subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             const req1 = httpMock.expectOne('/api/users/me/series');
@@ -195,7 +196,7 @@ describe('SeriesService', () => {
 
             // Second call should use cache
             service.getUserSeries().subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             httpMock.expectNone('/api/users/me/series');
@@ -212,7 +213,7 @@ describe('SeriesService', () => {
 
             // Second call with forceRefresh
             service.getUserSeries(true).subscribe(series => {
-                expect(series.length).toBe(1);
+                expect(series).toHaveLength(1);
             });
 
             const req2 = httpMock.expectOne('/api/users/me/series');
@@ -279,6 +280,8 @@ describe('SeriesService', () => {
                 success: true,
                 results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
             });
+            // Cache invalidated: a fresh GET was issued rather than serving cached data
+            expect(req3.request.method).toBe('GET');
         });
 
         it('should throw error on failure', () => {
@@ -325,6 +328,8 @@ describe('SeriesService', () => {
             service.getUserSeries().subscribe();
             const req3 = httpMock.expectOne('/api/users/me/series');
             req3.flush({ success: true, results: [] });
+            // Cache invalidated: a fresh GET was issued rather than serving cached data
+            expect(req3.request.method).toBe('GET');
         });
     });
 

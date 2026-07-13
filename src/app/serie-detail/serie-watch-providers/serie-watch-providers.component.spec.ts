@@ -74,7 +74,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const providerItems = compiled.querySelectorAll('.watch-provider-item');
-            expect(providerItems.length).toBe(4);
+            expect(providerItems).toHaveLength(4);
         });
 
         it('should render provider logos', () => {
@@ -83,7 +83,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const logos = compiled.querySelectorAll('.provider-logo');
-            expect(logos.length).toBe(3); // Only 3 have logo_path
+            expect(logos).toHaveLength(3); // Only 3 have logo_path
         });
 
         it('should render provider names', () => {
@@ -92,7 +92,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const names = compiled.querySelectorAll('.provider-name');
-            expect(names.length).toBe(4);
+            expect(names).toHaveLength(4);
             expect(names[0].textContent?.trim()).toBe('Netflix');
         });
 
@@ -102,7 +102,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const types = compiled.querySelectorAll('.provider-type');
-            expect(types.length).toBe(4);
+            expect(types).toHaveLength(4);
         });
 
         it('should render placeholder for missing logo', () => {
@@ -111,7 +111,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const placeholders = compiled.querySelectorAll('.provider-placeholder');
-            expect(placeholders.length).toBe(1); // Google Play has null logo_path
+            expect(placeholders).toHaveLength(1); // Google Play has null logo_path
         });
 
         it('should display empty state when no providers', () => {
@@ -120,7 +120,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const providerItems = compiled.querySelectorAll('.watch-provider-item');
-            expect(providerItems.length).toBe(0);
+            expect(providerItems).toHaveLength(0);
         });
     });
 
@@ -150,7 +150,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const logos = compiled.querySelectorAll('.provider-logo');
-            expect(logos.length).toBe(3); // Only providers with logo_path
+            expect(logos).toHaveLength(3); // Only providers with logo_path
         });
 
         it('should have WatchAction in potentialAction', () => {

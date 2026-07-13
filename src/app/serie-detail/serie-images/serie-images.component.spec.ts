@@ -55,12 +55,12 @@ describe('SerieImagesComponent', () => {
     describe('Image Collections', () => {
         it('should display backdrops', () => {
             expect(component['hasBackdrops']()).toBe(true);
-            expect(component['backdrops']().length).toBe(1);
+            expect(component['backdrops']()).toHaveLength(1);
         });
 
         it('should display posters', () => {
             expect(component['hasPosters']()).toBe(true);
-            expect(component['posters']().length).toBe(1);
+            expect(component['posters']()).toHaveLength(1);
         });
 
         it('should handle empty collections', () => {
@@ -167,7 +167,7 @@ describe('SerieImagesComponent', () => {
         it('should update current images based on tab', () => {
             component['onTabChange'](1);
             const currentImages = component['currentImages']();
-            expect(currentImages.length).toBe(mockImages.posters.length);
+            expect(currentImages).toHaveLength(mockImages.posters.length);
             expect(currentImages).toEqual(mockImages.posters);
         });
     });
@@ -470,6 +470,11 @@ describe('SerieImagesComponent', () => {
             const originalOntouchstart = (globalThis as { ontouchstart?: unknown }).ontouchstart;
             sessionStorage.setItem('swipeHintSeen', 'true');
             Object.defineProperty(globalThis, 'ontouchstart', { value: true, configurable: true });
+
+            // The block's beforeEach already calls onImageClick, which under jsdom
+            // (where 'ontouchstart' in globalThis is always true) shows the hint. Reset
+            // so we assert that THIS call, with swipeHintSeen set, does not re-show it.
+            component['showSwipeHint'].set(false);
 
             component['onImageClick'](multipleBackdrops[0], 'backdrop');
             expect(component['showSwipeHint']()).toBe(false);

@@ -190,7 +190,7 @@ describe('url.utils', () => {
         it('should be compatible with router.navigate()', () => {
             const params = getSerieRouteParams(100, 'Test Serie');
             expect(Array.isArray(params)).toBe(true);
-            expect(params.length).toBe(3);
+            expect(params).toHaveLength(3);
             expect(params[0]).toBe('/serie');
             expect(typeof params[1]).toBe('number');
             expect(typeof params[2]).toBe('string');
@@ -242,7 +242,7 @@ describe('url.utils', () => {
         it('should limit input length to 10000 characters (ReDoS protection)', () => {
             const longText = 'a'.repeat(15000);
             const result = stripHtmlTags(longText);
-            expect(result.length).toBe(10000);
+            expect(result).toHaveLength(10000);
             expect(result).toBe('a'.repeat(10000));
         });
 

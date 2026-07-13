@@ -147,7 +147,7 @@ describe('UserNotificationService', () => {
 
             await promise;
 
-            expect(service.notifications().length).toBe(1);
+            expect(service.notifications()).toHaveLength(1);
             expect(service.notifications().find(n => n.user_notification_id === notificationId)).toBeUndefined();
             expect(service.unreadCount()).toBe(0);
         });
@@ -164,7 +164,7 @@ describe('UserNotificationService', () => {
 
             await promise;
 
-            expect(service.notifications().length).toBe(originalCount);
+            expect(service.notifications()).toHaveLength(originalCount);
             expect(consoleSpy).toHaveBeenCalled();
         });
 
@@ -178,7 +178,7 @@ describe('UserNotificationService', () => {
 
             await promise;
 
-            expect(service.notifications().length).toBe(1);
+            expect(service.notifications()).toHaveLength(1);
             expect(service.unreadCount()).toBe(initialUnreadCount);
         });
     });
@@ -223,14 +223,14 @@ describe('UserNotificationService', () => {
 
             const promise = service.delete(notificationId);
 
-            expect(service.notifications().length).toBe(originalLength);
+            expect(service.notifications()).toHaveLength(originalLength);
 
             const req = httpMock.expectOne(`/api/notifications/${notificationId}`);
             req.flush({});
 
             await promise;
 
-            expect(service.notifications().length).toBe(originalLength - 1);
+            expect(service.notifications()).toHaveLength(originalLength - 1);
             expect(service.notifications().find(n => n.user_notification_id === notificationId)).toBeUndefined();
         });
     });

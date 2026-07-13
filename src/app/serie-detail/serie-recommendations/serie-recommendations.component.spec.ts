@@ -64,7 +64,7 @@ describe('SerieRecommendationsComponent', () => {
         fixture.detectChanges();
 
         const cards = fixture.nativeElement.querySelectorAll('.recommendation-card');
-        expect(cards.length).toBe(2);
+        expect(cards).toHaveLength(2);
     });
 
     it('should generate correct route for recommendation serie', () => {
