@@ -8,7 +8,7 @@
     <section class="search-form-container" aria-label="{{ 'search.form_label' | transloco }}">
         <mat-form-field appearance="outline" class="search-field">
             <mat-label>{{ 'search.placeholder' | transloco }}</mat-label>
-            <input matInput [formField]="searchForm.query" [placeholder]="'search.placeholder' | transloco"
+            <input id="search-input" matInput [formField]="searchForm.query" [placeholder]="'search.placeholder' | transloco"
                 (keyup.enter)="onSearch()" autocomplete="off" aria-describedby="search-hint">
 
             <mat-icon matPrefix aria-hidden="true">search</mat-icon>

@@ -3,19 +3,9 @@
 @use './styles/focus' as *;
 @use './styles/theme-colors' as theme;
 
-@import '@fontsource/roboto/300.css';
-@import '@fontsource/roboto/400.css';
-@import '@fontsource/roboto/500.css';
-@import '@fontsource/roboto/700.css';
-
-// Poppins: display typeface for headings/hero (cinematic identity)
-@import '@fontsource/poppins/400.css';
-@import '@fontsource/poppins/500.css';
-@import '@fontsource/poppins/600.css';
-
-// Material Icons with font-display: block (intentional for UX)
-// Prevents icon flash (FOUT), cached by SW after first load (~125KB)
-@import 'material-icons/iconfont/material-icons.css';
+// Fonts (Roboto, Poppins) and Material Icons are loaded via angular.json's
+// "styles" array so they are bundled/hashed and precede the SCSS output.
+// They remain cached by the service worker and keep font-display: block.
 
 html {
   // Single dark theme ("Nuit & Or"): cinematic dark surfaces + gold accent.

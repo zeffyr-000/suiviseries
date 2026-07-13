@@ -240,10 +240,10 @@ export class AuthService {
     private parseJwt(token: string): TokenPayload {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/');
-        // charCodeAt is intentionally used here (not codePointAt) because JWT parsing
-        // requires byte values (0-255) for proper URL encoding, not Unicode code points
+        // atob() yields a binary string where each char is a byte (0-255), so
+        // codePointAt(0) and charCodeAt(0) are equivalent here; use codePointAt.
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            return '%' + ('00' + (c.codePointAt(0) ?? 0).toString(16)).slice(-2);
         }).join(''));
 
         return JSON.parse(jsonPayload);

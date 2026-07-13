@@ -139,7 +139,7 @@
         }
 
         @if (imageLoading()) {
-        <output class="image-loading-overlay" role="status" aria-live="polite">
+        <output class="image-loading-overlay" aria-live="polite">
             <mat-spinner diameter="48" />
             <span class="visually-hidden">{{ 'common.loading_more' | transloco }}</span>
         </output>
@@ -152,7 +152,7 @@
             (load)="onImageLoad()" (error)="onImageLoad()" draggable="false">
 
         @if (showSwipeHint()) {
-        <output class="swipe-hint" role="status" aria-live="polite">
+        <output class="swipe-hint" aria-live="polite">
             <mat-icon aria-hidden="true">swipe</mat-icon>
             <span class="body-medium">{{ 'serie_detail.swipe_hint' | transloco }}</span>
         </output>

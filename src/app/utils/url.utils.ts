@@ -13,7 +13,7 @@ export function createSlug(text: string): string {
         .replaceAll(/\s+/g, '-') // Replace whitespace with hyphens
         .replaceAll(/-+/g, '-') // Replace multiple hyphens with single
         .replaceAll(/^-+/g, '') // Remove leading hyphens
-        .replaceAll(/-+$/g, ''); // Remove trailing hyphens
+        .replaceAll(/-$/g, ''); // Remove trailing hyphen (runs already collapsed above)
 
     // If Latin slug is empty (e.g., Asian characters), use Unicode-safe approach
     if (latinSlug) {
@@ -27,7 +27,7 @@ export function createSlug(text: string): string {
         .replaceAll(/\s+/g, '-') // Replace whitespace with hyphens
         .replaceAll(/-+/g, '-') // Replace multiple hyphens with single
         .replaceAll(/^-+/g, '') // Remove leading hyphens
-        .replaceAll(/-+$/g, ''); // Remove trailing hyphens
+        .replaceAll(/-$/g, ''); // Remove trailing hyphen (runs already collapsed above)
 }
 
 export function extractIdFromParam(param: string): number {
