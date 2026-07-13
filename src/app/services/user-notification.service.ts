@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { Notification } from '../models/notification.model';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserNotificationService {
     private readonly http = inject(HttpClient);
@@ -20,14 +20,16 @@ export class UserNotificationService {
     setNotifications(notifications: Notification[], unreadCount?: number): void {
         this._notifications.set(notifications || []);
         if (unreadCount === undefined) {
-            this._unreadCount.set(notifications?.filter(n => n.status === 'unread').length || 0);
+            this._unreadCount.set(notifications?.filter((n) => n.status === 'unread').length || 0);
         } else {
             this._unreadCount.set(unreadCount);
         }
     }
 
     async markAsRead(userNotificationId: number): Promise<void> {
-        const notification = this._notifications().find(n => n.user_notification_id === userNotificationId);
+        const notification = this._notifications().find(
+            (n) => n.user_notification_id === userNotificationId,
+        );
 
         // Already read, nothing to do
         if (!notification || notification.status === 'read') {
@@ -35,35 +37,35 @@ export class UserNotificationService {
         }
 
         // Update UI optimistically
-        this._notifications.update(notifications =>
-            notifications.map(n =>
+        this._notifications.update((notifications) =>
+            notifications.map((n) =>
                 n.user_notification_id === userNotificationId
                     ? { ...n, status: 'read', read_at: new Date().toISOString() }
-                    : n
-            )
+                    : n,
+            ),
         );
-        this._unreadCount.update(count => Math.max(0, count - 1));
+        this._unreadCount.update((count) => Math.max(0, count - 1));
 
         try {
             await firstValueFrom(
                 this.http.put<{ success: boolean; message: string }>(
                     `${this.apiUrl}/notifications/${userNotificationId}`,
                     { status: 'read' },
-                    { withCredentials: true }
-                )
+                    { withCredentials: true },
+                ),
             );
         } catch (error) {
             console.error('Failed to mark notification as read', error);
 
             // Rollback on error
-            this._notifications.update(notifications =>
-                notifications.map(n =>
+            this._notifications.update((notifications) =>
+                notifications.map((n) =>
                     n.user_notification_id === userNotificationId
                         ? { ...n, status: 'unread', read_at: null }
-                        : n
-                )
+                        : n,
+                ),
             );
-            this._unreadCount.update(count => count + 1);
+            this._unreadCount.update((count) => count + 1);
         }
     }
 
@@ -72,18 +74,20 @@ export class UserNotificationService {
             await firstValueFrom(
                 this.http.delete<{ success: boolean; message: string }>(
                     `${this.apiUrl}/notifications/${userNotificationId}`,
-                    { withCredentials: true }
-                )
+                    { withCredentials: true },
+                ),
             );
 
-            const deletedNotification = this._notifications().find(n => n.user_notification_id === userNotificationId);
+            const deletedNotification = this._notifications().find(
+                (n) => n.user_notification_id === userNotificationId,
+            );
 
-            this._notifications.update(notifications =>
-                notifications.filter(n => n.user_notification_id !== userNotificationId)
+            this._notifications.update((notifications) =>
+                notifications.filter((n) => n.user_notification_id !== userNotificationId),
             );
 
             if (deletedNotification?.status === 'unread') {
-                this._unreadCount.update(count => Math.max(0, count - 1));
+                this._unreadCount.update((count) => Math.max(0, count - 1));
             }
         } catch (error) {
             console.error('Failed to delete notification', error);

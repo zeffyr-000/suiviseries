@@ -11,7 +11,7 @@ describe('NotificationService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [getTranslocoTestingModule()],
-            providers: [NotificationService, MatSnackBar]
+            providers: [NotificationService, MatSnackBar],
         });
         service = TestBed.inject(NotificationService);
         snackBar = TestBed.inject(MatSnackBar);
@@ -38,8 +38,8 @@ describe('NotificationService', () => {
                     duration: 5000,
                     horizontalPosition: 'right',
                     verticalPosition: 'top',
-                    panelClass: ['snackbar-info']
-                }
+                    panelClass: ['snackbar-info'],
+                },
             );
         });
 
@@ -71,8 +71,8 @@ describe('NotificationService', () => {
                     duration: 5000,
                     horizontalPosition: 'right',
                     verticalPosition: 'top',
-                    panelClass: ['snackbar-error']
-                }
+                    panelClass: ['snackbar-error'],
+                },
             );
         });
     });
@@ -81,16 +81,12 @@ describe('NotificationService', () => {
         it('should open snackbar with success type', () => {
             service.success('notifications.success.serie_added');
 
-            expect(snackBar.open).toHaveBeenCalledWith(
-                'Série ajoutée à votre liste',
-                undefined,
-                {
-                    duration: 3000,
-                    horizontalPosition: 'right',
-                    verticalPosition: 'top',
-                    panelClass: ['snackbar-success']
-                }
-            );
+            expect(snackBar.open).toHaveBeenCalledWith('Série ajoutée à votre liste', undefined, {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-success'],
+            });
         });
     });
 
@@ -109,16 +105,12 @@ describe('NotificationService', () => {
         it('should open snackbar with info type', () => {
             service.info('notifications.close');
 
-            expect(snackBar.open).toHaveBeenCalledWith(
-                'Fermer la notification',
-                undefined,
-                {
-                    duration: 5000,
-                    horizontalPosition: 'right',
-                    verticalPosition: 'top',
-                    panelClass: ['snackbar-info']
-                }
-            );
+            expect(snackBar.open).toHaveBeenCalledWith('Fermer la notification', undefined, {
+                duration: 5000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-info'],
+            });
         });
     });
 

@@ -7,7 +7,9 @@ test.describe('Notifications', () => {
 
     test.describe('When not logged in', () => {
         test('should not display notifications button', async ({ page }) => {
-            await expect(page.locator('button[aria-label*="notification"], button[aria-label*="Ouvrir"]')).not.toBeVisible();
+            await expect(
+                page.locator('button[aria-label*="notification"], button[aria-label*="Ouvrir"]'),
+            ).not.toBeVisible();
         });
     });
 
@@ -23,19 +25,25 @@ test.describe('Notifications', () => {
 
         test('should display notifications button in toolbar', async ({ page }) => {
             // Check if user is logged in (adjust selector based on your UI)
-            const loginButton = page.locator('button:has-text("Se connecter"), button:has-text("Sign in")');
-            const isLoggedIn = await loginButton.count() === 0;
+            const loginButton = page.locator(
+                'button:has-text("Se connecter"), button:has-text("Sign in")',
+            );
+            const isLoggedIn = (await loginButton.count()) === 0;
 
             if (isLoggedIn) {
-                await expect(page.locator('button mat-icon:has-text("notifications")')).toBeVisible();
+                await expect(
+                    page.locator('button mat-icon:has-text("notifications")'),
+                ).toBeVisible();
             }
         });
 
         test('should display badge with unread count', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
             const badge = notificationButton.locator('.mat-badge-content');
 
-            const isLoggedIn = await notificationButton.count() > 0;
+            const isLoggedIn = (await notificationButton.count()) > 0;
 
             if (isLoggedIn) {
                 // Badge should be hidden if count is 0, or show count if > 0
@@ -49,9 +57,11 @@ test.describe('Notifications', () => {
         });
 
         test('should open notifications drawer on button click', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
 
                 // Drawer should be visible
@@ -64,15 +74,19 @@ test.describe('Notifications', () => {
         });
 
         test('should close drawer on close button click', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 // Open drawer
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
                 // Click close button
-                const closeButton = page.locator('.notifications-header button mat-icon:has-text("close")').locator('..');
+                const closeButton = page
+                    .locator('.notifications-header button mat-icon:has-text("close")')
+                    .locator('..');
                 await closeButton.click();
 
                 // Drawer should close
@@ -82,9 +96,11 @@ test.describe('Notifications', () => {
         });
 
         test('should close drawer on backdrop click', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 // Open drawer
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
@@ -99,9 +115,11 @@ test.describe('Notifications', () => {
         });
 
         test('should display "no notifications" message when empty', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
@@ -109,19 +127,23 @@ test.describe('Notifications', () => {
                 const noNotifications = page.locator('.no-notifications');
                 const notificationItems = page.locator('.notification-item');
 
-                const hasNotifications = await notificationItems.count() > 0;
+                const hasNotifications = (await notificationItems.count()) > 0;
 
                 if (!hasNotifications) {
                     await expect(noNotifications).toBeVisible();
-                    await expect(noNotifications.locator('mat-icon')).toHaveText('notifications_none');
+                    await expect(noNotifications.locator('mat-icon')).toHaveText(
+                        'notifications_none',
+                    );
                 }
             }
         });
 
         test('should display notification items with poster and text', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
@@ -132,8 +154,9 @@ test.describe('Notifications', () => {
                     const firstItem = notificationItems.first();
 
                     // Should have poster or fallback icon
-                    const hasPoster = await firstItem.locator('.notification-poster').count() > 0;
-                    const hasFallback = await firstItem.locator('.notification-icon-fallback').count() > 0;
+                    const hasPoster = (await firstItem.locator('.notification-poster').count()) > 0;
+                    const hasFallback =
+                        (await firstItem.locator('.notification-icon-fallback').count()) > 0;
                     expect(hasPoster || hasFallback).toBeTruthy();
 
                     // Should have title, message, and date
@@ -145,9 +168,11 @@ test.describe('Notifications', () => {
         });
 
         test('should show unread indicator on unread notifications', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
@@ -164,9 +189,11 @@ test.describe('Notifications', () => {
         });
 
         test('should navigate to serie page on notification click', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
@@ -188,9 +215,11 @@ test.describe('Notifications', () => {
         });
 
         test('should show delete button on notification hover', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
@@ -211,9 +240,11 @@ test.describe('Notifications', () => {
         });
 
         test('should delete notification on delete button click', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
@@ -235,9 +266,11 @@ test.describe('Notifications', () => {
         });
 
         test('should update badge count when marking as read', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 const badge = notificationButton.locator('.mat-badge-content');
                 const initialBadgeVisible = await badge.isVisible().catch(() => false);
 
@@ -266,7 +299,9 @@ test.describe('Notifications', () => {
 
                         if (newBadgeVisible) {
                             const newCount = await badge.textContent();
-                            expect(Number.parseInt(newCount || '0')).toBeLessThan(Number.parseInt(initialCount || '0'));
+                            expect(Number.parseInt(newCount || '0')).toBeLessThan(
+                                Number.parseInt(initialCount || '0'),
+                            );
                         } else {
                             // Badge should be hidden if count reached 0
                             expect(Number.parseInt(initialCount || '0')).toBe(1);
@@ -277,9 +312,11 @@ test.describe('Notifications', () => {
         });
 
         test('should support keyboard navigation (Escape to close)', async ({ page }) => {
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 // Open drawer
                 await notificationButton.click();
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
@@ -298,9 +335,11 @@ test.describe('Notifications', () => {
         test('should have proper ARIA labels', async ({ page }) => {
             await page.goto('/');
 
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 // Button should have aria-label
                 const ariaLabel = await notificationButton.getAttribute('aria-label');
                 expect(ariaLabel).toBeTruthy();
@@ -310,7 +349,9 @@ test.describe('Notifications', () => {
                 await page.waitForSelector('mat-sidenav[position="end"]', { state: 'visible' });
 
                 // Close button should have aria-label
-                const closeButton = page.locator('.notifications-header button mat-icon:has-text("close")').locator('..');
+                const closeButton = page
+                    .locator('.notifications-header button mat-icon:has-text("close")')
+                    .locator('..');
                 const closeAriaLabel = await closeButton.getAttribute('aria-label');
                 expect(closeAriaLabel).toBeTruthy();
             }
@@ -319,16 +360,20 @@ test.describe('Notifications', () => {
         test('should be keyboard accessible', async ({ page }) => {
             await page.goto('/');
 
-            const notificationButton = page.locator('button mat-icon:has-text("notifications")').locator('..');
+            const notificationButton = page
+                .locator('button mat-icon:has-text("notifications")')
+                .locator('..');
 
-            if (await notificationButton.count() > 0) {
+            if ((await notificationButton.count()) > 0) {
                 // Tab to notification button
                 await page.keyboard.press('Tab');
                 await page.keyboard.press('Tab');
                 await page.keyboard.press('Tab');
 
                 // Button should be focusable
-                const focused = await notificationButton.evaluate(el => el === document.activeElement);
+                const focused = await notificationButton.evaluate(
+                    (el) => el === document.activeElement,
+                );
 
                 if (focused) {
                     // Press Enter to open

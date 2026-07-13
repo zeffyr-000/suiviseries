@@ -1,4 +1,13 @@
-import { Serie, SerieStatus, Season, Episode, SerieUserData, SerieStats, SerieImage, SerieImages } from '../../models/serie.model';
+import {
+    Serie,
+    SerieStatus,
+    Season,
+    Episode,
+    SerieUserData,
+    SerieStats,
+    SerieImage,
+    SerieImages,
+} from '../../models/serie.model';
 
 // Factory function to create a mock Serie with sensible defaults
 export function createMockSerie(overrides: Partial<Serie> = {}): Serie {
@@ -19,7 +28,7 @@ export function createMockSerie(overrides: Partial<Serie> = {}): Serie {
         number_of_episodes: 10,
         popularity: 100,
         data_complete: true,
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -35,7 +44,7 @@ export function createMockEpisode(overrides: Partial<Episode> = {}): Episode {
         vote_average: 8,
         episode_type: 'standard',
         runtime: 45,
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -51,9 +60,9 @@ export function createMockSeason(overrides: Partial<Season> = {}): Season {
         episode_count: 10,
         episodes: [
             createMockEpisode({ id: 1001, episode_number: 1 }),
-            createMockEpisode({ id: 1002, episode_number: 2 })
+            createMockEpisode({ id: 1002, episode_number: 2 }),
         ],
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -66,7 +75,7 @@ export function createMockSerieUserData(overrides: Partial<SerieUserData> = {}):
         watched_at: null,
         watched_episodes: [],
         watched_seasons: [],
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -78,7 +87,7 @@ export function createMockSerieStats(overrides: Partial<SerieStats> = {}): Serie
         totalFollowers: 0,
         seasons_count: 1,
         episodes_count: 10,
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -92,7 +101,7 @@ export function createMockSerieImage(overrides: Partial<SerieImage> = {}): Serie
         vote_average: 5.5,
         vote_count: 100,
         iso_639_1: null,
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -100,39 +109,46 @@ export function createMockSerieImage(overrides: Partial<SerieImage> = {}): Serie
 export function createMockSerieImages(overrides: Partial<SerieImages> = {}): SerieImages {
     return {
         backdrops: [createMockSerieImage({ file_path: '/backdrop1.jpg' })],
-        posters: [createMockSerieImage({ file_path: '/poster1.jpg', width: 500, height: 750, aspect_ratio: 0.67 })],
+        posters: [
+            createMockSerieImage({
+                file_path: '/poster1.jpg',
+                width: 500,
+                height: 750,
+                aspect_ratio: 0.67,
+            }),
+        ],
         logos: [],
-        ...overrides
+        ...overrides,
     };
 }
 
 // Create a Serie with user data for authenticated user tests
 export function createMockSerieWithUserData(
     serieOverrides: Partial<Serie> = {},
-    userDataOverrides: Partial<SerieUserData> = {}
+    userDataOverrides: Partial<SerieUserData> = {},
 ): Serie {
     return createMockSerie({
         ...serieOverrides,
-        user_data: createMockSerieUserData(userDataOverrides)
+        user_data: createMockSerieUserData(userDataOverrides),
     });
 }
 
 // Create a Serie with seasons for testing season/episode interactions
 export function createMockSerieWithSeasons(
     serieOverrides: Partial<Serie> = {},
-    seasonsCount = 1
+    seasonsCount = 1,
 ): Serie {
     const seasons = new Array(seasonsCount).fill(null).map((_, i) =>
         createMockSeason({
             id: 100 + i,
             season_number: i + 1,
-            name: `Season ${i + 1}`
-        })
+            name: `Season ${i + 1}`,
+        }),
     );
 
     return createMockSerie({
         ...serieOverrides,
         seasons,
-        number_of_seasons: seasonsCount
+        number_of_seasons: seasonsCount,
     });
 }

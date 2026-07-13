@@ -29,18 +29,18 @@ This module manages the real-time notification system for the Suivi Séries appl
 
 ```typescript
 interface Notification {
-  user_notification_id: number;
-  notification_id: number;
-  serie_id: number;
-  serie_name: string;
-  serie_poster: string;
-  type: 'new_season' | 'new_episodes' | 'status_canceled' | 'status_ended';
-  translation_key: string;
-  variables: NotificationVariables;
-  status: 'unread' | 'read' | 'deleted';
-  notified_at: string;
-  read_at: string | null;
-  created_at: string;
+    user_notification_id: number;
+    notification_id: number;
+    serie_id: number;
+    serie_name: string;
+    serie_poster: string;
+    type: 'new_season' | 'new_episodes' | 'status_canceled' | 'status_ended';
+    translation_key: string;
+    variables: NotificationVariables;
+    status: 'unread' | 'read' | 'deleted';
+    notified_at: string;
+    read_at: string | null;
+    created_at: string;
 }
 ```
 
@@ -170,24 +170,24 @@ Styles integrated in `app.scss`:
 ```scss
 // Notifications sidenav
 mat-sidenav:last-of-type {
-  width: 400px;
-  max-width: 90vw;
-  border-radius: 16px 0 0 16px; // M3 large shape
+    width: 400px;
+    max-width: 90vw;
+    border-radius: 16px 0 0 16px; // M3 large shape
 }
 
 .notifications-header {
-  /* ... */
+    /* ... */
 }
 .notification-item {
-  &.unread::before {
-    /* 3px blue bar */
-  }
-  &:hover {
-    /* background rgba */
-  }
-  .delete-button {
-    opacity: 0 → 1 on hover;
-  }
+    &.unread::before {
+        /* 3px blue bar */
+    }
+    &:hover {
+        /* background rgba */
+    }
+    .delete-button {
+        opacity: 0 → 1 on hover;
+    }
 }
 ```
 
@@ -238,7 +238,7 @@ Marks notification as read or unread.
 
 ```json
 {
-  "status": "read" // or "unread"
+    "status": "read" // or "unread"
 }
 ```
 
@@ -246,13 +246,13 @@ Marks notification as read or unread.
 
 ```json
 {
-  "success": true,
-  "message": "Notification marked as read",
-  "notification": {
-    "id": 123,
-    "status": "read",
-    "read_at": "2025-12-12 14:30:00"
-  }
+    "success": true,
+    "message": "Notification marked as read",
+    "notification": {
+        "id": 123,
+        "status": "read",
+        "read_at": "2025-12-12 14:30:00"
+    }
 }
 ```
 
@@ -264,8 +264,8 @@ Permanently deletes notification.
 
 ```json
 {
-  "success": true,
-  "message": "Notification deleted"
+    "success": true,
+    "message": "Notification deleted"
 }
 ```
 

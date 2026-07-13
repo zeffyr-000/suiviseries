@@ -154,13 +154,16 @@ export enum SerieStatus {
     ENDED = 'Ended',
     CANCELED = 'Canceled',
     IN_PRODUCTION = 'In Production',
-    PLANNED = 'Planned'
+    PLANNED = 'Planned',
 }
 
-export const getTmdbImageUrl = (path: string, size: 'w300' | 'w500' | 'w780' | 'original' = 'w500'): string => {
+export const getTmdbImageUrl = (
+    path: string,
+    size: 'w300' | 'w500' | 'w780' | 'original' = 'w500',
+): string => {
     return `https://image.tmdb.org/t/p/${size}${path}`;
 };
 
 export const formatRating = (rating: number): string => {
-    return (rating / 10 * 5).toFixed(1);
+    return ((rating / 10) * 5).toFixed(1);
 };

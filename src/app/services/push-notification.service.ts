@@ -27,7 +27,7 @@ export interface PushMessage {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class PushNotificationService {
     private readonly http = inject(HttpClient);
@@ -59,16 +59,19 @@ export class PushNotificationService {
                 }
 
                 if (data?.notification_id) {
-                    this.http.put(
-                        `${environment.apiUrl}/notifications/${data.notification_id}`,
-                        { status: 'read' },
-                        { withCredentials: true }
-                    ).subscribe({
-                        error: (err) => console.error('Error marking notification as read:', err)
-                    });
+                    this.http
+                        .put(
+                            `${environment.apiUrl}/notifications/${data.notification_id}`,
+                            { status: 'read' },
+                            { withCredentials: true },
+                        )
+                        .subscribe({
+                            error: (err) =>
+                                console.error('Error marking notification as read:', err),
+                        });
                 }
             },
-            error: (err) => console.error('Error handling notification click:', err)
+            error: (err) => console.error('Error handling notification click:', err),
         });
 
         // Note: Push notifications are handled by custom-sw.js.
@@ -76,7 +79,7 @@ export class PushNotificationService {
         // The error handler below is still needed to catch errors in the communication
         // channel between the service worker and the Angular app (e.g., message deserialization issues).
         this.swPush.messages.subscribe({
-            error: (err) => console.error('Error receiving push message:', err)
+            error: (err) => console.error('Error receiving push message:', err),
         });
     }
 
@@ -95,7 +98,7 @@ export class PushNotificationService {
             next: (subscription) => {
                 this.isSubscribed.set(!!subscription);
             },
-            error: (err) => console.error('Error checking push subscription:', err)
+            error: (err) => console.error('Error checking push subscription:', err),
         });
     }
 
@@ -106,8 +109,8 @@ export class PushNotificationService {
 
         return from(
             this.swPush.requestSubscription({
-                serverPublicKey: environment.vapidPublicKey
-            })
+                serverPublicKey: environment.vapidPublicKey,
+            }),
         ).pipe(
             switchMap((subscription: PushSubscription) => {
                 this.isSubscribed.set(true);
@@ -115,11 +118,11 @@ export class PushNotificationService {
                 const subscriptionData = this.formatSubscription(subscription);
                 return this.sendSubscriptionToServer(subscriptionData);
             }),
-            catchError(error => {
+            catchError((error) => {
                 console.error('Error subscribing to push notifications:', error);
                 this.updatePermissionState();
                 return throwError(() => error);
-            })
+            }),
         );
     }
 
@@ -134,15 +137,17 @@ export class PushNotificationService {
             endpoint: subscription.endpoint,
             keys: {
                 p256dh: keys['p256dh'],
-                auth: keys['auth']
-            }
+                auth: keys['auth'],
+            },
         };
     }
 
-    private sendSubscriptionToServer(subscription: PushSubscriptionData): Observable<PushSubscriptionData> {
+    private sendSubscriptionToServer(
+        subscription: PushSubscriptionData,
+    ): Observable<PushSubscriptionData> {
         return this.http.post<PushSubscriptionData>(
             `${environment.apiUrl}/push/subscribe`,
-            subscription
+            subscription,
         );
     }
 
@@ -151,26 +156,28 @@ export class PushNotificationService {
             return throwError(() => new Error('Push notifications are not supported'));
         }
 
-        return from(this.swPush.subscription.pipe(
-            switchMap((subscription) => {
-                if (!subscription) {
-                    return throwError(() => new Error('No subscription found'));
-                }
+        return from(
+            this.swPush.subscription.pipe(
+                switchMap((subscription) => {
+                    if (!subscription) {
+                        return throwError(() => new Error('No subscription found'));
+                    }
 
-                const endpoint = subscription.endpoint;
+                    const endpoint = subscription.endpoint;
 
-                return from(subscription.unsubscribe()).pipe(
-                    switchMap(() => {
-                        this.isSubscribed.set(false);
-                        return this.deleteSubscriptionFromServer(endpoint);
-                    })
-                );
-            })
-        )).pipe(
-            catchError(error => {
+                    return from(subscription.unsubscribe()).pipe(
+                        switchMap(() => {
+                            this.isSubscribed.set(false);
+                            return this.deleteSubscriptionFromServer(endpoint);
+                        }),
+                    );
+                }),
+            ),
+        ).pipe(
+            catchError((error) => {
                 console.error('Error unsubscribing from push notifications:', error);
                 return throwError(() => error);
-            })
+            }),
         );
     }
 
@@ -178,7 +185,7 @@ export class PushNotificationService {
         return this.http.post<void>(
             `${environment.apiUrl}/push/unsubscribe`,
             { endpoint },
-            { withCredentials: true }
+            { withCredentials: true },
         );
     }
 
@@ -195,8 +202,7 @@ export class PushNotificationService {
         await registration.showNotification(title, {
             icon: '/icons/icon-192x192.png',
             badge: '/icons/icon-72x72.png',
-            ...options
+            ...options,
         });
     }
-
 }

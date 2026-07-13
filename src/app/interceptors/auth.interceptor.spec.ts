@@ -12,15 +12,15 @@ describe('authInterceptor', () => {
 
     beforeEach(() => {
         mockAuthService = {
-            getStoredToken: vi.fn()
+            getStoredToken: vi.fn(),
         };
 
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(withInterceptors([authInterceptor])),
                 provideHttpClientTesting(),
-                { provide: AuthService, useValue: mockAuthService }
-            ]
+                { provide: AuthService, useValue: mockAuthService },
+            ],
         });
 
         httpMock = TestBed.inject(HttpTestingController);
@@ -64,9 +64,11 @@ describe('authInterceptor', () => {
     it('should not override existing Authorization header', () => {
         mockAuthService.getStoredToken.mockReturnValue('test-token-123');
 
-        httpClient.get('/api/series', {
-            headers: { Authorization: 'Bearer custom-token' }
-        }).subscribe();
+        httpClient
+            .get('/api/series', {
+                headers: { Authorization: 'Bearer custom-token' },
+            })
+            .subscribe();
 
         const req = httpMock.expectOne('/api/series');
         expect(req.request.headers.get('Authorization')).toBe('Bearer custom-token');
@@ -113,12 +115,14 @@ describe('authInterceptor', () => {
     it('should preserve other headers when adding Authorization', () => {
         mockAuthService.getStoredToken.mockReturnValue('test-token-123');
 
-        httpClient.get('/api/series', {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Custom-Header': 'custom-value'
-            }
-        }).subscribe();
+        httpClient
+            .get('/api/series', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Custom-Header': 'custom-value',
+                },
+            })
+            .subscribe();
 
         const req = httpMock.expectOne('/api/series');
         expect(req.request.headers.get('Authorization')).toBe('Bearer test-token-123');

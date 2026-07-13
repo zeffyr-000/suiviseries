@@ -17,49 +17,45 @@
     </div>
 
     @if (loading()) {
-    <div class="loading-container">
-        <mat-spinner diameter="50" />
-        <p class="body-medium">{{ 'my_series.loading' | transloco }}</p>
-    </div>
-    }
-
-    @else if (error()) {
-    <div class="error-container">
-        <mat-icon color="warn">error</mat-icon>
-        <h2 class="headline-small">{{ 'my_series.error_title' | transloco }}</h2>
-        <p class="body-large">{{ error() }}</p>
-        <button mat-flat-button color="primary" (click)="goToSearch()">
-            <mat-icon>search</mat-icon>
-            {{ 'my_series.go_to_search' | transloco }}
-        </button>
-    </div>
-    }
-
-    @else if (mySeries().length === 0) {
-    <div class="empty-container">
-        <mat-icon class="empty-icon">tv_off</mat-icon>
-        <h2 class="headline-small">{{ 'my_series.empty_title' | transloco }}</h2>
-        <p class="body-large">{{ 'my_series.empty_message' | transloco }}</p>
-        <button mat-flat-button color="primary" (click)="goToSearch()">
-            <mat-icon>search</mat-icon>
-            {{ 'my_series.start_exploring' | transloco }}
-        </button>
-    </div>
-    }
-
-    @else {
-    <div class="series-stats">
-        <div class="stats-badge">
-            <mat-icon>tv</mat-icon>
-            <span class="stats-count headline-medium">{{ mySeries().length }}</span>
-            <span class="stats-label body-medium">{{ 'my_series.series_followed' | transloco }}</span>
+        <div class="loading-container">
+            <mat-spinner diameter="50" />
+            <p class="body-medium">{{ 'my_series.loading' | transloco }}</p>
         </div>
-    </div>
+    } @else if (error()) {
+        <div class="error-container">
+            <mat-icon color="warn">error</mat-icon>
+            <h2 class="headline-small">{{ 'my_series.error_title' | transloco }}</h2>
+            <p class="body-large">{{ error() }}</p>
+            <button mat-flat-button color="primary" (click)="goToSearch()">
+                <mat-icon>search</mat-icon>
+                {{ 'my_series.go_to_search' | transloco }}
+            </button>
+        </div>
+    } @else if (mySeries().length === 0) {
+        <div class="empty-container">
+            <mat-icon class="empty-icon">tv_off</mat-icon>
+            <h2 class="headline-small">{{ 'my_series.empty_title' | transloco }}</h2>
+            <p class="body-large">{{ 'my_series.empty_message' | transloco }}</p>
+            <button mat-flat-button color="primary" (click)="goToSearch()">
+                <mat-icon>search</mat-icon>
+                {{ 'my_series.start_exploring' | transloco }}
+            </button>
+        </div>
+    } @else {
+        <div class="series-stats">
+            <div class="stats-badge">
+                <mat-icon>tv</mat-icon>
+                <span class="stats-count headline-medium">{{ mySeries().length }}</span>
+                <span class="stats-label body-medium">{{
+                    'my_series.series_followed' | transloco
+                }}</span>
+            </div>
+        </div>
 
-    <div class="series-grid">
-        @for (serie of mySeries(); track serie.id) {
-        <app-serie-card [serie]="serie" />
-        }
-    </div>
+        <div class="series-grid">
+            @for (serie of mySeries(); track serie.id) {
+                <app-serie-card [serie]="serie" />
+            }
+        </div>
     }
 </div>

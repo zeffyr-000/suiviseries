@@ -23,32 +23,32 @@ import { Component, computed, inject, input, output, signal } from '@angular/cor
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
-  selector: 'app-component-name',
-  imports: [TranslocoModule],
-  templateUrl: './component-name.component.html',
-  styleUrl: './component-name.component.scss',
-  // OnPush is the zoneless default — do NOT set changeDetection
+    selector: 'app-component-name',
+    imports: [TranslocoModule],
+    templateUrl: './component-name.component.html',
+    styleUrl: './component-name.component.scss',
+    // OnPush is the zoneless default — do NOT set changeDetection
 })
 export class ComponentNameComponent {
-  // Injected dependencies
-  private readonly someService = inject(SomeService);
+    // Injected dependencies
+    private readonly someService = inject(SomeService);
 
-  // Signal inputs
-  readonly data = input.required<DataType>();
+    // Signal inputs
+    readonly data = input.required<DataType>();
 
-  // Outputs
-  readonly closed = output<void>();
+    // Outputs
+    readonly closed = output<void>();
 
-  // Local signals
-  protected readonly loading = signal(false);
+    // Local signals
+    protected readonly loading = signal(false);
 
-  // Computed signals
-  protected readonly displayValue = computed(() => this.data().name);
+    // Computed signals
+    protected readonly displayValue = computed(() => this.data().name);
 
-  // Methods
-  handleClick(): void {
-    this.closed.emit();
-  }
+    // Methods
+    handleClick(): void {
+        this.closed.emit();
+    }
 }
 ```
 
@@ -56,9 +56,9 @@ export class ComponentNameComponent {
 
 ```html
 @if (loading()) {
-  <mat-spinner diameter="40" />
+<mat-spinner diameter="40" />
 } @else {
-  <p class="body-large">{{ displayValue() }}</p>
+<p class="body-large">{{ displayValue() }}</p>
 }
 ```
 

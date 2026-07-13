@@ -17,13 +17,13 @@ This guide helps you contribute effectively to the Suiviseries project.
 
 ```json
 {
-  "recommendations": [
-    "angular.ng-template",
-    "ms-vscode.vscode-typescript-next",
-    "bradlc.vscode-tailwindcss",
-    "esbenp.prettier-vscode",
-    "ms-vscode.vscode-eslint"
-  ]
+    "recommendations": [
+        "angular.ng-template",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint"
+    ]
 }
 ```
 
@@ -34,12 +34,12 @@ This guide helps you contribute effectively to the Suiviseries project.
 ```json
 // package.json - Key project dependencies
 {
-  "@angular/core": "^22.0.0",
-  "@angular/material": "^22.0.0",
-  "@jsverse/transloco": "^8.0.0",
-  "@fontsource/roboto": "^5.1.0",
-  "rxjs": "~7.8.0",
-  "typescript": "~6.0.3"
+    "@angular/core": "^22.0.0",
+    "@angular/material": "^22.0.0",
+    "@jsverse/transloco": "^8.0.0",
+    "@fontsource/roboto": "^5.1.0",
+    "rxjs": "~7.8.0",
+    "typescript": "~6.0.3"
 }
 ```
 
@@ -48,14 +48,14 @@ This guide helps you contribute effectively to the Suiviseries project.
 ```json
 // .eslintrc.json - High quality standards
 {
-  "extends": ["@angular-eslint/recommended", "@angular-eslint/template/process-inline-templates"],
-  "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/prefer-readonly": "error",
-    "@typescript-eslint/explicit-function-return-type": "warn",
-    "@angular-eslint/component-class-suffix": "error",
-    "@angular-eslint/directive-class-suffix": "error"
-  }
+    "extends": ["@angular-eslint/recommended", "@angular-eslint/template/process-inline-templates"],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/prefer-readonly": "error",
+        "@typescript-eslint/explicit-function-return-type": "warn",
+        "@angular-eslint/component-class-suffix": "error",
+        "@angular-eslint/directive-class-suffix": "error"
+    }
 }
 ```
 
@@ -171,19 +171,17 @@ private seriesSubject = new BehaviorSubject<Serie[]>([]);
 ```html
 <!-- ✅ CORRECT - Angular 22 control flow syntax -->
 @if (isLoading) {
-  <app-spinner />
-} @else if (series.length > 0) {
-  @for (serie of series; track serie.id) {
-    <app-serie-card [serie]="serie" />
-  }
-} @else {
-  <p>No series found</p>
+<app-spinner />
+} @else if (series.length > 0) { @for (serie of series; track serie.id) {
+<app-serie-card [serie]="serie" />
+} } @else {
+<p>No series found</p>
 }
 
 <!-- ❌ INCORRECT - Old structural directives -->
 <app-spinner *ngIf="isLoading"></app-spinner>
 <div *ngFor="let serie of series; trackBy: trackById">
-  <!-- Never use *ngIf / *ngFor -->
+    <!-- Never use *ngIf / *ngFor -->
 </div>
 ```
 
@@ -193,13 +191,13 @@ private seriesSubject = new BehaviorSubject<Serie[]>([]);
 
 ```json
 {
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "exactOptionalPropertyTypes": true
-  }
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "exactOptionalPropertyTypes": true
+    }
 }
 ```
 
@@ -208,36 +206,36 @@ private seriesSubject = new BehaviorSubject<Serie[]>([]);
 ```typescript
 // ✅ CORRECT - Strict and explicit types
 interface Serie {
-  readonly id: string;
-  readonly title: string;
-  readonly seasons: readonly Season[];
-  readonly createdAt: Date;
+    readonly id: string;
+    readonly title: string;
+    readonly seasons: readonly Season[];
+    readonly createdAt: Date;
 }
 
 type SerieStatus = 'watching' | 'completed' | 'planned' | 'dropped';
 
 // Union types for states
 interface LoadingState {
-  status: 'loading';
+    status: 'loading';
 }
 
 interface SuccessState {
-  status: 'success';
-  data: Serie[];
+    status: 'success';
+    data: Serie[];
 }
 
 interface ErrorState {
-  status: 'error';
-  error: string;
+    status: 'error';
+    error: string;
 }
 
 type SeriesState = LoadingState | SuccessState | ErrorState;
 
 // ❌ INCORRECT - Too permissive types
 interface Serie {
-  id: any; // Use precise types
-  title?: string; // Avoid optional when required
-  seasons: Season[]; // Prefer readonly for immutability
+    id: any; // Use precise types
+    title?: string; // Avoid optional when required
+    seasons: Season[]; // Prefer readonly for immutability
 }
 ```
 
@@ -247,15 +245,15 @@ interface Serie {
 
 ```json
 {
-  "extends": ["@angular-eslint/recommended", "@angular-eslint/template/process-inline-templates"],
-  "rules": {
-    "@angular-eslint/component-selector": [
-      "error",
-      { "type": "element", "prefix": "app", "style": "kebab-case" }
-    ],
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/prefer-readonly": "error"
-  }
+    "extends": ["@angular-eslint/recommended", "@angular-eslint/template/process-inline-templates"],
+    "rules": {
+        "@angular-eslint/component-selector": [
+            "error",
+            { "type": "element", "prefix": "app", "style": "kebab-case" }
+        ],
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/prefer-readonly": "error"
+    }
 }
 ```
 
@@ -269,24 +267,24 @@ import { vi } from 'vitest';
 import { createMockSeriesService } from '../testing/mocks';
 
 describe('SerieDetailComponent - Hierarchical Watch Management', () => {
-  let seriesService: ReturnType<typeof createMockSeriesService>;
+    let seriesService: ReturnType<typeof createMockSeriesService>;
 
-  beforeEach(() => {
-    seriesService = createMockSeriesService();
-    TestBed.configureTestingModule({
-      imports: [SerieDetailComponent, getTranslocoTestingModule()],
-      providers: [{ provide: SeriesService, useValue: seriesService }]
+    beforeEach(() => {
+        seriesService = createMockSeriesService();
+        TestBed.configureTestingModule({
+            imports: [SerieDetailComponent, getTranslocoTestingModule()],
+            providers: [{ provide: SeriesService, useValue: seriesService }],
+        });
     });
-  });
 
-  afterEach(() => vi.restoreAllMocks());
+    afterEach(() => vi.restoreAllMocks());
 
-  it('should synchronize season status when all episodes are marked watched', () => {
-    const mockSerie = createMockSerieWithEpisodes();
-    component.serie.set(mockSerie);
-    component.markAllEpisodesInSeason(1, true);
-    expect(component.serie().seasons[0].watched).toBe(true);
-  });
+    it('should synchronize season status when all episodes are marked watched', () => {
+        const mockSerie = createMockSerieWithEpisodes();
+        component.serie.set(mockSerie);
+        component.markAllEpisodesInSeason(1, true);
+        expect(component.serie().seasons[0].watched).toBe(true);
+    });
 });
 ```
 
@@ -306,33 +304,33 @@ describe('SerieDetailComponent - Hierarchical Watch Management', () => {
 ```scss
 // Breakpoints Material Design
 $breakpoints: (
-  xs: 0px,
-  sm: 600px,
-  md: 960px,
-  lg: 1280px,
-  xl: 1920px,
+    xs: 0px,
+    sm: 600px,
+    md: 960px,
+    lg: 1280px,
+    xl: 1920px,
 );
 
 // Mixins responsive
 @mixin mobile-first($breakpoint) {
-  @media (min-width: map-get($breakpoints, $breakpoint)) {
-    @content;
-  }
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+        @content;
+    }
 }
 
 // Usage
 .serie-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
 
-  @include mobile-first(sm) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    @include mobile-first(sm) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-  @include mobile-first(lg) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+    @include mobile-first(lg) {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 ```
 
@@ -341,17 +339,17 @@ $breakpoints: (
 ```html
 <!-- ✅ CORRECT - Complete accessibility -->
 <button
-  mat-button
-  [attr.aria-label]="buttonLabel"
-  [attr.aria-pressed]="isPressed"
-  (click)="toggle()"
+    mat-button
+    [attr.aria-label]="buttonLabel"
+    [attr.aria-pressed]="isPressed"
+    (click)="toggle()"
 >
-  {{ buttonText }}
+    {{ buttonText }}
 </button>
 
 <!-- Using CDK a11y -->
 <div cdkTrapFocus [cdkTrapFocusAutoCapture]="true" role="dialog" aria-labelledby="dialog-title">
-  <h2 id="dialog-title">{{ dialogTitle }}</h2>
+    <h2 id="dialog-title">{{ dialogTitle }}</h2>
 </div>
 ```
 
@@ -495,12 +493,12 @@ Fixes #123
 ```typescript
 // Configuration for development debugging
 if (!environment.production) {
-  // Global exposure for debugging
-  (window as any).ng = {
-    getComponent: (element: Element) => ng.getComponent(element),
-    getContext: (element: Element) => ng.getContext(element),
-    getOwningComponent: (element: Element) => ng.getOwningComponent(element),
-  };
+    // Global exposure for debugging
+    (window as any).ng = {
+        getComponent: (element: Element) => ng.getComponent(element),
+        getContext: (element: Element) => ng.getContext(element),
+        getOwningComponent: (element: Element) => ng.getOwningComponent(element),
+    };
 }
 ```
 
@@ -529,49 +527,49 @@ if (!environment.production) {
 name: Suiviseries Quality Pipeline
 
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+    pull_request:
+        branches: [main]
+    push:
+        branches: [main]
 
 jobs:
-  quality-checks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    quality-checks:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+            - name: Setup Node.js 20
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: TypeScript compilation check
-        run: npx tsc --noEmit
+            - name: TypeScript compilation check
+              run: npx tsc --noEmit
 
-      - name: ESLint (strict Angular rules)
-        run: npm run lint -- --max-warnings 0
+            - name: ESLint (strict Angular rules)
+              run: npm run lint -- --max-warnings 0
 
-      - name: Unit tests with coverage
-        run: npm run test -- --watch=false --code-coverage --browsers=ChromeHeadless
+            - name: Unit tests with coverage
+              run: npm run test -- --watch=false --code-coverage --browsers=ChromeHeadless
 
-      - name: Build production bundle
-        run: npm run build -- --configuration production
+            - name: Build production bundle
+              run: npm run build -- --configuration production
 
-      - name: Bundle size analysis
-        run: |
-          npm install -g bundlesize
-          bundlesize
+            - name: Bundle size analysis
+              run: |
+                  npm install -g bundlesize
+                  bundlesize
 
-      - name: Lighthouse CI (Performance audit)
-        run: |
-          npm install -g @lhci/cli
-          lhci autorun
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+            - name: Lighthouse CI (Performance audit)
+              run: |
+                  npm install -g @lhci/cli
+                  lhci autorun
+              env:
+                  LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 ```
 
 ## 📈 Project Quality Metrics
@@ -643,24 +641,24 @@ private getCachedOrFetch<T>(key: string, fetcher: () => Observable<T>): Observab
 ```typescript
 // Optimized reactive state with computed signals
 export class SeriesLibraryService {
-  private seriesSignal = signal<Serie[]>([]);
+    private seriesSignal = signal<Serie[]>([]);
 
-  readonly series = this.seriesSignal.asReadonly();
+    readonly series = this.seriesSignal.asReadonly();
 
-  // Automatically calculated metrics
-  readonly totalWatchedEpisodes = computed(() =>
-    this.series().reduce(
-      (total, serie) =>
-        total + serie.seasons.flatMap((s) => s.episodes).filter((e) => e.watched).length,
-      0
-    )
-  );
+    // Automatically calculated metrics
+    readonly totalWatchedEpisodes = computed(() =>
+        this.series().reduce(
+            (total, serie) =>
+                total + serie.seasons.flatMap((s) => s.episodes).filter((e) => e.watched).length,
+            0,
+        ),
+    );
 
-  readonly completionRate = computed(() => {
-    const total = this.totalEpisodes();
-    const watched = this.totalWatchedEpisodes();
-    return total > 0 ? Math.round((watched / total) * 100) : 0;
-  });
+    readonly completionRate = computed(() => {
+        const total = this.totalEpisodes();
+        const watched = this.totalWatchedEpisodes();
+        return total > 0 ? Math.round((watched / total) * 100) : 0;
+    });
 }
 ```
 

@@ -13,7 +13,10 @@ import { getTranslocoTestingModule } from './testing/transloco-testing.module';
 import { Notification } from './models/notification.model';
 
 describe('App', () => {
-    let mockAuthService: { currentUser: ReturnType<typeof signal>; logout: ReturnType<typeof vi.fn> };
+    let mockAuthService: {
+        currentUser: ReturnType<typeof signal>;
+        logout: ReturnType<typeof vi.fn>;
+    };
     let mockUserNotificationService: {
         notifications: ReturnType<typeof signal>;
         unreadCount: ReturnType<typeof signal>;
@@ -35,13 +38,13 @@ describe('App', () => {
         notified_at: '2025-11-28T10:00:00Z',
         read_at: null,
         created_at: '2025-11-28T10:00:00Z',
-        variables: { season_number: 5 }
+        variables: { season_number: 5 },
     };
 
     beforeEach(() => {
         mockAuthService = {
             currentUser: signal(null),
-            logout: vi.fn().mockResolvedValue(undefined)
+            logout: vi.fn().mockResolvedValue(undefined),
         };
 
         mockUserNotificationService = {
@@ -50,7 +53,7 @@ describe('App', () => {
             setNotifications: vi.fn(),
             markAsRead: vi.fn(),
             delete: vi.fn(),
-            getTmdbPosterUrl: vi.fn((path: string) => `https://image.tmdb.org/t/p/w200${path}`)
+            getTmdbPosterUrl: vi.fn((path: string) => `https://image.tmdb.org/t/p/w200${path}`),
         };
 
         const mockPushService = {
@@ -59,7 +62,7 @@ describe('App', () => {
             isSupported: signal(false),
             subscribeToPush: vi.fn(),
             unsubscribeFromPush: vi.fn(),
-            showNotification: vi.fn().mockResolvedValue(undefined)
+            showNotification: vi.fn().mockResolvedValue(undefined),
         };
 
         TestBed.configureTestingModule({
@@ -73,8 +76,8 @@ describe('App', () => {
                 provideNoopAnimations(),
                 { provide: AuthService, useValue: mockAuthService },
                 { provide: UserNotificationService, useValue: mockUserNotificationService },
-                { provide: PushNotificationService, useValue: mockPushService }
-            ]
+                { provide: PushNotificationService, useValue: mockPushService },
+            ],
         });
     });
 
@@ -118,13 +121,16 @@ describe('App', () => {
             display_name: 'Test User',
             photo_url: null,
             notifications: [mockNotification],
-            notifications_count: 1
+            notifications_count: 1,
         };
 
         mockAuthService.currentUser.set(mockUser);
         fixture.detectChanges();
 
-        expect(mockUserNotificationService.setNotifications).toHaveBeenCalledWith([mockNotification], 1);
+        expect(mockUserNotificationService.setNotifications).toHaveBeenCalledWith(
+            [mockNotification],
+            1,
+        );
     });
 
     it('should get formatted notification message', () => {
@@ -164,7 +170,7 @@ describe('App', () => {
         const fixture = TestBed.createComponent(App);
         const app = fixture.componentInstance;
         const event = {
-            stopPropagation: vi.fn()
+            stopPropagation: vi.fn(),
         } as unknown as Event;
 
         await app.onNotificationDelete(event, mockNotification);

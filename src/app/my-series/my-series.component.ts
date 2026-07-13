@@ -23,10 +23,10 @@ import { environment } from '../../environments/environment';
         MatIconModule,
         MatProgressSpinnerModule,
         MatChipsModule,
-        SerieCardComponent
+        SerieCardComponent,
     ],
     templateUrl: './my-series.component.html',
-    styleUrl: './my-series.component.scss'
+    styleUrl: './my-series.component.scss',
 })
 export class MySeriesComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);
@@ -48,7 +48,7 @@ export class MySeriesComponent implements OnInit {
         this.metadataService.updatePageMetadata({
             title: this.translocoService.translate('seo.my_series.title'),
             description: this.translocoService.translate('seo.my_series.description'),
-            canonicalUrl: `${environment.siteUrl}/my-series`
+            canonicalUrl: `${environment.siteUrl}/my-series`,
         });
     }
 
@@ -56,17 +56,18 @@ export class MySeriesComponent implements OnInit {
         this.loading.set(true);
         this.error.set(null);
 
-        this.seriesService.getUserSeries(true).pipe(
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe({
-            next: (series: Serie[]) => {
-                this.mySeries.set(series);
-                this.loading.set(false);
-            },
-            error: () => {
-                this.loading.set(false);
-            }
-        });
+        this.seriesService
+            .getUserSeries(true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (series: Serie[]) => {
+                    this.mySeries.set(series);
+                    this.loading.set(false);
+                },
+                error: () => {
+                    this.loading.set(false);
+                },
+            });
     }
 
     protected onRefresh(): void {

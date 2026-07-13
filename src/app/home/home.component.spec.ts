@@ -13,7 +13,7 @@ import {
     createMockSerie,
     createMockAuthService,
     createMockMetadataService,
-    createMockMatDialog
+    createMockMatDialog,
 } from '../testing/mocks';
 import { LoginComponent } from '../login/login.component';
 
@@ -29,7 +29,7 @@ describe('HomeComponent', () => {
     function createMockSeriesService() {
         return {
             getPopularSeries: vi.fn().mockReturnValue(of(mockSeries)),
-            getTopRatedSeries: vi.fn().mockReturnValue(of(mockSeries))
+            getTopRatedSeries: vi.fn().mockReturnValue(of(mockSeries)),
         };
     }
 
@@ -40,17 +40,14 @@ describe('HomeComponent', () => {
         mockMetadataService = createMockMetadataService();
 
         TestBed.configureTestingModule({
-            imports: [
-                HomeComponent,
-                getTranslocoTestingModule()
-            ],
+            imports: [HomeComponent, getTranslocoTestingModule()],
             providers: [
                 provideRouter([]),
                 { provide: SeriesService, useValue: mockSeriesService },
                 { provide: MatDialog, useValue: mockDialog },
                 { provide: AuthService, useValue: mockAuthService },
-                { provide: MetadataService, useValue: mockMetadataService }
-            ]
+                { provide: MetadataService, useValue: mockMetadataService },
+            ],
         });
 
         component = TestBed.createComponent(HomeComponent).componentInstance;
@@ -80,8 +77,9 @@ describe('HomeComponent', () => {
 
             expect(mockMetadataService.updatePageMetadata).toHaveBeenCalledWith({
                 title: 'Suivi de Séries TV en Ligne - Gestion, Statistiques et Recommandations Gratuit',
-                description: 'Gérez facilement votre collection de séries TV, suivez votre progression, découvrez les tendances et recevez des recommandations personnalisées. Suivi Séries vous aide à ne jamais rater un épisode et à explorer de nouvelles séries populaires, le tout gratuitement et sans publicité.',
-                canonicalUrl: 'http://localhost:4200/'
+                description:
+                    'Gérez facilement votre collection de séries TV, suivez votre progression, découvrez les tendances et recevez des recommandations personnalisées. Suivi Séries vous aide à ne jamais rater un épisode et à explorer de nouvelles séries populaires, le tout gratuitement et sans publicité.',
+                canonicalUrl: 'http://localhost:4200/',
             });
         });
 
@@ -103,7 +101,7 @@ describe('HomeComponent', () => {
 
         it('should handle errors when loading popular series', () => {
             mockSeriesService.getPopularSeries.mockReturnValue(
-                throwError(() => new Error('API Error'))
+                throwError(() => new Error('API Error')),
             );
 
             component.ngOnInit();
@@ -127,7 +125,7 @@ describe('HomeComponent', () => {
             const fullPageSeries = new Array(12).fill(null).map((_, i) => ({
                 ...mockSeries[0],
                 id: i + 1,
-                name: `Test Serie ${i + 1}`
+                name: `Test Serie ${i + 1}`,
             }));
             mockSeriesService.getPopularSeries.mockReturnValue(of(fullPageSeries));
             component.ngOnInit();
@@ -181,11 +179,13 @@ describe('HomeComponent', () => {
             const initialCount = component['popularSeries']().length;
             mockSeriesService.getPopularSeries.mockClear();
 
-            const newSeries = [{
-                ...mockSeries[0],
-                id: 999,
-                name: 'New Serie'
-            }];
+            const newSeries = [
+                {
+                    ...mockSeries[0],
+                    id: 999,
+                    name: 'New Serie',
+                },
+            ];
             mockSeriesService.getPopularSeries.mockReturnValue(of(newSeries));
 
             component['loadMoreSeries']();
@@ -195,7 +195,7 @@ describe('HomeComponent', () => {
 
         it('should handle errors gracefully', () => {
             mockSeriesService.getPopularSeries.mockReturnValue(
-                throwError(() => new Error('Network error'))
+                throwError(() => new Error('Network error')),
             );
 
             component['loadMoreSeries']();
@@ -210,7 +210,7 @@ describe('HomeComponent', () => {
             const fullPageSeries = new Array(12).fill(null).map((_, i) => ({
                 ...mockSeries[0],
                 id: i + 1,
-                name: `Top Rated Serie ${i + 1}`
+                name: `Top Rated Serie ${i + 1}`,
             }));
             mockSeriesService.getPopularSeries.mockReturnValue(of(fullPageSeries));
             mockSeriesService.getTopRatedSeries.mockReturnValue(of(fullPageSeries));
@@ -256,11 +256,13 @@ describe('HomeComponent', () => {
             const initialCount = component['topRatedSeries']().length;
             mockSeriesService.getTopRatedSeries.mockClear();
 
-            const newSeries = [{
-                ...mockSeries[0],
-                id: 999,
-                name: 'Top Rated New'
-            }];
+            const newSeries = [
+                {
+                    ...mockSeries[0],
+                    id: 999,
+                    name: 'Top Rated New',
+                },
+            ];
             mockSeriesService.getTopRatedSeries.mockReturnValue(of(newSeries));
 
             component['loadMoreTopRated']();
@@ -270,7 +272,7 @@ describe('HomeComponent', () => {
 
         it('should handle errors gracefully', () => {
             mockSeriesService.getTopRatedSeries.mockReturnValue(
-                throwError(() => new Error('Network error'))
+                throwError(() => new Error('Network error')),
             );
 
             component['loadMoreTopRated']();
@@ -283,7 +285,7 @@ describe('HomeComponent', () => {
         it('should return the backdrop URL of the first popular serie with a backdrop', () => {
             component['popularSeries'].set([
                 createMockSerie({ backdrop_path: '/backdrop1.jpg', name: 'Serie A' }),
-                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Serie B' })
+                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Serie B' }),
             ]);
 
             expect(component['heroBackdrop']()).toContain('/backdrop1.jpg');
@@ -292,7 +294,7 @@ describe('HomeComponent', () => {
         it('should skip series without a backdrop and return the first one that has one', () => {
             component['popularSeries'].set([
                 createMockSerie({ backdrop_path: '', name: 'No Backdrop' }),
-                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Has Backdrop' })
+                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Has Backdrop' }),
             ]);
 
             expect(component['heroBackdrop']()).toContain('/backdrop2.jpg');
@@ -300,7 +302,7 @@ describe('HomeComponent', () => {
 
         it('should return null when no popular serie has a backdrop', () => {
             component['popularSeries'].set([
-                createMockSerie({ backdrop_path: '', name: 'No Backdrop' })
+                createMockSerie({ backdrop_path: '', name: 'No Backdrop' }),
             ]);
 
             expect(component['heroBackdrop']()).toBeNull();
@@ -326,8 +328,8 @@ describe('HomeComponent', () => {
             expect(mockDialog.open).toHaveBeenCalledWith(
                 expect.anything(),
                 expect.objectContaining({
-                    data: { returnUrl: '/my-series' }
-                })
+                    data: { returnUrl: '/my-series' },
+                }),
             );
         });
 
@@ -339,8 +341,8 @@ describe('HomeComponent', () => {
                 expect.objectContaining({
                     width: '400px',
                     disableClose: false,
-                    autoFocus: true
-                })
+                    autoFocus: true,
+                }),
             );
         });
     });
@@ -358,23 +360,20 @@ describe('HomeComponent', () => {
 
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [
-                    HomeComponent,
-                    getTranslocoTestingModule()
-                ],
+                imports: [HomeComponent, getTranslocoTestingModule()],
                 providers: [
                     provideRouter([]),
                     {
                         provide: ActivatedRoute,
                         useValue: {
-                            queryParams: of({ login: 'true' })
-                        }
+                            queryParams: of({ login: 'true' }),
+                        },
                     },
                     { provide: SeriesService, useValue: mockSeriesService },
                     { provide: MatDialog, useValue: mockDialog },
                     { provide: AuthService, useValue: mockAuthService },
-                    { provide: MetadataService, useValue: mockMetadataService }
-                ]
+                    { provide: MetadataService, useValue: mockMetadataService },
+                ],
             });
 
             const fixture = TestBed.createComponent(HomeComponent);

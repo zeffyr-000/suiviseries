@@ -11,7 +11,10 @@ import { environment } from '../../environments/environment';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Helper functions to reduce nesting - using firstValueFrom to avoid nested callbacks
-async function expectSubscribeError(service: PushNotificationService, expectedStatus: number): Promise<void> {
+async function expectSubscribeError(
+    service: PushNotificationService,
+    expectedStatus: number,
+): Promise<void> {
     try {
         await firstValueFrom(service.subscribeToPush());
         throw new Error('Should not succeed');
@@ -29,7 +32,11 @@ async function expectSubscribeNotSupported(service: PushNotificationService): Pr
     }
 }
 
-async function expectUnsubscribeSuccess(service: PushNotificationService, mockSwPush: any, mockSubscription: any): Promise<void> {
+async function expectUnsubscribeSuccess(
+    service: PushNotificationService,
+    mockSwPush: any,
+    mockSubscription: any,
+): Promise<void> {
     // Mock subscription with unsubscribe method
     mockSwPush.subscription = of(mockSubscription);
     mockSubscription.unsubscribe.mockResolvedValue(true);
@@ -59,18 +66,18 @@ describe('PushNotificationService', () => {
         toJSON: vi.fn(() => ({
             endpoint: 'https://fcm.googleapis.com/fcm/send/test-endpoint',
             keys: {
-                'p256dh': 'test-p256dh-key',
-                'auth': 'test-auth-key'
-            }
+                p256dh: 'test-p256dh-key',
+                auth: 'test-auth-key',
+            },
         })),
-        unsubscribe: vi.fn()
+        unsubscribe: vi.fn(),
     } as any;
 
     beforeEach(() => {
         // Mock Notification API
         (globalThis as any).Notification = {
             permission: 'default',
-            requestPermission: vi.fn(() => Promise.resolve('granted'))
+            requestPermission: vi.fn(() => Promise.resolve('granted')),
         };
 
         // Mock ServiceWorker API
@@ -81,11 +88,11 @@ describe('PushNotificationService', () => {
                 ready: Promise.resolve({
                     pushManager: {
                         subscribe: vi.fn(),
-                        getSubscription: vi.fn()
+                        getSubscription: vi.fn(),
                     },
-                    showNotification: vi.fn()
-                })
-            }
+                    showNotification: vi.fn(),
+                }),
+            },
         });
 
         // Mock SwPush
@@ -95,12 +102,12 @@ describe('PushNotificationService', () => {
             notificationClicks: of(),
             messages: of(),
             requestSubscription: vi.fn().mockResolvedValue(mockSubscription),
-            unsubscribe: vi.fn().mockResolvedValue(undefined)
+            unsubscribe: vi.fn().mockResolvedValue(undefined),
         };
 
         // Mock Router
         mockRouter = {
-            navigateByUrl: vi.fn()
+            navigateByUrl: vi.fn(),
         };
 
         TestBed.configureTestingModule({
@@ -109,8 +116,8 @@ describe('PushNotificationService', () => {
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 { provide: SwPush, useValue: mockSwPush },
-                { provide: Router, useValue: mockRouter }
-            ]
+                { provide: Router, useValue: mockRouter },
+            ],
         });
 
         service = TestBed.inject(PushNotificationService);
@@ -131,7 +138,13 @@ describe('PushNotificationService', () => {
         });
 
         it('should return false when SwPush is not enabled', () => {
-            const disabledSwPush = { ...mockSwPush, isEnabled: false, subscription: of(null), notificationClicks: of(), messages: of() };
+            const disabledSwPush = {
+                ...mockSwPush,
+                isEnabled: false,
+                subscription: of(null),
+                notificationClicks: of(),
+                messages: of(),
+            };
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
                 providers: [
@@ -139,8 +152,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: disabledSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
             const newService = TestBed.inject(PushNotificationService);
             expect(newService.isSupported()).toBe(false);
@@ -157,9 +170,9 @@ describe('PushNotificationService', () => {
             const mockNotificationClick = {
                 notification: {
                     data: {
-                        url: '/my-series'
-                    }
-                }
+                        url: '/my-series',
+                    },
+                },
             };
 
             const navigateSpy = vi.fn().mockResolvedValue(true);
@@ -169,7 +182,7 @@ describe('PushNotificationService', () => {
             const clickSwPush = {
                 ...mockSwPush,
                 notificationClicks: of(mockNotificationClick),
-                messages: of()
+                messages: of(),
             };
 
             TestBed.resetTestingModule();
@@ -179,8 +192,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: clickSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
 
             TestBed.inject(PushNotificationService);
@@ -193,15 +206,15 @@ describe('PushNotificationService', () => {
             const mockNotificationClick = {
                 notification: {
                     data: {
-                        notification_id: 123
-                    }
-                }
+                        notification_id: 123,
+                    },
+                },
             };
 
             const clickSwPush = {
                 ...mockSwPush,
                 notificationClicks: of(mockNotificationClick),
-                messages: of()
+                messages: of(),
             };
 
             TestBed.resetTestingModule();
@@ -211,8 +224,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: clickSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
 
             TestBed.inject(PushNotificationService);
@@ -231,9 +244,9 @@ describe('PushNotificationService', () => {
                 notification: {
                     data: {
                         url: '/serie/42',
-                        notification_id: 456
-                    }
-                }
+                        notification_id: 456,
+                    },
+                },
             };
 
             const navigateSpy = vi.fn().mockResolvedValue(true);
@@ -242,7 +255,7 @@ describe('PushNotificationService', () => {
             const clickSwPush = {
                 ...mockSwPush,
                 notificationClicks: of(mockNotificationClick),
-                messages: of()
+                messages: of(),
             };
 
             TestBed.resetTestingModule();
@@ -252,8 +265,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: clickSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
 
             TestBed.inject(PushNotificationService);
@@ -270,8 +283,8 @@ describe('PushNotificationService', () => {
         it('should handle notification click without data', () => {
             const mockNotificationClick = {
                 notification: {
-                    data: null
-                }
+                    data: null,
+                },
             };
 
             const navigateSpy = vi.fn();
@@ -280,7 +293,7 @@ describe('PushNotificationService', () => {
             const clickSwPush = {
                 ...mockSwPush,
                 notificationClicks: of(mockNotificationClick),
-                messages: of()
+                messages: of(),
             };
 
             TestBed.resetTestingModule();
@@ -290,8 +303,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: clickSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
 
             TestBed.inject(PushNotificationService);
@@ -306,15 +319,15 @@ describe('PushNotificationService', () => {
             const mockNotificationClick = {
                 notification: {
                     data: {
-                        notification_id: 789
-                    }
-                }
+                        notification_id: 789,
+                    },
+                },
             };
 
             const clickSwPush = {
                 ...mockSwPush,
                 notificationClicks: of(mockNotificationClick),
-                messages: of()
+                messages: of(),
             };
 
             TestBed.resetTestingModule();
@@ -324,8 +337,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: clickSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
 
             TestBed.inject(PushNotificationService);
@@ -338,7 +351,7 @@ describe('PushNotificationService', () => {
 
             expect(consoleSpy).toHaveBeenCalledWith(
                 'Error marking notification as read:',
-                expect.anything()
+                expect.anything(),
             );
 
             consoleSpy.mockRestore();
@@ -350,7 +363,7 @@ describe('PushNotificationService', () => {
             const promise = new Promise<PushSubscriptionData>((resolve, reject) => {
                 service.subscribeToPush().subscribe({
                     next: resolve,
-                    error: reject
+                    error: reject,
                 });
             });
 
@@ -363,8 +376,8 @@ describe('PushNotificationService', () => {
                 endpoint: 'https://fcm.googleapis.com/fcm/send/test-endpoint',
                 keys: {
                     p256dh: 'test-p256dh-key',
-                    auth: 'test-auth-key'
-                }
+                    auth: 'test-auth-key',
+                },
             });
 
             const data = await promise;
@@ -380,14 +393,23 @@ describe('PushNotificationService', () => {
 
             await Promise.resolve();
             const req = httpMock.expectOne(`${environment.apiUrl}/push/subscribe`);
-            req.flush({ error: 'Server error' }, { status: 500, statusText: 'Internal Server Error' });
+            req.flush(
+                { error: 'Server error' },
+                { status: 500, statusText: 'Internal Server Error' },
+            );
 
             await promise;
             consoleErrorSpy.mockRestore();
         });
 
         it('should throw error when SwPush is not enabled', async () => {
-            const disabledSwPush = { ...mockSwPush, isEnabled: false, subscription: of(null), notificationClicks: of(), messages: of() };
+            const disabledSwPush = {
+                ...mockSwPush,
+                isEnabled: false,
+                subscription: of(null),
+                notificationClicks: of(),
+                messages: of(),
+            };
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
                 providers: [
@@ -395,8 +417,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: disabledSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
             const newService = TestBed.inject(PushNotificationService);
             const newHttpMock = TestBed.inject(HttpTestingController);
@@ -437,7 +459,13 @@ describe('PushNotificationService', () => {
         });
 
         it('should throw error when SwPush is not enabled', async () => {
-            const disabledSwPush = { ...mockSwPush, isEnabled: false, subscription: of(null), notificationClicks: of(), messages: of() };
+            const disabledSwPush = {
+                ...mockSwPush,
+                isEnabled: false,
+                subscription: of(null),
+                notificationClicks: of(),
+                messages: of(),
+            };
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
                 providers: [
@@ -445,8 +473,8 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: disabledSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
             const newService = TestBed.inject(PushNotificationService);
             const newHttpMock = TestBed.inject(HttpTestingController);
@@ -470,19 +498,25 @@ describe('PushNotificationService', () => {
         it('should show notification successfully', async () => {
             await service.showNotification('Test Title', {
                 body: 'Test body',
-                tag: 'test-tag'
+                tag: 'test-tag',
             });
 
             expect(mockRegistration.showNotification).toHaveBeenCalledWith('Test Title', {
                 icon: '/icons/icon-192x192.png',
                 badge: '/icons/icon-72x72.png',
                 body: 'Test body',
-                tag: 'test-tag'
+                tag: 'test-tag',
             });
         });
 
         it('should throw error when permission granted but service worker not enabled', async () => {
-            const disabledSwPush = { ...mockSwPush, isEnabled: false, subscription: of(null), notificationClicks: of(), messages: of() };
+            const disabledSwPush = {
+                ...mockSwPush,
+                isEnabled: false,
+                subscription: of(null),
+                notificationClicks: of(),
+                messages: of(),
+            };
 
             // Ensure permission is granted before creating service
             (globalThis as any).Notification.permission = 'granted';
@@ -494,15 +528,17 @@ describe('PushNotificationService', () => {
                     provideHttpClient(),
                     provideHttpClientTesting(),
                     { provide: SwPush, useValue: disabledSwPush },
-                    { provide: Router, useValue: mockRouter }
-                ]
+                    { provide: Router, useValue: mockRouter },
+                ],
             });
             const newService = TestBed.inject(PushNotificationService);
 
             // Manually set permission signal since isSupported is false
             newService.permission.set('granted');
 
-            await expect(newService.showNotification('Test', { body: 'Test body' })).rejects.toThrow('Notifications are not supported');
+            await expect(
+                newService.showNotification('Test', { body: 'Test body' }),
+            ).rejects.toThrow('Notifications are not supported');
 
             TestBed.inject(HttpTestingController).verify();
         });
@@ -510,9 +546,9 @@ describe('PushNotificationService', () => {
         it('should throw error when permission not granted', async () => {
             service.permission.set('denied');
 
-            await expect(
-                service.showNotification('Test')
-            ).rejects.toThrow('Notification permission not granted');
+            await expect(service.showNotification('Test')).rejects.toThrow(
+                'Notification permission not granted',
+            );
         });
     });
 });

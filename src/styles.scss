@@ -3,37 +3,29 @@
 @use './styles/focus' as *;
 @use './styles/theme-colors' as theme;
 
-@import '@fontsource/roboto/300.css';
-@import '@fontsource/roboto/400.css';
-@import '@fontsource/roboto/500.css';
-@import '@fontsource/roboto/700.css';
-
-// Poppins: display typeface for headings/hero (cinematic identity)
-@import '@fontsource/poppins/400.css';
-@import '@fontsource/poppins/500.css';
-@import '@fontsource/poppins/600.css';
-
-// Material Icons with font-display: block (intentional for UX)
-// Prevents icon flash (FOUT), cached by SW after first load (~125KB)
-@import 'material-icons/iconfont/material-icons.css';
+// Fonts (Roboto, Poppins) and Material Icons are loaded via angular.json's
+// "styles" array so they are bundled/hashed and precede the SCSS output.
+// They remain cached by the service worker and keep font-display: block.
 
 html {
   // Single dark theme ("Nuit & Or"): cinematic dark surfaces + gold accent.
   color-scheme: dark;
 
-  @include mat.theme((
-    color: (
-      primary: theme.$primary-palette,
-      tertiary: theme.$tertiary-palette,
-    ),
-    typography: (
-      brand-family: 'Poppins',
-      plain-family: 'Roboto',
-    ),
-    density: (
-      scale: 0,
+  @include mat.theme(
+    (
+      color: (
+        primary: theme.$primary-palette,
+        tertiary: theme.$tertiary-palette,
+      ),
+      typography: (
+        brand-family: 'Poppins',
+        plain-family: 'Roboto',
+      ),
+      density: (
+        scale: 0,
+      ),
     )
-  ));
+  );
 
   // Gold accent (primary) + amber highlight on deep night-blue surfaces
   --primary-color: #c7a850;
@@ -307,30 +299,61 @@ body {
   box-shadow: var(--md-sys-elevation-level5) !important;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
-  font-family: 'Roboto', "Helvetica Neue", sans-serif;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
-.text-primary { color: var(--primary-color) !important; }
-.text-accent { color: var(--accent-color) !important; }
-.text-warn { color: var(--warn-color) !important; }
+.text-primary {
+  color: var(--primary-color) !important;
+}
+.text-accent {
+  color: var(--accent-color) !important;
+}
+.text-warn {
+  color: var(--warn-color) !important;
+}
 
-.bg-primary { background-color: var(--primary-color) !important; }
-.bg-accent { background-color: var(--accent-color) !important; }
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+.bg-accent {
+  background-color: var(--accent-color) !important;
+}
 
-.p-xs { padding: var(--spacing-xs) !important; }
-.p-sm { padding: var(--spacing-sm) !important; }
-.p-md { padding: var(--spacing-md) !important; }
-.p-lg { padding: var(--spacing-lg) !important; }
-.p-xl { padding: var(--spacing-xl) !important; }
+.p-xs {
+  padding: var(--spacing-xs) !important;
+}
+.p-sm {
+  padding: var(--spacing-sm) !important;
+}
+.p-md {
+  padding: var(--spacing-md) !important;
+}
+.p-lg {
+  padding: var(--spacing-lg) !important;
+}
+.p-xl {
+  padding: var(--spacing-xl) !important;
+}
 
-.m-xs { margin: var(--spacing-xs) !important; }
-.m-sm { margin: var(--spacing-sm) !important; }
-.m-md { margin: var(--spacing-md) !important; }
-.m-lg { margin: var(--spacing-lg) !important; }
-.m-xl { margin: var(--spacing-xl) !important; }
+.m-xs {
+  margin: var(--spacing-xs) !important;
+}
+.m-sm {
+  margin: var(--spacing-sm) !important;
+}
+.m-md {
+  margin: var(--spacing-md) !important;
+}
+.m-lg {
+  margin: var(--spacing-lg) !important;
+}
+.m-xl {
+  margin: var(--spacing-xl) !important;
+}
 
 .flex-center {
   display: flex;
@@ -450,8 +473,14 @@ html, body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* M3 Touch Targets - Minimum 48x48px on Mobile */
@@ -473,7 +502,7 @@ html, body {
   // Ensure clickable areas
   button,
   a:not(p a),
-  [role="button"],
+  [role='button'],
   .clickable {
     min-height: 48px;
     min-width: 48px;

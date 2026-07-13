@@ -9,21 +9,21 @@
             <p class="login-subtitle body-medium">{{ 'auth.sign_in_subtitle' | transloco }}</p>
 
             @if (loading()) {
-            <div class="loading-state">
-                <mat-spinner diameter="40" />
-                <p class="body-medium">{{ 'auth.connecting' | transloco }}</p>
-            </div>
+                <div class="loading-state">
+                    <mat-spinner diameter="40" />
+                    <p class="body-medium">{{ 'auth.connecting' | transloco }}</p>
+                </div>
             }
 
             @if (!loading()) {
-            <div class="google-signin-section">
-                <div #googleButton class="google-button-container"></div>
+                <div class="google-signin-section">
+                    <div #googleButton class="google-button-container"></div>
 
-                <div class="signin-hint body-small">
-                    <mat-icon class="info-icon">info</mat-icon>
-                    <span>{{ 'auth.secure_connection' | transloco }}</span>
+                    <div class="signin-hint body-small">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <span>{{ 'auth.secure_connection' | transloco }}</span>
+                    </div>
                 </div>
-            </div>
             }
         </div>
     </mat-dialog-content>

@@ -21,14 +21,11 @@ describe('PushNotificationPromptComponent', () => {
         mockSnackBar = createMockMatSnackBar();
 
         TestBed.configureTestingModule({
-            imports: [
-                PushNotificationPromptComponent,
-                getTranslocoTestingModule()
-            ],
+            imports: [PushNotificationPromptComponent, getTranslocoTestingModule()],
             providers: [
                 { provide: PushNotificationService, useValue: mockPushService },
-                { provide: MatSnackBar, useValue: mockSnackBar }
-            ]
+                { provide: MatSnackBar, useValue: mockSnackBar },
+            ],
         });
 
         translocoService = TestBed.inject(TranslocoService);
@@ -139,11 +136,9 @@ describe('PushNotificationPromptComponent', () => {
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.enabled_success');
             expect(translateSpy).toHaveBeenCalledWith('notifications.close');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 3000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 3000,
+            });
         });
 
         it('should dismiss prompt after successful subscription', async () => {
@@ -156,97 +151,85 @@ describe('PushNotificationPromptComponent', () => {
 
         it('should handle generic error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Unknown error'))
+                throwError(() => new Error('Unknown error')),
             );
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_generic');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
 
         it('should handle denied permission error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Permission denied'))
+                throwError(() => new Error('Permission denied')),
             );
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_denied');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
 
         it('should handle not supported error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Push messaging is not supported'))
+                throwError(() => new Error('Push messaging is not supported')),
             );
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_not_supported');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
 
         it('should handle dialog closed error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Permission dialog closed'))
+                throwError(() => new Error('Permission dialog closed')),
             );
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_dialog_closed');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
 
         it('should handle permission not granted error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Permission not granted'))
+                throwError(() => new Error('Permission not granted')),
             );
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_dialog_closed');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
 
         it('should handle service worker error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Service Worker not registered'))
+                throwError(() => new Error('Service Worker not registered')),
             );
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_service_worker');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
 
         it('should reset loading state even after error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Test error'))
+                throwError(() => new Error('Test error')),
             );
 
             await component.enableNotifications();
@@ -258,31 +241,25 @@ describe('PushNotificationPromptComponent', () => {
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
             const testError = new Error('Test error');
 
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => testError)
-            );
+            mockPushService.subscribeToPush.mockReturnValue(throwError(() => testError));
 
             await component.enableNotifications();
 
             expect(consoleSpy).toHaveBeenCalledWith(
                 'Error enabling push notifications:',
-                testError
+                testError,
             );
         });
 
         it('should handle non-Error objects', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => 'String error')
-            );
+            mockPushService.subscribeToPush.mockReturnValue(throwError(() => 'String error'));
 
             await component.enableNotifications();
 
             expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_generic');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.any(String),
-                { duration: 5000 }
-            );
+            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
+                duration: 5000,
+            });
         });
     });
 });

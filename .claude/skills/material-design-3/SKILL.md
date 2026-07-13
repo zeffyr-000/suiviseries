@@ -31,14 +31,14 @@ Prefer CSS custom properties / M3 tokens over literals.
 
 **Shape (border-radius):**
 
-| Element               | Radius |
-| --------------------- | ------ |
-| Buttons               | 20px (full, 40px height) |
-| Cards                 | 16px (large shape)       |
-| Dialogs / Menus       | 12px (medium)            |
-| Form field outlines   | 28px (full)              |
-| Chips                 | 12px                     |
-| Active nav items      | 28px                     |
+| Element             | Radius                   |
+| ------------------- | ------------------------ |
+| Buttons             | 20px (full, 40px height) |
+| Cards               | 16px (large shape)       |
+| Dialogs / Menus     | 12px (medium)            |
+| Form field outlines | 28px (full)              |
+| Chips               | 12px                     |
+| Active nav items    | 28px                     |
 
 **Elevation:** use `var(--md-sys-elevation-level0..5)` — never custom `box-shadow`. Cards at rest = level1, hover/menus = level2.
 

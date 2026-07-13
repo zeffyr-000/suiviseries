@@ -16,8 +16,8 @@ describe('authGuard', () => {
         TestBed.configureTestingModule({
             providers: [
                 { provide: AuthService, useValue: mockAuthService },
-                { provide: Router, useValue: mockRouter }
-            ]
+                { provide: Router, useValue: mockRouter },
+            ],
         });
     });
 
@@ -25,10 +25,7 @@ describe('authGuard', () => {
         mockAuthService.isAuthenticated.mockReturnValue(true);
 
         const canActivate = TestBed.runInInjectionContext(() =>
-            authGuard(
-                {} as never,
-                { url: '/my-series' } as never
-            )
+            authGuard({} as never, { url: '/my-series' } as never),
         );
 
         expect(canActivate).toBe(true);
@@ -39,44 +36,31 @@ describe('authGuard', () => {
         mockAuthService.isAuthenticated.mockReturnValue(false);
 
         const canActivate = TestBed.runInInjectionContext(() =>
-            authGuard(
-                {} as never,
-                { url: '/my-series' } as never
-            )
+            authGuard({} as never, { url: '/my-series' } as never),
         );
 
         expect(canActivate).toBe(false);
-        expect(mockRouter.navigate).toHaveBeenCalledWith(
-            ['/'],
-            { queryParams: { returnUrl: '/my-series', login: 'true' } }
-        );
+        expect(mockRouter.navigate).toHaveBeenCalledWith(['/'], {
+            queryParams: { returnUrl: '/my-series', login: 'true' },
+        });
     });
 
     it('should include returnUrl in query params when redirecting', () => {
         mockAuthService.isAuthenticated.mockReturnValue(false);
 
         TestBed.runInInjectionContext(() =>
-            authGuard(
-                {} as never,
-                { url: '/serie/123/breaking-bad' } as never
-            )
+            authGuard({} as never, { url: '/serie/123/breaking-bad' } as never),
         );
 
-        expect(mockRouter.navigate).toHaveBeenCalledWith(
-            ['/'],
-            { queryParams: { returnUrl: '/serie/123/breaking-bad', login: 'true' } }
-        );
+        expect(mockRouter.navigate).toHaveBeenCalledWith(['/'], {
+            queryParams: { returnUrl: '/serie/123/breaking-bad', login: 'true' },
+        });
     });
 
     it('should set login query param to true when redirecting', () => {
         mockAuthService.isAuthenticated.mockReturnValue(false);
 
-        TestBed.runInInjectionContext(() =>
-            authGuard(
-                {} as never,
-                { url: '/my-series' } as never
-            )
-        );
+        TestBed.runInInjectionContext(() => authGuard({} as never, { url: '/my-series' } as never));
 
         const callArgs = mockRouter.navigate.mock.calls[0];
         expect(callArgs[1].queryParams.login).toBe('true');
@@ -85,27 +69,16 @@ describe('authGuard', () => {
     it('should handle different protected URLs correctly', () => {
         mockAuthService.isAuthenticated.mockReturnValue(false);
 
-        const urls = [
-            '/my-series',
-            '/profile',
-            '/settings',
-            '/serie/456/elite'
-        ];
+        const urls = ['/my-series', '/profile', '/settings', '/serie/456/elite'];
 
-        urls.forEach(url => {
+        urls.forEach((url) => {
             mockRouter.navigate.mockClear();
 
-            TestBed.runInInjectionContext(() =>
-                authGuard(
-                    {} as never,
-                    { url } as never
-                )
-            );
+            TestBed.runInInjectionContext(() => authGuard({} as never, { url } as never));
 
-            expect(mockRouter.navigate).toHaveBeenCalledWith(
-                ['/'],
-                { queryParams: { returnUrl: url, login: 'true' } }
-            );
+            expect(mockRouter.navigate).toHaveBeenCalledWith(['/'], {
+                queryParams: { returnUrl: url, login: 'true' },
+            });
         });
     });
 });

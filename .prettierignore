@@ -1,0 +1,14 @@
+# Build output
+dist/
+coverage/
+.angular/
+
+# Dependencies
+node_modules/
+
+# Lockfiles (generated)
+package-lock.json
+
+# Minified / generated assets
+*.min.js
+*.min.css

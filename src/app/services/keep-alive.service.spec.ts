@@ -11,15 +11,12 @@ describe('KeepAliveService', () => {
     beforeEach(() => {
         authServiceMock = {
             isAuthenticated: signal(false),
-            refreshSession: () => Promise.resolve()
+            refreshSession: () => Promise.resolve(),
         };
 
         TestBed.configureTestingModule({
             imports: [getTranslocoTestingModule()],
-            providers: [
-                KeepAliveService,
-                { provide: AuthService, useValue: authServiceMock }
-            ]
+            providers: [KeepAliveService, { provide: AuthService, useValue: authServiceMock }],
         });
 
         service = TestBed.inject(KeepAliveService);

@@ -11,15 +11,9 @@ import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-legal',
-    imports: [
-        TranslocoModule,
-        MatCardModule,
-        MatIconModule,
-        MatButtonModule,
-        MatDividerModule
-    ],
+    imports: [TranslocoModule, MatCardModule, MatIconModule, MatButtonModule, MatDividerModule],
     templateUrl: './legal.component.html',
-    styleUrl: './legal.component.scss'
+    styleUrl: './legal.component.scss',
 })
 export class LegalComponent {
     private readonly metadataService = inject(MetadataService);
@@ -35,7 +29,7 @@ export class LegalComponent {
             description: this.translocoService.translate('seo.legal.description'),
             canonicalUrl: `${environment.siteUrl}/legal`,
             includeOpenGraph: true,
-            includeTwitter: true
+            includeTwitter: true,
         });
     }
 }

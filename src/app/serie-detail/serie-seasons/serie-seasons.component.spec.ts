@@ -21,19 +21,19 @@ describe('SerieSeasonsComponent', () => {
             still_path: '/ydlY3iPfeOAvu8gVqrxPoMvzNCn.jpg',
             vote_average: 8.5,
             episode_type: 'standard',
-            runtime: 58
+            runtime: 58,
         },
         {
             id: 2,
-            name: 'Cat\'s in the Bag...',
+            name: "Cat's in the Bag...",
             episode_number: 2,
             air_date: '2008-01-27',
             overview: 'Walt and Jesse attempt to dispose of the bodies.',
             still_path: '/2IqMyDHO1cvugT2cq8qUHZiAnVh.jpg',
             vote_average: 8.2,
             episode_type: 'standard',
-            runtime: 48
-        }
+            runtime: 48,
+        },
     ];
 
     const mockSeasons: Season[] = [
@@ -45,7 +45,7 @@ describe('SerieSeasonsComponent', () => {
             poster_path: '/1BP4xYv9ZG4ZVHkL7ocOziBbSYH.jpg',
             air_date: '2008-01-20',
             episode_count: 7,
-            episodes: mockEpisodes
+            episodes: mockEpisodes,
         },
         {
             id: 102,
@@ -55,16 +55,13 @@ describe('SerieSeasonsComponent', () => {
             poster_path: '/e3oGYpoTUhOFK0popCffRSJBGll.jpg',
             air_date: '2009-03-08',
             episode_count: 13,
-            episodes: []
-        }
+            episodes: [],
+        },
     ];
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SerieSeasonsComponent,
-                getTranslocoTestingModule()
-            ]
+            imports: [SerieSeasonsComponent, getTranslocoTestingModule()],
         });
 
         fixture = TestBed.createComponent(SerieSeasonsComponent);
@@ -240,7 +237,9 @@ describe('SerieSeasonsComponent', () => {
             fixture.detectChanges();
 
             const compiled = fixture.nativeElement as HTMLElement;
-            const watchedButtons = compiled.querySelectorAll('.season-watched-button, .episode-watched-button');
+            const watchedButtons = compiled.querySelectorAll(
+                '.season-watched-button, .episode-watched-button',
+            );
             expect(watchedButtons.length).toBeGreaterThan(0);
         });
 
@@ -257,8 +256,8 @@ describe('SerieSeasonsComponent', () => {
             const seasonsWithNullPoster = [
                 {
                     ...mockSeasons[0],
-                    poster_path: null
-                }
+                    poster_path: null,
+                },
             ];
             componentRef.setInput('seasons', seasonsWithNullPoster);
             fixture.detectChanges();
@@ -279,7 +278,7 @@ describe('SerieSeasonsComponent', () => {
         it('should have alt text on episode stills', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const stills = compiled.querySelectorAll('.episode-still');
-            stills.forEach(still => {
+            stills.forEach((still) => {
                 expect((still as HTMLImageElement).alt).toBeTruthy();
             });
         });
@@ -319,7 +318,9 @@ describe('SerieSeasonsComponent', () => {
             fixture.detectChanges();
 
             const compiled = fixture.nativeElement as HTMLElement;
-            const watchedButtons = compiled.querySelectorAll('.season-watched-button, .episode-watched-button');
+            const watchedButtons = compiled.querySelectorAll(
+                '.season-watched-button, .episode-watched-button',
+            );
             expect(watchedButtons.length).toBeGreaterThan(0);
         });
     });

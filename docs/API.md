@@ -27,8 +27,8 @@ Content-Type: application/json
 
 ```json
 {
-  "authUrl": "https://accounts.google.com/oauth/authorize?client_id=...",
-  "state": "random-state-token"
+    "authUrl": "https://accounts.google.com/oauth/authorize?client_id=...",
+    "state": "random-state-token"
 }
 ```
 
@@ -48,21 +48,21 @@ Content-Type: application/json
 
 ```json
 {
-  "success": true,
-  "user": {
-    "id": "usr_1234567890",
-    "email": "user@example.com",
-    "name": "John Doe",
-    "avatar": "https://lh3.googleusercontent.com/...",
-    "createdAt": "2024-01-15T10:30:00Z",
-    "lastLoginAt": "2024-01-20T14:25:00Z"
-  },
-  "tokens": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-    "expiresIn": 3600,
-    "tokenType": "Bearer"
-  }
+    "success": true,
+    "user": {
+        "id": "usr_1234567890",
+        "email": "user@example.com",
+        "name": "John Doe",
+        "avatar": "https://lh3.googleusercontent.com/...",
+        "createdAt": "2024-01-15T10:30:00Z",
+        "lastLoginAt": "2024-01-20T14:25:00Z"
+    },
+    "tokens": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
+        "expiresIn": 3600,
+        "tokenType": "Bearer"
+    }
 }
 ```
 
@@ -97,25 +97,25 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "id": "usr_1234567890",
-  "email": "user@example.com",
-  "name": "John Doe",
-  "avatar": "https://lh3.googleusercontent.com/...",
-  "preferences": {
-    "language": "fr",
-    "theme": "dark",
-    "notifications": {
-      "newEpisodes": true,
-      "seasonFinale": true,
-      "recommendations": false
+    "id": "usr_1234567890",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "avatar": "https://lh3.googleusercontent.com/...",
+    "preferences": {
+        "language": "fr",
+        "theme": "dark",
+        "notifications": {
+            "newEpisodes": true,
+            "seasonFinale": true,
+            "recommendations": false
+        }
+    },
+    "statistics": {
+        "totalSeries": 45,
+        "totalEpisodes": 1247,
+        "totalWatchTime": 52340,
+        "favoriteGenres": ["Drama", "Thriller", "Sci-Fi"]
     }
-  },
-  "statistics": {
-    "totalSeries": 45,
-    "totalEpisodes": 1247,
-    "totalWatchTime": 52340,
-    "favoriteGenres": ["Drama", "Thriller", "Sci-Fi"]
-  }
 }
 ```
 
@@ -159,36 +159,36 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "results": [
-    {
-      "id": "serie_breaking_bad",
-      "title": "Breaking Bad",
-      "originalTitle": "Breaking Bad",
-      "overview": "Un professeur de chimie...",
-      "genres": ["Crime", "Drama", "Thriller"],
-      "firstAirDate": "2008-01-20",
-      "lastAirDate": "2013-09-29",
-      "status": "ended",
-      "rating": 9.5,
-      "popularity": 98.7,
-      "poster": "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
-      "backdrop": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
-      "network": "AMC",
-      "country": "US",
-      "language": "en",
-      "numberOfSeasons": 5,
-      "numberOfEpisodes": 62,
-      "episodeRunTime": [45, 47],
-      "inProduction": false
+    "results": [
+        {
+            "id": "serie_breaking_bad",
+            "title": "Breaking Bad",
+            "originalTitle": "Breaking Bad",
+            "overview": "Un professeur de chimie...",
+            "genres": ["Crime", "Drama", "Thriller"],
+            "firstAirDate": "2008-01-20",
+            "lastAirDate": "2013-09-29",
+            "status": "ended",
+            "rating": 9.5,
+            "popularity": 98.7,
+            "poster": "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+            "backdrop": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+            "network": "AMC",
+            "country": "US",
+            "language": "en",
+            "numberOfSeasons": 5,
+            "numberOfEpisodes": 62,
+            "episodeRunTime": [45, 47],
+            "inProduction": false
+        }
+    ],
+    "pagination": {
+        "total": 156,
+        "limit": 20,
+        "offset": 0,
+        "hasNext": true,
+        "hasPrev": false
     }
-  ],
-  "pagination": {
-    "total": 156,
-    "limit": 20,
-    "offset": 0,
-    "hasNext": true,
-    "hasPrev": false
-  }
 }
 ```
 
@@ -203,77 +203,77 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "id": "serie_breaking_bad",
-  "title": "Breaking Bad",
-  "originalTitle": "Breaking Bad",
-  "overview": "Un professeur de chimie du lycée...",
-  "genres": ["Crime", "Drama", "Thriller"],
-  "firstAirDate": "2008-01-20",
-  "lastAirDate": "2013-09-29",
-  "status": "ended",
-  "rating": 9.5,
-  "popularity": 98.7,
-  "poster": "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
-  "backdrop": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
-  "network": "AMC",
-  "country": "US",
-  "language": "en",
-  "numberOfSeasons": 5,
-  "numberOfEpisodes": 62,
-  "episodeRunTime": [45, 47],
-  "inProduction": false,
-  "createdBy": [
-    {
-      "id": "person_vince_gilligan",
-      "name": "Vince Gilligan",
-      "job": "Creator"
-    }
-  ],
-  "seasons": [
-    {
-      "id": "season_1",
-      "seasonNumber": 1,
-      "name": "Season 1",
-      "overview": "La première saison...",
-      "airDate": "2008-01-20",
-      "episodeCount": 7,
-      "poster": "https://image.tmdb.org/t/p/w500/...",
-      "episodes": [
+    "id": "serie_breaking_bad",
+    "title": "Breaking Bad",
+    "originalTitle": "Breaking Bad",
+    "overview": "Un professeur de chimie du lycée...",
+    "genres": ["Crime", "Drama", "Thriller"],
+    "firstAirDate": "2008-01-20",
+    "lastAirDate": "2013-09-29",
+    "status": "ended",
+    "rating": 9.5,
+    "popularity": 98.7,
+    "poster": "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+    "backdrop": "https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+    "network": "AMC",
+    "country": "US",
+    "language": "en",
+    "numberOfSeasons": 5,
+    "numberOfEpisodes": 62,
+    "episodeRunTime": [45, 47],
+    "inProduction": false,
+    "createdBy": [
         {
-          "id": "episode_s1e1",
-          "episodeNumber": 1,
-          "name": "Pilot",
-          "overview": "Walter White...",
-          "airDate": "2008-01-20",
-          "runtime": 58,
-          "stillPath": "https://image.tmdb.org/t/p/w500/...",
-          "rating": 8.2
+            "id": "person_vince_gilligan",
+            "name": "Vince Gilligan",
+            "job": "Creator"
         }
-      ]
+    ],
+    "seasons": [
+        {
+            "id": "season_1",
+            "seasonNumber": 1,
+            "name": "Season 1",
+            "overview": "La première saison...",
+            "airDate": "2008-01-20",
+            "episodeCount": 7,
+            "poster": "https://image.tmdb.org/t/p/w500/...",
+            "episodes": [
+                {
+                    "id": "episode_s1e1",
+                    "episodeNumber": 1,
+                    "name": "Pilot",
+                    "overview": "Walter White...",
+                    "airDate": "2008-01-20",
+                    "runtime": 58,
+                    "stillPath": "https://image.tmdb.org/t/p/w500/...",
+                    "rating": 8.2
+                }
+            ]
+        }
+    ],
+    "cast": [
+        {
+            "id": "person_bryan_cranston",
+            "name": "Bryan Cranston",
+            "character": "Walter White",
+            "profilePath": "https://image.tmdb.org/t/p/w500/...",
+            "order": 0
+        }
+    ],
+    "userStatus": {
+        "isInLibrary": true,
+        "status": "completed",
+        "rating": 9,
+        "startedAt": "2024-01-10T20:00:00Z",
+        "completedAt": "2024-01-18T22:30:00Z",
+        "watchedEpisodes": 62,
+        "totalEpisodes": 62,
+        "currentSeason": 5,
+        "currentEpisode": 16,
+        "isFavorite": true,
+        "notes": "Une des meilleures séries jamais créées"
     }
-  ],
-  "cast": [
-    {
-      "id": "person_bryan_cranston",
-      "name": "Bryan Cranston",
-      "character": "Walter White",
-      "profilePath": "https://image.tmdb.org/t/p/w500/...",
-      "order": 0
-    }
-  ],
-  "userStatus": {
-    "isInLibrary": true,
-    "status": "completed",
-    "rating": 9,
-    "startedAt": "2024-01-10T20:00:00Z",
-    "completedAt": "2024-01-18T22:30:00Z",
-    "watchedEpisodes": 62,
-    "totalEpisodes": 62,
-    "currentSeason": 5,
-    "currentEpisode": 16,
-    "isFavorite": true,
-    "notes": "Une des meilleures séries jamais créées"
-  }
 }
 ```
 
@@ -296,32 +296,32 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "series": [
-    {
-      "id": "serie_breaking_bad",
-      "title": "Breaking Bad",
-      "poster": "https://image.tmdb.org/t/p/w500/...",
-      "userStatus": {
-        "status": "completed",
-        "rating": 9,
-        "progress": {
-          "watchedEpisodes": 62,
-          "totalEpisodes": 62,
-          "watchedSeasons": 5,
-          "totalSeasons": 5,
-          "completionPercentage": 100
-        },
-        "addedAt": "2024-01-10T18:00:00Z",
-        "lastWatchedAt": "2024-01-18T22:30:00Z",
-        "isFavorite": true
-      }
+    "series": [
+        {
+            "id": "serie_breaking_bad",
+            "title": "Breaking Bad",
+            "poster": "https://image.tmdb.org/t/p/w500/...",
+            "userStatus": {
+                "status": "completed",
+                "rating": 9,
+                "progress": {
+                    "watchedEpisodes": 62,
+                    "totalEpisodes": 62,
+                    "watchedSeasons": 5,
+                    "totalSeasons": 5,
+                    "completionPercentage": 100
+                },
+                "addedAt": "2024-01-10T18:00:00Z",
+                "lastWatchedAt": "2024-01-18T22:30:00Z",
+                "isFavorite": true
+            }
+        }
+    ],
+    "pagination": {
+        "total": 45,
+        "limit": 20,
+        "offset": 0
     }
-  ],
-  "pagination": {
-    "total": 45,
-    "limit": 20,
-    "offset": 0
-  }
 }
 ```
 
@@ -437,30 +437,30 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "history": [
-    {
-      "id": "history_entry_123",
-      "type": "episode",
-      "episode": {
-        "id": "episode_s5e16",
-        "title": "Felina",
-        "seasonNumber": 5,
-        "episodeNumber": 16,
-        "series": {
-          "id": "serie_breaking_bad",
-          "title": "Breaking Bad"
+    "history": [
+        {
+            "id": "history_entry_123",
+            "type": "episode",
+            "episode": {
+                "id": "episode_s5e16",
+                "title": "Felina",
+                "seasonNumber": 5,
+                "episodeNumber": 16,
+                "series": {
+                    "id": "serie_breaking_bad",
+                    "title": "Breaking Bad"
+                }
+            },
+            "watchedAt": "2024-01-18T22:30:00Z",
+            "rating": 10,
+            "notes": "Final parfait"
         }
-      },
-      "watchedAt": "2024-01-18T22:30:00Z",
-      "rating": 10,
-      "notes": "Final parfait"
+    ],
+    "pagination": {
+        "total": 1247,
+        "limit": 50,
+        "offset": 0
     }
-  ],
-  "pagination": {
-    "total": 1247,
-    "limit": 50,
-    "offset": 0
-  }
 }
 ```
 
@@ -477,39 +477,39 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "overview": {
-    "totalSeries": 45,
-    "seriesByStatus": {
-      "watching": 12,
-      "completed": 28,
-      "planned": 3,
-      "dropped": 2,
-      "on_hold": 0
+    "overview": {
+        "totalSeries": 45,
+        "seriesByStatus": {
+            "watching": 12,
+            "completed": 28,
+            "planned": 3,
+            "dropped": 2,
+            "on_hold": 0
+        },
+        "totalEpisodes": 1247,
+        "totalWatchTime": 52340,
+        "averageRating": 7.8,
+        "favoriteGenres": [
+            { "genre": "Drama", "count": 18, "percentage": 40 },
+            { "genre": "Thriller", "count": 15, "percentage": 33.3 },
+            { "genre": "Crime", "count": 12, "percentage": 26.7 }
+        ]
     },
-    "totalEpisodes": 1247,
-    "totalWatchTime": 52340,
-    "averageRating": 7.8,
-    "favoriteGenres": [
-      { "genre": "Drama", "count": 18, "percentage": 40 },
-      { "genre": "Thriller", "count": 15, "percentage": 33.3 },
-      { "genre": "Crime", "count": 12, "percentage": 26.7 }
+    "thisMonth": {
+        "episodesWatched": 23,
+        "watchTime": 1058,
+        "seriesCompleted": 2,
+        "newSeriesAdded": 1
+    },
+    "achievements": [
+        {
+            "id": "binge_watcher",
+            "name": "Binge Watcher",
+            "description": "Regarder 10 épisodes en une journée",
+            "unlockedAt": "2024-01-15T23:45:00Z",
+            "rarity": "common"
+        }
     ]
-  },
-  "thisMonth": {
-    "episodesWatched": 23,
-    "watchTime": 1058,
-    "seriesCompleted": 2,
-    "newSeriesAdded": 1
-  },
-  "achievements": [
-    {
-      "id": "binge_watcher",
-      "name": "Binge Watcher",
-      "description": "Regarder 10 épisodes en une journée",
-      "unlockedAt": "2024-01-15T23:45:00Z",
-      "rarity": "common"
-    }
-  ]
 }
 ```
 
@@ -542,25 +542,25 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "recommendations": [
-    {
-      "serie": {
-        "id": "serie_better_call_saul",
-        "title": "Better Call Saul",
-        "poster": "https://image.tmdb.org/t/p/w500/...",
-        "rating": 8.8,
-        "genres": ["Crime", "Drama"]
-      },
-      "reason": "Basé sur votre appréciation de Breaking Bad",
-      "similarity": 0.95,
-      "confidence": 0.87
+    "recommendations": [
+        {
+            "serie": {
+                "id": "serie_better_call_saul",
+                "title": "Better Call Saul",
+                "poster": "https://image.tmdb.org/t/p/w500/...",
+                "rating": 8.8,
+                "genres": ["Crime", "Drama"]
+            },
+            "reason": "Basé sur votre appréciation de Breaking Bad",
+            "similarity": 0.95,
+            "confidence": 0.87
+        }
+    ],
+    "metadata": {
+        "type": "similar",
+        "basedOn": ["Breaking Bad", "The Sopranos"],
+        "algorithm": "collaborative_filtering_v2"
     }
-  ],
-  "metadata": {
-    "type": "similar",
-    "basedOn": ["Breaking Bad", "The Sopranos"],
-    "algorithm": "collaborative_filtering_v2"
-  }
 }
 ```
 
@@ -592,16 +592,16 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Les données fournies ne sont pas valides",
-    "details": {
-      "field": "rating",
-      "message": "La note doit être comprise entre 1 et 10"
-    },
-    "timestamp": "2024-01-20T15:30:00Z",
-    "requestId": "req_1234567890"
-  }
+    "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Les données fournies ne sont pas valides",
+        "details": {
+            "field": "rating",
+            "message": "La note doit être comprise entre 1 et 10"
+        },
+        "timestamp": "2024-01-20T15:30:00Z",
+        "requestId": "req_1234567890"
+    }
 }
 ```
 

@@ -11,15 +11,15 @@ Use native control flow — NEVER `*ngIf` / `*ngFor` / `*ngSwitch`:
 
 ```html
 @if (loading()) {
-  <mat-spinner diameter="40" />
+<mat-spinner diameter="40" />
 } @else if (results().length === 0) {
-  <p class="body-large empty-state">{{ 'search.empty' | transloco }}</p>
+<p class="body-large empty-state">{{ 'search.empty' | transloco }}</p>
 } @else {
-  <div class="series-grid">
+<div class="series-grid">
     @for (serie of results(); track serie.id) {
-      <app-serie-card [serie]="serie" />
+    <app-serie-card [serie]="serie" />
     }
-  </div>
+</div>
 }
 ```
 

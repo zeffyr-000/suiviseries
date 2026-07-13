@@ -19,22 +19,22 @@ You are a specialized Angular modernization agent for the Suiviseries project.
 
 ### 1. Legacy Patterns → Modern Angular
 
-| Legacy Pattern                     | Modern Replacement                                 |
-| ---------------------------------- | -------------------------------------------------- |
-| `@Input()` decorator               | `input()` / `input.required()`                     |
-| `@Output()` decorator              | `output()`                                         |
-| `@HostBinding` / `@HostListener`   | `host` object in decorator                         |
-| `*ngIf` / `*ngFor` / `*ngSwitch`   | `@if` / `@for` / `@switch`                         |
-| `standalone: true` in decorator    | Remove (default since Angular 19+)                 |
-| `changeDetection: …OnPush`         | Remove (OnPush is the zoneless default)            |
-| `ngClass`                          | `class` bindings                                   |
-| `ngStyle`                          | `style` bindings                                   |
-| Class properties for state         | `signal()`                                         |
-| Getters for derived state          | `computed()`                                       |
-| `ChangeDetectorRef.markForCheck()` | Remove (signals auto-trigger)                      |
-| Constructor injection              | `inject()` function                                |
-| `BehaviorSubject` for shared state | `signal()` + `asReadonly()` in a service           |
-| Manual `switchMap` search plumbing | `rxResource` factory (see `rxresource-patterns`)   |
+| Legacy Pattern                     | Modern Replacement                               |
+| ---------------------------------- | ------------------------------------------------ |
+| `@Input()` decorator               | `input()` / `input.required()`                   |
+| `@Output()` decorator              | `output()`                                       |
+| `@HostBinding` / `@HostListener`   | `host` object in decorator                       |
+| `*ngIf` / `*ngFor` / `*ngSwitch`   | `@if` / `@for` / `@switch`                       |
+| `standalone: true` in decorator    | Remove (default since Angular 19+)               |
+| `changeDetection: …OnPush`         | Remove (OnPush is the zoneless default)          |
+| `ngClass`                          | `class` bindings                                 |
+| `ngStyle`                          | `style` bindings                                 |
+| Class properties for state         | `signal()`                                       |
+| Getters for derived state          | `computed()`                                     |
+| `ChangeDetectorRef.markForCheck()` | Remove (signals auto-trigger)                    |
+| Constructor injection              | `inject()` function                              |
+| `BehaviorSubject` for shared state | `signal()` + `asReadonly()` in a service         |
+| Manual `switchMap` search plumbing | `rxResource` factory (see `rxresource-patterns`) |
 
 ### 2. Project-Specific Rules
 

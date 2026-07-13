@@ -27,168 +27,173 @@ import { createSlug, formatRelativeDate } from './utils/url.utils';
 import { getNotificationTranslationKey } from './utils/notification.utils';
 
 @Component({
-  selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    RouterModule,
-    TranslocoModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatMenuModule,
-    MatDividerModule,
-    MatDialogModule,
-    MatBadgeModule,
-    MatTooltipModule,
-    MatSlideToggleModule,
-    PushNotificationPromptComponent
-  ],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+    selector: 'app-root',
+    imports: [
+        RouterOutlet,
+        RouterModule,
+        TranslocoModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatMenuModule,
+        MatDividerModule,
+        MatDialogModule,
+        MatBadgeModule,
+        MatTooltipModule,
+        MatSlideToggleModule,
+        PushNotificationPromptComponent,
+    ],
+    templateUrl: './app.html',
+    styleUrl: './app.scss',
 })
 export class App {
-  protected readonly menuOpen = signal(false);
-  protected readonly notificationsOpen = signal(false);
-  protected readonly pushLoading = signal(false);
+    protected readonly menuOpen = signal(false);
+    protected readonly notificationsOpen = signal(false);
+    protected readonly pushLoading = signal(false);
 
-  private readonly authService: AuthService = inject(AuthService);
-  protected readonly userNotificationService: UserNotificationService = inject(UserNotificationService);
-  protected readonly pushService: PushNotificationService = inject(PushNotificationService);
-  private readonly router: Router = inject(Router);
-  private readonly dialog: MatDialog = inject(MatDialog);
-  private readonly transloco = inject(TranslocoService);
-  private readonly snackBar = inject(MatSnackBar);
+    private readonly authService: AuthService = inject(AuthService);
+    protected readonly userNotificationService: UserNotificationService =
+        inject(UserNotificationService);
+    protected readonly pushService: PushNotificationService = inject(PushNotificationService);
+    private readonly router: Router = inject(Router);
+    private readonly dialog: MatDialog = inject(MatDialog);
+    private readonly transloco = inject(TranslocoService);
+    private readonly snackBar = inject(MatSnackBar);
 
-  protected readonly currentUser = computed(() => this.authService.currentUser());
+    protected readonly currentUser = computed(() => this.authService.currentUser());
 
-  constructor() {
-    effect(() => {
-      const user = this.currentUser();
-      if (user?.notifications) {
-        this.userNotificationService.setNotifications(user.notifications, user.notifications_count);
-      }
-    });
-  }
-
-  toggleMenu() {
-    this.menuOpen.set(!this.menuOpen());
-  }
-
-  toggleNotifications() {
-    this.notificationsOpen.set(!this.notificationsOpen());
-  }
-
-  getNotificationMessage(notification: Notification): string {
-    const key = getNotificationTranslationKey(notification.type);
-    return this.transloco.translate(key, notification.variables);
-  }
-
-  getFormattedDate(dateString: string): string {
-    return formatRelativeDate(dateString, (key: string, params?: Record<string, number>) =>
-      this.transloco.translate(key, params)
-    );
-  }
-
-  async onNotificationClick(notification: Notification): Promise<void> {
-    // Always call markAsRead - service handles already read notifications
-    await this.userNotificationService.markAsRead(notification.user_notification_id);
-    this.notificationsOpen.set(false);
-    const slug = createSlug(notification.serie_name);
-    this.router.navigate(['/serie', notification.serie_id, slug]);
-  }
-
-  async onNotificationDelete(event: Event, notification: Notification): Promise<void> {
-    event.stopPropagation();
-    await this.userNotificationService.delete(notification.user_notification_id);
-  }
-
-  login(): void {
-    this.dialog.open(LoginComponent, {
-      width: '540px',
-      maxWidth: '90vw',
-      disableClose: false,
-      autoFocus: true
-    });
-  }
-
-  async logout(): Promise<void> {
-    await this.authService.logout();
-    this.router.navigate(['/']);
-  }
-
-  async togglePushNotifications(): Promise<void> {
-    const isCurrentlyEnabled = this.pushService.permission() === 'granted' && this.pushService.isSubscribed();
-    const mockEvent = new Event('toggle');
-
-    if (isCurrentlyEnabled) {
-      await this.disablePushNotifications(mockEvent);
-    } else {
-      await this.enablePushNotifications(mockEvent);
+    constructor() {
+        effect(() => {
+            const user = this.currentUser();
+            if (user?.notifications) {
+                this.userNotificationService.setNotifications(
+                    user.notifications,
+                    user.notifications_count,
+                );
+            }
+        });
     }
-  }
 
-  async enablePushNotifications(event: Event): Promise<void> {
-    event.stopPropagation();
-    this.pushLoading.set(true);
+    toggleMenu() {
+        this.menuOpen.set(!this.menuOpen());
+    }
 
-    try {
-      await firstValueFrom(this.pushService.subscribeToPush());
-      this.snackBar.open(
-        this.transloco.translate('push_notifications.enabled_success'),
-        this.transloco.translate('notifications.close'),
-        { duration: 3000 }
-      );
+    toggleNotifications() {
+        this.notificationsOpen.set(!this.notificationsOpen());
+    }
 
-      await this.pushService.showNotification(
-        this.transloco.translate('push_notifications.confirmation_enabled_title'),
-        {
-          body: this.transloco.translate('push_notifications.confirmation_enabled_body'),
-          tag: 'push-confirmation-enabled'
+    getNotificationMessage(notification: Notification): string {
+        const key = getNotificationTranslationKey(notification.type);
+        return this.transloco.translate(key, notification.variables);
+    }
+
+    getFormattedDate(dateString: string): string {
+        return formatRelativeDate(dateString, (key: string, params?: Record<string, number>) =>
+            this.transloco.translate(key, params),
+        );
+    }
+
+    async onNotificationClick(notification: Notification): Promise<void> {
+        // Always call markAsRead - service handles already read notifications
+        await this.userNotificationService.markAsRead(notification.user_notification_id);
+        this.notificationsOpen.set(false);
+        const slug = createSlug(notification.serie_name);
+        this.router.navigate(['/serie', notification.serie_id, slug]);
+    }
+
+    async onNotificationDelete(event: Event, notification: Notification): Promise<void> {
+        event.stopPropagation();
+        await this.userNotificationService.delete(notification.user_notification_id);
+    }
+
+    login(): void {
+        this.dialog.open(LoginComponent, {
+            width: '540px',
+            maxWidth: '90vw',
+            disableClose: false,
+            autoFocus: true,
+        });
+    }
+
+    async logout(): Promise<void> {
+        await this.authService.logout();
+        this.router.navigate(['/']);
+    }
+
+    async togglePushNotifications(): Promise<void> {
+        const isCurrentlyEnabled =
+            this.pushService.permission() === 'granted' && this.pushService.isSubscribed();
+        const mockEvent = new Event('toggle');
+
+        if (isCurrentlyEnabled) {
+            await this.disablePushNotifications(mockEvent);
+        } else {
+            await this.enablePushNotifications(mockEvent);
         }
-      );
-    } catch (error) {
-      console.error('Error enabling push notifications:', error);
-      let message = this.transloco.translate('push_notifications.error_generic');
+    }
 
-      if (error instanceof Error) {
-        if (error.message.includes('denied')) {
-          message = this.transloco.translate('push_notifications.error_denied');
-        } else if (error.message.includes('not supported')) {
-          message = this.transloco.translate('push_notifications.error_not_supported');
+    async enablePushNotifications(event: Event): Promise<void> {
+        event.stopPropagation();
+        this.pushLoading.set(true);
+
+        try {
+            await firstValueFrom(this.pushService.subscribeToPush());
+            this.snackBar.open(
+                this.transloco.translate('push_notifications.enabled_success'),
+                this.transloco.translate('notifications.close'),
+                { duration: 3000 },
+            );
+
+            await this.pushService.showNotification(
+                this.transloco.translate('push_notifications.confirmation_enabled_title'),
+                {
+                    body: this.transloco.translate('push_notifications.confirmation_enabled_body'),
+                    tag: 'push-confirmation-enabled',
+                },
+            );
+        } catch (error) {
+            console.error('Error enabling push notifications:', error);
+            let message = this.transloco.translate('push_notifications.error_generic');
+
+            if (error instanceof Error) {
+                if (error.message.includes('denied')) {
+                    message = this.transloco.translate('push_notifications.error_denied');
+                } else if (error.message.includes('not supported')) {
+                    message = this.transloco.translate('push_notifications.error_not_supported');
+                }
+            }
+
+            this.snackBar.open(message, this.transloco.translate('notifications.close'), {
+                duration: 5000,
+            });
+        } finally {
+            this.pushLoading.set(false);
         }
-      }
-
-      this.snackBar.open(message, this.transloco.translate('notifications.close'), {
-        duration: 5000
-      });
-    } finally {
-      this.pushLoading.set(false);
     }
-  }
 
-  async disablePushNotifications(event: Event): Promise<void> {
-    event.stopPropagation();
-    this.pushLoading.set(true);
+    async disablePushNotifications(event: Event): Promise<void> {
+        event.stopPropagation();
+        this.pushLoading.set(true);
 
-    try {
-      await firstValueFrom(this.pushService.unsubscribeFromPush());
+        try {
+            await firstValueFrom(this.pushService.unsubscribeFromPush());
 
-      this.snackBar.open(
-        this.transloco.translate('push_notifications.disabled_success'),
-        this.transloco.translate('notifications.close'),
-        { duration: 3000 }
-      );
-    } catch (error) {
-      console.error('Error disabling push notifications:', error);
-      this.snackBar.open(
-        this.transloco.translate('push_notifications.error_generic'),
-        this.transloco.translate('notifications.close'),
-        { duration: 5000 }
-      );
-    } finally {
-      this.pushLoading.set(false);
+            this.snackBar.open(
+                this.transloco.translate('push_notifications.disabled_success'),
+                this.transloco.translate('notifications.close'),
+                { duration: 3000 },
+            );
+        } catch (error) {
+            console.error('Error disabling push notifications:', error);
+            this.snackBar.open(
+                this.transloco.translate('push_notifications.error_generic'),
+                this.transloco.translate('notifications.close'),
+                { duration: 5000 },
+            );
+        } finally {
+            this.pushLoading.set(false);
+        }
     }
-  }
 }

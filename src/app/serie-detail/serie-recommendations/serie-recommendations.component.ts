@@ -9,15 +9,9 @@ import { formatRating, Recommendation } from '../../models/serie.model';
 
 @Component({
     selector: 'app-serie-recommendations',
-    imports: [
-        RouterLink,
-        TranslocoModule,
-        MatCardModule,
-        MatIconModule,
-        DatePipe
-    ],
+    imports: [RouterLink, TranslocoModule, MatCardModule, MatIconModule, DatePipe],
     templateUrl: './serie-recommendations.component.html',
-    styleUrl: './serie-recommendations.component.scss'
+    styleUrl: './serie-recommendations.component.scss',
 })
 export class SerieRecommendationsComponent {
     recommendations = input.required<Recommendation[]>();

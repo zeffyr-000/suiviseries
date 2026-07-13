@@ -12,10 +12,10 @@ const createGoogleMock = () => ({
                 storeCredential: vi.fn(),
                 cancel: vi.fn(),
                 onGoogleLibraryLoad: vi.fn(),
-                revoke: vi.fn()
-            }
-        }
-    }
+                revoke: vi.fn(),
+            },
+        },
+    },
 });
 
 describe('google-identity.utils', () => {
@@ -45,7 +45,7 @@ describe('google-identity.utils', () => {
 
         it('should return false when google.accounts is undefined', () => {
             (globalThis as { window: unknown }).window = {
-                google: {}
+                google: {},
             } as unknown as Window;
             expect(isGoogleLibraryLoaded()).toBe(false);
         });
@@ -53,8 +53,8 @@ describe('google-identity.utils', () => {
         it('should return false when google.accounts.id is undefined', () => {
             (globalThis as { window: unknown }).window = {
                 google: {
-                    accounts: {}
-                }
+                    accounts: {},
+                },
             } as unknown as Window;
             expect(isGoogleLibraryLoaded()).toBe(false);
         });
@@ -79,7 +79,7 @@ describe('google-identity.utils', () => {
             const promise = waitForGoogleLibrary(100);
 
             // Wait for the rejection to be properly caught
-            const result = promise.catch(error => error);
+            const result = promise.catch((error) => error);
 
             await vi.advanceTimersByTimeAsync(150);
 

@@ -11,7 +11,7 @@ export function createMockUser(overrides: Partial<User> = {}): User {
         status: UserStatus.ACTIVE,
         created_at: '2023-01-01',
         last_login: '2023-01-01',
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -20,6 +20,6 @@ export function createMockAdminUser(overrides: Partial<User> = {}): User {
     return createMockUser({
         display_name: 'Admin User',
         email: 'admin@test.com',
-        ...overrides
+        ...overrides,
     });
 }

@@ -17,7 +17,7 @@ describe('SeriesService', () => {
         original_name: 'Test Serie Original',
         overview: 'Test overview',
         number_of_seasons: 3,
-        number_of_episodes: 30
+        number_of_episodes: 30,
     });
 
     beforeEach(() => {
@@ -27,8 +27,8 @@ describe('SeriesService', () => {
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 SeriesService,
-                NotificationService
-            ]
+                NotificationService,
+            ],
         });
         service = TestBed.inject(SeriesService);
         httpMock = TestBed.inject(HttpTestingController);
@@ -45,7 +45,7 @@ describe('SeriesService', () => {
 
     describe('getAllSeries', () => {
         it('should return series array on success', () => {
-            service.getAllSeries().subscribe(series => {
+            service.getAllSeries().subscribe((series) => {
                 expect(series).toHaveLength(1);
                 expect(series[0].name).toBe('Test Serie');
             });
@@ -58,7 +58,7 @@ describe('SeriesService', () => {
         it('should return empty array on error', () => {
             const spy = vi.spyOn(notificationService, 'error');
 
-            service.getAllSeries().subscribe(series => {
+            service.getAllSeries().subscribe((series) => {
                 expect(series).toEqual([]);
             });
 
@@ -71,7 +71,7 @@ describe('SeriesService', () => {
 
     describe('getPopularSeries', () => {
         it('should return popular series with pagination', () => {
-            service.getPopularSeries(10, 2).subscribe(series => {
+            service.getPopularSeries(10, 2).subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
@@ -81,7 +81,7 @@ describe('SeriesService', () => {
         });
 
         it('should return empty array on failure', () => {
-            service.getPopularSeries().subscribe(series => {
+            service.getPopularSeries().subscribe((series) => {
                 expect(series).toEqual([]);
             });
 
@@ -92,7 +92,7 @@ describe('SeriesService', () => {
 
     describe('getTopRatedSeries', () => {
         it('should return top rated series', () => {
-            service.getTopRatedSeries().subscribe(series => {
+            service.getTopRatedSeries().subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
@@ -103,7 +103,7 @@ describe('SeriesService', () => {
 
     describe('getSerieById', () => {
         it('should return serie by id', () => {
-            service.getSerieById(1).subscribe(serie => {
+            service.getSerieById(1).subscribe((serie) => {
                 expect(serie?.name).toBe('Test Serie');
             });
 
@@ -112,7 +112,7 @@ describe('SeriesService', () => {
         });
 
         it('should return undefined on failure', () => {
-            service.getSerieById(999).subscribe(serie => {
+            service.getSerieById(999).subscribe((serie) => {
                 expect(serie).toBeUndefined();
             });
 
@@ -123,7 +123,7 @@ describe('SeriesService', () => {
 
     describe('getSerieDetails', () => {
         it('should return serie details', () => {
-            service.getSerieDetails(1).subscribe(response => {
+            service.getSerieDetails(1).subscribe((response) => {
                 expect(response?.success).toBe(true);
                 expect(response?.serie.name).toBe('Test Serie');
             });
@@ -133,7 +133,7 @@ describe('SeriesService', () => {
         });
 
         it('should return null on error', () => {
-            service.getSerieDetails(1).subscribe(response => {
+            service.getSerieDetails(1).subscribe((response) => {
                 expect(response).toBeNull();
             });
 
@@ -144,7 +144,7 @@ describe('SeriesService', () => {
 
     describe('searchSeries', () => {
         it('should return empty array for empty query', () => {
-            service.searchSeries('').subscribe(series => {
+            service.searchSeries('').subscribe((series) => {
                 expect(series).toEqual([]);
             });
 
@@ -152,7 +152,7 @@ describe('SeriesService', () => {
         });
 
         it('should return search results', () => {
-            service.searchSeries('test').subscribe(series => {
+            service.searchSeries('test').subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
@@ -171,31 +171,31 @@ describe('SeriesService', () => {
 
     describe('getUserSeries', () => {
         it('should return user series', () => {
-            service.getUserSeries().subscribe(series => {
+            service.getUserSeries().subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
             const req = httpMock.expectOne('/api/users/me/series');
             req.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
         });
 
         it('should use cached data on second call', () => {
             // First call
-            service.getUserSeries().subscribe(series => {
+            service.getUserSeries().subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
             const req1 = httpMock.expectOne('/api/users/me/series');
             req1.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
 
             // Second call should use cache
-            service.getUserSeries().subscribe(series => {
+            service.getUserSeries().subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
@@ -208,37 +208,37 @@ describe('SeriesService', () => {
             const req1 = httpMock.expectOne('/api/users/me/series');
             req1.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
 
             // Second call with forceRefresh
-            service.getUserSeries(true).subscribe(series => {
+            service.getUserSeries(true).subscribe((series) => {
                 expect(series).toHaveLength(1);
             });
 
             const req2 = httpMock.expectOne('/api/users/me/series');
             req2.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
         });
     });
 
     describe('isSerieReallyFollowed', () => {
         it('should return true if serie is in user list', () => {
-            service.isSerieReallyFollowed(1).subscribe(result => {
+            service.isSerieReallyFollowed(1).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
             const req = httpMock.expectOne('/api/users/me/series');
             req.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
         });
 
         it('should return false if serie is not in user list', () => {
-            service.isSerieReallyFollowed(999).subscribe(result => {
+            service.isSerieReallyFollowed(999).subscribe((result) => {
                 expect(result).toBe(false);
             });
 
@@ -251,7 +251,7 @@ describe('SeriesService', () => {
         it('should follow serie and show success notification', () => {
             const spy = vi.spyOn(notificationService, 'success');
 
-            service.followSerie(1).subscribe(result => {
+            service.followSerie(1).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -278,7 +278,7 @@ describe('SeriesService', () => {
             const req3 = httpMock.expectOne('/api/users/me/series');
             req3.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
             // Cache invalidated: a fresh GET was issued rather than serving cached data
             expect(req3.request.method).toBe('GET');
@@ -288,7 +288,7 @@ describe('SeriesService', () => {
             service.followSerie(1).subscribe({
                 error: (err) => {
                     expect(err).toBeTruthy();
-                }
+                },
             });
 
             const req = httpMock.expectOne('/api/users/me/series/1/follow');
@@ -300,7 +300,7 @@ describe('SeriesService', () => {
         it('should unfollow serie and show success notification', () => {
             const spy = vi.spyOn(notificationService, 'success');
 
-            service.unfollowSerie(1).subscribe(result => {
+            service.unfollowSerie(1).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -316,7 +316,7 @@ describe('SeriesService', () => {
             const req1 = httpMock.expectOne('/api/users/me/series');
             req1.flush({
                 success: true,
-                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }]
+                results: [{ user_serie_id: 1, followed_at: '', updated_at: '', serie: mockSerie }],
             });
 
             // Unfollow a serie
@@ -335,7 +335,7 @@ describe('SeriesService', () => {
 
     describe('markSerieAsWatched', () => {
         it('should mark serie as watched', () => {
-            service.markSerieAsWatched(1).subscribe(result => {
+            service.markSerieAsWatched(1).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -344,7 +344,7 @@ describe('SeriesService', () => {
         });
 
         it('should return false on error', () => {
-            service.markSerieAsWatched(1).subscribe(result => {
+            service.markSerieAsWatched(1).subscribe((result) => {
                 expect(result).toBe(false);
             });
 
@@ -355,7 +355,7 @@ describe('SeriesService', () => {
 
     describe('unmarkSerieAsWatched', () => {
         it('should unmark serie as watched', () => {
-            service.unmarkSerieAsWatched(1).subscribe(result => {
+            service.unmarkSerieAsWatched(1).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -366,7 +366,7 @@ describe('SeriesService', () => {
 
     describe('markSeasonAsWatched', () => {
         it('should mark season as watched', () => {
-            service.markSeasonAsWatched(1, 10).subscribe(result => {
+            service.markSeasonAsWatched(1, 10).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -377,7 +377,7 @@ describe('SeriesService', () => {
 
     describe('unmarkSeasonAsWatched', () => {
         it('should unmark season as watched', () => {
-            service.unmarkSeasonAsWatched(1, 10).subscribe(result => {
+            service.unmarkSeasonAsWatched(1, 10).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -388,7 +388,7 @@ describe('SeriesService', () => {
 
     describe('markEpisodeAsWatched', () => {
         it('should mark episode as watched', () => {
-            service.markEpisodeAsWatched(1, 100).subscribe(result => {
+            service.markEpisodeAsWatched(1, 100).subscribe((result) => {
                 expect(result).toBe(true);
             });
 
@@ -399,7 +399,7 @@ describe('SeriesService', () => {
 
     describe('unmarkEpisodeAsWatched', () => {
         it('should unmark episode as watched', () => {
-            service.unmarkEpisodeAsWatched(1, 100).subscribe(result => {
+            service.unmarkEpisodeAsWatched(1, 100).subscribe((result) => {
                 expect(result).toBe(true);
             });
 

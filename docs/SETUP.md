@@ -56,9 +56,9 @@ Edit `environment.local.ts` with your API keys:
 
 ```typescript
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8888/suiviseries-api/www',
-  googleClientId: 'your-google-client-id.apps.googleusercontent.com',
+    production: false,
+    apiUrl: 'http://localhost:8888/suiviseries-api/www',
+    googleClientId: 'your-google-client-id.apps.googleusercontent.com',
 };
 ```
 
@@ -84,9 +84,9 @@ Copy your Client ID to the environment file:
 ```typescript
 // src/environments/environment.local.ts
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8888/suiviseries-api/www',
-  googleClientId: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+    production: false,
+    apiUrl: 'http://localhost:8888/suiviseries-api/www',
+    googleClientId: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
 };
 ```
 
@@ -103,11 +103,11 @@ The frontend is configured to proxy API calls to a local backend:
 
 ```json
 {
-  "/api/**": {
-    "target": "http://localhost:8888/suiviseries-api/www/",
-    "secure": false,
-    "pathRewrite": { "^/api": "" }
-  }
+    "/api/**": {
+        "target": "http://localhost:8888/suiviseries-api/www/",
+        "secure": false,
+        "pathRewrite": { "^/api": "" }
+    }
 }
 ```
 

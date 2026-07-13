@@ -28,27 +28,27 @@ import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 import { createMockAuthService, createMockSeriesService, createMockSerie } from '../testing/mocks';
 
 describe('HomeComponent', () => {
-  let seriesService: ReturnType<typeof createMockSeriesService>;
+    let seriesService: ReturnType<typeof createMockSeriesService>;
 
-  beforeEach(() => {
-    seriesService = createMockSeriesService();
-    TestBed.configureTestingModule({
-      imports: [HomeComponent, getTranslocoTestingModule()],
-      providers: [
-        { provide: AuthService, useValue: createMockAuthService() },
-        { provide: SeriesService, useValue: seriesService },
-      ],
+    beforeEach(() => {
+        seriesService = createMockSeriesService();
+        TestBed.configureTestingModule({
+            imports: [HomeComponent, getTranslocoTestingModule()],
+            providers: [
+                { provide: AuthService, useValue: createMockAuthService() },
+                { provide: SeriesService, useValue: seriesService },
+            ],
+        });
     });
-  });
 
-  afterEach(() => vi.restoreAllMocks());
+    afterEach(() => vi.restoreAllMocks());
 
-  it('should load series on init', () => {
-    seriesService.getSerieDetails.mockReturnValue(of(createMockSerie()));
-    const fixture = TestBed.createComponent(HomeComponent);
-    fixture.detectChanges();
-    expect(fixture.componentInstance.loading()).toBe(false);
-  });
+    it('should load series on init', () => {
+        seriesService.getSerieDetails.mockReturnValue(of(createMockSerie()));
+        const fixture = TestBed.createComponent(HomeComponent);
+        fixture.detectChanges();
+        expect(fixture.componentInstance.loading()).toBe(false);
+    });
 });
 ```
 
@@ -63,9 +63,9 @@ Prefer these over hand-rolling mocks so the shape stays in sync with the models.
 
 - **Signal assertions use function-call syntax**: `expect(component.loading()).toBe(false)`
 - **Assert against translation keys**, not translated strings:
-  ```typescript
-  expect(notificationService.error).toHaveBeenCalledWith('notifications.errors.load_series');
-  ```
+    ```typescript
+    expect(notificationService.error).toHaveBeenCalledWith('notifications.errors.load_series');
+    ```
 - Reset mocks in `afterEach(() => vi.restoreAllMocks())`
 - Test behavior/outputs, not implementation details
 - Keep unit tests off the real network — mock `HttpClient`-backed services via the factories

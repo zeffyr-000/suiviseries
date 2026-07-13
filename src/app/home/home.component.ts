@@ -27,10 +27,10 @@ import { environment } from '../../environments/environment';
         MatButtonModule,
         MatIconModule,
         MatCardModule,
-        SerieCardComponent
+        SerieCardComponent,
     ],
     templateUrl: './home.component.html',
-    styleUrl: './home.component.scss'
+    styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
     protected popularSeries = signal<Serie[]>([]);
@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
 
     // Dynamic hero backdrop: first popular serie with a backdrop image
     protected readonly heroBackdrop = computed(() => {
-        const withBackdrop = this.popularSeries().find(serie => serie.backdrop_path);
+        const withBackdrop = this.popularSeries().find((serie) => serie.backdrop_path);
         return withBackdrop ? getTmdbImageUrl(withBackdrop.backdrop_path, 'w780') : null;
     });
 
@@ -73,38 +73,44 @@ export class HomeComponent implements OnInit {
         this.metadataService.updatePageMetadata({
             title: this.translocoService.translate('seo.home.title'),
             description: this.translocoService.translate('seo.home.description'),
-            canonicalUrl: `${environment.siteUrl}/`
+            canonicalUrl: `${environment.siteUrl}/`,
         });
     }
 
     private loadSeriesData() {
         this.loading.set(true);
 
-        this.seriesService.getPopularSeries(this.pageSize, this.currentPage).pipe(
-            catchError(() => {
-                return of([]);
-            }),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(series => {
-            this.popularSeries.set(series);
-            this.loading.set(false);
-            this.hasMore.set(series.length === this.pageSize);
-        });
+        this.seriesService
+            .getPopularSeries(this.pageSize, this.currentPage)
+            .pipe(
+                catchError(() => {
+                    return of([]);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((series) => {
+                this.popularSeries.set(series);
+                this.loading.set(false);
+                this.hasMore.set(series.length === this.pageSize);
+            });
     }
 
     private loadTopRatedData() {
         this.topRatedLoading.set(true);
 
-        this.seriesService.getTopRatedSeries(this.topRatedPageSize, this.topRatedCurrentPage).pipe(
-            catchError(() => {
-                return of([]);
-            }),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(series => {
-            this.topRatedSeries.set(series);
-            this.topRatedLoading.set(false);
-            this.topRatedHasMore.set(series.length === this.topRatedPageSize);
-        });
+        this.seriesService
+            .getTopRatedSeries(this.topRatedPageSize, this.topRatedCurrentPage)
+            .pipe(
+                catchError(() => {
+                    return of([]);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((series) => {
+                this.topRatedSeries.set(series);
+                this.topRatedLoading.set(false);
+                this.topRatedHasMore.set(series.length === this.topRatedPageSize);
+            });
     }
 
     protected loadMoreSeries() {
@@ -113,20 +119,23 @@ export class HomeComponent implements OnInit {
         this.loadingMore.set(true);
         const nextPage = this.currentPage + 1;
 
-        this.seriesService.getPopularSeries(this.pageSize, nextPage).pipe(
-            catchError(() => {
-                return of([]);
-            }),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(series => {
-            if (series.length > 0) {
-                this.currentPage = nextPage;
-                this.popularSeries.set([...this.popularSeries(), ...series]);
-            }
+        this.seriesService
+            .getPopularSeries(this.pageSize, nextPage)
+            .pipe(
+                catchError(() => {
+                    return of([]);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((series) => {
+                if (series.length > 0) {
+                    this.currentPage = nextPage;
+                    this.popularSeries.set([...this.popularSeries(), ...series]);
+                }
 
-            this.hasMore.set(series.length === this.pageSize);
-            this.loadingMore.set(false);
-        });
+                this.hasMore.set(series.length === this.pageSize);
+                this.loadingMore.set(false);
+            });
     }
 
     protected loadMoreTopRated() {
@@ -135,26 +144,27 @@ export class HomeComponent implements OnInit {
         this.topRatedLoadingMore.set(true);
         const nextPage = this.topRatedCurrentPage + 1;
 
-        this.seriesService.getTopRatedSeries(this.topRatedPageSize, nextPage).pipe(
-            catchError(() => {
-                return of([]);
-            }),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(series => {
-            if (series.length > 0) {
-                this.topRatedCurrentPage = nextPage;
-                this.topRatedSeries.set([...this.topRatedSeries(), ...series]);
-            }
+        this.seriesService
+            .getTopRatedSeries(this.topRatedPageSize, nextPage)
+            .pipe(
+                catchError(() => {
+                    return of([]);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((series) => {
+                if (series.length > 0) {
+                    this.topRatedCurrentPage = nextPage;
+                    this.topRatedSeries.set([...this.topRatedSeries(), ...series]);
+                }
 
-            this.topRatedHasMore.set(series.length === this.topRatedPageSize);
-            this.topRatedLoadingMore.set(false);
-        });
+                this.topRatedHasMore.set(series.length === this.topRatedPageSize);
+                this.topRatedLoadingMore.set(false);
+            });
     }
 
     private checkForAutoLogin() {
-        this.route.queryParams.pipe(
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(params => {
+        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
             if (params['login'] === 'true' && !this.authService.isAuthenticated()) {
                 const returnUrl = params['returnUrl'];
                 this.goToLogin(returnUrl);
@@ -167,15 +177,16 @@ export class HomeComponent implements OnInit {
             width: '400px',
             disableClose: false,
             autoFocus: true,
-            data: { returnUrl: returnUrl }
+            data: { returnUrl: returnUrl },
         });
 
-        dialogRef.afterClosed().pipe(
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(result => {
-            if (result && returnUrl) {
-                this.router.navigate([returnUrl]);
-            }
-        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result) => {
+                if (result && returnUrl) {
+                    this.router.navigate([returnUrl]);
+                }
+            });
     }
 }

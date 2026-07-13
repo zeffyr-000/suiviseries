@@ -32,7 +32,7 @@ describe('Notifications Integration', () => {
             notified_at: '2025-11-28T10:00:00Z',
             read_at: null,
             created_at: '2025-11-28T10:00:00Z',
-            variables: { season_number: 5 }
+            variables: { season_number: 5 },
         },
         {
             user_notification_id: 2,
@@ -46,15 +46,15 @@ describe('Notifications Integration', () => {
             notified_at: '2025-11-27T15:30:00Z',
             read_at: null,
             created_at: '2025-11-27T15:30:00Z',
-            variables: { episode_count: 3 }
-        }
+            variables: { episode_count: 3 },
+        },
     ];
 
     beforeEach(() => {
         const currentUserSignal = signal(null);
         const mockAuthService = {
             currentUser: currentUserSignal,
-            logout: vi.fn().mockResolvedValue(undefined)
+            logout: vi.fn().mockResolvedValue(undefined),
         };
 
         const mockPushService = {
@@ -63,21 +63,19 @@ describe('Notifications Integration', () => {
             isSupported: signal(false),
             subscribeToPush: vi.fn(),
             unsubscribeFromPush: vi.fn(),
-            showNotification: vi.fn().mockResolvedValue(undefined)
+            showNotification: vi.fn().mockResolvedValue(undefined),
         };
 
         TestBed.configureTestingModule({
             imports: [App, getTranslocoTestingModule()],
             providers: [
-                provideRouter([
-                    { path: 'serie/:id/:slug', component: App }
-                ]),
+                provideRouter([{ path: 'serie/:id/:slug', component: App }]),
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 { provide: AuthService, useValue: mockAuthService },
                 { provide: PushNotificationService, useValue: mockPushService },
-                UserNotificationService
-            ]
+                UserNotificationService,
+            ],
         });
 
         fixture = TestBed.createComponent(App);
@@ -102,7 +100,7 @@ describe('Notifications Integration', () => {
                 display_name: 'Test User',
                 photo_url: null,
                 notifications: mockNotifications,
-                notifications_count: 2
+                notifications_count: 2,
             };
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -126,7 +124,9 @@ describe('Notifications Integration', () => {
 
             const promise = component.onNotificationClick(notification);
 
-            const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}`);
+            const req = httpMock.expectOne(
+                `/api/notifications/${notification.user_notification_id}`,
+            );
             expect(req.request.method).toBe('PUT');
             expect(req.request.body).toEqual({ status: 'read' });
             req.flush({});
@@ -144,7 +144,9 @@ describe('Notifications Integration', () => {
 
             component.onNotificationDelete(event, notification);
 
-            const req = httpMock.expectOne(`/api/notifications/${notification.user_notification_id}`);
+            const req = httpMock.expectOne(
+                `/api/notifications/${notification.user_notification_id}`,
+            );
             expect(req.request.method).toBe('DELETE');
             req.flush({});
 

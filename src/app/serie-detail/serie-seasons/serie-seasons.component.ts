@@ -21,10 +21,10 @@ import { Season } from '../../models/serie.model';
         MatCardModule,
         MatProgressSpinnerModule,
         MatDividerModule,
-        MatTooltipModule
+        MatTooltipModule,
     ],
     templateUrl: './serie-seasons.component.html',
-    styleUrl: './serie-seasons.component.scss'
+    styleUrl: './serie-seasons.component.scss',
 })
 export class SerieSeasonsComponent {
     seasons = input.required<Season[]>();

@@ -19,10 +19,10 @@ import { getNotificationTranslationKey } from '../utils/notification.utils';
         MatTooltipModule,
         MatRippleModule,
         MatBadgeModule,
-        TranslocoModule
+        TranslocoModule,
     ],
     templateUrl: './notifications-drawer.component.html',
-    styleUrl: './notifications-drawer.component.scss'
+    styleUrl: './notifications-drawer.component.scss',
 })
 export class NotificationsDrawerComponent {
     protected readonly userNotificationService = inject(UserNotificationService);
@@ -46,7 +46,7 @@ export class NotificationsDrawerComponent {
 
     getFormattedDate(dateString: string): string {
         return formatRelativeDate(dateString, (key: string, params?: Record<string, number>) =>
-            this.transloco.translate(key, params)
+            this.transloco.translate(key, params),
         );
     }
 

@@ -25,82 +25,82 @@
 ```scss
 // Display (Large announcements, hero sections)
 .display-large {
-  font-size: 3.5rem;
-  font-weight: 400;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
+    font-size: 3.5rem;
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
 }
 .display-medium {
-  font-size: 2.8rem;
-  font-weight: 400;
-  line-height: 1.16;
-  letter-spacing: 0;
+    font-size: 2.8rem;
+    font-weight: 400;
+    line-height: 1.16;
+    letter-spacing: 0;
 }
 .display-small {
-  font-size: 2.25rem;
-  font-weight: 400;
-  line-height: 1.22;
-  letter-spacing: 0;
+    font-size: 2.25rem;
+    font-weight: 400;
+    line-height: 1.22;
+    letter-spacing: 0;
 }
 
 // Headlines (Section titles)
 .headline-large {
-  font-size: 2rem;
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: 0;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: 0;
 }
 .headline-medium {
-  font-size: 1.75rem;
-  font-weight: 400;
-  line-height: 1.29;
-  letter-spacing: 0;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.29;
+    letter-spacing: 0;
 }
 .headline-small {
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1.33;
-  letter-spacing: 0;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.33;
+    letter-spacing: 0;
 }
 
 // Body (Regular text)
 .body-large {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.03em;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
 }
 .body-medium {
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.43;
-  letter-spacing: 0.018em;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.43;
+    letter-spacing: 0.018em;
 }
 .body-small {
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1.33;
-  letter-spacing: 0.033em;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.33;
+    letter-spacing: 0.033em;
 }
 
 // Labels (Buttons, chips, badges)
 .label-large {
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.43;
-  letter-spacing: 0.018em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.43;
+    letter-spacing: 0.018em;
 }
 .label-medium {
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.33;
-  letter-spacing: 0.033em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.33;
+    letter-spacing: 0.033em;
 }
 .label-small {
-  font-size: 0.688rem;
-  font-weight: 500;
-  line-height: 1.45;
-  letter-spacing: 0.036em;
+    font-size: 0.688rem;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0.036em;
 }
 ```
 
@@ -219,15 +219,17 @@
 transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
 
 // Fade in/out, slide transitions
-transition: opacity 300ms cubic-bezier(0.2, 0, 0, 1), transform 300ms cubic-bezier(0.2, 0, 0, 1);
+transition:
+    opacity 300ms cubic-bezier(0.2, 0, 0, 1),
+    transform 300ms cubic-bezier(0.2, 0, 0, 1);
 
 // Card entrance
 animation: cardFadeIn 400ms cubic-bezier(0.2, 0, 0, 1) both;
 
 // Press/Release
 &:active {
-  transform: scale(0.96);
-  transition-duration: 100ms;
+    transform: scale(0.96);
+    transition-duration: 100ms;
 }
 ```
 
@@ -244,43 +246,43 @@ animation: cardFadeIn 400ms cubic-bezier(0.2, 0, 0, 1) both;
 .mat-mdc-button,
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button {
-  min-height: 40px !important;
-  border-radius: 20px !important;
-  font-size: 0.875rem !important; // label-large
-  font-weight: 500 !important;
-  letter-spacing: 0.1px !important;
+    min-height: 40px !important;
+    border-radius: 20px !important;
+    font-size: 0.875rem !important; // label-large
+    font-weight: 500 !important;
+    letter-spacing: 0.1px !important;
 }
 
 // Icon buttons
 .mat-mdc-icon-button {
-  width: 40px !important;
-  height: 40px !important;
+    width: 40px !important;
+    height: 40px !important;
 
-  mat-icon {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-  }
+    mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
 }
 
 // FAB (Floating Action Button)
 .mat-mdc-fab {
-  width: 56px !important;
-  height: 56px !important;
+    width: 56px !important;
+    height: 56px !important;
 
-  mat-icon {
-    font-size: 24px;
-  }
+    mat-icon {
+        font-size: 24px;
+    }
 }
 
 // Mini FAB
 .mat-mdc-mini-fab {
-  width: 40px !important;
-  height: 40px !important;
+    width: 40px !important;
+    height: 40px !important;
 
-  mat-icon {
-    font-size: 20px;
-  }
+    mat-icon {
+        font-size: 20px;
+    }
 }
 ```
 
@@ -288,43 +290,43 @@ animation: cardFadeIn 400ms cubic-bezier(0.2, 0, 0, 1) both;
 
 ```scss
 button {
-  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
+    transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
 
-  // Hover
-  &:hover {
-    box-shadow: var(--md-sys-elevation-level2);
-    transform: translateY(-1px);
-  }
-
-  // Active/Press
-  &:active {
-    transform: scale(0.96);
-    transition-duration: 100ms;
-  }
-
-  // Focus visible (keyboard)
-  &:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-  }
-
-  // Disabled
-  &:disabled {
-    opacity: 0.38;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  // Loading state
-  &.loading {
-    pointer-events: none;
-
-    mat-spinner {
-      display: inline-block;
-      margin-right: 8px;
+    // Hover
+    &:hover {
+        box-shadow: var(--md-sys-elevation-level2);
+        transform: translateY(-1px);
     }
-  }
+
+    // Active/Press
+    &:active {
+        transform: scale(0.96);
+        transition-duration: 100ms;
+    }
+
+    // Focus visible (keyboard)
+    &:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+
+    // Disabled
+    &:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    // Loading state
+    &.loading {
+        pointer-events: none;
+
+        mat-spinner {
+            display: inline-block;
+            margin-right: 8px;
+        }
+    }
 }
 ```
 
@@ -336,20 +338,20 @@ button {
 
 ```scss
 .mat-mdc-card {
-  border-radius: 16px !important; // Large shape
-  box-shadow: var(--md-sys-elevation-level1);
-  transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
+    border-radius: 16px !important; // Large shape
+    box-shadow: var(--md-sys-elevation-level1);
+    transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
 
-  &:hover {
-    box-shadow: var(--md-sys-elevation-level3);
-    transform: translateY(-8px);
-  }
+    &:hover {
+        box-shadow: var(--md-sys-elevation-level3);
+        transform: translateY(-8px);
+    }
 
-  &:active {
-    transform: translateY(-4px);
-    box-shadow: var(--md-sys-elevation-level2);
-    transition-duration: 150ms;
-  }
+    &:active {
+        transform: translateY(-4px);
+        box-shadow: var(--md-sys-elevation-level2);
+        transition-duration: 150ms;
+    }
 }
 ```
 
@@ -357,16 +359,16 @@ button {
 
 ```html
 <mat-card>
-  <div class="poster-container">...</div>
+    <div class="poster-container">...</div>
 
-  <mat-card-content class="p-lg">
-    <h3 class="title-medium">Title</h3>
-    <p class="body-medium">Description</p>
-  </mat-card-content>
+    <mat-card-content class="p-lg">
+        <h3 class="title-medium">Title</h3>
+        <p class="body-medium">Description</p>
+    </mat-card-content>
 
-  <mat-card-actions class="p-lg">
-    <button mat-raised-button>Action</button>
-  </mat-card-actions>
+    <mat-card-actions class="p-lg">
+        <button mat-raised-button>Action</button>
+    </mat-card-actions>
 </mat-card>
 ```
 
@@ -378,28 +380,28 @@ button {
 
 ```scss
 .mat-mdc-form-field {
-  width: 100%;
+    width: 100%;
 
-  // Outline variant avec rounded corners
-  &.mat-form-field-appearance-outline {
-    .mdc-text-field--outlined .mdc-notched-outline {
-      .mdc-notched-outline__leading {
-        border-radius: 28px 0 0 28px !important;
-        width: 28px !important;
-      }
+    // Outline variant avec rounded corners
+    &.mat-form-field-appearance-outline {
+        .mdc-text-field--outlined .mdc-notched-outline {
+            .mdc-notched-outline__leading {
+                border-radius: 28px 0 0 28px !important;
+                width: 28px !important;
+            }
 
-      .mdc-notched-outline__trailing {
-        border-radius: 0 28px 28px 0 !important;
-      }
+            .mdc-notched-outline__trailing {
+                border-radius: 0 28px 28px 0 !important;
+            }
+        }
     }
-  }
 
-  // Filled variant
-  &.mat-form-field-appearance-fill {
-    .mdc-text-field {
-      border-radius: 4px 4px 0 0 !important;
+    // Filled variant
+    &.mat-form-field-appearance-fill {
+        .mdc-text-field {
+            border-radius: 4px 4px 0 0 !important;
+        }
     }
-  }
 }
 ```
 
@@ -411,25 +413,25 @@ button {
 
 ```scss
 .mat-mdc-dialog-container {
-  border-radius: 28px !important; // Extra-large shape pour dialogs
-  box-shadow: var(--md-sys-elevation-level3);
-  padding: 0;
+    border-radius: 28px !important; // Extra-large shape pour dialogs
+    box-shadow: var(--md-sys-elevation-level3);
+    padding: 0;
 
-  .mat-mdc-dialog-title {
-    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-md);
-    font-size: 1.5rem; // headline-small
-    font-weight: 400;
-  }
+    .mat-mdc-dialog-title {
+        padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-md);
+        font-size: 1.5rem; // headline-small
+        font-weight: 400;
+    }
 
-  .mat-mdc-dialog-content {
-    padding: 0 var(--spacing-xl) var(--spacing-lg);
-  }
+    .mat-mdc-dialog-content {
+        padding: 0 var(--spacing-xl) var(--spacing-lg);
+    }
 
-  .mat-mdc-dialog-actions {
-    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xl);
-    justify-content: flex-end;
-    gap: var(--spacing-sm);
-  }
+    .mat-mdc-dialog-actions {
+        padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xl);
+        justify-content: flex-end;
+        gap: var(--spacing-sm);
+    }
 }
 ```
 
@@ -441,32 +443,32 @@ button {
 
 ```scss
 mat-sidenav {
-  width: 280px;
-  border-radius: 0 16px 16px 0; // Large shape sur trailing edge
+    width: 280px;
+    border-radius: 0 16px 16px 0; // Large shape sur trailing edge
 
-  mat-list-item {
-    border-radius: 28px; // Full rounding
-    min-height: 56px;
-    margin: 0 8px 4px;
-    transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
+    mat-list-item {
+        border-radius: 28px; // Full rounding
+        min-height: 56px;
+        margin: 0 8px 4px;
+        transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
 
-    &:hover {
-      background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+        &:hover {
+            background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+        }
+
+        &.mat-mdc-list-item-active {
+            background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
+
+            mat-icon {
+                color: var(--primary-color);
+            }
+
+            span {
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+        }
     }
-
-    &.mat-mdc-list-item-active {
-      background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
-
-      mat-icon {
-        color: var(--primary-color);
-      }
-
-      span {
-        font-weight: 600;
-        color: var(--primary-color);
-      }
-    }
-  }
 }
 ```
 
@@ -481,19 +483,19 @@ mat-sidenav {
 ```scss
 // Mobile touch targets
 @media (max-width: 768px) {
-  button,
-  a,
-  .clickable {
-    min-height: 48px;
-    min-width: 48px;
-    padding: 12px;
-  }
+    button,
+    a,
+    .clickable {
+        min-height: 48px;
+        min-width: 48px;
+        padding: 12px;
+    }
 
-  // Exception : text links in paragraphs
-  p a {
-    min-height: auto;
-    min-width: auto;
-  }
+    // Exception : text links in paragraphs
+    p a {
+        min-height: auto;
+        min-width: auto;
+    }
 }
 ```
 
@@ -503,14 +505,14 @@ mat-sidenav {
 
 ```scss
 *:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-  border-radius: inherit;
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    border-radius: inherit;
 }
 
 // Custom focus for specific components
 button:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 ```
 
@@ -521,19 +523,19 @@ button:focus-visible {
 ```html
 <!-- Icon buttons MUST have aria-label -->
 <button mat-icon-button (click)="toggleMenu()" aria-label="Open menu">
-  <mat-icon>menu</mat-icon>
+    <mat-icon>menu</mat-icon>
 </button>
 
 <!-- Links with images need alt text -->
 <a routerLink="/" [attr.aria-label]="'app.title' | transloco">
-  <mat-icon aria-hidden="true">live_tv</mat-icon>
-  <span>{{ 'app.title' | transloco }}</span>
+    <mat-icon aria-hidden="true">live_tv</mat-icon>
+    <span>{{ 'app.title' | transloco }}</span>
 </a>
 
 <!-- Form fields need labels -->
 <mat-form-field>
-  <mat-label>Search series</mat-label>
-  <input matInput aria-label="Search series" />
+    <mat-label>Search series</mat-label>
+    <input matInput aria-label="Search series" />
 </mat-form-field>
 ```
 
@@ -548,14 +550,14 @@ button:focus-visible {
 ```scss
 // Check contrasts with color-mix
 .surface-variant {
-  background: var(--mat-sys-surface-variant);
-  color: var(--mat-sys-on-surface-variant); // ✅ Ensures contrast
+    background: var(--mat-sys-surface-variant);
+    color: var(--mat-sys-on-surface-variant); // ✅ Ensures contrast
 }
 
 // ❌ FORBIDDEN
 .bad-contrast {
-  background: #f0f0f0;
-  color: #d0d0d0; // Insufficient contrast
+    background: #f0f0f0;
+    color: #d0d0d0; // Insufficient contrast
 }
 ```
 
@@ -567,15 +569,15 @@ button:focus-visible {
 
 ```scss
 $breakpoints: (
-  'xs': 0,
-  // Extra small (phones portrait)
-  'sm': 600px,
-  // Small (phones landscape)
-  'md': 905px,
-  // Medium (tablets)
-  'lg': 1240px,
-  // Large (laptops)
-  'xl': 1440px // Extra large (desktops),
+    'xs': 0,
+    // Extra small (phones portrait)
+    'sm': 600px,
+    // Small (phones landscape)
+    'md': 905px,
+    // Medium (tablets)
+    'lg': 1240px,
+    // Large (laptops)
+    'xl': 1440px, // Extra large (desktops),
 );
 ```
 
@@ -586,25 +588,25 @@ $breakpoints: (
 ```scss
 // Base styles (mobile)
 .container {
-  padding: var(--spacing-md);
-  font-size: 0.875rem;
+    padding: var(--spacing-md);
+    font-size: 0.875rem;
 }
 
 // Tablet
 @media (min-width: 905px) {
-  .container {
-    padding: var(--spacing-lg);
-    font-size: 1rem;
-  }
+    .container {
+        padding: var(--spacing-lg);
+        font-size: 1rem;
+    }
 }
 
 // Desktop
 @media (min-width: 1240px) {
-  .container {
-    padding: var(--spacing-xl);
-    max-width: 1400px;
-    margin: 0 auto;
-  }
+    .container {
+        padding: var(--spacing-xl);
+        max-width: 1400px;
+        margin: 0 auto;
+    }
 }
 ```
 
@@ -615,26 +617,26 @@ $breakpoints: (
 ```scss
 // Increase button heights to 48px on mobile (WCAG requirement)
 @media (max-width: 768px) {
-  .mat-mdc-button,
-  .mat-mdc-raised-button,
-  .mat-mdc-outlined-button {
-    min-height: 48px !important;
-    height: 48px !important;
-  }
+    .mat-mdc-button,
+    .mat-mdc-raised-button,
+    .mat-mdc-outlined-button {
+        min-height: 48px !important;
+        height: 48px !important;
+    }
 
-  .mat-mdc-icon-button {
-    width: 48px !important;
-    height: 48px !important;
-  }
+    .mat-mdc-icon-button {
+        width: 48px !important;
+        height: 48px !important;
+    }
 
-  // All interactive elements
-  button,
-  a:not(p a),
-  [role='button'],
-  .clickable {
-    min-height: 48px;
-    min-width: 48px;
-  }
+    // All interactive elements
+    button,
+    a:not(p a),
+    [role='button'],
+    .clickable {
+        min-height: 48px;
+        min-width: 48px;
+    }
 }
 ```
 
@@ -643,25 +645,25 @@ $breakpoints: (
 ```scss
 // Grid columns responsive
 .grid {
-  display: grid;
-  gap: var(--spacing-md);
+    display: grid;
+    gap: var(--spacing-md);
 
-  // Mobile: 1 column
-  grid-template-columns: 1fr;
+    // Mobile: 1 column
+    grid-template-columns: 1fr;
 
-  // Tablet: 2 columns
-  @media (min-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    // Tablet: 2 columns
+    @media (min-width: 600px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-  // Desktop: 3+ columns
-  @media (min-width: 905px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+    // Desktop: 3+ columns
+    @media (min-width: 905px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
 
-  @media (min-width: 1240px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+    @media (min-width: 1240px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 ```
 
@@ -687,24 +689,24 @@ $breakpoints: (
 
 ```scss
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 25%,
-    color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) 50%,
-    color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 75%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  border-radius: 8px;
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 25%,
+        color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) 50%,
+        color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    border-radius: 8px;
 }
 
 @keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 ```
 
@@ -713,17 +715,17 @@ $breakpoints: (
 ```html
 <!-- Inline loading (buttons) -->
 <button [disabled]="loading()">
-  @if (loading()) {
-  <mat-spinner diameter="16"></mat-spinner>
-  } @else {
-  <mat-icon>save</mat-icon>
-  } Sauvegarder
+    @if (loading()) {
+    <mat-spinner diameter="16"></mat-spinner>
+    } @else {
+    <mat-icon>save</mat-icon>
+    } Sauvegarder
 </button>
 
 <!-- Page loading -->
 <div class="loading-container">
-  <mat-spinner diameter="50"></mat-spinner>
-  <p class="body-medium">Chargement...</p>
+    <mat-spinner diameter="50"></mat-spinner>
+    <p class="body-medium">Chargement...</p>
 </div>
 ```
 
@@ -736,13 +738,18 @@ $breakpoints: (
 ```scss
 // Use transform and opacity only (GPU-accelerated)
 .optimized {
-  transition: transform 300ms, opacity 300ms;
-  will-change: transform, opacity;
+    transition:
+        transform 300ms,
+        opacity 300ms;
+    will-change: transform, opacity;
 }
 
 // ❌ ÉVITER
 .slow {
-  transition: left 300ms, top 300ms, width 300ms; // Triggers layout recalc
+    transition:
+        left 300ms,
+        top 300ms,
+        width 300ms; // Triggers layout recalc
 }
 ```
 

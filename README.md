@@ -38,10 +38,10 @@ Track your favorite TV series, discover new content, and never miss an episode. 
 - **Responsive Design**: Optimized for mobile, tablet, and desktop
 - **A11y Accessibility**: Full screen reader support
 - **Image Gallery**: High-resolution series images (backdrops, posters, logos) with advanced slideshow
-  - 6 navigation methods: click, keyboard, wheel, touch swipe, buttons, thumbnail list
-  - Fullscreen mode, download, metadata display
-  - Complete WCAG AA keyboard accessibility
-  - Swipe gesture animations with visual feedback
+    - 6 navigation methods: click, keyboard, wheel, touch swipe, buttons, thumbnail list
+    - Fullscreen mode, download, metadata display
+    - Complete WCAG AA keyboard accessibility
+    - Swipe gesture animations with visual feedback
 
 ### 🌍 International & Performance
 
@@ -261,7 +261,7 @@ const spy = vi.spyOn(object, 'method');
 mockFn.mockReturnValue(42);
 mockFn.mockResolvedValue(Promise.resolve(data));
 mockFn.mockImplementation(() => {
-  /* custom logic */
+    /* custom logic */
 });
 mockFn.mockClear();
 
@@ -296,24 +296,24 @@ spy.mock.calls;
 
 1. **Transloco Testing**
 
-   - Use shared `getTranslocoTestingModule()` helper
-   - Assert against translation **keys**, NOT translated strings
-   - Example: `expect(text).toBe('notifications.success.serie_added')`
+    - Use shared `getTranslocoTestingModule()` helper
+    - Assert against translation **keys**, NOT translated strings
+    - Example: `expect(text).toBe('notifications.success.serie_added')`
 
 2. **Material Design Components**
 
-   - Import Material modules in test configuration
-   - Use `provideAnimationsAsync()` for components with animations
-   - Mock Material services (MatSnackBar, MatDialog) with `vi.spyOn()`
+    - Import Material modules in test configuration
+    - Use `provideAnimationsAsync()` for components with animations
+    - Mock Material services (MatSnackBar, MatDialog) with `vi.spyOn()`
 
 3. **Async Testing**
 
-   - NO `fakeAsync()` or `tick()` - use `vi.useFakeTimers()` + `vi.advanceTimersByTime()`
-   - Clean up with `vi.restoreAllMocks()` in `afterEach()`
+    - NO `fakeAsync()` or `tick()` - use `vi.useFakeTimers()` + `vi.advanceTimersByTime()`
+    - Clean up with `vi.restoreAllMocks()` in `afterEach()`
 
 4. **Type Safety**
-   - Avoid `any` - use `unknown` with type assertions
-   - Example: `(spy as unknown as ReturnType<typeof vi.fn>).mock.calls`
+    - Avoid `any` - use `unknown` with type assertions
+    - Example: `(spy as unknown as ReturnType<typeof vi.fn>).mock.calls`
 
 ### Run Tests
 

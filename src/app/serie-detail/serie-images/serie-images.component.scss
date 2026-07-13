@@ -106,7 +106,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     .image-thumbnail {
       object-fit: contain;
       padding: var(--spacing-xl);
@@ -321,11 +321,11 @@
       -webkit-user-drag: none;
       touch-action: pinch-zoom;
       transition: opacity 200ms ease-in-out;
-      
+
       &.loading {
         opacity: 0;
       }
-      
+
       &.logo-preview {
         background: var(--mat-sys-surface-container-highest);
         padding: calc(var(--spacing-xl) * 2);
@@ -377,7 +377,8 @@
     }
 
     @keyframes swipeIconMove {
-      0%, 100% {
+      0%,
+      100% {
         transform: translateX(-4px);
       }
       50% {

@@ -23,7 +23,7 @@ describe('SerieCardComponent', () => {
         status: SerieStatus.ENDED,
         popularity: 95.5,
         vote_average: 9.5,
-        vote_count: 15000
+        vote_count: 15000,
     });
 
     beforeEach(() => {
@@ -33,10 +33,10 @@ describe('SerieCardComponent', () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        snapshot: { params: {} }
-                    }
-                }
-            ]
+                        snapshot: { params: {} },
+                    },
+                },
+            ],
         });
 
         fixture = TestBed.createComponent(SerieCardComponent);

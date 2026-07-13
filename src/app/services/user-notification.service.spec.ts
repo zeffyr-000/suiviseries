@@ -22,7 +22,7 @@ describe('UserNotificationService', () => {
             notified_at: '2025-11-28T10:00:00Z',
             read_at: null,
             created_at: '2025-11-28T10:00:00Z',
-            variables: { season_number: 5 }
+            variables: { season_number: 5 },
         },
         {
             user_notification_id: 2,
@@ -36,17 +36,13 @@ describe('UserNotificationService', () => {
             notified_at: '2025-11-27T15:30:00Z',
             read_at: '2025-11-27T16:00:00Z',
             created_at: '2025-11-27T15:30:00Z',
-            variables: { episode_count: 3 }
-        }
+            variables: { episode_count: 3 },
+        },
     ];
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                UserNotificationService,
-                provideHttpClient(),
-                provideHttpClientTesting()
-            ]
+            providers: [UserNotificationService, provideHttpClient(), provideHttpClientTesting()],
         });
 
         service = TestBed.inject(UserNotificationService);
@@ -107,7 +103,9 @@ describe('UserNotificationService', () => {
             expect(req.request.body).toEqual({ status: 'read' });
             req.flush({});
 
-            const updatedNotification = service.notifications().find(n => n.user_notification_id === notificationId);
+            const updatedNotification = service
+                .notifications()
+                .find((n) => n.user_notification_id === notificationId);
             expect(updatedNotification?.status).toBe('read');
             expect(service.unreadCount()).toBe(0);
         });
@@ -124,7 +122,9 @@ describe('UserNotificationService', () => {
 
             await promise;
 
-            const notification = service.notifications().find(n => n.user_notification_id === notificationId);
+            const notification = service
+                .notifications()
+                .find((n) => n.user_notification_id === notificationId);
             expect(notification?.status).toBe('unread');
             expect(service.unreadCount()).toBe(originalUnreadCount);
             expect(consoleSpy).toHaveBeenCalled();
@@ -148,7 +148,9 @@ describe('UserNotificationService', () => {
             await promise;
 
             expect(service.notifications()).toHaveLength(1);
-            expect(service.notifications().find(n => n.user_notification_id === notificationId)).toBeUndefined();
+            expect(
+                service.notifications().find((n) => n.user_notification_id === notificationId),
+            ).toBeUndefined();
             expect(service.unreadCount()).toBe(0);
         });
 
@@ -196,8 +198,12 @@ describe('UserNotificationService', () => {
         it('should handle different sizes', () => {
             const posterPath = '/test.jpg';
 
-            expect(service.getTmdbPosterUrl(posterPath, 'w500')).toBe('https://image.tmdb.org/t/p/w500/test.jpg');
-            expect(service.getTmdbPosterUrl(posterPath)).toBe('https://image.tmdb.org/t/p/w200/test.jpg');
+            expect(service.getTmdbPosterUrl(posterPath, 'w500')).toBe(
+                'https://image.tmdb.org/t/p/w500/test.jpg',
+            );
+            expect(service.getTmdbPosterUrl(posterPath)).toBe(
+                'https://image.tmdb.org/t/p/w200/test.jpg',
+            );
         });
     });
 
@@ -208,7 +214,9 @@ describe('UserNotificationService', () => {
 
             service.markAsRead(notificationId);
 
-            const notification = service.notifications().find(n => n.user_notification_id === notificationId);
+            const notification = service
+                .notifications()
+                .find((n) => n.user_notification_id === notificationId);
             expect(notification?.status).toBe('read');
             expect(service.unreadCount()).toBe(0);
 
@@ -231,7 +239,9 @@ describe('UserNotificationService', () => {
             await promise;
 
             expect(service.notifications()).toHaveLength(originalLength - 1);
-            expect(service.notifications().find(n => n.user_notification_id === notificationId)).toBeUndefined();
+            expect(
+                service.notifications().find((n) => n.user_notification_id === notificationId),
+            ).toBeUndefined();
         });
     });
 });

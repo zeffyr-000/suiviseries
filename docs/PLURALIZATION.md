@@ -66,8 +66,9 @@ For most languages, we primarily use:
 ```html
 <!-- Complex logic in template -->
 <span>
-  {{ serie.episode_count > 1 ? ('series.episodes_plural' | transloco: {count: serie.episode_count})
-  : ('series.episodes_singular' | transloco: {count: serie.episode_count}) }}
+    {{ serie.episode_count > 1 ? ('series.episodes_plural' | transloco: {count:
+    serie.episode_count}) : ('series.episodes_singular' | transloco: {count: serie.episode_count})
+    }}
 </span>
 ```
 

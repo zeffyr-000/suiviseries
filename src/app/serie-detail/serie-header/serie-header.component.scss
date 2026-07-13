@@ -85,16 +85,19 @@
   height: 300px;
   object-fit: cover;
   border-radius: 16px;
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6),
-              0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent);
+  box-shadow:
+    0 12px 32px -8px rgba(0, 0, 0, 0.6),
+    0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent);
   border: 2px solid color-mix(in srgb, var(--gold) 22%, transparent);
-  transition: transform 300ms cubic-bezier(0.2, 0, 0, 1),
-              box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
+  transition:
+    transform 300ms cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
 
   &:hover {
     transform: scale(1.02);
-    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.7),
-                0 0 0 1px var(--gold-glow);
+    box-shadow:
+      0 16px 40px -8px rgba(0, 0, 0, 0.7),
+      0 0 0 1px var(--gold-glow);
   }
 
   @include mixins.respond-below(md) {
@@ -221,16 +224,19 @@
     font-size: 0.9375rem;
     font-weight: 600;
     letter-spacing: 0.2px;
-    transition: transform 150ms cubic-bezier(0.2, 0, 0, 1),
-                box-shadow 150ms cubic-bezier(0.2, 0, 0, 1),
-                background-color 150ms cubic-bezier(0.2, 0, 0, 1),
-                border-color 150ms cubic-bezier(0.2, 0, 0, 1);
+    transition:
+      transform 150ms cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 150ms cubic-bezier(0.2, 0, 0, 1),
+      background-color 150ms cubic-bezier(0.2, 0, 0, 1),
+      border-color 150ms cubic-bezier(0.2, 0, 0, 1);
 
     // Inactive state = solid gold filled button (primary call to action)
     background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%) !important;
     color: #1a1200 !important;
     border: 1px solid transparent !important;
-    box-shadow: 0 6px 18px -6px var(--gold-glow), var(--md-sys-elevation-level1) !important;
+    box-shadow:
+      0 6px 18px -6px var(--gold-glow),
+      var(--md-sys-elevation-level1) !important;
 
     mat-icon {
       color: #1a1200;
@@ -238,7 +244,9 @@
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 24px -6px var(--gold-glow), var(--md-sys-elevation-level2) !important;
+      box-shadow:
+        0 10px 24px -6px var(--gold-glow),
+        var(--md-sys-elevation-level2) !important;
     }
 
     &:active {
@@ -252,8 +260,9 @@
       backdrop-filter: blur(12px);
       color: var(--gold-bright) !important;
       border: 1.5px solid color-mix(in srgb, var(--gold) 60%, transparent) !important;
-      box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.5),
-                  inset 0 0 0 1px color-mix(in srgb, var(--gold) 14%, transparent) !important;
+      box-shadow:
+        0 4px 14px -4px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px color-mix(in srgb, var(--gold) 14%, transparent) !important;
 
       mat-icon {
         color: var(--gold-bright);
