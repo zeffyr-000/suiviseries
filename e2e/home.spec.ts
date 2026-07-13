@@ -5,7 +5,9 @@ test.describe('Home', () => {
         await page.goto('/');
 
         await expect(page.locator('h1')).toBeVisible();
-        await expect(page.locator('button:has-text("Parcourir"), button:has-text("Browse")')).toBeVisible();
+        await expect(
+            page.locator('button:has-text("Parcourir"), button:has-text("Browse")'),
+        ).toBeVisible();
     });
 
     test('should navigate to search', async ({ page }) => {

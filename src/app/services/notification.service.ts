@@ -3,19 +3,24 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class NotificationService {
     private readonly transloco = inject(TranslocoService);
     private readonly snackBar = inject(MatSnackBar);
 
-    show(messageKey: string, type: 'error' | 'success' | 'warning' | 'info' = 'info', duration = 5000, params?: Record<string, unknown>): void {
+    show(
+        messageKey: string,
+        type: 'error' | 'success' | 'warning' | 'info' = 'info',
+        duration = 5000,
+        params?: Record<string, unknown>,
+    ): void {
         const message = this.transloco.translate(messageKey, params);
         const config: MatSnackBarConfig = {
             duration,
             horizontalPosition: 'right',
             verticalPosition: 'top',
-            panelClass: [`snackbar-${type}`]
+            panelClass: [`snackbar-${type}`],
         };
 
         this.snackBar.open(message, undefined, config);

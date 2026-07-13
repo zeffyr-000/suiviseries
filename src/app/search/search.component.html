@@ -8,114 +8,138 @@
     <section class="search-form-container" aria-label="{{ 'search.form_label' | transloco }}">
         <mat-form-field appearance="outline" class="search-field">
             <mat-label>{{ 'search.placeholder' | transloco }}</mat-label>
-            <input id="search-input" matInput [formField]="searchForm.query" [placeholder]="'search.placeholder' | transloco"
-                (keyup.enter)="onSearch()" autocomplete="off" aria-describedby="search-hint">
+            <input
+                id="search-input"
+                matInput
+                [formField]="searchForm.query"
+                [placeholder]="'search.placeholder' | transloco"
+                (keyup.enter)="onSearch()"
+                autocomplete="off"
+                aria-describedby="search-hint"
+            />
 
             <mat-icon matPrefix aria-hidden="true">search</mat-icon>
 
             @if (searchForm.query().value().length > 0) {
-            <button matSuffix mat-icon-button (click)="clearSearch()" [attr.aria-label]="'search.clear' | transloco">
-                <mat-icon aria-hidden="true">clear</mat-icon>
-            </button>
+                <button
+                    matSuffix
+                    mat-icon-button
+                    (click)="clearSearch()"
+                    [attr.aria-label]="'search.clear' | transloco"
+                >
+                    <mat-icon aria-hidden="true">clear</mat-icon>
+                </button>
             }
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="onSearch()" [appButtonLoading]="loading()"
-            [disabled]="searchForm.query().invalid() || loading()" class="search-button">
+        <button
+            mat-raised-button
+            color="primary"
+            (click)="onSearch()"
+            [appButtonLoading]="loading()"
+            [disabled]="searchForm.query().invalid() || loading()"
+            class="search-button"
+        >
             <mat-icon aria-hidden="true">search</mat-icon>
             {{ 'search.search_button' | transloco }}
         </button>
     </section>
 
     @if (loading()) {
-    <section class="loading-container" aria-live="polite" aria-busy="true">
-        <mat-spinner diameter="50" aria-label="{{ 'search.searching' | transloco }}" />
-        <p>{{ 'search.searching' | transloco }}</p>
-    </section>
+        <section class="loading-container" aria-live="polite" aria-busy="true">
+            <mat-spinner diameter="50" aria-label="{{ 'search.searching' | transloco }}" />
+            <p>{{ 'search.searching' | transloco }}</p>
+        </section>
     }
 
     @if (error()) {
-    <section class="error-container" role="alert">
-        <mat-icon aria-hidden="true">error</mat-icon>
-        <p>{{ error() }}</p>
-        <button mat-stroked-button (click)="onSearch()">
-            <mat-icon aria-hidden="true">refresh</mat-icon>
-            {{ 'search.retry' | transloco }}
-        </button>
-    </section>
+        <section class="error-container" role="alert">
+            <mat-icon aria-hidden="true">error</mat-icon>
+            <p>{{ error() }}</p>
+            <button mat-stroked-button (click)="onSearch()">
+                <mat-icon aria-hidden="true">refresh</mat-icon>
+                {{ 'search.retry' | transloco }}
+            </button>
+        </section>
     }
 
     @if (hasResults() && !loading()) {
-    <section class="search-results" aria-labelledby="results-title">
-        <header class="results-header">
-            <h2 id="results-title">
-                <mat-icon aria-hidden="true">movie_filter</mat-icon>
-                {{ 'search.results_title' | transloco }}
-            </h2>
-            <div class="results-info">
-                @if (lastQuery()) {
-                <p class="search-query">{{ 'search.results_for' | transloco }} "{{ lastQuery() }}"</p>
+        <section class="search-results" aria-labelledby="results-title">
+            <header class="results-header">
+                <h2 id="results-title">
+                    <mat-icon aria-hidden="true">movie_filter</mat-icon>
+                    {{ 'search.results_title' | transloco }}
+                </h2>
+                <div class="results-info">
+                    @if (lastQuery()) {
+                        <p class="search-query">
+                            {{ 'search.results_for' | transloco }} "{{ lastQuery() }}"
+                        </p>
+                    }
+                    <mat-chip-set aria-label="{{ 'search.results_count_label' | transloco }}">
+                        <mat-chip>{{
+                            'search.results_count' | transloco: { count: searchResults().length }
+                        }}</mat-chip>
+                    </mat-chip-set>
+                </div>
+            </header>
+            <ul class="results-grid">
+                @for (serie of searchResults(); track serie.id) {
+                    <li><app-serie-card [serie]="serie" /></li>
                 }
-                <mat-chip-set aria-label="{{ 'search.results_count_label' | transloco }}">
-                    <mat-chip>{{ 'search.results_count' | transloco: {count: searchResults().length} }}</mat-chip>
-                </mat-chip-set>
-            </div>
-        </header>
-        <ul class="results-grid">
-            @for (serie of searchResults(); track serie.id) {
-            <li><app-serie-card [serie]="serie" /></li>
-            }
-        </ul>
-    </section>
+            </ul>
+        </section>
     }
 
     @if (showNoResults()) {
-    <output class="no-results-container" aria-labelledby="no-results-title">
-        <mat-icon class="no-results-icon" aria-hidden="true">search_off</mat-icon>
-        <h3 id="no-results-title">{{ 'search.no_results_title' | transloco }}</h3>
-        <p class="no-results-query">{{ 'search.no_results_for' | transloco }} "{{ lastQuery() }}"</p>
-        <div class="no-results-suggestions">
-            <h4>{{ 'search.suggestions_title' | transloco }}</h4>
-            <ul>
-                <li>
-                    <mat-icon aria-hidden="true">spellcheck</mat-icon>
-                    <span>{{ 'search.suggestion_spelling' | transloco }}</span>
-                </li>
-                <li>
-                    <mat-icon aria-hidden="true">translate</mat-icon>
-                    <span>{{ 'search.suggestion_original_title' | transloco }}</span>
-                </li>
-                <li>
-                    <mat-icon aria-hidden="true">short_text</mat-icon>
-                    <span>{{ 'search.suggestion_fewer_words' | transloco }}</span>
-                </li>
-            </ul>
-        </div>
-        <button mat-stroked-button (click)="clearSearch()">
-            <mat-icon aria-hidden="true">refresh</mat-icon>
-            {{ 'search.new_search' | transloco }}
-        </button>
-    </output>
+        <output class="no-results-container" aria-labelledby="no-results-title">
+            <mat-icon class="no-results-icon" aria-hidden="true">search_off</mat-icon>
+            <h3 id="no-results-title">{{ 'search.no_results_title' | transloco }}</h3>
+            <p class="no-results-query">
+                {{ 'search.no_results_for' | transloco }} "{{ lastQuery() }}"
+            </p>
+            <div class="no-results-suggestions">
+                <h4>{{ 'search.suggestions_title' | transloco }}</h4>
+                <ul>
+                    <li>
+                        <mat-icon aria-hidden="true">spellcheck</mat-icon>
+                        <span>{{ 'search.suggestion_spelling' | transloco }}</span>
+                    </li>
+                    <li>
+                        <mat-icon aria-hidden="true">translate</mat-icon>
+                        <span>{{ 'search.suggestion_original_title' | transloco }}</span>
+                    </li>
+                    <li>
+                        <mat-icon aria-hidden="true">short_text</mat-icon>
+                        <span>{{ 'search.suggestion_fewer_words' | transloco }}</span>
+                    </li>
+                </ul>
+            </div>
+            <button mat-stroked-button (click)="clearSearch()">
+                <mat-icon aria-hidden="true">refresh</mat-icon>
+                {{ 'search.new_search' | transloco }}
+            </button>
+        </output>
     }
 
     @if (!hasSearched() && !loading()) {
-    <section class="search-instructions" aria-labelledby="instructions-title">
-        <mat-icon class="instructions-icon" aria-hidden="true">tips_and_updates</mat-icon>
-        <h3 id="instructions-title">{{ 'search.instructions_title' | transloco }}</h3>
-        <ul>
-            <li>
-                <mat-icon aria-hidden="true">edit</mat-icon>
-                <span>{{ 'search.instruction_1' | transloco }}</span>
-            </li>
-            <li>
-                <mat-icon aria-hidden="true">keyboard_return</mat-icon>
-                <span>{{ 'search.instruction_2' | transloco }}</span>
-            </li>
-            <li>
-                <mat-icon aria-hidden="true">touch_app</mat-icon>
-                <span>{{ 'search.instruction_3' | transloco }}</span>
-            </li>
-        </ul>
-    </section>
+        <section class="search-instructions" aria-labelledby="instructions-title">
+            <mat-icon class="instructions-icon" aria-hidden="true">tips_and_updates</mat-icon>
+            <h3 id="instructions-title">{{ 'search.instructions_title' | transloco }}</h3>
+            <ul>
+                <li>
+                    <mat-icon aria-hidden="true">edit</mat-icon>
+                    <span>{{ 'search.instruction_1' | transloco }}</span>
+                </li>
+                <li>
+                    <mat-icon aria-hidden="true">keyboard_return</mat-icon>
+                    <span>{{ 'search.instruction_2' | transloco }}</span>
+                </li>
+                <li>
+                    <mat-icon aria-hidden="true">touch_app</mat-icon>
+                    <span>{{ 'search.instruction_3' | transloco }}</span>
+                </li>
+            </ul>
+        </section>
     }
 </article>

@@ -20,8 +20,9 @@
     background-position: center 20%;
     background-repeat: no-repeat;
     transform: scale(1.05);
-    animation: hero-backdrop-zoom 24s ease-in-out infinite alternate,
-               hero-backdrop-appear 1.2s cubic-bezier(0.2, 0, 0, 1) both;
+    animation:
+      hero-backdrop-zoom 24s ease-in-out infinite alternate,
+      hero-backdrop-appear 1.2s cubic-bezier(0.2, 0, 0, 1) both;
     z-index: 0;
   }
 
@@ -31,7 +32,12 @@
     inset: 0;
     z-index: 1;
     background:
-      linear-gradient(180deg, rgba(8, 11, 28, 0.55) 0%, rgba(8, 11, 28, 0.78) 55%, rgba(8, 11, 28, 0.96) 100%),
+      linear-gradient(
+        180deg,
+        rgba(8, 11, 28, 0.55) 0%,
+        rgba(8, 11, 28, 0.78) 55%,
+        rgba(8, 11, 28, 0.96) 100%
+      ),
       radial-gradient(120% 90% at 50% 35%, rgba(199, 168, 80, 0.18) 0%, rgba(8, 11, 28, 0) 55%);
   }
 
@@ -110,7 +116,7 @@
 
     .hero-button {
       min-width: 200px;
-      height: 44px;  // slightly taller for hero presence
+      height: 44px; // slightly taller for hero presence
       font-size: 0.9375rem;
       font-weight: 600;
       border-radius: 22px; // M3 full rounding
@@ -148,7 +154,8 @@
 
 // M3 Expressive: Floating animation for shapes
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   25% {
@@ -368,7 +375,7 @@
 
   .load-more-button {
     min-width: 200px;
-    height: 40px;  // M3 standard button height
+    height: 40px; // M3 standard button height
     border-radius: 20px; // M3 full rounding
     font-size: 0.875rem; // M3 label-large
     font-weight: 500;

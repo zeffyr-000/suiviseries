@@ -8,12 +8,12 @@ import { User, AuthResponse, AuthRequest, TokenPayload, InitResponse } from '../
 import {
     GoogleIdConfiguration,
     CredentialResponse,
-    GsiButtonConfiguration
+    GsiButtonConfiguration,
 } from '../types/google-identity.types';
 import { waitForGoogleLibrary, isGoogleLibraryLoaded } from '../utils/google-identity.utils';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class AuthService {
     private readonly http = inject(HttpClient);
@@ -88,10 +88,10 @@ export class AuthService {
 
         const response = await firstValueFrom(
             this.http.get<InitResponse>(`${this.apiUrl}/init`, { headers }).pipe(
-                catchError(error => {
+                catchError((error) => {
                     throw error;
-                })
-            )
+                }),
+            ),
         );
 
         if (response.authenticated && response.user) {
@@ -118,14 +118,16 @@ export class AuthService {
             'session_id',
             'auth_token',
             'suiviseries_session',
-            'connect.sid'
+            'connect.sid',
         ];
 
         for (const cookieName of cookiesToClear) {
             document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
             document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${globalThis.location.hostname};`;
             if (globalThis.location.hostname.includes('.')) {
-                const parentDomain = globalThis.location.hostname.substring(globalThis.location.hostname.indexOf('.'));
+                const parentDomain = globalThis.location.hostname.substring(
+                    globalThis.location.hostname.indexOf('.'),
+                );
                 document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${parentDomain};`;
             }
         }
@@ -135,7 +137,9 @@ export class AuthService {
         try {
             await waitForGoogleLibrary();
             this.configureGoogleSignIn();
-        } catch { /* empty */ }
+        } catch {
+            /* empty */
+        }
     }
 
     async initGoogleSignIn(): Promise<void> {
@@ -151,12 +155,14 @@ export class AuthService {
             client_id: environment.googleClientId,
             callback: (response: CredentialResponse) => this.handleGoogleResponse(response),
             auto_select: false,
-            cancel_on_tap_outside: true
+            cancel_on_tap_outside: true,
         };
 
         try {
             globalThis.window.google.accounts.id.initialize(config);
-        } catch { /* empty */ }
+        } catch {
+            /* empty */
+        }
     }
 
     renderGoogleButton(element: HTMLElement): void {
@@ -169,12 +175,14 @@ export class AuthService {
             size: 'large',
             width: 250,
             text: 'signin_with',
-            locale: 'fr'
+            locale: 'fr',
         };
 
         try {
             globalThis.window.google!.accounts.id.renderButton(element, buttonConfig);
-        } catch { /* empty */ }
+        } catch {
+            /* empty */
+        }
     }
 
     signInWithGooglePopup(): void {
@@ -196,18 +204,21 @@ export class AuthService {
     private processGoogleCredential(credential: string): void {
         this._loading.set(true);
         const authRequest: AuthRequest = {
-            credential: credential
+            credential: credential,
         };
 
-        this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, authRequest).pipe(
-            tap(response => {
-                this.setAuthenticatedUser(response.user, response.token);
-            }),
-            catchError(error => {
-                this._loading.set(false);
-                return throwError(() => error);
-            })
-        ).subscribe();
+        this.http
+            .post<AuthResponse>(`${this.apiUrl}/auth/login`, authRequest)
+            .pipe(
+                tap((response) => {
+                    this.setAuthenticatedUser(response.user, response.token);
+                }),
+                catchError((error) => {
+                    this._loading.set(false);
+                    return throwError(() => error);
+                }),
+            )
+            .subscribe();
     }
 
     private setAuthenticatedUser(user: User, token?: string): void {
@@ -242,9 +253,14 @@ export class AuthService {
         const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/');
         // atob() yields a binary string where each char is a byte (0-255), so
         // codePointAt(0) and charCodeAt(0) are equivalent here; use codePointAt.
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + (c.codePointAt(0) ?? 0).toString(16)).slice(-2);
-        }).join(''));
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(function (c) {
+                    return '%' + ('00' + (c.codePointAt(0) ?? 0).toString(16)).slice(-2);
+                })
+                .join(''),
+        );
 
         return JSON.parse(jsonPayload);
     }
@@ -265,17 +281,25 @@ export class AuthService {
         if (token) {
             try {
                 await firstValueFrom(
-                    this.http.post(`${this.apiUrl}/logout`, {}, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    }).pipe(
-                        catchError(() => {
-                            return of(null);
-                        })
-                    )
+                    this.http
+                        .post(
+                            `${this.apiUrl}/logout`,
+                            {},
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            },
+                        )
+                        .pipe(
+                            catchError(() => {
+                                return of(null);
+                            }),
+                        ),
                 );
-            } catch { /* empty */ }
+            } catch {
+                /* empty */
+            }
         }
 
         if (globalThis.window?.google?.accounts?.id) {

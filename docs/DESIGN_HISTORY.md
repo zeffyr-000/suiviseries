@@ -58,17 +58,17 @@ See full details in [DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md).
 
 ## Comparison table
 
-| Criterion            | V1 — Rose / Coral             | V2 — Nuit & Or                          |
-| -------------------- | ----------------------------- | --------------------------------------- |
-| Mode                 | Light                         | Dark                                    |
-| Dominant color       | Magenta pink `#e91e63`        | Night blue `#0e1227`                    |
-| Accent               | Coral                         | Gold `#c7a850` / `#e4c368`              |
-| Headings             | Roboto (light weight)         | Poppins 600 (display)                   |
-| Hero                 | Static gradient               | Dynamic TMDB backdrop + vignette        |
-| Cards                | Light, white badges           | Night-blue, golden glow & badge         |
-| Perceived identity   | Generic / utilitarian         | Cinematic / immersive                   |
-| `theme_color` PWA    | `#e91e63`                     | `#0c1024`                               |
-| Favicon              | Former (pink)                 | Golden TV + play triangle               |
+| Criterion          | V1 — Rose / Coral      | V2 — Nuit & Or                   |
+| ------------------ | ---------------------- | -------------------------------- |
+| Mode               | Light                  | Dark                             |
+| Dominant color     | Magenta pink `#e91e63` | Night blue `#0e1227`             |
+| Accent             | Coral                  | Gold `#c7a850` / `#e4c368`       |
+| Headings           | Roboto (light weight)  | Poppins 600 (display)            |
+| Hero               | Static gradient        | Dynamic TMDB backdrop + vignette |
+| Cards              | Light, white badges    | Night-blue, golden glow & badge  |
+| Perceived identity | Generic / utilitarian  | Cinematic / immersive            |
+| `theme_color` PWA  | `#e91e63`              | `#0c1024`                        |
+| Favicon            | Former (pink)          | Golden TV + play triangle        |
 
 ---
 

@@ -30,16 +30,16 @@ Breakpoints (`src/styles/_mixins.scss`): `xs 0`, `sm 600px`, `md 905px`, `lg 124
 @use '../styles/mixins' as *;
 
 .series-grid {
-  display: grid;
-  gap: var(--spacing-md);
-  grid-template-columns: 1fr;
+    display: grid;
+    gap: var(--spacing-md);
+    grid-template-columns: 1fr;
 
-  @include respond-to(sm) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @include respond-to(lg) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+    @include respond-to(sm) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @include respond-to(lg) {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 ```
 

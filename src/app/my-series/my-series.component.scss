@@ -96,7 +96,8 @@
 }
 
 @keyframes heartBeat {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   10% {
@@ -181,7 +182,8 @@
 }
 
 @keyframes iconPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -323,7 +325,8 @@
 }
 
 @keyframes iconFloat {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -332,7 +335,8 @@
 }
 
 @keyframes errorPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.8;
     transform: scale(1);
   }

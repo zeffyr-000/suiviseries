@@ -17,8 +17,8 @@ describe('SerieImagesComponent', () => {
                 aspect_ratio: 1.778,
                 vote_average: 5.5,
                 vote_count: 10,
-                iso_639_1: null
-            }
+                iso_639_1: null,
+            },
         ],
         posters: [
             {
@@ -28,18 +28,15 @@ describe('SerieImagesComponent', () => {
                 aspect_ratio: 0.667,
                 vote_average: 5.3,
                 vote_count: 8,
-                iso_639_1: 'fr'
-            }
+                iso_639_1: 'fr',
+            },
         ],
-        logos: []
+        logos: [],
     };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                SerieImagesComponent,
-                getTranslocoTestingModule()
-            ]
+            imports: [SerieImagesComponent, getTranslocoTestingModule()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SerieImagesComponent);
@@ -109,8 +106,8 @@ describe('SerieImagesComponent', () => {
                     aspect_ratio: 1.778,
                     vote_average: 6,
                     vote_count: 12,
-                    iso_639_1: null
-                }
+                    iso_639_1: null,
+                },
             ];
             fixture.componentRef.setInput('images', { backdrops, posters: [], logos: [] });
             fixture.detectChanges();
@@ -140,8 +137,8 @@ describe('SerieImagesComponent', () => {
                     aspect_ratio: 1.778,
                     vote_average: 6,
                     vote_count: 12,
-                    iso_639_1: null
-                }
+                    iso_639_1: null,
+                },
             ];
             fixture.componentRef.setInput('images', { backdrops, posters: [], logos: [] });
             fixture.detectChanges();
@@ -181,7 +178,7 @@ describe('SerieImagesComponent', () => {
                 aspect_ratio: 1.778,
                 vote_average: 5.5,
                 vote_count: 10,
-                iso_639_1: null
+                iso_639_1: null,
             },
             {
                 file_path: 'https://image.tmdb.org/t/p/original/backdrop2.jpg',
@@ -190,7 +187,7 @@ describe('SerieImagesComponent', () => {
                 aspect_ratio: 1.778,
                 vote_average: 6,
                 vote_count: 12,
-                iso_639_1: null
+                iso_639_1: null,
             },
             {
                 file_path: 'https://image.tmdb.org/t/p/original/backdrop3.jpg',
@@ -199,12 +196,16 @@ describe('SerieImagesComponent', () => {
                 aspect_ratio: 1.778,
                 vote_average: 7,
                 vote_count: 15,
-                iso_639_1: null
-            }
+                iso_639_1: null,
+            },
         ];
 
         beforeEach(() => {
-            fixture.componentRef.setInput('images', { backdrops: multipleBackdrops, posters: [], logos: [] });
+            fixture.componentRef.setInput('images', {
+                backdrops: multipleBackdrops,
+                posters: [],
+                logos: [],
+            });
             fixture.detectChanges();
             component['onImageClick'](multipleBackdrops[1], 'backdrop');
         });
@@ -219,13 +220,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -239,13 +240,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -259,13 +260,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'pen'
+                pointerType: 'pen',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'pen'
+                pointerType: 'pen',
             });
 
             component['onPointerDown'](pointerDown);
@@ -280,13 +281,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 2, // Different pointer ID (second finger)
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -301,13 +302,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'mouse'
+                pointerType: 'mouse',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'mouse'
+                pointerType: 'mouse',
             });
 
             component['onPointerDown'](pointerDown);
@@ -322,13 +323,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 200,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 180,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -345,7 +346,7 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -357,7 +358,7 @@ describe('SerieImagesComponent', () => {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerUp'](pointerUp);
@@ -373,13 +374,13 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 100,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             const pointerUp = new PointerEvent('pointerup', {
                 clientX: 100,
                 clientY: 300,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -393,7 +394,7 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -404,7 +405,7 @@ describe('SerieImagesComponent', () => {
                 clientX: 100,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             const initialImage = component['selectedImage']();
             component['onPointerUp'](pointerUp);
@@ -417,7 +418,7 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
 
             component['onPointerDown'](pointerDown);
@@ -434,7 +435,7 @@ describe('SerieImagesComponent', () => {
                 clientX: 300,
                 clientY: 200,
                 pointerId: 1,
-                pointerType: 'touch'
+                pointerType: 'touch',
             });
             Object.defineProperty(pointerDown, 'target', { value: button });
 
@@ -462,7 +463,10 @@ describe('SerieImagesComponent', () => {
             if (originalOntouchstart === undefined) {
                 delete (globalThis as { ontouchstart?: unknown }).ontouchstart;
             } else {
-                Object.defineProperty(globalThis, 'ontouchstart', { value: originalOntouchstart, configurable: true });
+                Object.defineProperty(globalThis, 'ontouchstart', {
+                    value: originalOntouchstart,
+                    configurable: true,
+                });
             }
         });
 
@@ -483,7 +487,10 @@ describe('SerieImagesComponent', () => {
             if (originalOntouchstart === undefined) {
                 delete (globalThis as { ontouchstart?: unknown }).ontouchstart;
             } else {
-                Object.defineProperty(globalThis, 'ontouchstart', { value: originalOntouchstart, configurable: true });
+                Object.defineProperty(globalThis, 'ontouchstart', {
+                    value: originalOntouchstart,
+                    configurable: true,
+                });
             }
         });
     });

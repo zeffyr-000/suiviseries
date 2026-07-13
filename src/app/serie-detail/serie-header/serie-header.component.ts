@@ -29,10 +29,10 @@ export interface SerieHeaderData {
         MatButtonModule,
         MatIconModule,
         SerieStatusChipComponent,
-        ButtonLoadingDirective
+        ButtonLoadingDirective,
     ],
     templateUrl: './serie-header.component.html',
-    styleUrl: './serie-header.component.scss'
+    styleUrl: './serie-header.component.scss',
 })
 export class SerieHeaderComponent {
     serie = input.required<SerieHeaderData>();

@@ -64,14 +64,14 @@ Here's how to test plurals:
 ```typescript
 // Test with different values
 const testCases = [
-  { count: 0, expected: 'No episodes' },
-  { count: 1, expected: '1 episode' },
-  { count: 2, expected: '2 episodes' },
-  { count: 10, expected: '10 episodes' },
+    { count: 0, expected: 'No episodes' },
+    { count: 1, expected: '1 episode' },
+    { count: 2, expected: '2 episodes' },
+    { count: 10, expected: '10 episodes' },
 ];
 
 testCases.forEach(({ count, expected }) => {
-  const result = transloco.translate('series.episodes', { count });
-  expect(result).toBe(expected);
+    const result = transloco.translate('series.episodes', { count });
+    expect(result).toBe(expected);
 });
 ```

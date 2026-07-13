@@ -9,11 +9,8 @@ describe('SerieRecommendationsComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                SerieRecommendationsComponent,
-                getTranslocoTestingModule()
-            ],
-            providers: [provideRouter([])]
+            imports: [SerieRecommendationsComponent, getTranslocoTestingModule()],
+            providers: [provideRouter([])],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SerieRecommendationsComponent);
@@ -44,7 +41,7 @@ describe('SerieRecommendationsComponent', () => {
                 backdrop_path: 'https://example.com/backdrop1.jpg',
                 first_air_date: '2020-01-01',
                 vote_average: 8.5,
-                popularity: 100
+                popularity: 100,
             },
             {
                 id: 2,
@@ -56,8 +53,8 @@ describe('SerieRecommendationsComponent', () => {
                 backdrop_path: null,
                 first_air_date: '2021-06-15',
                 vote_average: 7.2,
-                popularity: 80
-            }
+                popularity: 80,
+            },
         ];
 
         fixture.componentRef.setInput('recommendations', mockRecommendations);
@@ -78,7 +75,7 @@ describe('SerieRecommendationsComponent', () => {
             backdrop_path: null,
             first_air_date: '2020-01-01',
             vote_average: 8,
-            popularity: 100
+            popularity: 100,
         };
 
         const route = component.getSerieRoute(mockRecommendation);
@@ -97,8 +94,8 @@ describe('SerieRecommendationsComponent', () => {
                 backdrop_path: null,
                 first_air_date: '2020-01-01',
                 vote_average: 8,
-                popularity: 100
-            }
+                popularity: 100,
+            },
         ];
 
         fixture.componentRef.setInput('recommendations', mockRecommendations);
@@ -121,14 +118,16 @@ describe('SerieRecommendationsComponent', () => {
                 backdrop_path: null,
                 first_air_date: '2020-01-01',
                 vote_average: 8,
-                popularity: 100
-            }
+                popularity: 100,
+            },
         ];
 
         fixture.componentRef.setInput('recommendations', mockRecommendations);
         fixture.detectChanges();
 
-        const placeholder = fixture.nativeElement.querySelector('.recommendation-poster-placeholder');
+        const placeholder = fixture.nativeElement.querySelector(
+            '.recommendation-poster-placeholder',
+        );
         expect(placeholder).toBeTruthy();
     });
 
@@ -150,8 +149,8 @@ describe('SerieRecommendationsComponent', () => {
                 backdrop_path: null,
                 first_air_date: '2020-05-15',
                 vote_average: 8,
-                popularity: 100
-            }
+                popularity: 100,
+            },
         ];
 
         fixture.componentRef.setInput('recommendations', mockRecommendations);
@@ -173,8 +172,8 @@ describe('SerieRecommendationsComponent', () => {
                 backdrop_path: null,
                 first_air_date: '2020-01-01',
                 vote_average: 8,
-                popularity: 100
-            }
+                popularity: 100,
+            },
         ];
 
         fixture.componentRef.setInput('recommendations', mockRecommendations);

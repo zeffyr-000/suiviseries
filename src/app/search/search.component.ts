@@ -31,10 +31,10 @@ import { environment } from '../../environments/environment';
         MatProgressSpinnerModule,
         MatChipsModule,
         SerieCardComponent,
-        ButtonLoadingDirective
+        ButtonLoadingDirective,
     ],
     templateUrl: './search.component.html',
-    styleUrl: './search.component.scss'
+    styleUrl: './search.component.scss',
 })
 export class SearchComponent {
     private readonly seriesService = inject(SeriesService);
@@ -56,7 +56,7 @@ export class SearchComponent {
         return err ? String(err) : null;
     });
     protected readonly hasSearched = computed(
-        () => this.searchResource.hasValue() || this.searchResource.error() !== undefined
+        () => this.searchResource.hasValue() || this.searchResource.error() !== undefined,
     );
     protected readonly lastQuery = computed(() => {
         const query = this.searchResource.query().trim();
@@ -64,14 +64,14 @@ export class SearchComponent {
     });
     protected readonly hasResults = computed(() => this.searchResults().length > 0);
     protected readonly showNoResults = computed(
-        () => this.hasSearched() && !this.loading() && !this.hasResults() && !this.error()
+        () => this.hasSearched() && !this.loading() && !this.hasResults() && !this.error(),
     );
 
     constructor() {
         this.metadataService.updatePageMetadata({
             title: this.translocoService.translate('seo.search.title'),
             description: this.translocoService.translate('seo.search.description'),
-            canonicalUrl: `${environment.siteUrl}/search`
+            canonicalUrl: `${environment.siteUrl}/search`,
         });
 
         this.query$

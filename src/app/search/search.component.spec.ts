@@ -14,7 +14,7 @@ function createMockSearchResource() {
         isLoading: signal(false),
         error: signal(undefined),
         hasValue: signal(false),
-        query: signal('')
+        query: signal(''),
     };
 }
 
@@ -28,7 +28,7 @@ describe('SearchComponent', () => {
 
     beforeEach(() => {
         seriesService = {
-            createSearchResource: vi.fn().mockReturnValue(createMockSearchResource())
+            createSearchResource: vi.fn().mockReturnValue(createMockSearchResource()),
         };
 
         metadataService = createMockMetadataService();
@@ -37,8 +37,8 @@ describe('SearchComponent', () => {
             imports: [SearchComponent, getTranslocoTestingModule()],
             providers: [
                 { provide: SeriesService, useValue: seriesService },
-                { provide: MetadataService, useValue: metadataService }
-            ]
+                { provide: MetadataService, useValue: metadataService },
+            ],
         });
 
         fixture = TestBed.createComponent(SearchComponent);
@@ -95,7 +95,8 @@ describe('SearchComponent', () => {
         it('should show 3 instruction items', () => {
             fixture.detectChanges();
 
-            const instructionItems = fixture.nativeElement.querySelectorAll('.search-instructions li');
+            const instructionItems =
+                fixture.nativeElement.querySelectorAll('.search-instructions li');
 
             expect(instructionItems).toHaveLength(3);
         });

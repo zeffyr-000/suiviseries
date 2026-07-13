@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config';
 // installed, but happy-dom breaks Angular CDK's passive-listener probing
 // (`window.addEventListener is not a function`) for Material components (focus-monitor).
 export default defineConfig({
-  test: {
-    environment: 'jsdom',
-  },
+    test: {
+        environment: 'jsdom',
+    },
 });

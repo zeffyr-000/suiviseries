@@ -27,15 +27,15 @@ describe('LoginComponent', () => {
             currentUser: signal(null),
             initGoogleSignIn: vi.fn().mockResolvedValue(undefined),
             renderGoogleButton: vi.fn(),
-            signInWithGooglePopup: vi.fn()
+            signInWithGooglePopup: vi.fn(),
         };
 
         dialogRef = {
-            close: vi.fn()
+            close: vi.fn(),
         };
 
         router = {
-            navigate: vi.fn()
+            navigate: vi.fn(),
         };
 
         TestBed.configureTestingModule({
@@ -44,8 +44,8 @@ describe('LoginComponent', () => {
                 { provide: AuthService, useValue: authService },
                 { provide: MatDialogRef, useValue: dialogRef },
                 { provide: MAT_DIALOG_DATA, useValue: {} },
-                { provide: Router, useValue: router }
-            ]
+                { provide: Router, useValue: router },
+            ],
         });
 
         fixture = TestBed.createComponent(LoginComponent);
@@ -156,7 +156,7 @@ describe('LoginComponent', () => {
             await vi.waitFor(() => {
                 expect(consoleErrorSpy).toHaveBeenCalledWith(
                     'Failed to initialize Google Sign-In:',
-                    expect.any(Error)
+                    expect.any(Error),
                 );
             });
         });
@@ -183,8 +183,8 @@ describe('LoginComponent', () => {
                     { provide: AuthService, useValue: authService },
                     { provide: MatDialogRef, useValue: dialogRef },
                     { provide: MAT_DIALOG_DATA, useValue: { returnUrl: '/my-series' } },
-                    { provide: Router, useValue: router }
-                ]
+                    { provide: Router, useValue: router },
+                ],
             });
 
             fixture = TestBed.createComponent(LoginComponent);

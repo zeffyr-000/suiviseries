@@ -40,17 +40,23 @@ globalThis.addEventListener('push', (event) => {
             data: {
                 url: data.url,
                 notification_id: data.notification_id,
-                serie_id: data.serie_id
-            }
+                serie_id: data.serie_id,
+            },
         };
 
         event.waitUntil(
-            globalThis.registration.showNotification(data.title || 'Suivi Séries', options)
+            globalThis.registration
+                .showNotification(data.title || 'Suivi Séries', options)
                 .catch((err) => {
                     const title = data.title || 'Suivi Séries';
-                    const notificationId = data.notification_id ? ` (ID: ${data.notification_id})` : '';
-                    console.error(`[Custom SW] Error displaying notification "${title}"${notificationId}:`, err);
-                })
+                    const notificationId = data.notification_id
+                        ? ` (ID: ${data.notification_id})`
+                        : '';
+                    console.error(
+                        `[Custom SW] Error displaying notification "${title}"${notificationId}:`,
+                        err,
+                    );
+                }),
         );
     } catch (error) {
         console.error('[Custom SW] Error processing push:', error);
@@ -66,14 +72,18 @@ globalThis.addEventListener('notificationclick', (event) => {
         // Validate URL for security (must be a relative path starting with '/')
         const isValidUrl = url.startsWith('/');
         if (!isValidUrl) {
-            console.error('[Custom SW] Invalid URL in notification data (must be relative path):', url);
+            console.error(
+                '[Custom SW] Invalid URL in notification data (must be relative path):',
+                url,
+            );
             return;
         }
 
         event.waitUntil(
             Promise.all([
                 // Focus or open the window
-                clients.matchAll({ type: 'window', includeUncontrolled: true })
+                clients
+                    .matchAll({ type: 'window', includeUncontrolled: true })
                     .then((windowClients) => {
                         // Normalize URL to absolute for exact matching
                         let targetUrl;
@@ -96,19 +106,25 @@ globalThis.addEventListener('notificationclick', (event) => {
                 // Mark notification as read (runs independently)
                 event.notification.data.notification_id
                     ? fetch(`/api/notifications/${event.notification.data.notification_id}`, {
-                        method: 'PUT',
-                        credentials: 'include',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ status: 'read' })
-                    }).then((response) => {
-                        if (!response.ok) {
-                            throw new Error(`Failed to mark notification as read. Status: ${response.status}`);
-                        }
-                    }).catch((err) => console.error('[Custom SW] Error marking notification as read:', err))
-                    : Promise.resolve()
-            ]).catch((err) => console.error('[Custom SW] Error handling click:', err))
+                          method: 'PUT',
+                          credentials: 'include',
+                          headers: {
+                              'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ status: 'read' }),
+                      })
+                          .then((response) => {
+                              if (!response.ok) {
+                                  throw new Error(
+                                      `Failed to mark notification as read. Status: ${response.status}`,
+                                  );
+                              }
+                          })
+                          .catch((err) =>
+                              console.error('[Custom SW] Error marking notification as read:', err),
+                          )
+                    : Promise.resolve(),
+            ]).catch((err) => console.error('[Custom SW] Error handling click:', err)),
         );
     }
 });

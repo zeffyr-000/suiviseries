@@ -5,7 +5,7 @@ import { interval, from } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class KeepAliveService {
     private readonly authService = inject(AuthService);
@@ -17,7 +17,7 @@ export class KeepAliveService {
             .pipe(
                 filter(() => this.authService.isAuthenticated()),
                 switchMap(() => from(this.authService.refreshSession())),
-                takeUntilDestroyed(this.destroyRef)
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
     }

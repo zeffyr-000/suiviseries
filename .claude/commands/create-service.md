@@ -26,25 +26,25 @@ import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class FeatureService {
-  private readonly http = inject(HttpClient);
-  private readonly notificationService = inject(NotificationService);
-  private readonly apiUrl = environment.apiUrl;
+    private readonly http = inject(HttpClient);
+    private readonly notificationService = inject(NotificationService);
+    private readonly apiUrl = environment.apiUrl;
 
-  private readonly _items = signal<Item[]>([]);
-  readonly items = this._items.asReadonly();
+    private readonly _items = signal<Item[]>([]);
+    readonly items = this._items.asReadonly();
 
-  loadItems(): void {
-    this.http
-      .get<ItemsResponse>(`${this.apiUrl}/items`)
-      .pipe(
-        map((res) => (res.success ? res.results : [])),
-        catchError(() => {
-          this.notificationService.error('notifications.errors.load_items');
-          return of([]);
-        })
-      )
-      .subscribe((items) => this._items.set(items));
-  }
+    loadItems(): void {
+        this.http
+            .get<ItemsResponse>(`${this.apiUrl}/items`)
+            .pipe(
+                map((res) => (res.success ? res.results : [])),
+                catchError(() => {
+                    this.notificationService.error('notifications.errors.load_items');
+                    return of([]);
+                }),
+            )
+            .subscribe((items) => this._items.set(items));
+    }
 }
 ```
 

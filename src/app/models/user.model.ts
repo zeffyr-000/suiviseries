@@ -16,7 +16,7 @@ export interface User {
 export enum UserStatus {
     ACTIVE = 'active',
     DELETED = 'deleted',
-    DISABLED = 'disabled'
+    DISABLED = 'disabled',
 }
 
 export interface AuthResponse {

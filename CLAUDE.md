@@ -13,21 +13,21 @@ Read it before any code change. `llms.txt` is a condensed variant for other LLM 
 
 Domain guides loaded on demand — Claude Code picks the relevant one from its description.
 
-| Skill                    | When it applies                                        |
-| ------------------------ | ------------------------------------------------------ |
-| `angular-components`      | Editing `*.component.ts`                               |
-| `angular-templates`       | Editing `*.html` templates                             |
-| `angular-services`        | Editing `src/app/services/**`                          |
-| `rxresource-patterns`     | Reactive data fetching with `rxResource`               |
-| `typescript-conventions`  | Any `*.ts` file                                        |
-| `material-design-3`       | Angular Material / M3 markup, theming, components      |
-| `scss-styling`            | Editing `*.scss` (M3 tokens, theme, utilities)         |
-| `api-data-mapping`        | Backend snake_case ↔ frontend model mapping            |
-| `transloco-i18n`          | Translations and `MessageFormat` pluralization         |
-| `pwa-service-worker`      | Service worker, push notifications, app updates        |
-| `vitest-testing`          | `*.spec.ts` unit tests                                 |
-| `e2e-playwright`          | `e2e/**` Playwright tests                              |
-| `github-actions`          | `.github/workflows/**` CI                              |
+| Skill                    | When it applies                                   |
+| ------------------------ | ------------------------------------------------- |
+| `angular-components`     | Editing `*.component.ts`                          |
+| `angular-templates`      | Editing `*.html` templates                        |
+| `angular-services`       | Editing `src/app/services/**`                     |
+| `rxresource-patterns`    | Reactive data fetching with `rxResource`          |
+| `typescript-conventions` | Any `*.ts` file                                   |
+| `material-design-3`      | Angular Material / M3 markup, theming, components |
+| `scss-styling`           | Editing `*.scss` (M3 tokens, theme, utilities)    |
+| `api-data-mapping`       | Backend snake_case ↔ frontend model mapping       |
+| `transloco-i18n`         | Translations and `MessageFormat` pluralization    |
+| `pwa-service-worker`     | Service worker, push notifications, app updates   |
+| `vitest-testing`         | `*.spec.ts` unit tests                            |
+| `e2e-playwright`         | `e2e/**` Playwright tests                         |
+| `github-actions`         | `.github/workflows/**` CI                         |
 
 ## Subagents (`.claude/agents/`)
 

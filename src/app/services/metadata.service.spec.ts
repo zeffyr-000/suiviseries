@@ -18,14 +18,14 @@ describe('MetadataService', () => {
     beforeEach(() => {
         titleService = {
             setTitle: vi.fn(),
-            getTitle: vi.fn().mockReturnValue('Test Title')
+            getTitle: vi.fn().mockReturnValue('Test Title'),
         };
         metaService = {
-            updateTag: vi.fn()
+            updateTag: vi.fn(),
         };
         router = { url: '/test' };
         googleAnalytics = {
-            pageView: vi.fn()
+            pageView: vi.fn(),
         };
 
         mockDocument = document;
@@ -38,8 +38,8 @@ describe('MetadataService', () => {
                 { provide: Meta, useValue: metaService },
                 { provide: Router, useValue: router },
                 { provide: GoogleAnalyticsService, useValue: googleAnalytics },
-                { provide: DOCUMENT, useValue: mockDocument }
-            ]
+                { provide: DOCUMENT, useValue: mockDocument },
+            ],
         });
 
         service = TestBed.inject(MetadataService);
@@ -66,7 +66,7 @@ describe('MetadataService', () => {
             service.setDescription('Test description');
             expect(metaService.updateTag).toHaveBeenCalledWith({
                 name: 'description',
-                content: 'Test description'
+                content: 'Test description',
             });
         });
 
@@ -74,7 +74,8 @@ describe('MetadataService', () => {
             service.setDescription('');
             expect(metaService.updateTag).toHaveBeenCalledWith({
                 name: 'description',
-                content: 'Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode.'
+                content:
+                    'Suivez vos séries TV préférées, découvrez de nouveaux contenus et ne ratez jamais un épisode.',
             });
         });
     });
@@ -83,11 +84,26 @@ describe('MetadataService', () => {
         it('should set og tags', () => {
             service.setOpenGraphData('Title', 'Description', 'image.jpg', 'https://example.com');
 
-            expect(metaService.updateTag).toHaveBeenCalledWith({ property: 'og:title', content: 'Title - Suivi Séries' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ property: 'og:description', content: 'Description' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ property: 'og:type', content: 'website' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ property: 'og:url', content: 'https://example.com' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ property: 'og:image', content: 'image.jpg' });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                property: 'og:title',
+                content: 'Title - Suivi Séries',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                property: 'og:description',
+                content: 'Description',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                property: 'og:type',
+                content: 'website',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                property: 'og:url',
+                content: 'https://example.com',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                property: 'og:image',
+                content: 'image.jpg',
+            });
         });
 
         it('should not set url and image when not provided', () => {
@@ -95,8 +111,14 @@ describe('MetadataService', () => {
             service.setOpenGraphData('Title', 'Description');
 
             const calls = metaService.updateTag.mock.calls;
-            expect(calls.some((c: unknown) => (c as [{ property?: string }])[0].property === 'og:url')).toBe(false);
-            expect(calls.some((c: unknown) => (c as [{ property?: string }])[0].property === 'og:image')).toBe(false);
+            expect(
+                calls.some((c: unknown) => (c as [{ property?: string }])[0].property === 'og:url'),
+            ).toBe(false);
+            expect(
+                calls.some(
+                    (c: unknown) => (c as [{ property?: string }])[0].property === 'og:image',
+                ),
+            ).toBe(false);
         });
     });
 
@@ -104,10 +126,22 @@ describe('MetadataService', () => {
         it('should set twitter card tags', () => {
             service.setTwitterCard('Title', 'Description', 'image.jpg');
 
-            expect(metaService.updateTag).toHaveBeenCalledWith({ name: 'twitter:card', content: 'summary_large_image' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ name: 'twitter:title', content: 'Title - Suivi Séries' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ name: 'twitter:description', content: 'Description' });
-            expect(metaService.updateTag).toHaveBeenCalledWith({ name: 'twitter:image', content: 'image.jpg' });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                name: 'twitter:card',
+                content: 'summary_large_image',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                name: 'twitter:title',
+                content: 'Title - Suivi Séries',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                name: 'twitter:description',
+                content: 'Description',
+            });
+            expect(metaService.updateTag).toHaveBeenCalledWith({
+                name: 'twitter:image',
+                content: 'image.jpg',
+            });
         });
     });
 
@@ -136,7 +170,7 @@ describe('MetadataService', () => {
                 title: 'Test Page',
                 description: 'Test Description',
                 image: 'test.jpg',
-                canonicalUrl: 'https://example.com'
+                canonicalUrl: 'https://example.com',
             });
 
             expect(titleService.setTitle).toHaveBeenCalled();
@@ -150,12 +184,20 @@ describe('MetadataService', () => {
                 title: 'Test',
                 description: 'Test',
                 includeOpenGraph: false,
-                includeTwitter: false
+                includeTwitter: false,
             });
 
             const calls = metaService.updateTag.mock.calls;
-            expect(calls.some((c: unknown) => (c as [{ property?: string }])[0].property?.startsWith('og:'))).toBe(false);
-            expect(calls.some((c: unknown) => (c as [{ name?: string }])[0].name?.startsWith('twitter:'))).toBe(false);
+            expect(
+                calls.some((c: unknown) =>
+                    (c as [{ property?: string }])[0].property?.startsWith('og:'),
+                ),
+            ).toBe(false);
+            expect(
+                calls.some((c: unknown) =>
+                    (c as [{ name?: string }])[0].name?.startsWith('twitter:'),
+                ),
+            ).toBe(false);
         });
     });
 

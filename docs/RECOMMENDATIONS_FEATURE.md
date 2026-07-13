@@ -24,16 +24,16 @@ recommendations = input.required<Recommendation[]>();
 
 ```typescript
 interface Recommendation {
-  id: number; // Internal database ID (for direct navigation)
-  tmdb_id: number; // TMDB ID (for reference)
-  name: string; // Serie name
-  original_name: string; // Original serie name
-  overview: string; // Serie synopsis
-  poster_path: string | null; // Full poster URL (w500) or null
-  backdrop_path: string | null; // Full backdrop URL (w1280) or null
-  first_air_date: string | null; // First air date (YYYY-MM-DD)
-  vote_average: number; // Rating (0-10)
-  popularity: number; // TMDB popularity score
+    id: number; // Internal database ID (for direct navigation)
+    tmdb_id: number; // TMDB ID (for reference)
+    name: string; // Serie name
+    original_name: string; // Original serie name
+    overview: string; // Serie synopsis
+    poster_path: string | null; // Full poster URL (w500) or null
+    backdrop_path: string | null; // Full backdrop URL (w1280) or null
+    first_air_date: string | null; // First air date (YYYY-MM-DD)
+    vote_average: number; // Rating (0-10)
+    popularity: number; // TMDB popularity score
 }
 ```
 
@@ -43,19 +43,19 @@ interface Recommendation {
 
 - **Grid layout**: Responsive grid with auto-fill columns (minimum 150px on desktop, 120px on mobile)
 - **Card design**: Each recommended series is displayed as a card with:
-  - Poster image or placeholder icon
-  - Series title (truncated to 2 lines)
-  - Release year
-  - Star rating (converted from 0-10 to 0-5 scale)
+    - Poster image or placeholder icon
+    - Series title (truncated to 2 lines)
+    - Release year
+    - Star rating (converted from 0-10 to 0-5 scale)
 
 ### Interactions
 
 - **Click**: Navigates to the detail page of the selected recommended serie using internal database ID
 - **Keyboard**: Fully keyboard accessible with focus states
 - **Hover effects**:
-  - Card lifts up 8px with scale transform on hover
-  - Smooth transitions for all hover states
-  - Focus outline for keyboard navigation
+    - Card lifts up 8px with scale transform on hover
+    - Smooth transitions for all hover states
+    - Focus outline for keyboard navigation
 
 ### Accessibility
 
@@ -70,12 +70,12 @@ interface Recommendation {
 
 1. **API Response**: The backend returns a `recommendations` array in the `/api/series/:id/detail` endpoint
 2. **Computed Property**:
-   ```typescript
-   protected recommendations = computed(() => {
-       const currentSerie = this.serie();
-       return currentSerie?.recommendations || [];
-   });
-   ```
+    ```typescript
+    protected recommendations = computed(() => {
+        const currentSerie = this.serie();
+        return currentSerie?.recommendations || [];
+    });
+    ```
 3. **Template Rendering**: Component only renders if `recommendations().length > 0`
 4. **Navigation**: Uses `routerLink` for direct navigation with internal database ID
 

@@ -58,14 +58,14 @@ Application (app.component)
 
 ```typescript
 @Component({
-  selector: 'app-serie-card',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule],
-  template: `...`,
+    selector: 'app-serie-card',
+    standalone: true,
+    imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule],
+    template: `...`,
 })
 export class SerieCardComponent {
-  @Input() serie!: Serie;
-  // Component logic
+    @Input() serie!: Serie;
+    // Component logic
 }
 ```
 
@@ -93,16 +93,16 @@ export class SerieCardComponent {
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
-  // Private state
-  private seriesState = signal<Serie[]>([]);
+    // Private state
+    private seriesState = signal<Serie[]>([]);
 
-  // Public state (read-only)
-  readonly series = this.seriesState.asReadonly();
+    // Public state (read-only)
+    readonly series = this.seriesState.asReadonly();
 
-  // Actions
-  loadSeries(): void {
-    this.http.get<Serie[]>('/api/series').subscribe((series) => this.seriesState.set(series));
-  }
+    // Actions
+    loadSeries(): void {
+        this.http.get<Serie[]>('/api/series').subscribe((series) => this.seriesState.set(series));
+    }
 }
 ```
 
@@ -110,15 +110,15 @@ export class SeriesService {
 
 ```typescript
 export class SerieDetailComponent {
-  // Signals for local state
-  protected serie = signal<Serie | null>(null);
-  protected loading = signal<boolean>(true);
+    // Signals for local state
+    protected serie = signal<Serie | null>(null);
+    protected loading = signal<boolean>(true);
 
-  // Computed values
-  protected isWatched = computed(() => {
-    const currentSerie = this.serie();
-    return currentSerie?.user_data?.is_watched || false;
-  });
+    // Computed values
+    protected isWatched = computed(() => {
+        const currentSerie = this.serie();
+        return currentSerie?.user_data?.is_watched || false;
+    });
 }
 ```
 
@@ -157,17 +157,17 @@ markSeasonAsWatched(seasonId: number) {
 
 ```typescript
 export const routes: Routes = [
-  { path: '', loadComponent: () => import('./home/home.component') },
-  { path: 'search', loadComponent: () => import('./search/search.component') },
-  {
-    path: 'my-series',
-    loadComponent: () => import('./my-series/my-series.component'),
-    canActivate: [authGuard], // Protection by guard
-  },
-  {
-    path: 'serie/:id/:nom',
-    loadComponent: () => import('./serie-detail/serie-detail.component'),
-  },
+    { path: '', loadComponent: () => import('./home/home.component') },
+    { path: 'search', loadComponent: () => import('./search/search.component') },
+    {
+        path: 'my-series',
+        loadComponent: () => import('./my-series/my-series.component'),
+        canActivate: [authGuard], // Protection by guard
+    },
+    {
+        path: 'serie/:id/:nom',
+        loadComponent: () => import('./serie-detail/serie-detail.component'),
+    },
 ];
 ```
 
@@ -175,19 +175,19 @@ export const routes: Routes = [
 
 ```typescript
 export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+    const authService = inject(AuthService);
+    const router = inject(Router);
 
-  if (authService.isAuthenticated()) {
-    return true;
-  }
+    if (authService.isAuthenticated()) {
+        return true;
+    }
 
-  // Redirect with returnUrl
-  const returnUrl = state.url;
-  router.navigate(['/'], {
-    queryParams: { login: 'true', returnUrl },
-  });
-  return false;
+    // Redirect with returnUrl
+    const returnUrl = state.url;
+    router.navigate(['/'], {
+        queryParams: { login: 'true', returnUrl },
+    });
+    return false;
 };
 ```
 
@@ -200,11 +200,11 @@ export const authGuard: CanActivateFn = (route, state) => {
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
-  private readonly http = inject(HttpClient);
-  private readonly authService = inject(AuthService);
+    private readonly http = inject(HttpClient);
+    private readonly authService = inject(AuthService);
 
-  // Using readonly for immutability
-  private readonly apiUrl = environment.apiUrl;
+    // Using readonly for immutability
+    private readonly apiUrl = environment.apiUrl;
 }
 ```
 
@@ -212,17 +212,17 @@ export class SeriesService {
 
 ```typescript
 export class SerieDetailComponent {
-  // Modern injection with inject()
-  private readonly route = inject(ActivatedRoute);
-  private readonly seriesService = inject(SeriesService);
-  private readonly authService = inject(AuthService);
+    // Modern injection with inject()
+    private readonly route = inject(ActivatedRoute);
+    private readonly seriesService = inject(SeriesService);
+    private readonly authService = inject(AuthService);
 
-  ngOnInit() {
-    // Reactive composition
-    this.route.params
-      .pipe(switchMap((params) => this.seriesService.getSerieDetails(params['id'])))
-      .subscribe((serie) => this.serie.set(serie));
-  }
+    ngOnInit() {
+        // Reactive composition
+        this.route.params
+            .pipe(switchMap((params) => this.seriesService.getSerieDetails(params['id'])))
+            .subscribe((serie) => this.serie.set(serie));
+    }
 }
 ```
 
@@ -235,22 +235,22 @@ export class SerieDetailComponent {
 ```typescript
 @Injectable()
 export class ApiService {
-  private readonly http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
 
-  // Generic methods with error handling
-  get<T>(endpoint: string): Observable<T> {
-    return this.http.get<T>(`/api/${endpoint}`).pipe(catchError(this.handleError<T>()));
-  }
+    // Generic methods with error handling
+    get<T>(endpoint: string): Observable<T> {
+        return this.http.get<T>(`/api/${endpoint}`).pipe(catchError(this.handleError<T>()));
+    }
 
-  private handleError<T>(): (error: any) => Observable<T> {
-    return (error: any): Observable<T> => {
-      // Development-only logging
-      if (!environment.production) {
-        console.error('API Error:', error);
-      }
-      return of({} as T);
-    };
-  }
+    private handleError<T>(): (error: any) => Observable<T> {
+        return (error: any): Observable<T> => {
+            // Development-only logging
+            if (!environment.production) {
+                console.error('API Error:', error);
+            }
+            return of({} as T);
+        };
+    }
 }
 ```
 
@@ -259,12 +259,12 @@ export class ApiService {
 ```json
 // proxy.conf.json
 {
-  "/api/*": {
-    "target": "http://localhost:8888/suiviseries-api/www",
-    "secure": true,
-    "changeOrigin": true,
-    "logLevel": "debug"
-  }
+    "/api/*": {
+        "target": "http://localhost:8888/suiviseries-api/www",
+        "secure": true,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
 }
 ```
 
@@ -279,18 +279,18 @@ export class ApiService {
 
 // M3 Theme Configuration
 html {
-  @include mat.theme(
-    (
-      color: (
-        primary: mat.$rose-palette,
-        tertiary: mat.$red-palette,
-      ),
-      typography: (
-        brand-family: 'Roboto',
-        bold-weight: 700,
-      ),
-    )
-  );
+    @include mat.theme(
+        (
+            color: (
+                primary: mat.$rose-palette,
+                tertiary: mat.$red-palette,
+            ),
+            typography: (
+                brand-family: 'Roboto',
+                bold-weight: 700,
+            ),
+        )
+    );
 }
 ```
 
@@ -308,28 +308,28 @@ import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 import { createMockSeriesService, createMockSerie } from '../testing/mocks';
 
 describe('SerieDetailComponent', () => {
-  let mockSeriesService: ReturnType<typeof createMockSeriesService>;
+    let mockSeriesService: ReturnType<typeof createMockSeriesService>;
 
-  beforeEach(() => {
-    mockSeriesService = createMockSeriesService();
+    beforeEach(() => {
+        mockSeriesService = createMockSeriesService();
 
-    TestBed.configureTestingModule({
-      imports: [SerieDetailComponent, getTranslocoTestingModule()],
-      providers: [{ provide: SeriesService, useValue: mockSeriesService }],
+        TestBed.configureTestingModule({
+            imports: [SerieDetailComponent, getTranslocoTestingModule()],
+            providers: [{ provide: SeriesService, useValue: mockSeriesService }],
+        });
     });
-  });
 
-  afterEach(() => vi.restoreAllMocks());
+    afterEach(() => vi.restoreAllMocks());
 
-  it('should load serie on init', () => {
-    const mockSerie = createMockSerie();
-    mockSeriesService.getSerieDetails.mockReturnValue(of(mockSerie));
+    it('should load serie on init', () => {
+        const mockSerie = createMockSerie();
+        mockSeriesService.getSerieDetails.mockReturnValue(of(mockSerie));
 
-    const fixture = TestBed.createComponent(SerieDetailComponent);
-    fixture.componentInstance.ngOnInit();
+        const fixture = TestBed.createComponent(SerieDetailComponent);
+        fixture.componentInstance.ngOnInit();
 
-    expect(fixture.componentInstance.serie()).toEqual(mockSerie);
-  });
+        expect(fixture.componentInstance.serie()).toEqual(mockSerie);
+    });
 });
 ```
 
@@ -356,21 +356,21 @@ describe('SerieDetailComponent', () => {
 @use '@angular/cdk/layout';
 
 .series-grid {
-  display: grid;
-  gap: 16px;
+    display: grid;
+    gap: 16px;
 
-  // Mobile
-  grid-template-columns: 1fr;
+    // Mobile
+    grid-template-columns: 1fr;
 
-  // Tablet
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    // Tablet
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-  // Desktop
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+    // Desktop
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 ```
 

@@ -12,7 +12,7 @@ import {
     createMockSerie,
     createMockSerieStats,
     createMockAuthService,
-    createMockMetadataService
+    createMockMetadataService,
 } from '../testing/mocks';
 import { SerieStatus, WatchProvider, Video } from '../models/serie.model';
 
@@ -39,47 +39,44 @@ describe('SerieDetailComponent', () => {
         number_of_seasons: 5,
         number_of_episodes: 62,
         popularity: 300,
-        seasons: []
+        seasons: [],
     });
 
     const mockStats = createMockSerieStats({
         totalFollowers: 1000,
         seasons_count: 5,
-        episodes_count: 62
+        episodes_count: 62,
     });
 
     const mockResponse = {
         success: true,
         serie: mockSerie,
-        stats: mockStats
+        stats: mockStats,
     };
 
     beforeEach(() => {
         mockSeriesService = {
             getSerieDetails: vi.fn().mockReturnValue(of(mockResponse)),
-            isSerieReallyFollowed: vi.fn().mockReturnValue(of(false))
+            isSerieReallyFollowed: vi.fn().mockReturnValue(of(false)),
         };
 
         mockAuthService = createMockAuthService();
         mockMetadataService = createMockMetadataService();
 
         TestBed.configureTestingModule({
-            imports: [
-                SerieDetailComponent,
-                getTranslocoTestingModule()
-            ],
+            imports: [SerieDetailComponent, getTranslocoTestingModule()],
             providers: [
                 provideRouter([]),
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        params: of({ id: '1', nom: 'breaking-bad' })
-                    }
+                        params: of({ id: '1', nom: 'breaking-bad' }),
+                    },
                 },
                 { provide: SeriesService, useValue: mockSeriesService },
                 { provide: AuthService, useValue: mockAuthService },
-                { provide: MetadataService, useValue: mockMetadataService }
-            ]
+                { provide: MetadataService, useValue: mockMetadataService },
+            ],
         });
 
         component = TestBed.createComponent(SerieDetailComponent).componentInstance;
@@ -114,9 +111,7 @@ describe('SerieDetailComponent', () => {
         });
 
         it('should handle errors', () => {
-            mockSeriesService.getSerieDetails.mockReturnValue(
-                of({ success: false })
-            );
+            mockSeriesService.getSerieDetails.mockReturnValue(of({ success: false }));
 
             component.ngOnInit();
 
@@ -151,7 +146,7 @@ describe('SerieDetailComponent', () => {
 
             component['stats'].set({
                 ...mockStats,
-                followedByCurrentUser: true
+                followedByCurrentUser: true,
             });
 
             expect(component['isFollowing']()).toBe(true);
@@ -162,7 +157,7 @@ describe('SerieDetailComponent', () => {
 
             component['stats'].set({
                 ...mockStats,
-                watchedByCurrentUser: true
+                watchedByCurrentUser: true,
             });
 
             expect(component['isWatched']()).toBe(true);
@@ -188,7 +183,7 @@ describe('SerieDetailComponent', () => {
     describe('Error Handling', () => {
         it('should handle API errors', () => {
             mockSeriesService.getSerieDetails.mockReturnValue(
-                throwError(() => new Error('Network error'))
+                throwError(() => new Error('Network error')),
             );
 
             component.ngOnInit();
@@ -204,32 +199,32 @@ describe('SerieDetailComponent', () => {
                 provider_id: 8,
                 provider_name: 'Netflix',
                 logo_path: 'https://image.tmdb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg',
-                type: 'flatrate'
+                type: 'flatrate',
             },
             {
                 provider_id: 119,
                 provider_name: 'Amazon Prime Video',
                 logo_path: 'https://image.tmdb.org/t/p/original/emthp39XA2YScoYL1p0sdbAH2WA.jpg',
-                type: 'flatrate'
+                type: 'flatrate',
             },
             {
                 provider_id: 2,
                 provider_name: 'Apple TV',
                 logo_path: 'https://image.tmdb.org/t/p/original/peURlLlr8jggOwK53fJ5wdQl05y.jpg',
-                type: 'buy'
+                type: 'buy',
             },
             {
                 provider_id: 3,
                 provider_name: 'Google Play Movies',
                 logo_path: 'https://image.tmdb.org/t/p/original/tbEdFQDwx5LEVr8WpSeXQSIirVq.jpg',
-                type: 'rent'
-            }
+                type: 'rent',
+            },
         ];
 
         it('should compute watch providers from serie data', () => {
             const serieWithProviders = {
                 ...mockSerie,
-                watch_providers: mockWatchProviders
+                watch_providers: mockWatchProviders,
             };
 
             component['serie'].set(serieWithProviders);
@@ -249,7 +244,7 @@ describe('SerieDetailComponent', () => {
 
             const serieWithProviders = {
                 ...mockSerie,
-                watch_providers: mockWatchProviders
+                watch_providers: mockWatchProviders,
             };
             component['serie'].set(serieWithProviders);
             expect(component['hasWatchProviders']()).toBe(true);
@@ -265,7 +260,7 @@ describe('SerieDetailComponent', () => {
                 site: 'YouTube',
                 size: 1080,
                 official: true,
-                published_at: '2024-01-15T10:00:00.000Z'
+                published_at: '2024-01-15T10:00:00.000Z',
             },
             {
                 key: 'abc123xyz',
@@ -274,7 +269,7 @@ describe('SerieDetailComponent', () => {
                 site: 'YouTube',
                 size: 720,
                 official: false,
-                published_at: '2024-01-10T08:30:00.000Z'
+                published_at: '2024-01-10T08:30:00.000Z',
             },
             {
                 key: 'xyz456abc',
@@ -283,14 +278,14 @@ describe('SerieDetailComponent', () => {
                 site: 'YouTube',
                 size: 1080,
                 official: true,
-                published_at: '2024-01-05T12:00:00.000Z'
-            }
+                published_at: '2024-01-05T12:00:00.000Z',
+            },
         ];
 
         it('should compute videos from serie data', () => {
             const serieWithVideos = {
                 ...mockSerie,
-                videos: mockVideos
+                videos: mockVideos,
             };
 
             component['serie'].set(serieWithVideos);
@@ -311,7 +306,7 @@ describe('SerieDetailComponent', () => {
 
             const serieWithVideos = {
                 ...mockSerie,
-                videos: mockVideos
+                videos: mockVideos,
             };
             component['serie'].set(serieWithVideos);
             expect(component['hasVideos']()).toBe(true);
@@ -320,7 +315,7 @@ describe('SerieDetailComponent', () => {
         it('should filter official trailers', () => {
             const serieWithVideos = {
                 ...mockSerie,
-                videos: mockVideos
+                videos: mockVideos,
             };
 
             component['serie'].set(serieWithVideos);
@@ -335,31 +330,35 @@ describe('SerieDetailComponent', () => {
 
     describe('Images', () => {
         const mockImages = {
-            backdrops: [{
-                file_path: '/backdrop1.jpg',
-                width: 1920,
-                height: 1080,
-                aspect_ratio: 1.78,
-                vote_average: 5.5,
-                vote_count: 100,
-                iso_639_1: null
-            }],
-            posters: [{
-                file_path: '/poster1.jpg',
-                width: 500,
-                height: 750,
-                aspect_ratio: 0.67,
-                vote_average: 5,
-                vote_count: 50,
-                iso_639_1: 'en'
-            }],
-            logos: []
+            backdrops: [
+                {
+                    file_path: '/backdrop1.jpg',
+                    width: 1920,
+                    height: 1080,
+                    aspect_ratio: 1.78,
+                    vote_average: 5.5,
+                    vote_count: 100,
+                    iso_639_1: null,
+                },
+            ],
+            posters: [
+                {
+                    file_path: '/poster1.jpg',
+                    width: 500,
+                    height: 750,
+                    aspect_ratio: 0.67,
+                    vote_average: 5,
+                    vote_count: 50,
+                    iso_639_1: 'en',
+                },
+            ],
+            logos: [],
         };
 
         it('should compute images from serie data', () => {
             const serieWithImages = {
                 ...mockSerie,
-                images: mockImages
+                images: mockImages,
             };
 
             component['serie'].set(serieWithImages);
@@ -379,7 +378,7 @@ describe('SerieDetailComponent', () => {
 
             const serieWithImages = {
                 ...mockSerie,
-                images: mockImages
+                images: mockImages,
             };
             component['serie'].set(serieWithImages);
             expect(component['hasImages']()).toBe(true);
@@ -388,7 +387,7 @@ describe('SerieDetailComponent', () => {
         it('should compute primaryBackdropUrl from images', () => {
             const serieWithImages = {
                 ...mockSerie,
-                images: mockImages
+                images: mockImages,
             };
 
             component['serie'].set(serieWithImages);
@@ -420,14 +419,14 @@ describe('SerieDetailComponent', () => {
                 status: SerieStatus.ENDED,
                 number_of_seasons: 6,
                 number_of_episodes: 63,
-                popularity: 200
-            })
+                popularity: 200,
+            }),
         ];
 
         it('should compute recommendations from serie data', () => {
             const serieWithRecs = {
                 ...mockSerie,
-                recommendations: mockRecommendations
+                recommendations: mockRecommendations,
             };
 
             component['serie'].set(serieWithRecs);
@@ -450,13 +449,13 @@ describe('SerieDetailComponent', () => {
             is_watched: false,
             watched_at: null,
             watched_episodes: [1, 2, 3],
-            watched_seasons: [1]
+            watched_seasons: [1],
         };
 
         it('should compute userSerieData from serie', () => {
             const serieWithUserData = {
                 ...mockSerie,
-                user_data: mockUserData
+                user_data: mockUserData,
             };
 
             component['serie'].set(serieWithUserData);
@@ -473,7 +472,7 @@ describe('SerieDetailComponent', () => {
         it('should compute watchedEpisodes from user data', () => {
             const serieWithUserData = {
                 ...mockSerie,
-                user_data: mockUserData
+                user_data: mockUserData,
             };
 
             component['serie'].set(serieWithUserData);
@@ -490,7 +489,7 @@ describe('SerieDetailComponent', () => {
         it('should compute watchedSeasons from user data', () => {
             const serieWithUserData = {
                 ...mockSerie,
-                user_data: mockUserData
+                user_data: mockUserData,
             };
 
             component['serie'].set(serieWithUserData);
@@ -509,8 +508,8 @@ describe('SerieDetailComponent', () => {
                     is_watched: false,
                     watched_at: null,
                     watched_episodes: [10, 20, 30],
-                    watched_seasons: [1, 2]
-                }
+                    watched_seasons: [1, 2],
+                },
             };
             component['serie'].set(serieWithUserData);
         });
@@ -587,7 +586,8 @@ describe('SerieDetailComponent', () => {
 
         it('should call followSerie when not following', () => {
             const followSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { followSerie: typeof followSpy }).followSerie = followSpy;
+            (mockSeriesService as unknown as { followSerie: typeof followSpy }).followSerie =
+                followSpy;
 
             component['onToggleFollow']();
 
@@ -596,7 +596,8 @@ describe('SerieDetailComponent', () => {
 
         it('should call unfollowSerie when already following', () => {
             const unfollowSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { unfollowSerie: typeof unfollowSpy }).unfollowSerie = unfollowSpy;
+            (mockSeriesService as unknown as { unfollowSerie: typeof unfollowSpy }).unfollowSerie =
+                unfollowSpy;
             component['stats'].set({ ...mockStats, followedByCurrentUser: true });
 
             component['onToggleFollow']();
@@ -606,7 +607,8 @@ describe('SerieDetailComponent', () => {
 
         it('should update stats on successful follow', () => {
             const followSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { followSerie: typeof followSpy }).followSerie = followSpy;
+            (mockSeriesService as unknown as { followSerie: typeof followSpy }).followSerie =
+                followSpy;
 
             component['onToggleFollow']();
 
@@ -615,7 +617,8 @@ describe('SerieDetailComponent', () => {
 
         it('should handle follow error', () => {
             const followSpy = vi.fn().mockReturnValue(throwError(() => new Error('API Error')));
-            (mockSeriesService as unknown as { followSerie: typeof followSpy }).followSerie = followSpy;
+            (mockSeriesService as unknown as { followSerie: typeof followSpy }).followSerie =
+                followSpy;
 
             component['onToggleFollow']();
 
@@ -634,8 +637,8 @@ describe('SerieDetailComponent', () => {
                     is_watched: false,
                     watched_at: null,
                     watched_episodes: [],
-                    watched_seasons: []
-                }
+                    watched_seasons: [],
+                },
             });
             component['stats'].set(mockStats);
         });
@@ -658,7 +661,9 @@ describe('SerieDetailComponent', () => {
 
         it('should call markSerieAsWatched when not watched', () => {
             const markSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { markSerieAsWatched: typeof markSpy }).markSerieAsWatched = markSpy;
+            (
+                mockSeriesService as unknown as { markSerieAsWatched: typeof markSpy }
+            ).markSerieAsWatched = markSpy;
 
             component['onToggleWatched']();
 
@@ -667,7 +672,9 @@ describe('SerieDetailComponent', () => {
 
         it('should call unmarkSerieAsWatched when already watched', () => {
             const unmarkSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { unmarkSerieAsWatched: typeof unmarkSpy }).unmarkSerieAsWatched = unmarkSpy;
+            (
+                mockSeriesService as unknown as { unmarkSerieAsWatched: typeof unmarkSpy }
+            ).unmarkSerieAsWatched = unmarkSpy;
             component['stats'].set({ ...mockStats, watchedByCurrentUser: true });
 
             component['onToggleWatched']();
@@ -677,7 +684,9 @@ describe('SerieDetailComponent', () => {
 
         it('should revert on failure', () => {
             const markSpy = vi.fn().mockReturnValue(of(false));
-            (mockSeriesService as unknown as { markSerieAsWatched: typeof markSpy }).markSerieAsWatched = markSpy;
+            (
+                mockSeriesService as unknown as { markSerieAsWatched: typeof markSpy }
+            ).markSerieAsWatched = markSpy;
 
             component['onToggleWatched']();
 
@@ -686,7 +695,9 @@ describe('SerieDetailComponent', () => {
 
         it('should handle watched error', () => {
             const markSpy = vi.fn().mockReturnValue(throwError(() => new Error('API Error')));
-            (mockSeriesService as unknown as { markSerieAsWatched: typeof markSpy }).markSerieAsWatched = markSpy;
+            (
+                mockSeriesService as unknown as { markSerieAsWatched: typeof markSpy }
+            ).markSerieAsWatched = markSpy;
 
             component['onToggleWatched']();
 
@@ -708,10 +719,36 @@ describe('SerieDetailComponent', () => {
                     air_date: '2023-01-01',
                     episode_count: 10,
                     episodes: [
-                        { id: 1001, episode_number: 1, name: 'Ep 1', overview: '', still_path: '', air_date: '2023-01-01', season_number: 1, show_id: 1, vote_average: 8, vote_count: 100, episode_type: 'standard', runtime: 45 },
-                        { id: 1002, episode_number: 2, name: 'Ep 2', overview: '', still_path: '', air_date: '2023-01-08', season_number: 1, show_id: 1, vote_average: 8, vote_count: 100, episode_type: 'standard', runtime: 45 }
-                    ]
-                }
+                        {
+                            id: 1001,
+                            episode_number: 1,
+                            name: 'Ep 1',
+                            overview: '',
+                            still_path: '',
+                            air_date: '2023-01-01',
+                            season_number: 1,
+                            show_id: 1,
+                            vote_average: 8,
+                            vote_count: 100,
+                            episode_type: 'standard',
+                            runtime: 45,
+                        },
+                        {
+                            id: 1002,
+                            episode_number: 2,
+                            name: 'Ep 2',
+                            overview: '',
+                            still_path: '',
+                            air_date: '2023-01-08',
+                            season_number: 1,
+                            show_id: 1,
+                            vote_average: 8,
+                            vote_count: 100,
+                            episode_type: 'standard',
+                            runtime: 45,
+                        },
+                    ],
+                },
             ],
             user_data: {
                 is_following: true,
@@ -719,8 +756,8 @@ describe('SerieDetailComponent', () => {
                 is_watched: false,
                 watched_at: null,
                 watched_episodes: [],
-                watched_seasons: []
-            }
+                watched_seasons: [],
+            },
         };
 
         beforeEach(() => {
@@ -747,7 +784,9 @@ describe('SerieDetailComponent', () => {
 
         it('should mark season as watched', () => {
             const markSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { markSeasonAsWatched: typeof markSpy }).markSeasonAsWatched = markSpy;
+            (
+                mockSeriesService as unknown as { markSeasonAsWatched: typeof markSpy }
+            ).markSeasonAsWatched = markSpy;
 
             component['onToggleSeasonWatched'](100);
 
@@ -756,14 +795,16 @@ describe('SerieDetailComponent', () => {
 
         it('should unmark season as watched when already watched', () => {
             const unmarkSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { unmarkSeasonAsWatched: typeof unmarkSpy }).unmarkSeasonAsWatched = unmarkSpy;
+            (
+                mockSeriesService as unknown as { unmarkSeasonAsWatched: typeof unmarkSpy }
+            ).unmarkSeasonAsWatched = unmarkSpy;
 
             const serieWithWatchedSeason = {
                 ...mockSerieWithSeasons,
                 user_data: {
                     ...mockSerieWithSeasons.user_data,
-                    watched_seasons: [100]
-                }
+                    watched_seasons: [100],
+                },
             };
             component['serie'].set(serieWithWatchedSeason);
 
@@ -786,10 +827,36 @@ describe('SerieDetailComponent', () => {
                     air_date: '2023-01-01',
                     episode_count: 2,
                     episodes: [
-                        { id: 1001, episode_number: 1, name: 'Ep 1', overview: '', still_path: '', air_date: '2023-01-01', season_number: 1, show_id: 1, vote_average: 8, vote_count: 100, episode_type: 'standard', runtime: 45 },
-                        { id: 1002, episode_number: 2, name: 'Ep 2', overview: '', still_path: '', air_date: '2023-01-08', season_number: 1, show_id: 1, vote_average: 8, vote_count: 100, episode_type: 'standard', runtime: 45 }
-                    ]
-                }
+                        {
+                            id: 1001,
+                            episode_number: 1,
+                            name: 'Ep 1',
+                            overview: '',
+                            still_path: '',
+                            air_date: '2023-01-01',
+                            season_number: 1,
+                            show_id: 1,
+                            vote_average: 8,
+                            vote_count: 100,
+                            episode_type: 'standard',
+                            runtime: 45,
+                        },
+                        {
+                            id: 1002,
+                            episode_number: 2,
+                            name: 'Ep 2',
+                            overview: '',
+                            still_path: '',
+                            air_date: '2023-01-08',
+                            season_number: 1,
+                            show_id: 1,
+                            vote_average: 8,
+                            vote_count: 100,
+                            episode_type: 'standard',
+                            runtime: 45,
+                        },
+                    ],
+                },
             ],
             user_data: {
                 is_following: true,
@@ -797,8 +864,8 @@ describe('SerieDetailComponent', () => {
                 is_watched: false,
                 watched_at: null,
                 watched_episodes: [],
-                watched_seasons: []
-            }
+                watched_seasons: [],
+            },
         };
 
         beforeEach(() => {
@@ -825,7 +892,9 @@ describe('SerieDetailComponent', () => {
 
         it('should mark episode as watched', () => {
             const markSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { markEpisodeAsWatched: typeof markSpy }).markEpisodeAsWatched = markSpy;
+            (
+                mockSeriesService as unknown as { markEpisodeAsWatched: typeof markSpy }
+            ).markEpisodeAsWatched = markSpy;
 
             component['onToggleEpisodeWatched'](1001);
 
@@ -834,14 +903,16 @@ describe('SerieDetailComponent', () => {
 
         it('should unmark episode as watched when already watched', () => {
             const unmarkSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { unmarkEpisodeAsWatched: typeof unmarkSpy }).unmarkEpisodeAsWatched = unmarkSpy;
+            (
+                mockSeriesService as unknown as { unmarkEpisodeAsWatched: typeof unmarkSpy }
+            ).unmarkEpisodeAsWatched = unmarkSpy;
 
             const serieWithWatchedEpisode = {
                 ...mockSerieWithEpisodes,
                 user_data: {
                     ...mockSerieWithEpisodes.user_data,
-                    watched_episodes: [1001]
-                }
+                    watched_episodes: [1001],
+                },
             };
             component['serie'].set(serieWithWatchedEpisode);
 
@@ -852,8 +923,12 @@ describe('SerieDetailComponent', () => {
 
         it('should update watched episodes list', () => {
             const markSpy = vi.fn().mockReturnValue(of(true));
-            (mockSeriesService as unknown as { markEpisodeAsWatched: typeof markSpy }).markEpisodeAsWatched = markSpy;
-            (mockSeriesService as unknown as { markSeasonAsWatched: ReturnType<typeof vi.fn> }).markSeasonAsWatched = vi.fn().mockReturnValue(of(true));
+            (
+                mockSeriesService as unknown as { markEpisodeAsWatched: typeof markSpy }
+            ).markEpisodeAsWatched = markSpy;
+            (
+                mockSeriesService as unknown as { markSeasonAsWatched: ReturnType<typeof vi.fn> }
+            ).markSeasonAsWatched = vi.fn().mockReturnValue(of(true));
 
             component['onToggleEpisodeWatched'](1001);
 

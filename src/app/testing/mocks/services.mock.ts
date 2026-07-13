@@ -29,7 +29,7 @@ export function createMockAuthService(overrides: Partial<MockAuthService> = {}):
         isUserAuthenticated: vi.fn().mockReturnValue(false),
         getStoredToken: vi.fn().mockReturnValue(null),
         logout: vi.fn().mockResolvedValue(undefined),
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -41,7 +41,7 @@ export function createMockAuthenticatedAuthService() {
         currentUser: signal(mockUser),
         isUserAuthenticated: vi.fn().mockReturnValue(true),
         userDisplayName: vi.fn().mockReturnValue(mockUser.display_name),
-        userPhotoUrl: vi.fn().mockReturnValue(mockUser.photo_url)
+        userPhotoUrl: vi.fn().mockReturnValue(mockUser.photo_url),
     });
 }
 
@@ -49,7 +49,7 @@ export function createMockAuthenticatedAuthService() {
 export function createMockMetadataService() {
     return {
         updatePageMetadata: vi.fn(),
-        setOpenGraphData: vi.fn()
+        setOpenGraphData: vi.fn(),
     };
 }
 
@@ -71,16 +71,20 @@ interface MockSeriesService {
 }
 
 // Mock SeriesService factory
-export function createMockSeriesService(overrides: Partial<MockSeriesService> = {}): MockSeriesService {
+export function createMockSeriesService(
+    overrides: Partial<MockSeriesService> = {},
+): MockSeriesService {
     const mockSerie = createMockSerie();
     const mockStats = createMockSerieStats();
 
     return {
-        getSerieDetails: vi.fn().mockReturnValue(of({
-            success: true,
-            serie: mockSerie,
-            stats: mockStats
-        })),
+        getSerieDetails: vi.fn().mockReturnValue(
+            of({
+                success: true,
+                serie: mockSerie,
+                stats: mockStats,
+            }),
+        ),
         isSerieReallyFollowed: vi.fn().mockReturnValue(of(false)),
         getPopularSeries: vi.fn().mockReturnValue(of([mockSerie])),
         getTopRatedSeries: vi.fn().mockReturnValue(of([mockSerie])),
@@ -97,9 +101,9 @@ export function createMockSeriesService(overrides: Partial<MockSeriesService> = 
             isLoading: signal(false),
             error: signal(undefined),
             hasValue: signal(false),
-            query: signal('')
+            query: signal(''),
         }),
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -113,14 +117,16 @@ interface MockPushNotificationService {
 }
 
 // Mock PushNotificationService factory
-export function createMockPushNotificationService(overrides: Partial<MockPushNotificationService> = {}): MockPushNotificationService {
+export function createMockPushNotificationService(
+    overrides: Partial<MockPushNotificationService> = {},
+): MockPushNotificationService {
     return {
         isSupported: signal(true),
         permission: signal<NotificationPermission>('default'),
         isSubscribed: signal(false),
         subscribeToPush: vi.fn().mockReturnValue(of(undefined)),
         unsubscribeFromPush: vi.fn().mockReturnValue(of(undefined)),
-        ...overrides
+        ...overrides,
     };
 }
 
@@ -128,15 +134,15 @@ export function createMockPushNotificationService(overrides: Partial<MockPushNot
 export function createMockMatDialog() {
     return {
         open: vi.fn().mockReturnValue({
-            afterClosed: vi.fn().mockReturnValue(of(null))
-        })
+            afterClosed: vi.fn().mockReturnValue(of(null)),
+        }),
     };
 }
 
 // Mock MatSnackBar factory
 export function createMockMatSnackBar() {
     return {
-        open: vi.fn()
+        open: vi.fn(),
     };
 }
 
@@ -144,6 +150,6 @@ export function createMockMatSnackBar() {
 export function createMockRouter() {
     return {
         navigate: vi.fn().mockResolvedValue(true),
-        navigateByUrl: vi.fn().mockResolvedValue(true)
+        navigateByUrl: vi.fn().mockResolvedValue(true),
     };
 }

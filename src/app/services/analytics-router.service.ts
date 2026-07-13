@@ -5,7 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MetadataService } from './metadata.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class AnalyticsRouterService {
     private readonly router = inject(Router);
@@ -19,16 +19,18 @@ export class AnalyticsRouterService {
         }
         this.isInitialized = true;
 
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe(() => {
-            try {
-                this.metadataService.trackCurrentPage();
-            } catch (error) {
-                // Log navigation tracking errors for debugging and monitoring
-                console.error('Error tracking page navigation:', error);
-            }
-        });
+        this.router.events
+            .pipe(
+                filter((event) => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                try {
+                    this.metadataService.trackCurrentPage();
+                } catch (error) {
+                    // Log navigation tracking errors for debugging and monitoring
+                    console.error('Error tracking page navigation:', error);
+                }
+            });
     }
 }

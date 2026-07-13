@@ -1,5 +1,9 @@
 import { Injectable, inject, ApplicationRef } from '@angular/core';
-import { SwUpdate, VersionReadyEvent, VersionInstallationFailedEvent } from '@angular/service-worker';
+import {
+    SwUpdate,
+    VersionReadyEvent,
+    VersionInstallationFailedEvent,
+} from '@angular/service-worker';
 import { TranslocoService } from '@jsverse/transloco';
 import { filter, interval, concat, first } from 'rxjs';
 
@@ -16,7 +20,7 @@ import { filter, interval, concat, first } from 'rxjs';
  * getting stuck in a broken state. See docs/SERVICE_WORKER.md for details.
  */
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class UpdateService {
     private readonly swUpdate = inject(SwUpdate);
@@ -35,8 +39,8 @@ export class UpdateService {
 
         // Check for updates every 6 hours once app is stable
         const appIsStable$ = this.appRef.isStable.pipe(
-            filter(isStable => isStable),
-            first()
+            filter((isStable) => isStable),
+            first(),
         );
         const everySixHours$ = interval(6 * 60 * 60 * 1000);
         const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
@@ -63,7 +67,12 @@ export class UpdateService {
 
         // Handle installation failures
         this.swUpdate.versionUpdates
-            .pipe(filter((evt): evt is VersionInstallationFailedEvent => evt.type === 'VERSION_INSTALLATION_FAILED'))
+            .pipe(
+                filter(
+                    (evt): evt is VersionInstallationFailedEvent =>
+                        evt.type === 'VERSION_INSTALLATION_FAILED',
+                ),
+            )
             .subscribe((evt) => {
                 console.error('[UpdateService] Version installation failed:', evt.error);
             });

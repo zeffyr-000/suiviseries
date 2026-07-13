@@ -33,12 +33,12 @@ npx http-server dist/suiviseries/browser -p 8080   # or any static server
 
 ### Web Push (PushNotificationService)
 
-| Symptom                         | Likely cause                                                        |
-| ------------------------------- | ------------------------------------------------------------------- |
-| Subscription request throws     | Missing/incorrect VAPID public key, or SW not yet active            |
-| No permission prompt            | `Notification.permission` already `denied`, or not a user gesture   |
-| Push not received               | Subscription not stored on backend, or backend not sending          |
-| Nothing happens in dev          | Expected — SW disabled in dev; test against a prod build            |
+| Symptom                     | Likely cause                                                      |
+| --------------------------- | ----------------------------------------------------------------- |
+| Subscription request throws | Missing/incorrect VAPID public key, or SW not yet active          |
+| No permission prompt        | `Notification.permission` already `denied`, or not a user gesture |
+| Push not received           | Subscription not stored on backend, or backend not sending        |
+| Nothing happens in dev      | Expected — SW disabled in dev; test against a prod build          |
 
 Always feature-detect: `'serviceWorker' in navigator`, `'PushManager' in window`, `Notification.permission`.
 

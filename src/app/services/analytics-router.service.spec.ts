@@ -16,19 +16,19 @@ describe('AnalyticsRouterService', () => {
 
     beforeEach(() => {
         mockRouter = {
-            events: new Subject()
+            events: new Subject(),
         };
 
         mockMetadataService = {
-            trackCurrentPage: vi.fn()
+            trackCurrentPage: vi.fn(),
         };
 
         TestBed.configureTestingModule({
             providers: [
                 AnalyticsRouterService,
                 { provide: Router, useValue: mockRouter },
-                { provide: MetadataService, useValue: mockMetadataService }
-            ]
+                { provide: MetadataService, useValue: mockMetadataService },
+            ],
         });
 
         service = TestBed.inject(AnalyticsRouterService);
@@ -111,7 +111,10 @@ describe('AnalyticsRouterService', () => {
 
             // First call throws but is caught internally
             mockRouter.events.next(new NavigationEnd(1, '/home', '/home'));
-            expect(consoleErrorSpy).toHaveBeenCalledWith('Error tracking page navigation:', expect.any(Error));
+            expect(consoleErrorSpy).toHaveBeenCalledWith(
+                'Error tracking page navigation:',
+                expect.any(Error),
+            );
 
             // Second call should work
             mockRouter.events.next(new NavigationEnd(2, '/search', '/search'));
@@ -124,13 +127,7 @@ describe('AnalyticsRouterService', () => {
         it('should track different route URLs', () => {
             service.initialize();
 
-            const routes = [
-                '/home',
-                '/search',
-                '/my-series',
-                '/serie/123/breaking-bad',
-                '/login'
-            ];
+            const routes = ['/home', '/search', '/my-series', '/serie/123/breaking-bad', '/login'];
 
             routes.forEach((url, index) => {
                 mockRouter.events.next(new NavigationEnd(index + 1, url, url));

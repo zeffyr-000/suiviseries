@@ -12,14 +12,12 @@ describe('LegalComponent', () => {
 
     beforeEach(async () => {
         metadataService = {
-            updatePageMetadata: vi.fn()
+            updatePageMetadata: vi.fn(),
         };
 
         await TestBed.configureTestingModule({
             imports: [LegalComponent, getTranslocoTestingModule()],
-            providers: [
-                { provide: MetadataService, useValue: metadataService }
-            ]
+            providers: [{ provide: MetadataService, useValue: metadataService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(LegalComponent);
@@ -45,8 +43,8 @@ describe('LegalComponent', () => {
             expect.objectContaining({
                 canonicalUrl: expect.stringContaining('/legal'),
                 includeOpenGraph: true,
-                includeTwitter: true
-            })
+                includeTwitter: true,
+            }),
         );
     });
 

@@ -34,15 +34,15 @@ This Material Design 3 review achieved professional-grade quality:
 ```scss
 // Desktop: 40px M3 standard
 .mat-mdc-button {
-  height: 40px !important;
-  border-radius: 20px !important; // Full rounding adapted to 40px height
+    height: 40px !important;
+    border-radius: 20px !important; // Full rounding adapted to 40px height
 }
 
 // Mobile: 48px for touch targets
 @media (max-width: 768px) {
-  .mat-mdc-button {
-    height: 48px !important;
-  }
+    .mat-mdc-button {
+        height: 48px !important;
+    }
 }
 ```
 
@@ -65,13 +65,13 @@ This Material Design 3 review achieved professional-grade quality:
 
 ```scss
 @media (max-width: 768px) {
-  button,
-  a:not(p a),
-  [role='button'],
-  .clickable {
-    min-height: 48px;
-    min-width: 48px;
-  }
+    button,
+    a:not(p a),
+    [role='button'],
+    .clickable {
+        min-height: 48px;
+        min-width: 48px;
+    }
 }
 ```
 
@@ -89,9 +89,9 @@ This Material Design 3 review achieved professional-grade quality:
 
 ```scss
 button:disabled {
-  opacity: 0.38 !important; // M3 standard
-  cursor: not-allowed !important;
-  pointer-events: none !important;
+    opacity: 0.38 !important; // M3 standard
+    cursor: not-allowed !important;
+    pointer-events: none !important;
 }
 ```
 
@@ -110,13 +110,13 @@ button:disabled {
 ```scss
 // Visible focus with M3 ring
 *:focus-visible {
-  outline: 2px solid var(--primary-color) !important;
-  outline-offset: 2px !important;
+    outline: 2px solid var(--primary-color) !important;
+    outline-offset: 2px !important;
 }
 
 // Emphasis for buttons
 button:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 ```
 
@@ -136,7 +136,7 @@ button:focus-visible {
 ```html
 <!-- Interactive buttons -->
 <button [attr.aria-label]="'action.label' | transloco">
-  <mat-icon>save</mat-icon>
+    <mat-icon>save</mat-icon>
 </button>
 
 <!-- Decorative icons -->
@@ -162,13 +162,13 @@ button:focus-visible {
 
 ```scss
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
-  }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+    }
 }
 ```
 
@@ -188,10 +188,10 @@ button:focus-visible {
 
 ```scss
 @media (prefers-contrast: high) {
-  *:focus-visible {
-    outline-width: 3px !important;
-    outline-offset: 3px !important;
-  }
+    *:focus-visible {
+        outline-width: 3px !important;
+        outline-offset: 3px !important;
+    }
 }
 ```
 
@@ -246,8 +246,8 @@ button:focus-visible {
 
 ```html
 <button mat-raised-button [appButtonLoading]="isLoading()">
-  <mat-icon>save</mat-icon>
-  Save
+    <mat-icon>save</mat-icon>
+    Save
 </button>
 ```
 
@@ -319,28 +319,28 @@ button:focus-visible {
 
 1. **Route Animations**
 
-   - Add transitions between pages
-   - Use `@angular/animations`
-   - Duration: 300ms emphasized easing
+    - Add transitions between pages
+    - Use `@angular/animations`
+    - Duration: 300ms emphasized easing
 
 2. **Skeleton Loaders**
 
-   - Replace some spinners with skeletons
-   - Better performance perception
+    - Replace some spinners with skeletons
+    - Better performance perception
 
 3. **Custom Ripple Effects**
 
-   - Verify all clickable elements have ripple
-   - Add custom ripples if needed
+    - Verify all clickable elements have ripple
+    - Add custom ripples if needed
 
 4. **Dark Theme**
 
-   - Implement M3 dark mode
-   - Automatic toggle based on system preferences
+    - Implement M3 dark mode
+    - Automatic toggle based on system preferences
 
 5. **Use ButtonLoading Directive**
-   - Replace manual loading implementations
-   - Standardize all loading states
+    - Replace manual loading implementations
+    - Standardize all loading states
 
 ---
 

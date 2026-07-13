@@ -8,7 +8,7 @@
   justify-content: center;
   min-height: 50vh;
   gap: var(--spacing-lg);
-  
+
   p {
     margin: 0;
     font-size: 0.875rem;
@@ -17,7 +17,6 @@
     color: var(--mat-sys-on-surface-variant);
   }
 }
-
 
 .error-container {
   display: flex;
@@ -43,16 +42,16 @@
     letter-spacing: 0;
     color: var(--mat-sys-error);
   }
-  
+
   p {
     font-size: 0.875rem;
     color: var(--mat-sys-on-surface-variant);
   }
-  
+
   button {
     border-radius: 20px;
     transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:active {
       transform: scale(0.96);
     }
@@ -72,25 +71,25 @@
     padding: var(--spacing-lg);
     gap: var(--spacing-lg);
   }
-  
+
   mat-card,
   app-serie-watch-providers,
   app-serie-videos,
   app-serie-seasons {
     border-radius: 16px;
   }
-  
+
   mat-card {
     box-shadow: var(--md-sys-elevation-level1);
     transition: box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
-    
+
     &:hover {
       box-shadow: var(--md-sys-elevation-level2);
     }
-    
+
     mat-card-header {
       padding-bottom: var(--spacing-md);
-      
+
       mat-card-title {
         display: flex;
         align-items: center;
@@ -214,7 +213,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -245,7 +245,7 @@
   background: color-mix(in srgb, var(--mat-sys-surface-variant) 30%, transparent);
   border-radius: 12px;
   transition: background 150ms cubic-bezier(0.2, 0, 0, 1);
-  
+
   &:hover {
     background: color-mix(in srgb, var(--mat-sys-surface-variant) 40%, transparent);
   }
@@ -269,11 +269,11 @@
 button[mat-icon-button] {
   border-radius: 50%;
   transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
-  
+
   &:hover {
     background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
   }
-  
+
   &:active {
     transform: scale(0.92);
   }

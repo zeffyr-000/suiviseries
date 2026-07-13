@@ -37,8 +37,8 @@ The application uses a **custom service worker** that extends Angular's default 
 
 ```typescript
 provideServiceWorker('custom-sw.js', {
-  enabled: !isDevMode(),
-  registrationStrategy: 'registerWhenStable:30000',
+    enabled: !isDevMode(),
+    registrationStrategy: 'registerWhenStable:30000',
 });
 ```
 
@@ -54,26 +54,32 @@ The application uses **three asset groups** with different caching strategies to
 
 ```json
 {
-  "assetGroups": [
-    {
-      "name": "app",
-      "installMode": "prefetch",
-      "resources": {
-        "files": ["/index.html", "/manifest.webmanifest", "/*.css", "/*.js", "!/custom-sw.js"]
-      }
-    },
-    {
-      "name": "assets",
-      "installMode": "lazy",
-      "updateMode": "prefetch",
-      "resources": {
-        "files": [
-          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)",
-          "!/favicon.ico"
-        ]
-      }
-    }
-  ]
+    "assetGroups": [
+        {
+            "name": "app",
+            "installMode": "prefetch",
+            "resources": {
+                "files": [
+                    "/index.html",
+                    "/manifest.webmanifest",
+                    "/*.css",
+                    "/*.js",
+                    "!/custom-sw.js"
+                ]
+            }
+        },
+        {
+            "name": "assets",
+            "installMode": "lazy",
+            "updateMode": "prefetch",
+            "resources": {
+                "files": [
+                    "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)",
+                    "!/favicon.ico"
+                ]
+            }
+        }
+    ]
 }
 ```
 
@@ -153,27 +159,27 @@ To prevent `Hash mismatch (cacheBustedFetchFromNetwork)` errors in production:
 
 ```json
 {
-  "dataGroups": [
-    {
-      "name": "api-performance",
-      "urls": ["https://image.tmdb.org/**"],
-      "cacheConfig": {
-        "strategy": "performance", // Cache-first
-        "maxSize": 200,
-        "maxAge": "30d"
-      }
-    },
-    {
-      "name": "api-freshness",
-      "urls": ["/api/**"],
-      "cacheConfig": {
-        "strategy": "freshness", // Network-first
-        "maxSize": 50,
-        "maxAge": "1h",
-        "timeout": "3s"
-      }
-    }
-  ]
+    "dataGroups": [
+        {
+            "name": "api-performance",
+            "urls": ["https://image.tmdb.org/**"],
+            "cacheConfig": {
+                "strategy": "performance", // Cache-first
+                "maxSize": 200,
+                "maxAge": "30d"
+            }
+        },
+        {
+            "name": "api-freshness",
+            "urls": ["/api/**"],
+            "cacheConfig": {
+                "strategy": "freshness", // Network-first
+                "maxSize": 50,
+                "maxAge": "1h",
+                "timeout": "3s"
+            }
+        }
+    ]
 }
 ```
 
@@ -181,16 +187,16 @@ To prevent `Hash mismatch (cacheBustedFetchFromNetwork)` errors in production:
 
 ```json
 {
-  "assets": [
-    { "glob": "**/*", "input": "public" },
-    "src/robots.txt",
-    "src/custom-sw.js" // Copied to dist/browser/
-  ],
-  "configurations": {
-    "production": {
-      "serviceWorker": "ngsw-config.json" // Generates ngsw.json manifest
+    "assets": [
+        { "glob": "**/*", "input": "public" },
+        "src/robots.txt",
+        "src/custom-sw.js" // Copied to dist/browser/
+    ],
+    "configurations": {
+        "production": {
+            "serviceWorker": "ngsw-config.json" // Generates ngsw.json manifest
+        }
     }
-  }
 }
 ```
 
@@ -202,12 +208,12 @@ importScripts('./ngsw-worker.js');
 
 // Custom push notification handler
 globalThis.addEventListener('push', (event) => {
-  // Handle push notifications...
+    // Handle push notifications...
 });
 
 // Custom notification click handler
 globalThis.addEventListener('notificationclick', (event) => {
-  // Handle notification clicks...
+    // Handle notification clicks...
 });
 ```
 
@@ -318,24 +324,24 @@ This shows:
 
 1. **Move volatile assets to lazy group**:
 
-   ```json
-   {
-     "name": "ui-assets",
-     "installMode": "lazy",
-     "updateMode": "prefetch",
-     "resources": { "files": ["/favicon.ico"] }
-   }
-   ```
+    ```json
+    {
+        "name": "ui-assets",
+        "installMode": "lazy",
+        "updateMode": "prefetch",
+        "resources": { "files": ["/favicon.ico"] }
+    }
+    ```
 
 2. **Verify hashes before deploy**:
 
-   ```bash
-   # Check the hash in ngsw.json (base64 SHA-1)
-   cat dist/suiviseries/browser/ngsw.json | jq '.hashTable["/favicon.ico"]'
+    ```bash
+    # Check the hash in ngsw.json (base64 SHA-1)
+    cat dist/suiviseries/browser/ngsw.json | jq '.hashTable["/favicon.ico"]'
 
-   # Compare with actual file hash (base64, matching Angular's format)
-   openssl dgst -sha1 -binary dist/suiviseries/browser/favicon.ico | openssl base64
-   ```
+    # Compare with actual file hash (base64, matching Angular's format)
+    openssl dgst -sha1 -binary dist/suiviseries/browser/favicon.ico | openssl base64
+    ```
 
 3. **Clear CDN cache after every deploy**
 
@@ -377,9 +383,9 @@ This shows:
 
 ```typescript
 this.swUpdate.unrecoverable.subscribe(() => {
-  if (confirm('Reload to recover?')) {
-    location.reload();
-  }
+    if (confirm('Reload to recover?')) {
+        location.reload();
+    }
 });
 ```
 
@@ -389,21 +395,21 @@ this.swUpdate.unrecoverable.subscribe(() => {
 
 2. **Verify ngsw.json**: Check `dist/suiviseries/browser/ngsw.json`
 
-   - Ensure `custom-sw.js` is NOT in the `urls` or `hashTable`
-   - Verify all referenced files exist
+    - Ensure `custom-sw.js` is NOT in the `urls` or `hashTable`
+    - Verify all referenced files exist
 
 3. **Test with http-server**:
 
-   ```bash
-   npx http-server dist/suiviseries/browser -p 8080
-   ```
+    ```bash
+    npx http-server dist/suiviseries/browser -p 8080
+    ```
 
 4. **Check SW registration**: DevTools > Application > Service Workers
 
 5. **Simulate update**:
-   - Make a change and rebuild
-   - Reload the page
-   - Verify update notification appears
+    - Make a change and rebuild
+    - Reload the page
+    - Verify update notification appears
 
 ## Production Deployment Checklist
 

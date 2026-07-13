@@ -11,11 +11,11 @@
 
 // Specific focus styles for common interactive elements
 button:focus-visible,
-[role="button"]:focus-visible,
+[role='button']:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
-[tabindex]:not([tabindex="-1"]):focus-visible {
+[tabindex]:not([tabindex='-1']):focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }

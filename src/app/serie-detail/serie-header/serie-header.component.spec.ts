@@ -22,7 +22,7 @@ describe('SerieHeaderComponent', () => {
         number_of_episodes: 62,
         first_air_date: '2008-01-20',
         status: SerieStatus.ENDED,
-        overview: 'A high school chemistry teacher turned methamphetamine producer.'
+        overview: 'A high school chemistry teacher turned methamphetamine producer.',
     };
 
     const mockFormatRating = (rating: number): string => {
@@ -31,10 +31,7 @@ describe('SerieHeaderComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SerieHeaderComponent,
-                getTranslocoTestingModule()
-            ]
+            imports: [SerieHeaderComponent, getTranslocoTestingModule()],
         });
 
         fixture = TestBed.createComponent(SerieHeaderComponent);
@@ -43,8 +40,14 @@ describe('SerieHeaderComponent', () => {
 
         // Set required inputs
         componentRef.setInput('serie', mockSerieData);
-        componentRef.setInput('backdropUrl', 'https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg');
-        componentRef.setInput('posterUrl', 'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg');
+        componentRef.setInput(
+            'backdropUrl',
+            'https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg',
+        );
+        componentRef.setInput(
+            'posterUrl',
+            'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
+        );
         componentRef.setInput('isAuthenticated', false);
         componentRef.setInput('isFollowing', false);
         componentRef.setInput('isWatched', false);

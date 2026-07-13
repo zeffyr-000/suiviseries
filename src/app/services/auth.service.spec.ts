@@ -17,17 +17,16 @@ describe('AuthService', () => {
 
         TestBed.configureTestingModule({
             imports: [getTranslocoTestingModule()],
-            providers: [
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                AuthService
-            ]
+            providers: [provideHttpClient(), provideHttpClientTesting(), AuthService],
         });
         service = TestBed.inject(AuthService);
         httpMock = TestBed.inject(HttpTestingController);
 
         // Mock waitAndConfigureGoogleSignIn to avoid timeout
-        vi.spyOn(service as unknown as { waitAndConfigureGoogleSignIn: () => Promise<void> }, 'waitAndConfigureGoogleSignIn').mockResolvedValue(undefined);
+        vi.spyOn(
+            service as unknown as { waitAndConfigureGoogleSignIn: () => Promise<void> },
+            'waitAndConfigureGoogleSignIn',
+        ).mockResolvedValue(undefined);
     });
 
     afterEach(() => {
@@ -198,10 +197,10 @@ describe('AuthService', () => {
                 google: {
                     accounts: {
                         id: {
-                            disableAutoSelect: disableAutoSelectSpy
-                        }
-                    }
-                }
+                            disableAutoSelect: disableAutoSelectSpy,
+                        },
+                    },
+                },
             } as unknown as Window & typeof globalThis;
 
             await service.logout();
@@ -265,10 +264,10 @@ describe('AuthService', () => {
                 google: {
                     accounts: {
                         id: {
-                            renderButton: renderButtonSpy
-                        }
-                    }
-                }
+                            renderButton: renderButtonSpy,
+                        },
+                    },
+                },
             } as unknown as Window & typeof globalThis;
 
             service.renderGoogleButton(element);
@@ -293,10 +292,12 @@ describe('AuthService', () => {
                 google: {
                     accounts: {
                         id: {
-                            renderButton: () => { throw new Error('Render error'); }
-                        }
-                    }
-                }
+                            renderButton: () => {
+                                throw new Error('Render error');
+                            },
+                        },
+                    },
+                },
             } as unknown as Window & typeof globalThis;
 
             expect(() => service.renderGoogleButton(element)).not.toThrow();
@@ -317,10 +318,10 @@ describe('AuthService', () => {
                 google: {
                     accounts: {
                         id: {
-                            prompt: promptSpy
-                        }
-                    }
-                }
+                            prompt: promptSpy,
+                        },
+                    },
+                },
             } as unknown as Window & typeof globalThis;
 
             service.signInWithGooglePopup();
@@ -359,10 +360,12 @@ describe('AuthService', () => {
 
 function createMockJwt(): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const payload = btoa(JSON.stringify({
-        sub: '1',
-        exp: Math.floor(Date.now() / 1000) + 3600
-    }));
+    const payload = btoa(
+        JSON.stringify({
+            sub: '1',
+            exp: Math.floor(Date.now() / 1000) + 3600,
+        }),
+    );
     const signature = 'mock-signature';
     return `${header}.${payload}.${signature}`;
 }

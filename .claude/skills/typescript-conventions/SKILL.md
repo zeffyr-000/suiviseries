@@ -17,7 +17,7 @@ description: TypeScript conventions for Suiviseries — strict typing, no any (u
 
 - Simple `//` comments in **English only**
 - **No JSDoc** `/** */` blocks
-- Comment the *why*, not the *what*
+- Comment the _why_, not the _what_
 
 ## Error Handling
 

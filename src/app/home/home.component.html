@@ -1,7 +1,11 @@
 <div>
     <section class="hero-section" [class.has-backdrop]="heroBackdrop()">
         @if (heroBackdrop(); as backdrop) {
-        <div class="hero-backdrop" [style.background-image]="'url(' + backdrop + ')'" aria-hidden="true"></div>
+            <div
+                class="hero-backdrop"
+                [style.background-image]="'url(' + backdrop + ')'"
+                aria-hidden="true"
+            ></div>
         }
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-background-shapes"></div>
@@ -9,8 +13,13 @@
             <h1 class="display-large">{{ 'hero.title' | transloco }}</h1>
             <p class="body-large">{{ 'hero.subtitle' | transloco }}</p>
             <div class="hero-actions">
-                <button mat-flat-button color="primary" class="hero-button" routerLink="/search"
-                    [attr.aria-label]="'hero.browse_series' | transloco">
+                <button
+                    mat-flat-button
+                    color="primary"
+                    class="hero-button"
+                    routerLink="/search"
+                    [attr.aria-label]="'hero.browse_series' | transloco"
+                >
                     <mat-icon>search</mat-icon>
                     {{ 'hero.browse_series' | transloco }}
                 </button>
@@ -27,39 +36,44 @@
         </div>
 
         @if (loading()) {
-        <div class="loading-grid">
-            @for (item of [1,2,3,4,5,6]; track item) {
-            <mat-card class="series-card loading">
-                <div class="poster-placeholder"></div>
-                <mat-card-content>
-                    <div class="title-placeholder"></div>
-                    <div class="info-placeholder"></div>
-                </mat-card-content>
-            </mat-card>
-            }
-        </div>
+            <div class="loading-grid">
+                @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+                    <mat-card class="series-card loading">
+                        <div class="poster-placeholder"></div>
+                        <mat-card-content>
+                            <div class="title-placeholder"></div>
+                            <div class="info-placeholder"></div>
+                        </mat-card-content>
+                    </mat-card>
+                }
+            </div>
         } @else {
-        <div class="series-grid">
-            @for (serie of popularSeries(); track serie.id; let idx = $index) {
-            <app-serie-card [serie]="serie" [priority]="idx < 4" />
+            <div class="series-grid">
+                @for (serie of popularSeries(); track serie.id; let idx = $index) {
+                    <app-serie-card [serie]="serie" [priority]="idx < 4" />
+                }
+            </div>
+
+            @if (hasMore() && !loadingMore()) {
+                <div class="load-more-container">
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        (click)="loadMoreSeries()"
+                        class="load-more-button"
+                    >
+                        <mat-icon>expand_more</mat-icon>
+                        {{ 'sections.load_more' | transloco }}
+                    </button>
+                </div>
             }
-        </div>
 
-        @if (hasMore() && !loadingMore()) {
-        <div class="load-more-container">
-            <button mat-flat-button color="primary" (click)="loadMoreSeries()" class="load-more-button">
-                <mat-icon>expand_more</mat-icon>
-                {{ 'sections.load_more' | transloco }}
-            </button>
-        </div>
-        }
-
-        @if (loadingMore()) {
-        <div class="load-more-container">
-            <mat-icon class="loading-icon">hourglass_empty</mat-icon>
-            <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
-        </div>
-        }
+            @if (loadingMore()) {
+                <div class="load-more-container">
+                    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+                    <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
+                </div>
+            }
         }
     </section>
 
@@ -72,39 +86,44 @@
         </div>
 
         @if (topRatedLoading()) {
-        <div class="loading-grid">
-            @for (item of [1,2,3,4,5,6]; track item) {
-            <mat-card class="series-card loading">
-                <div class="poster-placeholder"></div>
-                <mat-card-content>
-                    <div class="title-placeholder"></div>
-                    <div class="info-placeholder"></div>
-                </mat-card-content>
-            </mat-card>
-            }
-        </div>
+            <div class="loading-grid">
+                @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+                    <mat-card class="series-card loading">
+                        <div class="poster-placeholder"></div>
+                        <mat-card-content>
+                            <div class="title-placeholder"></div>
+                            <div class="info-placeholder"></div>
+                        </mat-card-content>
+                    </mat-card>
+                }
+            </div>
         } @else {
-        <div class="series-grid">
-            @for (serie of topRatedSeries(); track serie.id) {
-            <app-serie-card [serie]="serie" />
+            <div class="series-grid">
+                @for (serie of topRatedSeries(); track serie.id) {
+                    <app-serie-card [serie]="serie" />
+                }
+            </div>
+
+            @if (topRatedHasMore() && !topRatedLoadingMore()) {
+                <div class="load-more-container">
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        (click)="loadMoreTopRated()"
+                        class="load-more-button"
+                    >
+                        <mat-icon>expand_more</mat-icon>
+                        {{ 'sections.load_more' | transloco }}
+                    </button>
+                </div>
             }
-        </div>
 
-        @if (topRatedHasMore() && !topRatedLoadingMore()) {
-        <div class="load-more-container">
-            <button mat-flat-button color="primary" (click)="loadMoreTopRated()" class="load-more-button">
-                <mat-icon>expand_more</mat-icon>
-                {{ 'sections.load_more' | transloco }}
-            </button>
-        </div>
-        }
-
-        @if (topRatedLoadingMore()) {
-        <div class="load-more-container">
-            <mat-icon class="loading-icon">hourglass_empty</mat-icon>
-            <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
-        </div>
-        }
+            @if (topRatedLoadingMore()) {
+                <div class="load-more-container">
+                    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+                    <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
+                </div>
+            }
         }
     </section>
 </div>

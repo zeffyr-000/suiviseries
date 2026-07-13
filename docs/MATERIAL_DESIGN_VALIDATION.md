@@ -127,16 +127,16 @@
 ```scss
 // Desktop: 40px (M3 standard)
 .mat-mdc-button {
-  min-height: 40px !important;
-  height: 40px !important;
-  border-radius: 20px !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    border-radius: 20px !important;
 }
 
 // Mobile: 48px (touch targets)
 @media (max-width: 768px) {
-  .mat-mdc-button {
-    height: 48px !important;
-  }
+    .mat-mdc-button {
+        height: 48px !important;
+    }
 }
 ```
 
@@ -157,12 +157,12 @@
 
 ```scss
 @media (max-width: 768px) {
-  button,
-  a,
-  .clickable {
-    min-height: 48px;
-    min-width: 48px;
-  }
+    button,
+    a,
+    .clickable {
+        min-height: 48px;
+        min-width: 48px;
+    }
 }
 ```
 
@@ -170,8 +170,8 @@
 
 ```scss
 *:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 ```
 
@@ -217,15 +217,15 @@
 
 ```scss
 $breakpoints: (
-  'xs': 0,
-  // Phones portrait
-  'sm': 600px,
-  // Phones landscape  ✅
-  'md': 905px,
-  // Tablets           ✅
-  'lg': 1240px,
-  // Laptops           ✅
-  'xl': 1440px // Desktops          ✅,
+    'xs': 0,
+    // Phones portrait
+    'sm': 600px,
+    // Phones landscape  ✅
+    'md': 905px,
+    // Tablets           ✅
+    'lg': 1240px,
+    // Laptops           ✅
+    'xl': 1440px, // Desktops          ✅,
 );
 ```
 

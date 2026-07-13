@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class MetadataService {
     private readonly titleService = inject(Title);
@@ -17,7 +17,9 @@ export class MetadataService {
     private readonly transloco = inject(TranslocoService);
 
     private readonly defaultTitle = computed(() => this.transloco.translate('app.title'));
-    private readonly defaultDescription = computed(() => this.transloco.translate('app.description'));
+    private readonly defaultDescription = computed(() =>
+        this.transloco.translate('app.description'),
+    );
 
     setTitle(title: string): void {
         const fullTitle = title ? `${title} - ${this.defaultTitle()}` : this.defaultTitle();
@@ -27,7 +29,7 @@ export class MetadataService {
     setDescription(description: string): void {
         this.metaService.updateTag({
             name: 'description',
-            content: description || this.defaultDescription()
+            content: description || this.defaultDescription(),
         });
     }
 
@@ -35,7 +37,10 @@ export class MetadataService {
         const fullTitle = title ? `${title} - ${this.defaultTitle()}` : this.defaultTitle();
 
         this.metaService.updateTag({ property: 'og:title', content: fullTitle });
-        this.metaService.updateTag({ property: 'og:description', content: description || this.defaultDescription() });
+        this.metaService.updateTag({
+            property: 'og:description',
+            content: description || this.defaultDescription(),
+        });
         this.metaService.updateTag({ property: 'og:type', content: 'website' });
 
         if (url) {
@@ -52,7 +57,10 @@ export class MetadataService {
 
         this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
         this.metaService.updateTag({ name: 'twitter:title', content: fullTitle });
-        this.metaService.updateTag({ name: 'twitter:description', content: description || this.defaultDescription() });
+        this.metaService.updateTag({
+            name: 'twitter:description',
+            content: description || this.defaultDescription(),
+        });
 
         if (image) {
             this.metaService.updateTag({ name: 'twitter:image', content: image });
@@ -87,7 +95,7 @@ export class MetadataService {
             image,
             canonicalUrl,
             includeOpenGraph = true,
-            includeTwitter = true
+            includeTwitter = true,
         } = options;
 
         this.setTitle(title);
@@ -112,7 +120,9 @@ export class MetadataService {
             const currentTitle = this.titleService.getTitle();
 
             this.googleAnalytics.pageView(currentPath, currentTitle);
-        } catch { /* empty */ }
+        } catch {
+            /* empty */
+        }
     }
 
     resetToDefaults(): void {

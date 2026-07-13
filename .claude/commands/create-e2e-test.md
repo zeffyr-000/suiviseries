@@ -20,18 +20,18 @@ Write a Playwright spec in `e2e/`. Consult the `e2e-playwright` skill.
 import { test, expect } from '@playwright/test';
 
 test.describe('Feature', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/feature');
-  });
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/feature');
+    });
 
-  test('should display the feature page', async ({ page }) => {
-    await expect(page.locator('h1')).toBeVisible();
-  });
+    test('should display the feature page', async ({ page }) => {
+        await expect(page.locator('h1')).toBeVisible();
+    });
 
-  test('should react to user input', async ({ page }) => {
-    await page.locator('input[matInput]').fill('breaking bad');
-    await expect(page.locator('app-serie-card').first()).toBeVisible();
-  });
+    test('should react to user input', async ({ page }) => {
+        await page.locator('input[matInput]').fill('breaking bad');
+        await expect(page.locator('app-serie-card').first()).toBeVisible();
+    });
 });
 ```
 

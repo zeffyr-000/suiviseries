@@ -21,14 +21,14 @@ When the application starts (`app.config.ts`), the authentication service perfor
 
 1. **Load from Storage** (`loadUserFromStorage()`):
 
-   - Reads user data from localStorage
-   - Sets the user as authenticated in the application state
-   - Does NOT immediately invalidate expired JWT tokens
+    - Reads user data from localStorage
+    - Sets the user as authenticated in the application state
+    - Does NOT immediately invalidate expired JWT tokens
 
 2. **Verify with Backend** (`refreshSession()`):
-   - Sends a request to `/api/init` with the stored token
-   - If backend session is valid: updates user data and continues
-   - If backend session is invalid: clears authentication data
+    - Sends a request to `/api/init` with the stored token
+    - If backend session is valid: updates user data and continues
+    - If backend session is invalid: clears authentication data
 
 This approach allows the backend to maintain longer sessions (e.g., using refresh tokens) while the frontend JWT may have a shorter expiration.
 
@@ -118,16 +118,16 @@ private async initializeApp(): Promise<void> {
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class KeepAliveService {
-  private readonly KEEP_ALIVE_INTERVAL = 60 * 60 * 1000; // 1 hour
+    private readonly KEEP_ALIVE_INTERVAL = 60 * 60 * 1000; // 1 hour
 
-  startKeepAlive(): void {
-    interval(this.KEEP_ALIVE_INTERVAL)
-      .pipe(
-        filter(() => this.authService.isAuthenticated()),
-        switchMap(() => from(this.authService.refreshSession()))
-      )
-      .subscribe();
-  }
+    startKeepAlive(): void {
+        interval(this.KEEP_ALIVE_INTERVAL)
+            .pipe(
+                filter(() => this.authService.isAuthenticated()),
+                switchMap(() => from(this.authService.refreshSession())),
+            )
+            .subscribe();
+    }
 }
 ```
 
@@ -307,19 +307,19 @@ CREATE TABLE refresh_tokens (
 
 ```json
 {
-  "authenticated": true,
-  "user": {
-    "id": 123,
-    "google_id": "google-id-123",
-    "email": "user@example.com",
-    "display_name": "John Doe",
-    "photo_url": "https://...",
-    "status": "active",
-    "created_at": "2023-01-01T00:00:00Z",
-    "last_login": "2025-12-30T10:00:00Z",
-    "notifications": [],
-    "notifications_count": 0
-  }
+    "authenticated": true,
+    "user": {
+        "id": 123,
+        "google_id": "google-id-123",
+        "email": "user@example.com",
+        "display_name": "John Doe",
+        "photo_url": "https://...",
+        "status": "active",
+        "created_at": "2023-01-01T00:00:00Z",
+        "last_login": "2025-12-30T10:00:00Z",
+        "notifications": [],
+        "notifications_count": 0
+    }
 }
 ```
 
@@ -327,8 +327,8 @@ CREATE TABLE refresh_tokens (
 
 ```json
 {
-  "authenticated": false,
-  "user": null
+    "authenticated": false,
+    "user": null
 }
 ```
 

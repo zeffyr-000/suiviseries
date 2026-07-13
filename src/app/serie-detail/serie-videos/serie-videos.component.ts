@@ -15,13 +15,9 @@ export interface Video {
 
 @Component({
     selector: 'app-serie-videos',
-    imports: [
-        TranslocoModule,
-        MatCardModule,
-        MatIconModule
-    ],
+    imports: [TranslocoModule, MatCardModule, MatIconModule],
     templateUrl: './serie-videos.component.html',
-    styleUrl: './serie-videos.component.scss'
+    styleUrl: './serie-videos.component.scss',
 })
 export class SerieVideosComponent {
     videos = input.required<Video[]>();

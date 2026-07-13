@@ -21,13 +21,13 @@ import { getNotificationTranslationKey } from '../utils/notification.utils';
         MatMenuModule,
         MatTooltipModule,
         MatRippleModule,
-        TranslocoModule
+        TranslocoModule,
     ],
     host: {
-        'class': 'notifications-menu-host'
+        class: 'notifications-menu-host',
     },
     templateUrl: './notifications-menu.component.html',
-    styleUrl: './notifications-menu.component.scss'
+    styleUrl: './notifications-menu.component.scss',
 })
 export class NotificationsMenuComponent {
     protected readonly userNotificationService = inject(UserNotificationService);
@@ -45,7 +45,7 @@ export class NotificationsMenuComponent {
 
     getFormattedDate(dateString: string): string {
         return formatRelativeDate(dateString, (key: string, params?: Record<string, number>) =>
-            this.transloco.translate(key, params)
+            this.transloco.translate(key, params),
         );
     }
 

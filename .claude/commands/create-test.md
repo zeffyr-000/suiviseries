@@ -27,29 +27,29 @@ import { SeriesService } from '../services/series.service';
 import { FeatureComponent } from './feature.component';
 
 describe('FeatureComponent', () => {
-  let seriesService: ReturnType<typeof createMockSeriesService>;
+    let seriesService: ReturnType<typeof createMockSeriesService>;
 
-  beforeEach(() => {
-    seriesService = createMockSeriesService();
-    TestBed.configureTestingModule({
-      imports: [FeatureComponent, getTranslocoTestingModule()],
-      providers: [{ provide: SeriesService, useValue: seriesService }],
+    beforeEach(() => {
+        seriesService = createMockSeriesService();
+        TestBed.configureTestingModule({
+            imports: [FeatureComponent, getTranslocoTestingModule()],
+            providers: [{ provide: SeriesService, useValue: seriesService }],
+        });
     });
-  });
 
-  afterEach(() => vi.restoreAllMocks());
+    afterEach(() => vi.restoreAllMocks());
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(FeatureComponent);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
+    it('should create', () => {
+        const fixture = TestBed.createComponent(FeatureComponent);
+        expect(fixture.componentInstance).toBeTruthy();
+    });
 
-  it('should notify on load error', () => {
-    seriesService.getSerieDetails.mockReturnValue(of({ success: false } as never));
-    const fixture = TestBed.createComponent(FeatureComponent);
-    fixture.componentInstance.ngOnInit();
-    // expect(notificationService.error).toHaveBeenCalledWith('notifications.errors.your_key');
-  });
+    it('should notify on load error', () => {
+        seriesService.getSerieDetails.mockReturnValue(of({ success: false } as never));
+        const fixture = TestBed.createComponent(FeatureComponent);
+        fixture.componentInstance.ngOnInit();
+        // expect(notificationService.error).toHaveBeenCalledWith('notifications.errors.your_key');
+    });
 });
 ```
 

@@ -18,7 +18,7 @@ describe('Session Persistence Integration', () => {
     function mockGoogleSignIn(service: AuthService) {
         vi.spyOn(
             service as unknown as { waitAndConfigureGoogleSignIn: () => Promise<void> },
-            'waitAndConfigureGoogleSignIn'
+            'waitAndConfigureGoogleSignIn',
         ).mockResolvedValue(undefined);
     }
 
@@ -31,8 +31,8 @@ describe('Session Persistence Integration', () => {
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 AuthService,
-                KeepAliveService
-            ]
+                KeepAliveService,
+            ],
         });
 
         authService = TestBed.inject(AuthService);
@@ -49,8 +49,8 @@ describe('Session Persistence Integration', () => {
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 AuthService,
-                KeepAliveService
-            ]
+                KeepAliveService,
+            ],
         });
 
         authService = TestBed.inject(AuthService);
@@ -206,7 +206,9 @@ describe('Session Persistence Integration', () => {
 
         it('should be configured to run every hour', () => {
             // Access via reflection since KEEP_ALIVE_INTERVAL is private
-            const interval = (keepAliveService as unknown as { KEEP_ALIVE_INTERVAL: number })['KEEP_ALIVE_INTERVAL'];
+            const interval = (keepAliveService as unknown as { KEEP_ALIVE_INTERVAL: number })[
+                'KEEP_ALIVE_INTERVAL'
+            ];
             expect(interval).toBe(60 * 60 * 1000);
         });
     });
@@ -230,8 +232,8 @@ describe('Session Persistence Integration', () => {
                 authenticated: true,
                 user: {
                     ...mockUser,
-                    last_login: '2023-01-03' // Updated last login
-                }
+                    last_login: '2023-01-03', // Updated last login
+                },
             });
 
             await promise;
@@ -246,20 +248,24 @@ describe('Session Persistence Integration', () => {
 
 function createMockJwt(): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const payload = btoa(JSON.stringify({
-        sub: '1',
-        exp: Math.floor(Date.now() / 1000) + 3600 // Valid for 1 hour
-    }));
+    const payload = btoa(
+        JSON.stringify({
+            sub: '1',
+            exp: Math.floor(Date.now() / 1000) + 3600, // Valid for 1 hour
+        }),
+    );
     const signature = 'mock-signature';
     return `${header}.${payload}.${signature}`;
 }
 
 function createExpiredJwt(): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const payload = btoa(JSON.stringify({
-        sub: '1',
-        exp: Math.floor(Date.now() / 1000) - 3600 // Expired 1 hour ago
-    }));
+    const payload = btoa(
+        JSON.stringify({
+            sub: '1',
+            exp: Math.floor(Date.now() / 1000) - 3600, // Expired 1 hour ago
+        }),
+    );
     const signature = 'mock-signature';
     return `${header}.${payload}.${signature}`;
 }

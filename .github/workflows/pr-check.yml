@@ -1,52 +1,52 @@
 name: PR Check
 
 on:
-  pull_request:
-    branches:
-      - main
+    pull_request:
+        branches:
+            - main
 
 # Cancel superseded runs on the same PR branch instead of letting them pile up
 concurrency:
-  group: pr-check-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true
+    group: pr-check-${{ github.head_ref || github.ref }}
+    cancel-in-progress: true
 
 # Least privilege: this workflow only reads the repository
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    test:
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
 
-    strategy:
-      # Report every Node version independently — one failing leg must not
-      # cancel the others (that is what produced the "operation was canceled").
-      fail-fast: false
-      matrix:
-        node-version: [22.22.3, 24.x]
+        strategy:
+            # Report every Node version independently — one failing leg must not
+            # cancel the others (that is what produced the "operation was canceled").
+            fail-fast: false
+            matrix:
+                node-version: [22.22.3, 24.x]
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+            - name: Setup Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+            - name: Install dependencies
+              run: npm ci --legacy-peer-deps
 
-      - name: Lint
-        run: npm run lint
+            - name: Lint
+              run: npm run lint
 
-      - name: Unit tests (coverage)
-        run: npm run test:coverage
+            - name: Unit tests (coverage)
+              run: npm run test:coverage
 
-      - name: Build (production)
-        run: npm run build -- --configuration production
+            - name: Build (production)
+              run: npm run build -- --configuration production
 
-      - name: Report build size
-        run: du -sh dist/suiviseries
+            - name: Report build size
+              run: du -sh dist/suiviseries

@@ -13,7 +13,9 @@ describe('notification.utils', () => {
         });
 
         it('should return correct key for status_canceled', () => {
-            expect(getNotificationTranslationKey('status_canceled')).toBe('notification.status_canceled');
+            expect(getNotificationTranslationKey('status_canceled')).toBe(
+                'notification.status_canceled',
+            );
         });
 
         it('should return correct key for status_ended', () => {

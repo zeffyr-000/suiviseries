@@ -20,30 +20,27 @@ describe('MySeriesComponent', () => {
             original_name: 'My Serie 1',
             overview: 'Description 1',
             number_of_seasons: 3,
-            number_of_episodes: 30
-        })
+            number_of_episodes: 30,
+        }),
     ];
 
     beforeEach(() => {
         mockSeriesService = {
-            getUserSeries: vi.fn().mockReturnValue(of(mockSeries))
+            getUserSeries: vi.fn().mockReturnValue(of(mockSeries)),
         };
 
         mockMetadataService = createMockMetadataService();
 
         TestBed.configureTestingModule({
-            imports: [
-                MySeriesComponent,
-                getTranslocoTestingModule()
-            ],
+            imports: [MySeriesComponent, getTranslocoTestingModule()],
             providers: [
                 // Catch-all so goToSearch()'s router.navigate(['/search']) resolves
                 // instead of rejecting async with NG04002 (an unhandled rejection that
                 // otherwise floats onto unrelated test files).
                 provideRouter([{ path: '**', children: [] }]),
                 { provide: SeriesService, useValue: mockSeriesService },
-                { provide: MetadataService, useValue: mockMetadataService }
-            ]
+                { provide: MetadataService, useValue: mockMetadataService },
+            ],
         });
 
         component = TestBed.createComponent(MySeriesComponent).componentInstance;
@@ -67,8 +64,9 @@ describe('MySeriesComponent', () => {
 
             expect(mockMetadataService.updatePageMetadata).toHaveBeenCalledWith({
                 title: 'Mes Séries',
-                description: 'Gérez votre collection personnelle de séries TV. Suivez votre progression et ne ratez jamais un épisode.',
-                canonicalUrl: 'http://localhost:4200/my-series'
+                description:
+                    'Gérez votre collection personnelle de séries TV. Suivez votre progression et ne ratez jamais un épisode.',
+                canonicalUrl: 'http://localhost:4200/my-series',
             });
         });
 
@@ -91,7 +89,7 @@ describe('MySeriesComponent', () => {
 
         it('should handle errors gracefully', () => {
             mockSeriesService.getUserSeries.mockReturnValue(
-                throwError(() => new Error('API Error'))
+                throwError(() => new Error('API Error')),
             );
 
             component.ngOnInit();
@@ -125,8 +123,8 @@ describe('MySeriesComponent', () => {
             const newSeries = [
                 createMockSerie({
                     id: 2,
-                    name: 'New Serie'
-                })
+                    name: 'New Serie',
+                }),
             ];
             mockSeriesService.getUserSeries.mockReturnValue(of(newSeries));
 

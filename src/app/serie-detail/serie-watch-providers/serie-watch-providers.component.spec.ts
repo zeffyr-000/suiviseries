@@ -15,34 +15,31 @@ describe('SerieWatchProvidersComponent', () => {
             provider_id: 8,
             provider_name: 'Netflix',
             logo_path: 'https://image.tmdb.org/t/p/original/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg',
-            type: 'flatrate'
+            type: 'flatrate',
         },
         {
             provider_id: 119,
             provider_name: 'Amazon Prime Video',
             logo_path: 'https://image.tmdb.org/t/p/original/emthp39XA2YScoYL1p0sdbAH2WA.jpg',
-            type: 'flatrate'
+            type: 'flatrate',
         },
         {
             provider_id: 2,
             provider_name: 'Apple TV',
             logo_path: 'https://image.tmdb.org/t/p/original/peURlLlr8jggOwK53fJ5wdQl05y.jpg',
-            type: 'buy'
+            type: 'buy',
         },
         {
             provider_id: 3,
             provider_name: 'Google Play Movies',
             logo_path: null,
-            type: 'rent'
-        }
+            type: 'rent',
+        },
     ];
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SerieWatchProvidersComponent,
-                getTranslocoTestingModule()
-            ]
+            imports: [SerieWatchProvidersComponent, getTranslocoTestingModule()],
         });
 
         fixture = TestBed.createComponent(SerieWatchProvidersComponent);
@@ -165,16 +162,16 @@ describe('SerieWatchProvidersComponent', () => {
 
     describe('Provider Types', () => {
         it('should handle flatrate providers', () => {
-            const flatrateProviders = mockProviders.filter(p => p.type === 'flatrate');
+            const flatrateProviders = mockProviders.filter((p) => p.type === 'flatrate');
             componentRef.setInput('providers', flatrateProviders);
             fixture.detectChanges();
 
             expect(component.providers()).toHaveLength(2);
-            expect(component.providers().every(p => p.type === 'flatrate')).toBe(true);
+            expect(component.providers().every((p) => p.type === 'flatrate')).toBe(true);
         });
 
         it('should handle buy providers', () => {
-            const buyProviders = mockProviders.filter(p => p.type === 'buy');
+            const buyProviders = mockProviders.filter((p) => p.type === 'buy');
             componentRef.setInput('providers', buyProviders);
             fixture.detectChanges();
 
@@ -183,7 +180,7 @@ describe('SerieWatchProvidersComponent', () => {
         });
 
         it('should handle rent providers', () => {
-            const rentProviders = mockProviders.filter(p => p.type === 'rent');
+            const rentProviders = mockProviders.filter((p) => p.type === 'rent');
             componentRef.setInput('providers', rentProviders);
             fixture.detectChanges();
 
@@ -217,7 +214,7 @@ describe('SerieWatchProvidersComponent', () => {
 
             const compiled = fixture.nativeElement as HTMLElement;
             const logos = compiled.querySelectorAll('.provider-logo');
-            logos.forEach(logo => {
+            logos.forEach((logo) => {
                 expect((logo as HTMLImageElement).alt).toBeTruthy();
             });
         });

@@ -12,13 +12,9 @@ export interface WatchProvider {
 
 @Component({
     selector: 'app-serie-watch-providers',
-    imports: [
-        TranslocoModule,
-        MatCardModule,
-        MatIconModule
-    ],
+    imports: [TranslocoModule, MatCardModule, MatIconModule],
     templateUrl: './serie-watch-providers.component.html',
-    styleUrl: './serie-watch-providers.component.scss'
+    styleUrl: './serie-watch-providers.component.scss',
 })
 export class SerieWatchProvidersComponent {
     providers = input.required<WatchProvider[]>();

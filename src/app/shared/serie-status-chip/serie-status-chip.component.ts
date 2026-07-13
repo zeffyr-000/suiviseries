@@ -9,13 +9,9 @@ import { SerieStatus } from '../../models/serie.model';
 
 @Component({
     selector: 'app-serie-status-chip',
-    imports: [
-        TranslocoModule,
-        MatChipsModule,
-        MatIconModule
-    ],
+    imports: [TranslocoModule, MatChipsModule, MatIconModule],
     templateUrl: './serie-status-chip.component.html',
-    styleUrl: './serie-status-chip.component.scss'
+    styleUrl: './serie-status-chip.component.scss',
 })
 export class SerieStatusChipComponent {
     readonly status = input<SerieStatus>(SerieStatus.PLANNED);
@@ -31,7 +27,7 @@ export class SerieStatusChipComponent {
             [SerieStatus.ENDED]: 'status-ended',
             [SerieStatus.CANCELED]: 'status-canceled',
             [SerieStatus.IN_PRODUCTION]: 'status-production',
-            [SerieStatus.PLANNED]: 'status-planned'
+            [SerieStatus.PLANNED]: 'status-planned',
         };
         return `${statusMap[this.status()] || 'status-default'} size-${this.size()}`;
     });
@@ -42,7 +38,7 @@ export class SerieStatusChipComponent {
             [SerieStatus.ENDED]: 'check_circle',
             [SerieStatus.CANCELED]: 'cancel',
             [SerieStatus.IN_PRODUCTION]: 'work',
-            [SerieStatus.PLANNED]: 'schedule'
+            [SerieStatus.PLANNED]: 'schedule',
         };
         return iconMap[this.status()] || 'info';
     });
@@ -53,7 +49,7 @@ export class SerieStatusChipComponent {
             [SerieStatus.ENDED]: 'status.ended',
             [SerieStatus.CANCELED]: 'status.canceled',
             [SerieStatus.IN_PRODUCTION]: 'status.in_production',
-            [SerieStatus.PLANNED]: 'status.planned'
+            [SerieStatus.PLANNED]: 'status.planned',
         };
         return this.translocoService.translate(statusMap[this.status()]);
     });

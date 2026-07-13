@@ -19,10 +19,10 @@ import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip
         MatCardModule,
         MatButtonModule,
         MatIconModule,
-        SerieStatusChipComponent
+        SerieStatusChipComponent,
     ],
     templateUrl: './serie-card.component.html',
-    styleUrl: './serie-card.component.scss'
+    styleUrl: './serie-card.component.scss',
 })
 export class SerieCardComponent {
     readonly serie = input.required<Serie>();

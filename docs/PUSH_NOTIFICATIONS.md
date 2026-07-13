@@ -26,14 +26,14 @@ The backend **MUST** send push notifications with a **valid JSON payload**. The 
 
 ```json
 {
-  "title": "New episodes available!",
-  "body": "Breaking Bad - 3 new episodes available",
-  "icon": "https://image.tmdb.org/t/p/w154/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg",
-  "badge": "/icons/icon-72x72.png",
-  "tag": "notification-10414",
-  "url": "/series/breaking-bad/1396",
-  "notification_id": 10414,
-  "serie_id": 1311
+    "title": "New episodes available!",
+    "body": "Breaking Bad - 3 new episodes available",
+    "icon": "https://image.tmdb.org/t/p/w154/ztkUQFLlC19CCMYHW9o1zWhJRNq.jpg",
+    "badge": "/icons/icon-72x72.png",
+    "tag": "notification-10414",
+    "url": "/series/breaking-bad/1396",
+    "notification_id": 10414,
+    "serie_id": 1311
 }
 ```
 
@@ -77,7 +77,7 @@ Test push notification
 
 ```json
 {
-  "status": "read"
+    "status": "read"
 }
 ```
 
@@ -85,13 +85,13 @@ Test push notification
 
 ```json
 {
-  "success": true,
-  "message": "Notification marked as read",
-  "notification": {
-    "id": 123,
-    "status": "read",
-    "read_at": "2025-12-12 14:30:00"
-  }
+    "success": true,
+    "message": "Notification marked as read",
+    "notification": {
+        "id": 123,
+        "status": "read",
+        "read_at": "2025-12-12 14:30:00"
+    }
 }
 ```
 
@@ -99,8 +99,8 @@ Test push notification
 
 ```json
 {
-  "success": false,
-  "error": "Notification not found"
+    "success": false,
+    "error": "Notification not found"
 }
 ```
 
@@ -119,13 +119,13 @@ Test push notification
 
 1. **PushNotificationService** - Manages push notification subscriptions
 
-   - Subscribes to push notifications via VAPID
-   - Manages subscription state with signals
+    - Subscribes to push notifications via VAPID
+    - Manages subscription state with signals
 
 2. **UserNotificationService** - Manages notification state
-   - Stores notifications in a signal
-   - Provides read/unread counts
-   - Handles optimistic UI updates
+    - Stores notifications in a signal
+    - Provides read/unread counts
+    - Handles optimistic UI updates
 
 ### Notification Flow
 

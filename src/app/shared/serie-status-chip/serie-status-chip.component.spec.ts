@@ -16,10 +16,7 @@ describe('SerieStatusChipComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                SerieStatusChipComponent,
-                getTranslocoTestingModule()
-            ]
+            imports: [SerieStatusChipComponent, getTranslocoTestingModule()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(SerieStatusChipComponent);
@@ -53,7 +50,7 @@ describe('SerieStatusChipComponent', () => {
             [SerieStatus.ENDED, 'status-ended size-small'],
             [SerieStatus.CANCELED, 'status-canceled size-small'],
             [SerieStatus.IN_PRODUCTION, 'status-production size-small'],
-            [SerieStatus.PLANNED, 'status-planned size-small']
+            [SerieStatus.PLANNED, 'status-planned size-small'],
         ])('should return correct class for %s status', (status, expectedClass) => {
             setInput(status);
             expect(component['statusClass']()).toBe(expectedClass);
@@ -61,7 +58,7 @@ describe('SerieStatusChipComponent', () => {
 
         it.each([
             ['medium', 'status-returning size-medium'],
-            ['large', 'status-ended size-large']
+            ['large', 'status-ended size-large'],
         ])('should include %s size in class', (size, expectedClass) => {
             const status = size === 'medium' ? SerieStatus.RETURNING : SerieStatus.ENDED;
             setInput(status, size);
@@ -75,7 +72,7 @@ describe('SerieStatusChipComponent', () => {
             [SerieStatus.ENDED, 'check_circle'],
             [SerieStatus.CANCELED, 'cancel'],
             [SerieStatus.IN_PRODUCTION, 'work'],
-            [SerieStatus.PLANNED, 'schedule']
+            [SerieStatus.PLANNED, 'schedule'],
         ])('should return %s icon for %s status', (status, expectedIcon) => {
             setInput(status);
             expect(component['statusIcon']()).toBe(expectedIcon);
@@ -88,7 +85,7 @@ describe('SerieStatusChipComponent', () => {
             [SerieStatus.ENDED, 'Terminée'],
             [SerieStatus.CANCELED, 'Annulée'],
             [SerieStatus.IN_PRODUCTION, 'En production'],
-            [SerieStatus.PLANNED, 'Prévue']
+            [SerieStatus.PLANNED, 'Prévue'],
         ])('should return translated text for %s status', (status, expectedText) => {
             setInput(status);
             expect(component['translatedStatus']()).toBe(expectedText);

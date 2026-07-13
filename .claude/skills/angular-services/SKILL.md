@@ -12,26 +12,26 @@ State lives in services (this project has **no `@ngrx/signals` store**). Service
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
-  private readonly http = inject(HttpClient);
-  private readonly notificationService = inject(NotificationService);
-  private readonly apiUrl = environment.apiUrl;
+    private readonly http = inject(HttpClient);
+    private readonly notificationService = inject(NotificationService);
+    private readonly apiUrl = environment.apiUrl;
 
-  // Signal state: private writable + public readonly
-  private readonly _userSeries = signal<Serie[]>([]);
-  readonly userSeries = this._userSeries.asReadonly();
+    // Signal state: private writable + public readonly
+    private readonly _userSeries = signal<Serie[]>([]);
+    readonly userSeries = this._userSeries.asReadonly();
 
-  loadUserSeries(): void {
-    this.http
-      .get<UserSeriesResponse>(`${this.apiUrl}/user/series`)
-      .pipe(
-        map((res) => (res.success ? res.results.map((r) => r.serie) : [])),
-        catchError(() => {
-          this.notificationService.error('notifications.errors.load_series');
-          return of([]);
-        })
-      )
-      .subscribe((series) => this._userSeries.set(series));
-  }
+    loadUserSeries(): void {
+        this.http
+            .get<UserSeriesResponse>(`${this.apiUrl}/user/series`)
+            .pipe(
+                map((res) => (res.success ? res.results.map((r) => r.serie) : [])),
+                catchError(() => {
+                    this.notificationService.error('notifications.errors.load_series');
+                    return of([]);
+                }),
+            )
+            .subscribe((series) => this._userSeries.set(series));
+    }
 }
 ```
 
@@ -50,11 +50,11 @@ Every HTTP call returns an empty/default value on error and notifies the user wi
 
 ```typescript
 return this.http.get<Response>(`${this.apiUrl}/endpoint`).pipe(
-  map((response) => (response.success ? response.results : [])),
-  catchError(() => {
-    this.notificationService.error('notifications.errors.your_key');
-    return of([]);
-  })
+    map((response) => (response.success ? response.results : [])),
+    catchError(() => {
+        this.notificationService.error('notifications.errors.your_key');
+        return of([]);
+    }),
 );
 ```
 

@@ -76,16 +76,16 @@ npm run build       # Production build
 
 ```typescript
 @Component({
-  selector: 'app-example',
-  imports: [TranslocoModule, MatButtonModule], // standalone by default in v22+
-  templateUrl: './example.component.html', // ALWAYS separate files
-  styleUrl: './example.component.scss', // singular
-  // Zoneless app: omitting changeDetection is safe (signal-driven scheduling).
-  // Prefer OnPush if setting explicitly.
+    selector: 'app-example',
+    imports: [TranslocoModule, MatButtonModule], // standalone by default in v22+
+    templateUrl: './example.component.html', // ALWAYS separate files
+    styleUrl: './example.component.scss', // singular
+    // Zoneless app: omitting changeDetection is safe (signal-driven scheduling).
+    // Prefer OnPush if setting explicitly.
 })
 export class ExampleComponent {
-  readonly data = input.required<Data>(); // input(), not @Input()
-  protected readonly derived = computed(() => this.data().value);
+    readonly data = input.required<Data>(); // input(), not @Input()
+    protected readonly derived = computed(() => this.data().value);
 }
 ```
 
@@ -146,11 +146,11 @@ All HTTP calls return an empty/default value on error and notify the user:
 
 ```typescript
 return this.http.get<Response>(`${this.apiUrl}/endpoint`).pipe(
-  map((response) => (response.success ? response.results : [])),
-  catchError(() => {
-    this.notificationService.error('notifications.errors.your_key');
-    return of([]);
-  })
+    map((response) => (response.success ? response.results : [])),
+    catchError(() => {
+        this.notificationService.error('notifications.errors.your_key');
+        return of([]);
+    }),
 );
 ```
 
@@ -225,13 +225,13 @@ import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 import { createMockAuthService, createMockSeriesService } from '../testing/mocks';
 
 beforeEach(() => {
-  TestBed.configureTestingModule({
-    imports: [HomeComponent, getTranslocoTestingModule()],
-    providers: [
-      { provide: AuthService, useValue: createMockAuthService() },
-      { provide: SeriesService, useValue: createMockSeriesService() },
-    ],
-  });
+    TestBed.configureTestingModule({
+        imports: [HomeComponent, getTranslocoTestingModule()],
+        providers: [
+            { provide: AuthService, useValue: createMockAuthService() },
+            { provide: SeriesService, useValue: createMockSeriesService() },
+        ],
+    });
 });
 
 afterEach(() => vi.restoreAllMocks());

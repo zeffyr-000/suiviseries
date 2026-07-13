@@ -17,7 +17,7 @@ describe('SerieVideosComponent', () => {
             type: 'Trailer',
             site: 'YouTube',
             official: true,
-            published_at: '2024-01-15T10:00:00.000Z'
+            published_at: '2024-01-15T10:00:00.000Z',
         },
         {
             key: 'abc123xyz',
@@ -25,7 +25,7 @@ describe('SerieVideosComponent', () => {
             type: 'Behind the Scenes',
             site: 'YouTube',
             official: false,
-            published_at: '2024-01-10T08:30:00.000Z'
+            published_at: '2024-01-10T08:30:00.000Z',
         },
         {
             key: '123456789',
@@ -33,16 +33,13 @@ describe('SerieVideosComponent', () => {
             type: 'Teaser',
             site: 'Vimeo',
             official: true,
-            published_at: '2024-01-05T12:00:00.000Z'
-        }
+            published_at: '2024-01-05T12:00:00.000Z',
+        },
     ];
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                SerieVideosComponent,
-                getTranslocoTestingModule()
-            ]
+            imports: [SerieVideosComponent, getTranslocoTestingModule()],
         });
 
         fixture = TestBed.createComponent(SerieVideosComponent);
@@ -98,7 +95,7 @@ describe('SerieVideosComponent', () => {
                 site: 'Dailymotion',
                 type: 'Clip',
                 official: false,
-                published_at: null
+                published_at: null,
             };
 
             const url = component['getVideoEmbedUrl'](unsupportedVideo);
@@ -128,7 +125,7 @@ describe('SerieVideosComponent', () => {
                 site: 'Dailymotion',
                 type: 'Clip',
                 official: false,
-                published_at: null
+                published_at: null,
             };
 
             const thumbnail = component['getVideoThumbnail'](unsupportedVideo);
@@ -196,13 +193,17 @@ describe('SerieVideosComponent', () => {
     describe('Schema.org Markup', () => {
         it('should have VideoGallery schema.org markup', () => {
             const compiled = fixture.nativeElement as HTMLElement;
-            const videoGallery = compiled.querySelector('[itemtype="https://schema.org/VideoGallery"]');
+            const videoGallery = compiled.querySelector(
+                '[itemtype="https://schema.org/VideoGallery"]',
+            );
             expect(videoGallery).toBeTruthy();
         });
 
         it('should have VideoObject markup for each video', () => {
             const compiled = fixture.nativeElement as HTMLElement;
-            const videoObjects = compiled.querySelectorAll('[itemtype="https://schema.org/VideoObject"]');
+            const videoObjects = compiled.querySelectorAll(
+                '[itemtype="https://schema.org/VideoObject"]',
+            );
             expect(videoObjects).toHaveLength(3);
         });
 
@@ -235,7 +236,7 @@ describe('SerieVideosComponent', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const accessibleForFree = compiled.querySelectorAll('[itemprop="isAccessibleForFree"]');
             expect(accessibleForFree.length).toBeGreaterThanOrEqual(2); // Vimeo n'a pas de thumbnail
-            accessibleForFree.forEach(element => {
+            accessibleForFree.forEach((element) => {
                 expect(element.getAttribute('content')).toBe('true');
             });
         });
@@ -244,7 +245,8 @@ describe('SerieVideosComponent', () => {
     describe('Accessibility', () => {
         it('should have semantic container element', () => {
             const compiled = fixture.nativeElement as HTMLElement;
-            const container = compiled.querySelector('.video-list') || compiled.querySelector('mat-card');
+            const container =
+                compiled.querySelector('.video-list') || compiled.querySelector('mat-card');
             expect(container).toBeTruthy();
         });
 
@@ -257,7 +259,7 @@ describe('SerieVideosComponent', () => {
         it('should have alt text on video thumbnails', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const thumbnails = compiled.querySelectorAll('.video-thumbnail img');
-            thumbnails.forEach(thumbnail => {
+            thumbnails.forEach((thumbnail) => {
                 expect((thumbnail as HTMLImageElement).alt).toBeTruthy();
             });
         });
@@ -265,7 +267,7 @@ describe('SerieVideosComponent', () => {
         it('should have keyboard accessible video items', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const videoItems = compiled.querySelectorAll('.video-item');
-            videoItems.forEach(item => {
+            videoItems.forEach((item) => {
                 // Buttons are focusable by default (implicit tabindex=0)
                 expect(item.tagName).toBe('BUTTON');
             });

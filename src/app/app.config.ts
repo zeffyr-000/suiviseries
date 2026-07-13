@@ -1,4 +1,12 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection, provideAppInitializer, isDevMode, Injectable, inject } from '@angular/core';
+import {
+    ApplicationConfig,
+    provideBrowserGlobalErrorListeners,
+    provideZonelessChangeDetection,
+    provideAppInitializer,
+    isDevMode,
+    Injectable,
+    inject,
+} from '@angular/core';
 import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -7,8 +15,8 @@ import { provideTranslocoMessageformat } from '@jsverse/transloco-messageformat'
 import { Observable, of } from 'rxjs';
 
 import {
-  NGX_GOOGLE_ANALYTICS_INITIALIZER_PROVIDER,
-  NGX_GOOGLE_ANALYTICS_SETTINGS_TOKEN
+    NGX_GOOGLE_ANALYTICS_INITIALIZER_PROVIDER,
+    NGX_GOOGLE_ANALYTICS_SETTINGS_TOKEN,
 } from 'ngx-google-analytics';
 import { environment } from '../environments/environment';
 
@@ -23,56 +31,56 @@ import { provideServiceWorker } from '@angular/service-worker';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoInlineLoader implements TranslocoLoader {
-  getTranslation(): Observable<Translation> {
-    return of(frTranslations);
-  }
+    getTranslation(): Observable<Translation> {
+        return of(frTranslations);
+    }
 }
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZonelessChangeDetection(),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    // eslint-disable-next-line @typescript-eslint/no-deprecated
-    provideAnimations(),
-    provideTransloco({
-      config: {
-        availableLangs: ['fr'],
-        defaultLang: 'fr',
-        reRenderOnLangChange: true,
-        prodMode: !isDevMode(),
-      },
-      loader: TranslocoInlineLoader
-    }),
-    provideTranslocoMessageformat(),
-    {
-      provide: NGX_GOOGLE_ANALYTICS_SETTINGS_TOKEN,
-      useValue: {
-        trackingCode: environment.googleAnalyticsId,
-        enableTracing: !environment.production
-      }
-    },
-    NGX_GOOGLE_ANALYTICS_INITIALIZER_PROVIDER,
-    provideAppInitializer(() => {
-      const analyticsRouter = inject(AnalyticsRouterService);
-      analyticsRouter.initialize();
-    }),
-    provideAppInitializer(() => {
-      const authService = inject(AuthService);
-      return authService.initializeAuth();
-    }),
-    provideAppInitializer(() => {
-      const updateService = inject(UpdateService);
-      updateService.checkForUpdates();
-    }),
-    provideAppInitializer(() => {
-      const keepAliveService = inject(KeepAliveService);
-      keepAliveService.startKeepAlive();
-    }),
-    provideServiceWorker('custom-sw.js', {
-      enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000'
-    })
-  ]
+    providers: [
+        provideBrowserGlobalErrorListeners(),
+        provideZonelessChangeDetection(),
+        provideRouter(routes, withPreloading(PreloadAllModules)),
+        provideHttpClient(withInterceptors([authInterceptor])),
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        provideAnimations(),
+        provideTransloco({
+            config: {
+                availableLangs: ['fr'],
+                defaultLang: 'fr',
+                reRenderOnLangChange: true,
+                prodMode: !isDevMode(),
+            },
+            loader: TranslocoInlineLoader,
+        }),
+        provideTranslocoMessageformat(),
+        {
+            provide: NGX_GOOGLE_ANALYTICS_SETTINGS_TOKEN,
+            useValue: {
+                trackingCode: environment.googleAnalyticsId,
+                enableTracing: !environment.production,
+            },
+        },
+        NGX_GOOGLE_ANALYTICS_INITIALIZER_PROVIDER,
+        provideAppInitializer(() => {
+            const analyticsRouter = inject(AnalyticsRouterService);
+            analyticsRouter.initialize();
+        }),
+        provideAppInitializer(() => {
+            const authService = inject(AuthService);
+            return authService.initializeAuth();
+        }),
+        provideAppInitializer(() => {
+            const updateService = inject(UpdateService);
+            updateService.checkForUpdates();
+        }),
+        provideAppInitializer(() => {
+            const keepAliveService = inject(KeepAliveService);
+            keepAliveService.startKeepAlive();
+        }),
+        provideServiceWorker('custom-sw.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000',
+        }),
+    ],
 };

@@ -9,32 +9,34 @@ description: Angular component structure and conventions for Suiviseries — zon
 
 ```typescript
 @Component({
-  selector: 'app-my-feature',
-  imports: [TranslocoModule, MatCardModule, MatButtonModule],
-  templateUrl: './my-feature.component.html', // ALWAYS separate files
-  styleUrl: './my-feature.component.scss', // singular
-  // Zoneless default = OnPush — do NOT set changeDetection
+    selector: 'app-my-feature',
+    imports: [TranslocoModule, MatCardModule, MatButtonModule],
+    templateUrl: './my-feature.component.html', // ALWAYS separate files
+    styleUrl: './my-feature.component.scss', // singular
+    // Zoneless default = OnPush — do NOT set changeDetection
 })
 export class MyFeatureComponent {
-  // 1. Injected dependencies (private readonly for services)
-  private readonly seriesService = inject(SeriesService);
-  private readonly route = inject(ActivatedRoute);
+    // 1. Injected dependencies (private readonly for services)
+    private readonly seriesService = inject(SeriesService);
+    private readonly route = inject(ActivatedRoute);
 
-  // 2. Inputs / Outputs
-  readonly serie = input.required<Serie>();
-  readonly priority = input(false);
-  readonly closed = output<void>();
+    // 2. Inputs / Outputs
+    readonly serie = input.required<Serie>();
+    readonly priority = input(false);
+    readonly closed = output<void>();
 
-  // 3. Local state (signals)
-  protected readonly loading = signal(false);
+    // 3. Local state (signals)
+    protected readonly loading = signal(false);
 
-  // 4. Computed signals
-  protected readonly displayName = computed(() => this.serie().name || this.serie().original_name);
+    // 4. Computed signals
+    protected readonly displayName = computed(
+        () => this.serie().name || this.serie().original_name,
+    );
 
-  // 5. Methods
-  onSelect(): void {
-    this.closed.emit();
-  }
+    // 5. Methods
+    onSelect(): void {
+        this.closed.emit();
+    }
 }
 ```
 

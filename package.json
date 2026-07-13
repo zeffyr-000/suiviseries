@@ -27,7 +27,11 @@
         }
       },
       {
-        "files": ["*.scss", "*.css", "*.json"],
+        "files": [
+          "*.scss",
+          "*.css",
+          "*.json"
+        ],
         "options": {
           "tabWidth": 2
         }

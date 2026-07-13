@@ -84,15 +84,15 @@ src/
 
 ```scss
 $md-breakpoints: (
-  xs: 0px,
-  // Mobile portrait
-  sm: 600px,
-  // Mobile landscape
-  md: 905px,
-  // Tablet
-  lg: 1240px,
-  // Desktop
-  xl: 1440px // Large desktop,,,,,,
+    xs: 0px,
+    // Mobile portrait
+    sm: 600px,
+    // Mobile landscape
+    md: 905px,
+    // Tablet
+    lg: 1240px,
+    // Desktop
+    xl: 1440px, // Large desktop,,,,,,
 );
 
 // Usage: @include respond-to(lg) { ... }    // min-width
@@ -107,11 +107,11 @@ All component SCSS files must import mixins:
 @use '../../styles/mixins' as *; // Adjust path depth as needed
 
 .my-component {
-  padding: var(--spacing-lg);
+    padding: var(--spacing-lg);
 
-  @include respond-below(md) {
-    padding: var(--spacing-md);
-  }
+    @include respond-below(md) {
+        padding: var(--spacing-md);
+    }
 }
 ```
 
@@ -123,20 +123,11 @@ All component SCSS files must import mixins:
 
 ```scss
 // Small components (chips, small buttons)
---md-sys-shape-corner-extra-small: 4px
---md-sys-shape-corner-small: 8px
-
-// Medium components (standard buttons, inputs)
---md-sys-shape-corner-medium: 12px
-
-// Large components (cards, dialogs)
---md-sys-shape-corner-large: 16px
-
-// Extra large (hero sections, large cards)
---md-sys-shape-corner-extra-large: 28px
-
-// Full rounding (pills, badges, FABs)
---md-sys-shape-corner-full: 9999px
+--md-sys-shape-corner-extra-small: 4px --md-sys-shape-corner-small: 8px // Medium components (standard buttons, inputs)
+    --md-sys-shape-corner-medium: 12px // Large components (cards, dialogs)
+    --md-sys-shape-corner-large: 16px // Extra large (hero sections, large cards)
+    --md-sys-shape-corner-extra-large: 28px // Full rounding (pills, badges, FABs)
+    --md-sys-shape-corner-full: 9999px;
 ```
 
 ### Application in Project
@@ -221,43 +212,29 @@ All typography classes are available globally via `styles.scss`:
 
 ```scss
 // Micro interactions (50-200ms)
---md-sys-motion-duration-short1: 50ms    // Instant feedback
---md-sys-motion-duration-short2: 100ms   // Quick transitions
---md-sys-motion-duration-short3: 150ms   // Button hover
---md-sys-motion-duration-short4: 200ms   // Standard hover
-
-// Standard transitions (250-400ms)
---md-sys-motion-duration-medium1: 250ms
---md-sys-motion-duration-medium2: 300ms  // Card transitions
---md-sys-motion-duration-medium3: 350ms
---md-sys-motion-duration-medium4: 400ms  // Image loads
-
-// Emphasized motion (450-600ms)
---md-sys-motion-duration-long1: 450ms
---md-sys-motion-duration-long2: 500ms    // Page transitions
---md-sys-motion-duration-long3: 550ms
---md-sys-motion-duration-long4: 600ms
-
-// Complex animations (700-1000ms)
---md-sys-motion-duration-extra-long1-4: 700ms-1000ms
+--md-sys-motion-duration-short1: 50ms // Instant feedback
+    --md-sys-motion-duration-short2: 100ms // Quick transitions
+    --md-sys-motion-duration-short3: 150ms // Button hover
+    --md-sys-motion-duration-short4: 200ms // Standard hover
+    // Standard transitions (250-400ms)
+    --md-sys-motion-duration-medium1: 250ms --md-sys-motion-duration-medium2: 300ms // Card transitions
+    --md-sys-motion-duration-medium3: 350ms --md-sys-motion-duration-medium4: 400ms // Image loads
+    // Emphasized motion (450-600ms)
+    --md-sys-motion-duration-long1: 450ms --md-sys-motion-duration-long2: 500ms // Page transitions
+    --md-sys-motion-duration-long3: 550ms --md-sys-motion-duration-long4: 600ms // Complex animations (700-1000ms)
+    --md-sys-motion-duration-extra-long1-4: 700ms-1000ms;
 ```
 
 ### M3 Easing Curves
 
 ```scss
 // Standard - Most common (90% of cases)
---md-sys-motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1)
-
-// Emphasized - Expressive, dramatic
---md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1)
-
-// Decelerate - Elements entering view
---md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1)
---md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1)
-
-// Accelerate - Elements exiting view
---md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1)
---md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15)
+--md-sys-motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1) // Emphasized - Expressive, dramatic
+    --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1) // Decelerate - Elements entering view
+    --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1)
+    --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1) // Accelerate - Elements exiting view
+    --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1)
+    --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
 ```
 
 ### Easing Usage Examples
@@ -291,14 +268,11 @@ block + the custom CSS variables below).
 
 ```scss
 // Gold accent on deep night-blue surfaces
---primary-color: #c7a850  // Gold (primary)
---accent-color: #e4c368   // Bright amber (highlights)
---warn-color: #ff5449     // Error red (dark-tuned)
-
-// Gold helpers (glow / highlights)
---gold: #c7a850
---gold-bright: #e4c368
---gold-glow: rgba(199, 168, 80, 0.35)
+--primary-color: #c7a850 // Gold (primary)
+    --accent-color: #e4c368 // Bright amber (highlights)
+    --warn-color: #ff5449 // Error red (dark-tuned)
+    // Gold helpers (glow / highlights)
+    --gold: #c7a850 --gold-bright: #e4c368 --gold-glow: rgba(199, 168, 80, 0.35);
 ```
 
 > Palette seeds used to generate `_theme-colors.scss`:
@@ -329,7 +303,7 @@ border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 
 // Hover state (8% overlay)
 &:hover {
-  background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    background: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 }
 ```
 
@@ -340,13 +314,13 @@ border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 ### Spacing Tokens
 
 ```scss
---spacing-unit: 8px   // Base unit (8px grid)
---spacing-xs: 4px     // Extra small (0.5x)
---spacing-sm: 8px     // Small (1x)
---spacing-md: 16px    // Medium (2x)
---spacing-lg: 24px    // Large (3x)
---spacing-xl: 32px    // Extra large (4x)
---spacing-xxl: 48px   // 2X large (6x)
+--spacing-unit: 8px // Base unit (8px grid)
+    --spacing-xs: 4px // Extra small (0.5x)
+    --spacing-sm: 8px // Small (1x)
+    --spacing-md: 16px // Medium (2x)
+    --spacing-lg: 24px // Large (3x)
+    --spacing-xl: 32px // Extra large (4x)
+    --spacing-xxl: 48px; // 2X large (6x)
 ```
 
 ### Spacing Utility Classes
@@ -354,36 +328,36 @@ border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 ```scss
 // Padding
 .p-xs {
-  padding: var(--spacing-xs);
+    padding: var(--spacing-xs);
 }
 .p-sm {
-  padding: var(--spacing-sm);
+    padding: var(--spacing-sm);
 }
 .p-md {
-  padding: var(--spacing-md);
+    padding: var(--spacing-md);
 }
 .p-lg {
-  padding: var(--spacing-lg);
+    padding: var(--spacing-lg);
 }
 .p-xl {
-  padding: var(--spacing-xl);
+    padding: var(--spacing-xl);
 }
 
 // Margin
 .m-xs {
-  margin: var(--spacing-xs);
+    margin: var(--spacing-xs);
 }
 .m-sm {
-  margin: var(--spacing-sm);
+    margin: var(--spacing-sm);
 }
 .m-md {
-  margin: var(--spacing-md);
+    margin: var(--spacing-md);
 }
 .m-lg {
-  margin: var(--spacing-lg);
+    margin: var(--spacing-lg);
 }
 .m-xl {
-  margin: var(--spacing-xl);
+    margin: var(--spacing-xl);
 }
 ```
 
@@ -395,19 +369,19 @@ border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 
 ```scss
 .my-card {
-  border-radius: 16px; // M3 large shape
-  background: var(--mat-sys-surface);
-  box-shadow: var(--md-sys-elevation-level1);
-  transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
+    border-radius: 16px; // M3 large shape
+    background: var(--mat-sys-surface);
+    box-shadow: var(--md-sys-elevation-level1);
+    transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
 
-  &:hover {
-    box-shadow: var(--md-sys-elevation-level3);
-    transform: translateY(-8px);
-  }
+    &:hover {
+        box-shadow: var(--md-sys-elevation-level3);
+        transform: translateY(-8px);
+    }
 
-  &:active {
-    transform: scale(0.98);
-  }
+    &:active {
+        transform: scale(0.98);
+    }
 }
 ```
 
@@ -415,26 +389,26 @@ border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 
 ```scss
 .my-button {
-  height: 40px;
-  border-radius: 20px; // M3 full rounding
-  padding: 10px var(--spacing-lg);
-  font-size: 0.875rem; // M3 label-large
-  font-weight: 500;
-  letter-spacing: 0.1px;
-  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
+    height: 40px;
+    border-radius: 20px; // M3 full rounding
+    padding: 10px var(--spacing-lg);
+    font-size: 0.875rem; // M3 label-large
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
 
-  &:hover:not(:disabled) {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
-  }
+    &:hover:not(:disabled) {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+    }
 
-  &:active:not(:disabled) {
-    transform: scale(0.96);
-  }
+    &:active:not(:disabled) {
+        transform: scale(0.96);
+    }
 
-  mat-icon {
-    margin-right: var(--spacing-xs);
-  }
+    mat-icon {
+        margin-right: var(--spacing-xs);
+    }
 }
 ```
 
@@ -442,20 +416,20 @@ border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);
 
 ```scss
 .search-field {
-  // For proper rounded corners on Material outlined inputs
-  ::ng-deep {
-    .mdc-text-field--outlined {
-      .mdc-notched-outline {
-        .mdc-notched-outline__leading {
-          border-radius: 28px 0 0 28px !important;
-          width: 28px !important;
+    // For proper rounded corners on Material outlined inputs
+    ::ng-deep {
+        .mdc-text-field--outlined {
+            .mdc-notched-outline {
+                .mdc-notched-outline__leading {
+                    border-radius: 28px 0 0 28px !important;
+                    width: 28px !important;
+                }
+                .mdc-notched-outline__trailing {
+                    border-radius: 0 28px 28px 0 !important;
+                }
+            }
         }
-        .mdc-notched-outline__trailing {
-          border-radius: 0 28px 28px 0 !important;
-        }
-      }
     }
-  }
 }
 ```
 
@@ -469,26 +443,26 @@ Applied in `home.component.scss`, `my-series.component.scss`:
 
 ```scss
 .series-grid {
-  app-serie-card {
-    animation: cardFadeIn 400ms cubic-bezier(0.2, 0, 0, 1) backwards;
+    app-serie-card {
+        animation: cardFadeIn 400ms cubic-bezier(0.2, 0, 0, 1) backwards;
 
-    @for $i from 1 through 12 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 50}ms; // 50ms stagger
-      }
+        @for $i from 1 through 12 {
+            &:nth-child(#{$i}) {
+                animation-delay: #{$i * 50}ms; // 50ms stagger
+            }
+        }
     }
-  }
 }
 
 @keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 ```
 
@@ -496,35 +470,35 @@ Applied in `home.component.scss`, `my-series.component.scss`:
 
 ```scss
 .loading-grid {
-  .series-card.loading {
-    animation: skeletonFadeIn 300ms cubic-bezier(0.2, 0, 0, 1) backwards;
+    .series-card.loading {
+        animation: skeletonFadeIn 300ms cubic-bezier(0.2, 0, 0, 1) backwards;
 
-    @for $i from 1 through 6 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 60}ms;
-      }
+        @for $i from 1 through 6 {
+            &:nth-child(#{$i}) {
+                animation-delay: #{$i * 60}ms;
+            }
+        }
     }
-  }
 }
 
 .poster-placeholder {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 25%,
-    color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) 50%,
-    color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 75%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 25%,
+        color-mix(in srgb, var(--mat-sys-surface-variant) 80%, transparent) 50%,
+        color-mix(in srgb, var(--mat-sys-surface-variant) 50%, transparent) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 ```
 
@@ -532,45 +506,45 @@ Applied in `home.component.scss`, `my-series.component.scss`:
 
 ```scss
 .error-container {
-  animation: errorShake 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    animation: errorShake 500ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  mat-icon {
-    animation: errorIconBounce 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
+    mat-icon {
+        animation: errorIconBounce 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 }
 
 @keyframes errorShake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-4px);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(4px);
-  }
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-4px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(4px);
+    }
 }
 
 @keyframes errorIconBounce {
-  0% {
-    transform: scale(0.3) rotate(-45deg);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.1) rotate(5deg);
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
+    0% {
+        transform: scale(0.3) rotate(-45deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
 }
 ```
 
@@ -579,44 +553,44 @@ Applied in `home.component.scss`, `my-series.component.scss`:
 ```scss
 // Heart beat (my-series favorite icon)
 @keyframes heartBeat {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  10% {
-    transform: scale(1.1);
-  }
-  20% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.1);
-  }
-  40% {
-    transform: scale(1);
-  }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    10% {
+        transform: scale(1.1);
+    }
+    20% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1.1);
+    }
+    40% {
+        transform: scale(1);
+    }
 }
 
 // Icon float (empty states)
 @keyframes iconFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
 }
 
 // Icon pulse (stats badge)
 @keyframes iconPulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
 }
 ```
 
@@ -638,19 +612,19 @@ Added global fix in `styles.scss`:
 .mat-mdc-unelevated-button,
 .mat-mdc-outlined-button,
 .mat-mdc-flat-button {
-  .mdc-button__label {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
+    .mdc-button__label {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
 
-    mat-icon {
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      margin: 0 !important;
+        mat-icon {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 !important;
+        }
     }
-  }
 }
 ```
 
@@ -676,37 +650,37 @@ xl: 1440px   // Large desktop (1440px+)
 @use '../../styles/mixins' as *;
 
 .container {
-  padding: var(--spacing-md);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
 
-  // Tablet and up (min-width: 905px)
-  @include respond-to(md) {
-    padding: var(--spacing-xl);
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-lg);
-  }
+    // Tablet and up (min-width: 905px)
+    @include respond-to(md) {
+        padding: var(--spacing-xl);
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
 
-  // Desktop and up (min-width: 1240px)
-  @include respond-to(lg) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-xl);
-  }
+    // Desktop and up (min-width: 1240px)
+    @include respond-to(lg) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xl);
+    }
 
-  // Large desktop (min-width: 1440px)
-  @include respond-to(xl) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+    // Large desktop (min-width: 1440px)
+    @include respond-to(xl) {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 // Mobile-first approach with max-width
 .mobile-menu {
-  display: block;
+    display: block;
 
-  @include respond-to(md) {
-    display: none; // Hide on tablet+
-  }
+    @include respond-to(md) {
+        display: none; // Hide on tablet+
+    }
 }
 ```
 
@@ -714,15 +688,15 @@ xl: 1440px   // Large desktop (1440px+)
 
 ```scss
 .page-title {
-  font-size: 2rem; // Mobile: headline-large
+    font-size: 2rem; // Mobile: headline-large
 
-  @include respond-to(md) {
-    font-size: 2.5rem; // Tablet: display-small
-  }
+    @include respond-to(md) {
+        font-size: 2.5rem; // Tablet: display-small
+    }
 
-  @include respond-to(lg) {
-    font-size: 3.5rem; // Desktop: display-large
-  }
+    @include respond-to(lg) {
+        font-size: 3.5rem; // Desktop: display-large
+    }
 }
 ```
 
@@ -769,15 +743,15 @@ The `.mdc-button__label` fix automatically applies correct M3 typography.
 
 ```scss
 .mat-mdc-text-field--outlined {
-  .mdc-notched-outline {
-    .mdc-notched-outline__leading {
-      border-radius: 28px 0 0 28px !important;
-      width: 28px !important;
+    .mdc-notched-outline {
+        .mdc-notched-outline__leading {
+            border-radius: 28px 0 0 28px !important;
+            width: 28px !important;
+        }
+        .mdc-notched-outline__trailing {
+            border-radius: 0 28px 28px 0 !important;
+        }
     }
-    .mdc-notched-outline__trailing {
-      border-radius: 0 28px 28px 0 !important;
-    }
-  }
 }
 ```
 
@@ -794,14 +768,14 @@ The `.mdc-button__label` fix automatically applies correct M3 typography.
 ```html
 <!-- ✅ Correct -->
 <button mat-raised-button>
-  <mat-icon>search</mat-icon>
-  Search
+    <mat-icon>search</mat-icon>
+    Search
 </button>
 
 <!-- ❌ Incorrect (extra wrappers) -->
 <button mat-raised-button>
-  <span><mat-icon>search</mat-icon></span>
-  Search
+    <span><mat-icon>search</mat-icon></span>
+    Search
 </button>
 ```
 
@@ -813,11 +787,15 @@ The `.mdc-button__label` fix automatically applies correct M3 typography.
 
 ```scss
 // ✅ Good - GPU accelerated
-transition: transform 300ms, opacity 300ms;
+transition:
+    transform 300ms,
+    opacity 300ms;
 
 // ❌ Avoid - Causes repaints
 transition: all 300ms;
-transition: width 300ms, height 300ms;
+transition:
+    width 300ms,
+    height 300ms;
 ```
 
 ### CSS Budget Warnings
@@ -863,58 +841,58 @@ When creating/updating components, ensure:
 
 1. **Home** (`home.component.*`)
 
-   - Hero section with M3 shapes (28px bottom radius)
-   - Section headers with icon animations
-   - Staggered card entrance (50ms delay)
-   - Loading skeletons with shimmer
-   - Load more buttons with M3 full rounding
+    - Hero section with M3 shapes (28px bottom radius)
+    - Section headers with icon animations
+    - Staggered card entrance (50ms delay)
+    - Loading skeletons with shimmer
+    - Load more buttons with M3 full rounding
 
 2. **Search** (`search.component.*`)
 
-   - Rounded search input (28px notched outline)
-   - Error state with shake + bounce animations
-   - Loading state with spinner pulse
-   - No results state with floating icon
-   - Results grid with staggered cards
+    - Rounded search input (28px notched outline)
+    - Error state with shake + bounce animations
+    - Loading state with spinner pulse
+    - No results state with floating icon
+    - Results grid with staggered cards
 
 3. **My Series** (`my-series.component.*`)
 
-   - Header with slide-in animation
-   - Favorite icon with heartbeat animation
-   - Stats badge with hover lift
-   - Series grid with card stagger
-   - Empty/error states with icon float
+    - Header with slide-in animation
+    - Favorite icon with heartbeat animation
+    - Stats badge with hover lift
+    - Series grid with card stagger
+    - Empty/error states with icon float
 
 4. **Serie Detail** (`serie-detail.component.*`)
 
-   - Hero with 28px bottom radius
-   - Back button with inverse surface tokens
-   - Vote average badge (neutral, not primary)
-   - Expansion panels (12px radius)
-   - Tooltips with backdrop blur
-   - Warning cards with pulse animation
+    - Hero with 28px bottom radius
+    - Back button with inverse surface tokens
+    - Vote average badge (neutral, not primary)
+    - Expansion panels (12px radius)
+    - Tooltips with backdrop blur
+    - Warning cards with pulse animation
 
 5. **Login** (`login.component.*`)
 
-   - Dialog with headline-small title
-   - Google button with 20px rounding
-   - Hint card with surface-variant background
-   - Mobile responsive typography
+    - Dialog with headline-small title
+    - Google button with 20px rounding
+    - Hint card with surface-variant background
+    - Mobile responsive typography
 
 6. **Serie Card** (`shared/serie-card.component.*`)
 
-   - 16px card border-radius
-   - Elevation 1→3 on hover
-   - Poster scale 1.06 on hover
-   - Rating badge with blur backdrop
-   - Entrance animation (400ms)
+    - 16px card border-radius
+    - Elevation 1→3 on hover
+    - Poster scale 1.06 on hover
+    - Rating badge with blur backdrop
+    - Entrance animation (400ms)
 
 7. **App Shell** (`app.*`)
-   - Toolbar with title-large typography
-   - Sidenav with 16px trailing radius
-   - Nav items with 28px full rounding
-   - Active state with 15% primary background
-   - Menu with 12px radius
+    - Toolbar with title-large typography
+    - Sidenav with 16px trailing radius
+    - Nav items with 28px full rounding
+    - Active state with 15% primary background
+    - Menu with 12px radius
 
 ### 🎨 Global Utilities
 
@@ -1029,58 +1007,58 @@ Before committing M3 changes:
 
 1. **Storybook Integration**
 
-   - Create interactive component documentation
-   - Add design tokens showcase
-   - Document all animation patterns
+    - Create interactive component documentation
+    - Add design tokens showcase
+    - Document all animation patterns
 
 2. **"Nuit & Or" Theme Polish**
 
-   - Dark is the single, default theme (no toggle by design)
-   - Keep verifying WCAG AA contrast (gold text/icons on dark surfaces)
-   - Refine elevation/glow on key surfaces
+    - Dark is the single, default theme (no toggle by design)
+    - Keep verifying WCAG AA contrast (gold text/icons on dark surfaces)
+    - Refine elevation/glow on key surfaces
 
 3. **Performance Optimization**
-   - Analyze bundle size
-   - Optimize images (WebP, lazy loading)
-   - Tree-shake unused Material components
+    - Analyze bundle size
+    - Optimize images (WebP, lazy loading)
+    - Tree-shake unused Material components
 
 ### Medium Term
 
 1. **Advanced Animations**
 
-   - Shared element transitions
-   - Page transition animations
-   - Gesture-based interactions
+    - Shared element transitions
+    - Page transition animations
+    - Gesture-based interactions
 
 2. **Accessibility Improvements**
 
-   - Screen reader testing
-   - Keyboard shortcuts documentation
-   - High contrast mode support
+    - Screen reader testing
+    - Keyboard shortcuts documentation
+    - High contrast mode support
 
 3. **Component Library**
-   - Extract reusable components
-   - Create design system package
-   - Publish to npm (optional)
+    - Extract reusable components
+    - Create design system package
+    - Publish to npm (optional)
 
 ### Long Term
 
 1. **Design Tokens**
 
-   - JSON-based token system
-   - Theme generator tool
-   - Multi-brand support
+    - JSON-based token system
+    - Theme generator tool
+    - Multi-brand support
 
 2. **Monitoring**
 
-   - Web Vitals tracking
-   - Error monitoring (Sentry)
-   - Analytics integration
+    - Web Vitals tracking
+    - Error monitoring (Sentry)
+    - Analytics integration
 
 3. **Internationalization**
-   - RTL language support
-   - Date/time formatting
-   - Currency formatting
+    - RTL language support
+    - Date/time formatting
+    - Currency formatting
 
 ---
 

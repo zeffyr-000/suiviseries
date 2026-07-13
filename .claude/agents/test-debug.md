@@ -24,15 +24,15 @@ npm run test:coverage          # coverage (≥ 80% target)
 
 Common failure causes:
 
-| Symptom                                       | Likely cause / fix                                                   |
-| --------------------------------------------- | -------------------------------------------------------------------- |
-| `No provider for TranslocoService`            | Missing `getTranslocoTestingModule()` in `imports`                   |
-| Assertion sees a key, not text (or vice-versa)| Assert against **translation keys**, not translated strings          |
-| `expect(component.value)` never matches       | Signals are functions — use `component.value()`                      |
-| Mock method `undefined`                       | Use the `createMock*Service()` factory instead of a partial object   |
-| State leaks across tests                      | Add `afterEach(() => vi.restoreAllMocks())`                          |
-| Timer-based logic never resolves              | `vi.useFakeTimers()` + `vi.advanceTimersByTime(ms)`                  |
-| Change not reflected                          | Call `fixture.detectChanges()` after state changes                   |
+| Symptom                                        | Likely cause / fix                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------ |
+| `No provider for TranslocoService`             | Missing `getTranslocoTestingModule()` in `imports`                 |
+| Assertion sees a key, not text (or vice-versa) | Assert against **translation keys**, not translated strings        |
+| `expect(component.value)` never matches        | Signals are functions — use `component.value()`                    |
+| Mock method `undefined`                        | Use the `createMock*Service()` factory instead of a partial object |
+| State leaks across tests                       | Add `afterEach(() => vi.restoreAllMocks())`                        |
+| Timer-based logic never resolves               | `vi.useFakeTimers()` + `vi.advanceTimersByTime(ms)`                |
+| Change not reflected                           | Call `fixture.detectChanges()` after state changes                 |
 
 ## E2E Tests (Playwright)
 
@@ -45,13 +45,13 @@ npm run e2e:report  # open last report
 
 Common failure causes:
 
-| Symptom                          | Likely cause / fix                                                   |
-| -------------------------------- | -------------------------------------------------------------------- |
-| Text assertion fails on FR UI    | Match language-tolerantly with regex (`/recherche|search/i`)         |
-| Flaky "element not found"        | Use web-first `await expect(locator).toBeVisible()` (auto-waits)     |
-| `waitForTimeout` flakiness       | Replace fixed waits with assertions on state                         |
-| Server not reachable             | Playwright `webServer` starts `npm run start`; check port 4200 free  |
-| Only fails in CI                 | Inspect trace/screenshot/video artifacts (retained on failure)       |
+| Symptom                       | Likely cause / fix                                                  |
+| ----------------------------- | ------------------------------------------------------------------- |
+| Text assertion fails on FR UI | Match language-tolerantly with regex (`/recherche                   | search/i`) |
+| Flaky "element not found"     | Use web-first `await expect(locator).toBeVisible()` (auto-waits)    |
+| `waitForTimeout` flakiness    | Replace fixed waits with assertions on state                        |
+| Server not reachable          | Playwright `webServer` starts `npm run start`; check port 4200 free |
+| Only fails in CI              | Inspect trace/screenshot/video artifacts (retained on failure)      |
 
 ## Workflow
 

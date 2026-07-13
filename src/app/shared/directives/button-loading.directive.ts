@@ -1,14 +1,24 @@
-import { Directive, input, effect, inject, ElementRef, Renderer2, ViewContainerRef, ComponentRef, OnDestroy } from '@angular/core';
+import {
+    Directive,
+    input,
+    effect,
+    inject,
+    ElementRef,
+    Renderer2,
+    ViewContainerRef,
+    ComponentRef,
+    OnDestroy,
+} from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 // Directive to manage button loading states following Material Design 3
-// 
+//
 // Usage:
 // <button mat-raised-button [appButtonLoading]="isLoading()">
 //   <mat-icon>save</mat-icon>
 //   Save
 // </button>
-// 
+//
 // When loading is true: button disabled, spinner replaces icon, text remains visible
 // Note: Only handles the first mat-icon found - buttons should contain a single icon
 @Directive({

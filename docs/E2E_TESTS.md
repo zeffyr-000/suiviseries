@@ -49,17 +49,17 @@ npm run e2e:report
 
 - **Non connecté**: Bouton notifications non affiché
 - **Connecté**:
-  - Affichage du bouton avec badge (nombre de non-lus)
-  - Ouverture/fermeture du drawer (clic bouton, backdrop, bouton fermer, Escape)
-  - Affichage de la liste avec posters, titres, messages, dates
-  - Indicateur visuel notifications non-lues
-  - Navigation vers la série au clic
-  - Suppression de notification (bouton delete)
-  - Mise à jour du badge après lecture/suppression
-  - Message "aucune notification" quand vide
+    - Affichage du bouton avec badge (nombre de non-lus)
+    - Ouverture/fermeture du drawer (clic bouton, backdrop, bouton fermer, Escape)
+    - Affichage de la liste avec posters, titres, messages, dates
+    - Indicateur visuel notifications non-lues
+    - Navigation vers la série au clic
+    - Suppression de notification (bouton delete)
+    - Mise à jour du badge après lecture/suppression
+    - Message "aucune notification" quand vide
 - **Accessibilité**:
-  - Labels ARIA (button, close button)
-  - Navigation clavier (Tab, Enter, Escape)
+    - Labels ARIA (button, close button)
+    - Navigation clavier (Tab, Enter, Escape)
 
 ## Ajouter des tests
 
@@ -69,8 +69,8 @@ Créer un fichier `e2e/mon-test.spec.ts`:
 import { test, expect } from '@playwright/test';
 
 test('mon test', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('h1')).toBeVisible();
+    await page.goto('/');
+    await expect(page.locator('h1')).toBeVisible();
 });
 ```
 

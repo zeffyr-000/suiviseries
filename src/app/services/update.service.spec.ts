@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { ApplicationRef } from '@angular/core';
-import { SwUpdate, VersionReadyEvent, VersionInstallationFailedEvent, UnrecoverableStateEvent } from '@angular/service-worker';
+import {
+    SwUpdate,
+    VersionReadyEvent,
+    VersionInstallationFailedEvent,
+    UnrecoverableStateEvent,
+} from '@angular/service-worker';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subject } from 'rxjs';
 import { UpdateService } from './update.service';
@@ -30,11 +35,11 @@ describe('UpdateService', () => {
             isEnabled: true,
             checkForUpdate: vi.fn().mockResolvedValue(false),
             versionUpdates: new Subject<VersionReadyEvent | VersionInstallationFailedEvent>(),
-            unrecoverable: new Subject<UnrecoverableStateEvent>()
+            unrecoverable: new Subject<UnrecoverableStateEvent>(),
         };
 
         mockAppRef = {
-            isStable: new Subject<boolean>()
+            isStable: new Subject<boolean>(),
         };
 
         originalConfirm = globalThis.confirm;
@@ -47,8 +52,8 @@ describe('UpdateService', () => {
             providers: [
                 UpdateService,
                 { provide: SwUpdate, useValue: mockSwUpdate },
-                { provide: ApplicationRef, useValue: mockAppRef }
-            ]
+                { provide: ApplicationRef, useValue: mockAppRef },
+            ],
         });
 
         translocoService = TestBed.inject(TranslocoService);
@@ -114,7 +119,7 @@ describe('UpdateService', () => {
             mockSwUpdate.versionUpdates.next({
                 type: 'VERSION_READY',
                 currentVersion: { hash: 'v1' },
-                latestVersion: { hash: 'v2' }
+                latestVersion: { hash: 'v2' },
             } as VersionReadyEvent);
 
             expect(translateSpy).toHaveBeenCalledWith('app.update.new_version_available');
@@ -127,7 +132,7 @@ describe('UpdateService', () => {
 
             globalThis.confirm = mockConfirm;
             (globalThis as { location: { reload: () => void } }).location = {
-                reload: mockReload
+                reload: mockReload,
             };
 
             service.checkForUpdates();
@@ -135,7 +140,7 @@ describe('UpdateService', () => {
             mockSwUpdate.versionUpdates.next({
                 type: 'VERSION_READY',
                 currentVersion: { hash: 'v1' },
-                latestVersion: { hash: 'v2' }
+                latestVersion: { hash: 'v2' },
             } as VersionReadyEvent);
 
             expect(mockReload).toHaveBeenCalled();
@@ -147,7 +152,7 @@ describe('UpdateService', () => {
 
             globalThis.confirm = mockConfirm;
             (globalThis as { location: { reload: () => void } }).location = {
-                reload: mockReload
+                reload: mockReload,
             };
 
             service.checkForUpdates();
@@ -155,7 +160,7 @@ describe('UpdateService', () => {
             mockSwUpdate.versionUpdates.next({
                 type: 'VERSION_READY',
                 currentVersion: { hash: 'v1' },
-                latestVersion: { hash: 'v2' }
+                latestVersion: { hash: 'v2' },
             } as VersionReadyEvent);
 
             expect(mockReload).not.toHaveBeenCalled();
@@ -169,7 +174,7 @@ describe('UpdateService', () => {
 
             // Emit non-VERSION_READY event
             mockSwUpdate.versionUpdates.next({
-                type: 'VERSION_DETECTED'
+                type: 'VERSION_DETECTED',
             } as never);
 
             expect(mockConfirm).not.toHaveBeenCalled();
@@ -184,13 +189,13 @@ describe('UpdateService', () => {
             mockSwUpdate.versionUpdates.next({
                 type: 'VERSION_READY',
                 currentVersion: { hash: 'v1' },
-                latestVersion: { hash: 'v2' }
+                latestVersion: { hash: 'v2' },
             } as VersionReadyEvent);
 
             mockSwUpdate.versionUpdates.next({
                 type: 'VERSION_READY',
                 currentVersion: { hash: 'v2' },
-                latestVersion: { hash: 'v3' }
+                latestVersion: { hash: 'v3' },
             } as VersionReadyEvent);
 
             expect(mockConfirm).toHaveBeenCalledTimes(2);
@@ -213,12 +218,12 @@ describe('UpdateService', () => {
             mockSwUpdate.versionUpdates.next({
                 type: 'VERSION_INSTALLATION_FAILED',
                 version: { hash: 'v2' },
-                error: 'Installation failed'
+                error: 'Installation failed',
             } as VersionInstallationFailedEvent);
 
             expect(consoleErrorSpy).toHaveBeenCalledWith(
                 '[UpdateService] Version installation failed:',
-                'Installation failed'
+                'Installation failed',
             );
         });
 
@@ -230,12 +235,12 @@ describe('UpdateService', () => {
 
             mockSwUpdate.unrecoverable.next({
                 type: 'UNRECOVERABLE_STATE',
-                reason: 'Hash mismatch'
+                reason: 'Hash mismatch',
             } as UnrecoverableStateEvent);
 
             expect(consoleErrorSpy).toHaveBeenCalledWith(
                 '[UpdateService] Unrecoverable state:',
-                'Hash mismatch'
+                'Hash mismatch',
             );
             expect(translateSpy).toHaveBeenCalledWith('app.update.unrecoverable_state');
             expect(mockConfirm).toHaveBeenCalled();
@@ -247,14 +252,14 @@ describe('UpdateService', () => {
 
             globalThis.confirm = mockConfirm;
             (globalThis as { location: { reload: () => void } }).location = {
-                reload: mockReload
+                reload: mockReload,
             };
 
             service.checkForUpdates();
 
             mockSwUpdate.unrecoverable.next({
                 type: 'UNRECOVERABLE_STATE',
-                reason: 'Hash mismatch'
+                reason: 'Hash mismatch',
             } as UnrecoverableStateEvent);
 
             expect(mockReload).toHaveBeenCalled();
@@ -268,7 +273,7 @@ describe('UpdateService', () => {
             await vi.waitFor(() => {
                 expect(consoleErrorSpy).toHaveBeenCalledWith(
                     '[UpdateService] Initial update check failed:',
-                    expect.any(Error)
+                    expect.any(Error),
                 );
             });
         });

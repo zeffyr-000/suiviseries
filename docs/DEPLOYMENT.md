@@ -80,23 +80,25 @@ npx webpack-bundle-analyzer dist/suiviseries/stats.json
 ```typescript
 // app.routes.ts - Feature-optimized loading
 export const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () => import('./pages/home/home.component').then((m) => m.HomeComponent),
-  },
-  {
-    path: 'series/:id',
-    loadComponent: () =>
-      import('./pages/serie-detail/serie-detail.component').then((m) => m.SerieDetailComponent),
-    // Critical data preloading
-    resolve: {
-      serie: SerieResolver,
+    {
+        path: '',
+        loadComponent: () => import('./pages/home/home.component').then((m) => m.HomeComponent),
     },
-  },
-  {
-    path: 'search',
-    loadChildren: () => import('./features/search/search.routes').then((m) => m.searchRoutes),
-  },
+    {
+        path: 'series/:id',
+        loadComponent: () =>
+            import('./pages/serie-detail/serie-detail.component').then(
+                (m) => m.SerieDetailComponent,
+            ),
+        // Critical data preloading
+        resolve: {
+            serie: SerieResolver,
+        },
+    },
+    {
+        path: 'search',
+        loadChildren: () => import('./features/search/search.routes').then((m) => m.searchRoutes),
+    },
 ];
 ```
 
@@ -106,25 +108,25 @@ export const routes: Routes = [
 // series.service.ts - Smart cache with TTL
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
-  private cache = new Map<string, { data: any; expiry: number }>();
-  private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+    private cache = new Map<string, { data: any; expiry: number }>();
+    private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-  getSerie(id: string): Observable<Serie> {
-    const cached = this.cache.get(`serie-${id}`);
+    getSerie(id: string): Observable<Serie> {
+        const cached = this.cache.get(`serie-${id}`);
 
-    if (cached && cached.expiry > Date.now()) {
-      return of(cached.data);
+        if (cached && cached.expiry > Date.now()) {
+            return of(cached.data);
+        }
+
+        return this.http.get<Serie>(`/api/series/${id}`).pipe(
+            tap((data) =>
+                this.cache.set(`serie-${id}`, {
+                    data,
+                    expiry: Date.now() + this.CACHE_TTL,
+                }),
+            ),
+        );
     }
-
-    return this.http.get<Serie>(`/api/series/${id}`).pipe(
-      tap((data) =>
-        this.cache.set(`serie-${id}`, {
-          data,
-          expiry: Date.now() + this.CACHE_TTL,
-        })
-      )
-    );
-  }
 }
 ```
 
@@ -206,21 +208,21 @@ export class SerieDetailComponent {
 // auth.service.ts - Secure token storage
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'suiviseries_auth_token';
+    private readonly TOKEN_KEY = 'suiviseries_auth_token';
 
-  private storeToken(token: string): void {
-    // Using sessionStorage for enhanced security
-    sessionStorage.setItem(this.TOKEN_KEY, token);
-  }
+    private storeToken(token: string): void {
+        // Using sessionStorage for enhanced security
+        sessionStorage.setItem(this.TOKEN_KEY, token);
+    }
 
-  private getStoredToken(): string | null {
-    return sessionStorage.getItem(this.TOKEN_KEY);
-  }
+    private getStoredToken(): string | null {
+        return sessionStorage.getItem(this.TOKEN_KEY);
+    }
 
-  logout(): void {
-    sessionStorage.removeItem(this.TOKEN_KEY);
-    this.router.navigate(['/login']);
-  }
+    logout(): void {
+        sessionStorage.removeItem(this.TOKEN_KEY);
+        this.router.navigate(['/login']);
+    }
 }
 ```
 
@@ -229,20 +231,20 @@ export class AuthService {
 ```typescript
 // Example: search.component.ts - Input validation
 export class SearchComponent {
-  private sanitizeQuery(query: string): string {
-    // Remove dangerous characters
-    return query
-      .replace(/[<>\"'&]/g, '')
-      .trim()
-      .slice(0, 100);
-  }
-
-  onSearch(query: string): void {
-    const sanitizedQuery = this.sanitizeQuery(query);
-    if (sanitizedQuery.length >= 2) {
-      this.seriesService.search(sanitizedQuery);
+    private sanitizeQuery(query: string): string {
+        // Remove dangerous characters
+        return query
+            .replace(/[<>\"'&]/g, '')
+            .trim()
+            .slice(0, 100);
     }
-  }
+
+    onSearch(query: string): void {
+        const sanitizedQuery = this.sanitizeQuery(query);
+        if (sanitizedQuery.length >= 2) {
+            this.seriesService.search(sanitizedQuery);
+        }
+    }
 }
 ```
 

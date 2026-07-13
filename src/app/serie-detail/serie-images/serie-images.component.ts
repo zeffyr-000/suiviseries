@@ -1,4 +1,14 @@
-import { Component, input, signal, viewChild, ElementRef, effect, computed, DestroyRef, inject } from '@angular/core';
+import {
+    Component,
+    input,
+    signal,
+    viewChild,
+    ElementRef,
+    effect,
+    computed,
+    DestroyRef,
+    inject,
+} from '@angular/core';
 import { DecimalPipe, UpperCasePipe } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
 import { MatCardModule } from '@angular/material/card';
@@ -25,13 +35,13 @@ interface SwipeState {
         MatIconModule,
         MatButtonModule,
         MatTabsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
     ],
     templateUrl: './serie-images.component.html',
     styleUrl: './serie-images.component.scss',
     host: {
-        '(document:visibilitychange)': 'onVisibilityChange()'
-    }
+        '(document:visibilitychange)': 'onVisibilityChange()',
+    },
 })
 export class SerieImagesComponent {
     private readonly destroyRef = inject(DestroyRef);
@@ -121,7 +131,7 @@ export class SerieImagesComponent {
     protected currentImageIndex = computed<number>(() => {
         const current = this.selectedImage();
         if (!current) return 0;
-        return this.currentImages().findIndex(img => img.file_path === current.file_path) + 1;
+        return this.currentImages().findIndex((img) => img.file_path === current.file_path) + 1;
     });
 
     protected hasPrevious = computed<boolean>(() => this.currentImageIndex() > 1);
@@ -171,7 +181,8 @@ export class SerieImagesComponent {
         const overlay = this.dialogOverlay();
 
         if (document.fullscreenElement) {
-            document.exitFullscreen()
+            document
+                .exitFullscreen()
                 .then(() => this.isFullscreen.set(false))
                 .catch((err) => {
                     console.error('Exit fullscreen failed:', err);
@@ -254,7 +265,7 @@ export class SerieImagesComponent {
             startX: event.clientX,
             startY: event.clientY,
             startTime: Date.now(),
-            pointerId: event.pointerId
+            pointerId: event.pointerId,
         };
     }
 
@@ -266,7 +277,8 @@ export class SerieImagesComponent {
         const deltaTime = Date.now() - this.swipeState.startTime;
 
         // Check if it's a valid horizontal swipe
-        const isHorizontalSwipe = Math.abs(deltaX) > this.SWIPE_THRESHOLD &&
+        const isHorizontalSwipe =
+            Math.abs(deltaX) > this.SWIPE_THRESHOLD &&
             deltaY < this.SWIPE_MAX_VERTICAL &&
             deltaTime < this.SWIPE_MAX_TIME;
 
@@ -319,19 +331,25 @@ export class SerieImagesComponent {
         if (!container) return;
 
         if (document.fullscreenElement) {
-            document.exitFullscreen().then(() => {
-                this.isFullscreen.set(false);
-            }).catch((err) => {
-                console.error('Exit fullscreen failed:', err);
-                this.isFullscreen.set(false);
-            });
+            document
+                .exitFullscreen()
+                .then(() => {
+                    this.isFullscreen.set(false);
+                })
+                .catch((err) => {
+                    console.error('Exit fullscreen failed:', err);
+                    this.isFullscreen.set(false);
+                });
         } else {
-            container.nativeElement.requestFullscreen().then(() => {
-                this.isFullscreen.set(true);
-            }).catch((err) => {
-                console.error('Fullscreen request failed:', err);
-                this.isFullscreen.set(false);
-            });
+            container.nativeElement
+                .requestFullscreen()
+                .then(() => {
+                    this.isFullscreen.set(true);
+                })
+                .catch((err) => {
+                    console.error('Fullscreen request failed:', err);
+                    this.isFullscreen.set(false);
+                });
         }
     }
 
@@ -341,7 +359,8 @@ export class SerieImagesComponent {
 
         // Extract filename from path
         const pathSegments = image.file_path.split('/');
-        const originalFilename = pathSegments[pathSegments.length - 1]?.split('?')[0] || 'image.jpg';
+        const originalFilename =
+            pathSegments[pathSegments.length - 1]?.split('?')[0] || 'image.jpg';
 
         try {
             // Try fetch + blob for cross-origin download
