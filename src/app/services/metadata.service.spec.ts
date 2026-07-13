@@ -125,7 +125,7 @@ describe('MetadataService', () => {
             service.setCanonicalUrl('https://example.com/page2');
 
             const canonicals = document.querySelectorAll('link[rel="canonical"]');
-            expect(canonicals.length).toBe(1);
+            expect(canonicals).toHaveLength(1);
             expect(canonicals[0].getAttribute('href')).toBe('https://example.com/page2');
         });
     });

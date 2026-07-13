@@ -150,7 +150,7 @@ describe('Notifications Integration', () => {
 
             await Promise.resolve();
 
-            expect(notificationService.notifications().length).toBe(1);
+            expect(notificationService.notifications()).toHaveLength(1);
             expect(notificationService.unreadCount()).toBe(1);
         });
 
@@ -169,7 +169,7 @@ describe('Notifications Integration', () => {
 
             await Promise.resolve();
 
-            expect(notificationService.notifications().length).toBe(1);
+            expect(notificationService.notifications()).toHaveLength(1);
             expect(notificationService.unreadCount()).toBe(0);
         });
     });
@@ -239,7 +239,7 @@ describe('Notifications Integration', () => {
 
             await Promise.resolve();
 
-            expect(notificationService.notifications().length).toBe(originalLength);
+            expect(notificationService.notifications()).toHaveLength(originalLength);
             expect(consoleSpy).toHaveBeenCalled();
         });
     });
@@ -277,7 +277,7 @@ describe('Notifications Integration', () => {
             await Promise.resolve();
 
             expect(notificationService.unreadCount()).toBe(1);
-            expect(notificationService.notifications().length).toBe(1);
+            expect(notificationService.notifications()).toHaveLength(1);
         });
     });
 });

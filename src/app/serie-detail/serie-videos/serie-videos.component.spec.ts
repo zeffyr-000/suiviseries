@@ -158,7 +158,7 @@ describe('SerieVideosComponent', () => {
         it('should render all videos in the list', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const videoItems = compiled.querySelectorAll('.video-item');
-            expect(videoItems.length).toBe(3);
+            expect(videoItems).toHaveLength(3);
         });
 
         it('should render video thumbnails', () => {
@@ -170,7 +170,7 @@ describe('SerieVideosComponent', () => {
         it('should render video names', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const names = compiled.querySelectorAll('.video-name');
-            expect(names.length).toBe(3);
+            expect(names).toHaveLength(3);
             expect(names[0].textContent?.trim()).toBe('Official Trailer');
         });
 
@@ -183,13 +183,13 @@ describe('SerieVideosComponent', () => {
         it('should render official badge for official videos', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const officialBadges = compiled.querySelectorAll('.official-badge');
-            expect(officialBadges.length).toBe(2); // Two official videos
+            expect(officialBadges).toHaveLength(2); // Two official videos
         });
 
         it('should render video type badges', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const typeBadges = compiled.querySelectorAll('.video-type');
-            expect(typeBadges.length).toBe(3);
+            expect(typeBadges).toHaveLength(3);
         });
     });
 
@@ -203,7 +203,7 @@ describe('SerieVideosComponent', () => {
         it('should have VideoObject markup for each video', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const videoObjects = compiled.querySelectorAll('[itemtype="https://schema.org/VideoObject"]');
-            expect(videoObjects.length).toBe(3);
+            expect(videoObjects).toHaveLength(3);
         });
 
         it('should have video name in itemprop', () => {

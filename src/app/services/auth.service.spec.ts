@@ -243,9 +243,8 @@ describe('AuthService', () => {
 
     describe('Google Sign-In methods', () => {
         it('should initialize Google Sign-In', async () => {
-            await service.initGoogleSignIn();
-            // Should complete without error
-            expect(true).toBe(true);
+            // Resolves (does not reject) when the Google library is unavailable
+            await expect(service.initGoogleSignIn()).resolves.toBeUndefined();
         });
 
         it('should not render button when Google library is not loaded', () => {
@@ -254,7 +253,7 @@ describe('AuthService', () => {
             service.renderGoogleButton(element);
 
             // Should not throw
-            expect(element.children.length).toBe(0);
+            expect(element.children).toHaveLength(0);
         });
 
         it('should render Google button when library is loaded', () => {
@@ -307,9 +306,7 @@ describe('AuthService', () => {
         });
 
         it('should not call prompt when Google library is not loaded', () => {
-            service.signInWithGooglePopup();
-            // Should not throw
-            expect(true).toBe(true);
+            expect(() => service.signInWithGooglePopup()).not.toThrow();
         });
 
         it('should call Google prompt when library is loaded', () => {

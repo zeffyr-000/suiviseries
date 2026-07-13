@@ -68,7 +68,7 @@ describe('LegalComponent', () => {
         fixture.detectChanges();
 
         const links = fixture.nativeElement.querySelectorAll('a[target="_blank"]');
-        expect(links.length).toBe(2);
+        expect(links).toHaveLength(2);
 
         links.forEach((link: HTMLAnchorElement) => {
             expect(link.getAttribute('rel')).toBe('noopener noreferrer');

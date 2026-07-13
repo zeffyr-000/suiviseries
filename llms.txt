@@ -1,0 +1,61 @@
+# Suiviseries — LLM Context
+
+TV series tracking PWA — Angular 22, zoneless, standalone, signals. No SSR, no @ngrx store.
+
+## Stack
+- Angular 22 (standalone, zoneless via provideZonelessChangeDetection, signals)
+- Angular Material 22 + CDK (Material Design 3) — NOT Bootstrap
+- TypeScript 6 (strict), RxJS 7 (HTTP + rxResource)
+- Transloco 8 + MessageFormat (i18n: fr primary)
+- Vitest 4 (unit, via `ng test`), Playwright 1.x (E2E)
+- Service Worker (PWA + Web Push), ngx-google-analytics
+- Backend: separate PHP API (suiviseries-api), TMDB data source
+
+## Key Rules
+- OnPush via the zoneless default — omit changeDetection (set ChangeDetectionStrategy.OnPush only if explicit)
+- signal() for local state, computed() for derived — call as functions: this.value()
+- inject() only — no constructor injection
+- readonly on all injected dependencies and signals
+- styleUrl (singular) not styleUrls; ALWAYS separate template/style files
+- @if/@for/@switch — not *ngIf/*ngFor; class/style bindings — not ngClass/ngStyle
+- State lives in providedIn:'root' services exposing signals (no @ngrx/signals store)
+- English-only // comments (no JSDoc)
+- Vitest (not Jasmine/Karma); test against translation keys, not translated strings
+- No any — use unknown / proper typing
+- All user-facing text via Transloco keys
+
+## Architecture
+- Services (services/*): AuthService (Google OAuth + JWT), SeriesService (REST /api/* + rxResource search),
+  MetadataService, NotificationService (MatSnackBar wrapper), UserNotificationService,
+  PushNotificationService, UpdateService (SwUpdate), KeepAliveService, AnalyticsRouterService
+- authGuard protects /my-series; lazy loadComponent routes
+- /api/* proxied to http://localhost:8888/suiviseries-api/www/ in dev
+- Backend returns snake_case (TMDB-shaped); models in models/serie.model.ts mirror those fields
+- Response envelopes carry { success, results } — check success first
+
+## rxResource Pattern
+Expose an rxResource factory from a SERVICE; params()=undefined skips the request.
+Component consumes results()/isLoading()/error() computed signals. Auto-cancels like switchMap.
+
+## Material Design 3
+- NotificationService (wraps MatSnackBar) with translation keys — never raw MatSnackBar for user text
+- MatMenu max-width 280px — use MatSidenav position="end" for wider panels
+- M3 typography classes (.display-*, .headline-*, .body-*, .label-*) — never inline font-size
+- Theme via mat.theme(...) in SCSS (rose primary, red tertiary)
+
+## PWA
+- ngsw-config.json service worker; UpdateService for SwUpdate prompts
+- PushNotificationService for Web Push; guard 'serviceWorker' in navigator / Notification.permission
+
+## Commands
+npm start — Dev server (proxy) · npm test — Vitest · npm run lint · npm run build · npm run e2e
+
+## Angular Official Context
+- Best practices: https://angular.dev/assets/context/best-practices.md
+- Full LLM context: https://angular.dev/assets/context/llms-full.txt
+- Angular llms.txt index: https://angular.dev/llms.txt
+
+## AI Tooling
+Primary agent: Claude Code. Config under .claude/ (see CLAUDE.md): skills (.claude/skills/*),
+subagents (.claude/agents/*), slash commands (.claude/commands/*), and a PostToolUse prettier+eslint
+hook (.claude/settings.json). AGENTS.md is the full source of truth.

@@ -65,7 +65,9 @@ describe('App', () => {
         TestBed.configureTestingModule({
             imports: [App, getTranslocoTestingModule(), MatDialogModule],
             providers: [
-                provideRouter([]),
+                // Catch-all so the template's routerLinks (/, /search, /mes-series, /legal)
+                // resolve during change detection instead of throwing NG04002.
+                provideRouter([{ path: '**', children: [] }]),
                 provideHttpClient(),
                 // eslint-disable-next-line @typescript-eslint/no-deprecated
                 provideNoopAnimations(),

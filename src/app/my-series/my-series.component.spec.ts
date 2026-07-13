@@ -37,7 +37,10 @@ describe('MySeriesComponent', () => {
                 getTranslocoTestingModule()
             ],
             providers: [
-                provideRouter([]),
+                // Catch-all so goToSearch()'s router.navigate(['/search']) resolves
+                // instead of rejecting async with NG04002 (an unhandled rejection that
+                // otherwise floats onto unrelated test files).
+                provideRouter([{ path: '**', children: [] }]),
                 { provide: SeriesService, useValue: mockSeriesService },
                 { provide: MetadataService, useValue: mockMetadataService }
             ]
