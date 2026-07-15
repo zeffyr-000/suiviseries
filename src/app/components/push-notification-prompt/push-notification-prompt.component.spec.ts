@@ -149,83 +149,40 @@ describe('PushNotificationPromptComponent', () => {
             expect(component.shouldShowPrompt()).toBe(false);
         });
 
-        it('should handle generic error', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Unknown error')),
-            );
+        it.each([
+            { error: 'Unknown error', expectedKey: 'push_notifications.error_generic' },
+            { error: 'Permission denied', expectedKey: 'push_notifications.error_denied' },
+            {
+                error: 'Push messaging is not supported',
+                expectedKey: 'push_notifications.error_not_supported',
+            },
+            {
+                error: 'Permission dialog closed',
+                expectedKey: 'push_notifications.error_dialog_closed',
+            },
+            {
+                error: 'Permission not granted',
+                expectedKey: 'push_notifications.error_dialog_closed',
+            },
+            {
+                error: 'Service Worker not registered',
+                expectedKey: 'push_notifications.error_service_worker',
+            },
+        ])(
+            'should map "$error" to $expectedKey and show error snackbar',
+            async ({ error, expectedKey }) => {
+                mockPushService.subscribeToPush.mockReturnValue(throwError(() => new Error(error)));
 
-            await component.enableNotifications();
+                await component.enableNotifications();
 
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_generic');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
-        });
-
-        it('should handle denied permission error', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Permission denied')),
-            );
-
-            await component.enableNotifications();
-
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_denied');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
-        });
-
-        it('should handle not supported error', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Push messaging is not supported')),
-            );
-
-            await component.enableNotifications();
-
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_not_supported');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
-        });
-
-        it('should handle dialog closed error', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Permission dialog closed')),
-            );
-
-            await component.enableNotifications();
-
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_dialog_closed');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
-        });
-
-        it('should handle permission not granted error', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Permission not granted')),
-            );
-
-            await component.enableNotifications();
-
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_dialog_closed');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
-        });
-
-        it('should handle service worker error', async () => {
-            mockPushService.subscribeToPush.mockReturnValue(
-                throwError(() => new Error('Service Worker not registered')),
-            );
-
-            await component.enableNotifications();
-
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_service_worker');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
-        });
+                expect(translateSpy).toHaveBeenCalledWith(expectedKey);
+                expect(mockSnackBar.open).toHaveBeenCalledWith(
+                    expect.any(String),
+                    expect.any(String),
+                    { duration: 5000 },
+                );
+            },
+        );
 
         it('should reset loading state even after error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(

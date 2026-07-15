@@ -18,6 +18,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SerieImage, SerieImages } from '../../models/serie.model';
 
+type ImageType = 'backdrop' | 'poster' | 'logo';
+
 interface SwipeState {
     startX: number;
     startY: number;
@@ -50,7 +52,7 @@ export class SerieImagesComponent {
 
     protected selectedTab = signal<number>(0);
     protected selectedImage = signal<SerieImage | null>(null);
-    protected selectedImageType = signal<'backdrop' | 'poster' | 'logo' | null>(null);
+    protected selectedImageType = signal<ImageType | null>(null);
     protected isFullscreen = signal<boolean>(false);
     protected showAllView = signal<boolean>(false);
     protected imageLoading = signal<boolean>(false);
@@ -138,12 +140,12 @@ export class SerieImagesComponent {
 
     protected hasNext = computed<boolean>(() => this.currentImageIndex() < this.totalImages());
 
-    protected currentTabType = computed<'backdrop' | 'poster' | 'logo'>(() => {
+    protected currentTabType = computed<ImageType>(() => {
         const tab = this.selectedTab();
-        return ['backdrop', 'poster', 'logo'][tab] as 'backdrop' | 'poster' | 'logo';
+        return ['backdrop', 'poster', 'logo'][tab] as ImageType;
     });
 
-    protected onImageClick(image: SerieImage, type: 'backdrop' | 'poster' | 'logo'): void {
+    protected onImageClick(image: SerieImage, type: ImageType): void {
         this.imageLoading.set(true);
         this.selectedImage.set(image);
         this.selectedImageType.set(type);
@@ -270,7 +272,7 @@ export class SerieImagesComponent {
     }
 
     protected onPointerUp(event: PointerEvent): void {
-        if (!this.swipeState || event.pointerId !== this.swipeState.pointerId) return;
+        if (this.swipeState?.pointerId !== event.pointerId) return;
 
         const deltaX = event.clientX - this.swipeState.startX;
         const deltaY = Math.abs(event.clientY - this.swipeState.startY);
@@ -375,7 +377,7 @@ export class SerieImagesComponent {
             link.download = originalFilename;
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
+            link.remove();
 
             URL.revokeObjectURL(url);
         } catch {
