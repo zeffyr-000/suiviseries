@@ -246,7 +246,6 @@
                 </output>
             }
 
-            <!-- sonarqube-disable-next-line: Alt text is a translation key that resolves to descriptive text without redundant "image" word -->
             <img
                 [src]="selectedImage()!.file_path"
                 [alt]="'serie_detail.' + (selectedImageType() || 'backdrop') + '_alt' | transloco"
@@ -330,7 +329,6 @@
                     (click)="onImageClick(image, currentTabType()); closeAllView()"
                     [attr.aria-label]="'serie_detail.view_image' | transloco"
                 >
-                    <!-- sonarqube-disable-next-line: Alt text is a translation key that resolves to descriptive text without redundant "image" word -->
                     <img
                         [src]="image.file_path"
                         [alt]="'serie_detail.' + currentTabType() + '_alt' | transloco"
