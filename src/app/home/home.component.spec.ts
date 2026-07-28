@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -282,20 +282,31 @@ describe('HomeComponent', () => {
     });
 
     describe('heroBackdrop', () => {
-        it('should return the backdrop URL of the first popular serie with a backdrop', () => {
+        // The hero no longer takes the first popular serie: it shows whichever
+        // serie the daily rotation picked, so the two must always agree.
+        it('should show the artwork of the serie the rotation picked', () => {
             component['popularSeries'].set([
-                createMockSerie({ backdrop_path: '/backdrop1.jpg', name: 'Serie A' }),
-                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Serie B' }),
+                createMockSerie({ id: 1, backdrop_path: '/backdrop1.jpg', vote_average: 8.1 }),
+                createMockSerie({ id: 2, backdrop_path: '/backdrop2.jpg', vote_average: 8.2 }),
             ]);
+            component['topRatedSeries'].set([]);
+            component['loading'].set(false);
+            component['topRatedLoading'].set(false);
 
-            expect(component['heroBackdrop']()).toContain('/backdrop1.jpg');
+            const featured = component['featuredSerie']();
+
+            expect(featured).not.toBeNull();
+            expect(component['heroBackdrop']()).toContain(featured!.backdrop_path);
         });
 
-        it('should skip series without a backdrop and return the first one that has one', () => {
+        it('should never pick a serie that has no wide artwork', () => {
             component['popularSeries'].set([
-                createMockSerie({ backdrop_path: '', name: 'No Backdrop' }),
-                createMockSerie({ backdrop_path: '/backdrop2.jpg', name: 'Has Backdrop' }),
+                createMockSerie({ id: 1, backdrop_path: '', vote_average: 9.9 }),
+                createMockSerie({ id: 2, backdrop_path: '/backdrop2.jpg', vote_average: 8.2 }),
             ]);
+            component['topRatedSeries'].set([]);
+            component['loading'].set(false);
+            component['topRatedLoading'].set(false);
 
             expect(component['heroBackdrop']()).toContain('/backdrop2.jpg');
         });
@@ -380,6 +391,144 @@ describe('HomeComponent', () => {
             fixture.componentInstance.ngOnInit();
 
             expect(mockDialog.open).not.toHaveBeenCalled();
+        });
+    });
+    describe('Featured serie rotation', () => {
+        // A pool wide enough that a rotation is observable, mixing a headliner
+        // with the kind of entry the rating floor is meant to reject.
+        const popular = [
+            createMockSerie({ id: 10, name: 'Silo', vote_average: 8.2 }),
+            createMockSerie({ id: 20, name: 'Tagesschau', vote_average: 6.8 }),
+            createMockSerie({ id: 30, name: 'House of the Dragon', vote_average: 8.4 }),
+            createMockSerie({ id: 40, name: 'Sans image', vote_average: 9, backdrop_path: '' }),
+        ];
+        const topRated = [
+            createMockSerie({ id: 30, name: 'House of the Dragon', vote_average: 8.4 }),
+            createMockSerie({ id: 50, name: 'Breaking Bad', vote_average: 8.9 }),
+        ];
+
+        // The day is captured when the component is constructed, so the clock
+        // has to be set before the component exists.
+        const bootWith = (pop = popular, top = topRated) => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(pop));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(top));
+            component = TestBed.createComponent(HomeComponent).componentInstance;
+            component.ngOnInit();
+        };
+
+        const onDay = (iso: string) => {
+            vi.setSystemTime(new Date(iso));
+        };
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should merge both lists into the pool, without duplicates', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith();
+
+            const ids = component['featureCandidates']().map((serie) => serie.id);
+
+            expect(ids).toEqual([10, 30, 50]);
+        });
+
+        it('should reject series below the rating floor, which is what keeps news shows off the front page', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith();
+
+            const names = component['featureCandidates']().map((serie) => serie.name);
+
+            expect(names).not.toContain('Tagesschau');
+        });
+
+        it('should reject series with no wide artwork', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith();
+
+            expect(component['featureCandidates']().map((serie) => serie.id)).not.toContain(40);
+        });
+
+        it('should keep the same pick throughout a day, so nothing swaps on reload', () => {
+            onDay('2026-03-01T08:00:00');
+            bootWith();
+            const morning = component['featuredSerie']()?.id;
+
+            onDay('2026-03-01T23:30:00');
+            const night = component['featuredSerie']()?.id;
+
+            expect(morning).toBeDefined();
+            expect(night).toBe(morning);
+        });
+
+        it('should move to another serie the next day', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith();
+            const today = component['featuredSerie']()?.id;
+
+            onDay('2026-03-02T10:00:00');
+            bootWith();
+            const tomorrow = component['featuredSerie']()?.id;
+
+            expect(today).toBeDefined();
+            expect(tomorrow).not.toBe(today);
+        });
+
+        it('should walk the whole pool before repeating', () => {
+            const seen = new Set<number | undefined>();
+
+            for (let day = 1; day <= 3; day++) {
+                onDay(`2026-03-0${day}T10:00:00`);
+                bootWith();
+                seen.add(component['featuredSerie']()?.id);
+            }
+
+            // Three candidates clear the floor, so three days give three
+            // different headliners before the sequence comes back round.
+            expect(seen.size).toBe(3);
+        });
+
+        it('should hold back the pick until both lists have landed', () => {
+            onDay('2026-03-01T10:00:00');
+            component = TestBed.createComponent(HomeComponent).componentInstance;
+
+            // ngOnInit not called: both lists are still marked as loading.
+            expect(component['featuredSerie']()).toBeNull();
+        });
+
+        it('should not change when more pages are appended', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith();
+            const before = component['featuredSerie']()?.id;
+
+            mockSeriesService.getPopularSeries.mockReturnValue(
+                of([createMockSerie({ id: 99, name: 'Page deux', vote_average: 9.9 })]),
+            );
+            component['loadMoreSeries']();
+
+            expect(component['featuredSerie']()?.id).toBe(before);
+        });
+
+        it('should return nothing when no serie clears the bar', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith([createMockSerie({ id: 1, vote_average: 3 })], []);
+
+            expect(component['featuredSerie']()).toBeNull();
+        });
+
+        it('should keep the featured serie out of the ranking below it', () => {
+            onDay('2026-03-01T10:00:00');
+            bootWith();
+
+            const featuredId = component['featuredSerie']()?.id;
+            const rankedIds = component['rankedSeries']().map((serie) => serie.id);
+
+            expect(featuredId).toBeDefined();
+            expect(rankedIds).not.toContain(featuredId);
         });
     });
 });

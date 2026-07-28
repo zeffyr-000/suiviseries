@@ -22,6 +22,7 @@ import { UserNotificationService } from './services/user-notification.service';
 import { PushNotificationService } from './services/push-notification.service';
 import { LoginComponent } from './login/login.component';
 import { PushNotificationPromptComponent } from './components/push-notification-prompt/push-notification-prompt.component';
+import { AppFooterComponent } from './shared/app-footer/app-footer.component';
 import { Notification } from './models/notification.model';
 import { createSlug, formatRelativeDate } from './utils/url.utils';
 import { getNotificationTranslationKey } from './utils/notification.utils';
@@ -44,6 +45,7 @@ import { getNotificationTranslationKey } from './utils/notification.utils';
         MatTooltipModule,
         MatSlideToggleModule,
         PushNotificationPromptComponent,
+        AppFooterComponent,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',

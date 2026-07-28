@@ -27,13 +27,39 @@ html {
     )
   );
 
-  // Gold accent (primary) + amber highlight on deep night-blue surfaces
+  // ── Brand palette ──────────────────────────────────────────────────
+  // Three colours, three jobs, never interchangeable:
+  //   gold  = identity and prestige (titles, ratings, primary action)
+  //   flare = energy (trending, followed series, hover)
+  //   ice   = data (progress, counters)
+  // Measured against --ink: gold 11.6:1, ice 12.7:1, flare 6.2:1. Flare clears
+  // WCAG AA but sits under the 7:1 bar this project sets for text below 18px,
+  // so it carries icons, borders, glows and large type only — never body copy.
+  --ink: #060916;
+  --gold: #e4c368;
+  --gold-deep: #c7a850;
+  --flare: #ff4d6d;
+  --ice: #56dfff;
+  --violet: #7c5cff;
+
+  // Signature gradient: ambient glows, section markers, one word of a title
+  --aurora: linear-gradient(115deg, var(--gold) 0%, var(--flare) 48%, var(--violet) 100%);
+
+  --gold-glow: rgba(228, 195, 104, 0.35);
+  --flare-glow: rgba(255, 77, 109, 0.38);
+  --ice-glow: rgba(86, 223, 255, 0.32);
+
+  // Semantic state colours, deliberately separate from the brand accents: a
+  // warning must not read as "energy". These were referenced by components as
+  // undefined variables with inline fallbacks, so the fallback always won.
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+
+  // Legacy aliases: still referenced across component styles.
   --primary-color: #c7a850;
   --accent-color: #e4c368;
   --warn-color: #ff5449;
-  --gold: #c7a850;
   --gold-bright: #e4c368;
-  --gold-glow: rgba(199, 168, 80, 0.35);
 
   --md-sys-shape-corner-none: 0;
   --md-sys-shape-corner-extra-small: 4px;
@@ -85,14 +111,40 @@ html {
   --spacing-lg: 24px;
   --spacing-xl: 32px;
   --spacing-xxl: 48px;
+  // Editorial rhythm: section padding, previously written as calc(--spacing-xl * n)
+  --spacing-3xl: 64px;
+  --spacing-4xl: 96px;
+
+  // ── Editorial type scale ───────────────────────────────────────────
+  // Display sizes are fluid, UI sizes stay on the M3 steps. The character
+  // comes from the ratio between them: 7rem against 1rem, not 3.5 against 1.
+  --type-hero: clamp(2.75rem, 8.5vw, 7rem);
+  --type-display: clamp(2rem, 4.5vw, 3.5rem);
+  --type-section: clamp(1.75rem, 3.4vw, 2.75rem);
+  // 0.88 looks tighter but collides: French sets accents above capitals, and
+  // at 7rem the acute on "épisode" runs into the descenders of the line above.
+  --leading-hero: 0.94;
+  --tracking-hero: -0.045em;
+  --tracking-display: -0.03em;
+  --tracking-eyebrow: 0.18em;
+
+  // Film grain, inlined so it costs one declaration and no request
+  --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  // The ambient layers live behind the app shell, so the shell must not
+  // paint over them. Set through the Material token rather than an override.
+  --mat-sidenav-content-background-color: transparent;
 
   // Smooth anchor scrolling (respecting reduced-motion below)
   scroll-behavior: smooth;
+
+  // Painted on the root so the ambient layers below can sit above it.
+  background-color: var(--ink);
 }
 
 body {
   color-scheme: dark;
-  background-color: var(--mat-sys-surface);
+  background-color: transparent;
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
   margin: 0;
@@ -100,6 +152,43 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+// ── Ambient depth ────────────────────────────────────────────────────
+// Two inert fixed layers behind the whole app: a slow aurora drift and a
+// film grain. They replace the flat fill that made the interface read as
+// safe. Negative z-index keeps them under all content and out of reach of
+// pointer events; neither affects layout.
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+}
+
+body::before {
+  inset: -20vh -10vw;
+  z-index: -2;
+  background:
+    radial-gradient(38vw 38vw at 12% 8%, rgba(228, 195, 104, 0.16), transparent 62%),
+    radial-gradient(42vw 42vw at 88% 32%, rgba(255, 77, 109, 0.13), transparent 64%),
+    radial-gradient(46vw 46vw at 40% 88%, rgba(124, 92, 255, 0.12), transparent 66%);
+  filter: blur(30px);
+  animation: aurora-drift 34s var(--md-sys-motion-easing-emphasized) infinite alternate;
+}
+
+body::after {
+  inset: 0;
+  z-index: -1;
+  background-image: var(--texture-grain);
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+@keyframes aurora-drift {
+  to {
+    transform: translate3d(-3%, 2%, 0) scale(1.08);
+  }
 }
 
 // Gold-tinted text selection (cinematic identity)
@@ -128,8 +217,14 @@ body {
   border: 3px solid var(--mat-sys-surface);
   border-radius: 9999px;
 
-  &:hover {
-    background-color: color-mix(in srgb, var(--gold) 60%, var(--mat-sys-surface-container-highest));
+  @media (hover: hover) {
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--gold) 60%,
+        var(--mat-sys-surface-container-highest)
+      );
+    }
   }
 }
 
@@ -200,8 +295,10 @@ body {
   &.mat-mdc-unelevated-button {
     box-shadow: var(--md-sys-elevation-level1) !important;
 
-    &:hover {
-      box-shadow: var(--md-sys-elevation-level2) !important;
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: var(--md-sys-elevation-level2) !important;
+      }
     }
 
     &:active {
@@ -241,8 +338,10 @@ body {
 
 /* Material Design 3 Component Overrides */
 /* !important is required to override Angular Material's inline and high-specificity styles */
+// Cards use the large corner, as the design system documents. This override
+// used to resolve to --border-radius, which is the small 8px corner.
 .mat-mdc-card {
-  border-radius: var(--border-radius) !important;
+  border-radius: var(--md-sys-shape-corner-large) !important;
 }
 
 .mat-mdc-form-field {
@@ -306,78 +405,112 @@ body {
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
-.text-primary {
-  color: var(--primary-color) !important;
-}
-.text-accent {
-  color: var(--accent-color) !important;
-}
-.text-warn {
-  color: var(--warn-color) !important;
+// The former .text-*, .bg-*, .p-*, .m-* and .flex-* helpers were removed:
+// no template referenced any of them, and each one shipped an !important.
+
+// Available to screen readers, removed from the visual flow. Needed wherever
+// meaning is carried by shape alone, such as the arc of a progress ring.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
-.bg-primary {
-  background-color: var(--primary-color) !important;
-}
-.bg-accent {
-  background-color: var(--accent-color) !important;
-}
-
-.p-xs {
-  padding: var(--spacing-xs) !important;
-}
-.p-sm {
-  padding: var(--spacing-sm) !important;
-}
-.p-md {
-  padding: var(--spacing-md) !important;
-}
-.p-lg {
-  padding: var(--spacing-lg) !important;
-}
-.p-xl {
-  padding: var(--spacing-xl) !important;
-}
-
-.m-xs {
-  margin: var(--spacing-xs) !important;
-}
-.m-sm {
-  margin: var(--spacing-sm) !important;
-}
-.m-md {
-  margin: var(--spacing-md) !important;
-}
-.m-lg {
-  margin: var(--spacing-lg) !important;
-}
-.m-xl {
-  margin: var(--spacing-xl) !important;
-}
-
-.flex-center {
+// Overline above a section heading. The rule that precedes it is what turns
+// a plain label into an editorial marker.
+.eyebrow {
   display: flex;
-  justify-content: center;
   align-items: center;
+  gap: var(--spacing-sm);
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--gold);
 }
 
-.flex-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.eyebrow::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 2px;
+  background: currentcolor;
 }
 
-.flex-column {
-  display: flex;
-  flex-direction: column;
+.eyebrow--flare {
+  color: var(--flare);
+}
+
+.eyebrow--ice {
+  color: var(--ice);
+}
+
+// Clips the signature gradient into the glyphs. Applied to a single word of
+// a display heading, never to a whole sentence.
+.aurora-text {
+  background: var(--aurora);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+// Expressive call to action. The shared Material button rules force
+// 40px / 20px / 0 24px with !important; rather than weakening that baseline
+// for every other button, this opts out at a higher specificity.
+.mat-mdc-button.btn-expressive,
+.mat-mdc-unelevated-button.btn-expressive,
+.mat-mdc-raised-button.btn-expressive,
+.mat-mdc-flat-button.btn-expressive {
+  height: 52px !important;
+  padding: 0 var(--spacing-xl) !important;
+  border-radius: var(--md-sys-shape-corner-full) !important;
+  font-size: 0.9375rem !important;
+  // No letter-spacing override here on purpose. It was 0.02em, which at this
+  // size is 0.3px against the 0.1px the shared button rule already applies —
+  // an imperceptible difference that cost one more !important standing between
+  // the reader and their own text-spacing settings (WCAG 1.4.12).
+  color: #17110a !important;
+  background: linear-gradient(135deg, #f2d888, var(--gold) 55%, var(--gold-deep)) !important;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gold) 50%, transparent),
+    0 10px 34px -10px var(--gold-glow) !important;
+}
+
+@media (hover: hover) {
+  .btn-expressive:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--gold) 70%, transparent),
+      0 16px 40px -10px var(--gold-glow) !important;
+  }
+}
+
+// Editorial display: the one place the type is allowed to shout. Reserved
+// for a page's single opening statement, never for section headings.
+.display-hero {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: var(--type-hero);
+  font-weight: 800;
+  line-height: var(--leading-hero);
+  letter-spacing: var(--tracking-hero);
+  text-wrap: balance;
 }
 
 .display-large {
   font-family: 'Poppins', 'Roboto', sans-serif;
   font-size: 3.5rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.14;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-display);
 }
 
 .display-medium {
@@ -417,6 +550,33 @@ body {
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.33;
+  letter-spacing: 0;
+}
+
+// The title steps were documented and used in templates (app.html,
+// serie-card, serie-header) but never declared, so that text fell back to
+// body-medium. Declaring them here is what those templates always expected.
+.title-large {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.27;
+  letter-spacing: -0.01em;
+}
+
+.title-medium {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.33;
+  letter-spacing: -0.01em;
+}
+
+.title-small {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.43;
   letter-spacing: 0;
 }
 
@@ -468,18 +628,26 @@ body {
   letter-spacing: 0.036em;
 }
 
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+// Scroll-driven reveal. Progressive enhancement: without support the
+// element simply starts visible, so no content is ever hidden by CSS alone.
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-scroll {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 26%;
+    }
+  }
 }
 
-@keyframes fadeIn {
+@keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(26px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -536,13 +704,18 @@ body {
 }
 
 /* Accessibility: honor users who prefer reduced motion */
+// Single authoritative reduced-motion reset for the app. 1ms rather than 0s
+// so animationend still fires reliably. animation-timeline is cleared too:
+// a duration of 1ms means nothing to a scroll-driven animation, which is
+// paced by scroll position rather than by time.
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
+    animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    animation-timeline: auto !important;
+    transition-duration: 1ms !important;
     scroll-behavior: auto !important;
   }
 }

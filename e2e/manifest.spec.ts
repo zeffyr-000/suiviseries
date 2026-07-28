@@ -19,7 +19,7 @@ test.describe('PWA', () => {
 
         const themeColor = await page.locator('meta[name="theme-color"]').getAttribute('content');
 
-        expect(themeColor).toBe('#0c1024');
+        expect(themeColor).toBe('#060916');
     });
 
     test('should have apple touch icon', async ({ page }) => {

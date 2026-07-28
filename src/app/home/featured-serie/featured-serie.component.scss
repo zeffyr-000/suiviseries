@@ -1,0 +1,129 @@
+@use '../../../styles/mixins' as *;
+
+.featured {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  // No fixed height: the grid row already stretches this item, and forcing
+  // 100% clipped the call to action whenever the copy ran long.
+  min-height: 400px;
+  padding: var(--spacing-xl);
+  border-radius: var(--md-sys-shape-corner-extra-large);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.featured-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      8deg,
+      color-mix(in srgb, var(--ink) 97%, transparent) 8%,
+      color-mix(in srgb, var(--ink) 60%, transparent) 46%,
+      transparent 78%
+    ),
+    radial-gradient(40% 60% at 88% 12%, var(--flare-glow), transparent 70%);
+}
+
+.featured-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  max-width: 42ch;
+}
+
+.featured-title {
+  margin: 0;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: var(--type-section);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: var(--tracking-display);
+  color: var(--mat-sys-on-surface);
+  text-wrap: balance;
+}
+
+.featured-overview {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.featured-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--mat-sys-on-surface-variant);
+  font-variant-numeric: tabular-nums;
+}
+
+.featured-rating {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.separator {
+  opacity: 0.5;
+}
+
+// Flare marks what is live: a returning series is the one thing on this page
+// with a reason to feel urgent.
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--md-sys-shape-corner-full);
+  border: 1px solid color-mix(in srgb, var(--flare) 45%, transparent);
+  background: color-mix(in srgb, var(--flare) 14%, transparent);
+  color: var(--flare);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentcolor;
+    box-shadow: 0 0 8px currentcolor;
+    animation: live-blink 2.4s var(--md-sys-motion-easing-standard) infinite;
+  }
+}
+
+@keyframes live-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.featured-cta {
+  align-self: flex-start;
+  margin-top: var(--spacing-xs);
+  text-decoration: none;
+}
+
+@include respond-below(md) {
+  .featured {
+    min-height: 320px;
+    padding: var(--spacing-lg);
+  }
+}

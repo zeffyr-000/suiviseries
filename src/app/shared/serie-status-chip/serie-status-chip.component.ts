@@ -17,6 +17,10 @@ export class SerieStatusChipComponent {
     readonly status = input<SerieStatus>(SerieStatus.PLANNED);
     readonly size = input<'small' | 'medium' | 'large'>('small');
     readonly showIcon = input(true);
+    // 'inline' drops the Material chip for a plain coloured label. A filled
+    // pill carries too much weight when it sits on top of artwork, but the
+    // status wording and colours stay shared with the chip.
+    readonly variant = input<'chip' | 'inline'>('chip');
 
     private readonly translocoService = inject(TranslocoService);
 

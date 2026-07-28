@@ -1,0 +1,48 @@
+<section class="hero" [class.hero--has-backdrop]="!!backdrop()">
+    @if (backdrop(); as image) {
+        <div
+            class="hero-backdrop"
+            [style.background-image]="'url(' + image + ')'"
+            aria-hidden="true"
+        ></div>
+    }
+
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <div class="hero-content">
+        <p class="eyebrow">{{ 'hero.eyebrow' | transloco }}</p>
+
+        <h1 class="hero-title display-hero">
+            {{ 'hero.headline_lead' | transloco }}
+            <span class="aurora-text">{{ 'hero.headline_accent' | transloco }}</span>
+        </h1>
+
+        <p class="hero-tagline body-large">{{ 'hero.tagline' | transloco }}</p>
+
+        <div class="hero-actions">
+            <button
+                mat-flat-button
+                class="btn-expressive"
+                routerLink="/search"
+                [attr.aria-label]="'hero.browse_series' | transloco"
+            >
+                <mat-icon>search</mat-icon>
+                {{ 'hero.browse_series' | transloco }}
+            </button>
+
+            <a class="hero-secondary" href="#decouvrir">
+                {{ 'hero.how_it_works' | transloco }}
+                <mat-icon aria-hidden="true">arrow_downward</mat-icon>
+            </a>
+        </div>
+    </div>
+
+    @if (featured(); as serie) {
+        <a class="hero-credit label-small" [routerLink]="featuredRoute()">
+            <span class="hero-credit-label">{{ 'hero.now_showing' | transloco }}</span>
+            <span class="hero-credit-name">{{ serie.name }}</span>
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+        </a>
+    }
+</section>

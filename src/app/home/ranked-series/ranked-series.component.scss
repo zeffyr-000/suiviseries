@@ -1,0 +1,60 @@
+@use '../../../styles/mixins' as *;
+
+.ranked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-xl) var(--spacing-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ranked-item {
+  position: relative;
+  padding-left: var(--spacing-lg);
+}
+
+// The card is positioned explicitly so the numeral can be ordered above it;
+// left to auto stacking, the card's own positioned layers won the paint order
+// and swallowed the part of the glyph that overlaps the artwork.
+.ranked-item app-serie-card {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+// Outlined numerals that break out of the artwork: the editorial device that
+// tells this section apart from the rail above it, at almost no weight.
+// Anchored to the top-left corner, the only quiet area of the card: the
+// bottom carries the title block and the top-right carries the rating.
+.rank-number {
+  position: absolute;
+  left: calc(var(--spacing-xs) * -1);
+  top: calc(var(--spacing-sm) * -1);
+  z-index: 2;
+  text-shadow: 0 2px 12px var(--ink);
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--mat-sys-on-surface) 30%, transparent);
+  pointer-events: none;
+}
+
+.ranked-item:first-child .rank-number {
+  -webkit-text-stroke-color: color-mix(in srgb, var(--gold) 85%, transparent);
+}
+
+@include respond-below(sm) {
+  .ranked-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .rank-number {
+    font-size: 3rem;
+  }
+}

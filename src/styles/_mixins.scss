@@ -64,8 +64,48 @@ $md-breakpoints: (
   }
 }
 
-// MD3 carousel horizontal scroll (uncontained layout)
-@mixin horizontal-scroll($background-color: var(--mat-sys-surface)) {
+// Frosted panel over artwork: toolbars, sticky headers, badges laid on a
+// poster. The saturation lift keeps the colour underneath from going muddy
+// once it is blurred.
+@mixin glass-surface($opacity: 55%, $blur: 20px) {
+  background: color-mix(in srgb, var(--ink) $opacity, transparent);
+  backdrop-filter: blur($blur) saturate(140%);
+  -webkit-backdrop-filter: blur($blur) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+// Cinematic bloom: the artwork blurred behind itself, so a poster casts its own
+// colour onto the page. The template passes the image in through --poster-src,
+// which keeps the URL out of the stylesheet and unduplicated.
+//
+// Declarations only, no selector of its own: the caller owns the ::before and
+// :hover nesting. A `&` here would depend on a parent the mixin cannot see,
+// which is both harder to follow and unresolvable for a linter reading this
+// file on its own.
+@mixin poster-bloom-layer($radius: var(--md-sys-shape-corner-large)) {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: $radius;
+  background: var(--poster-src) center / cover no-repeat;
+  filter: blur(24px) saturate(180%);
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
+}
+
+// MD3 carousel horizontal scroll (uncontained layout).
+//
+// Split into declaration-only mixins for the same reason as poster-bloom-layer:
+// a `&` at the root of a mixin depends on a parent the mixin cannot see, which
+// no linter reading this file alone can resolve. The caller owns the nesting.
+//
+// A scroller therefore includes this mixin for its own declarations, then nests
+// the fade mixins on its leading and trailing pseudo-elements and the scrollbar
+// mixins on the WebKit scrollbar pseudo-elements. serie-recommendations is the
+// reference call site.
+@mixin horizontal-scroll {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -77,53 +117,47 @@ $md-breakpoints: (
   padding: var(--spacing-sm) var(--spacing-md);
   gap: var(--spacing-sm);
   scroll-padding-right: var(--spacing-md);
+}
 
-  // Left fade indicator
-  &::before {
-    content: '';
-    display: block;
-    position: sticky;
-    left: 0;
-    width: var(--spacing-xxl);
-    min-width: var(--spacing-xxl);
-    height: 100%;
-    background: linear-gradient(to right, #{$background-color}, transparent);
-    pointer-events: none;
-    z-index: 10;
-    flex-shrink: 0;
-    align-self: stretch;
-  }
+// A sticky fade at either edge, so the rail reads as continuing past the
+// viewport instead of stopping at a hard cut.
+//
+// Two explicit mixins rather than one taking a side: deriving the gradient
+// direction from an argument needed Sass's if(), which is deprecated, and left
+// a computed direction that static analysis cannot resolve. Spelling both out
+// costs a few lines and removes the guesswork.
+@mixin horizontal-scroll-fade-base {
+  content: '';
+  display: block;
+  position: sticky;
+  width: var(--spacing-xxl);
+  min-width: var(--spacing-xxl);
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  flex-shrink: 0;
+  align-self: stretch;
+}
 
-  // Right fade indicator
-  &::after {
-    content: '';
-    display: block;
-    position: sticky;
-    right: 0;
-    width: var(--spacing-xxl);
-    min-width: var(--spacing-xxl);
-    height: 100%;
-    background: linear-gradient(to left, #{$background-color}, transparent);
-    pointer-events: none;
-    z-index: 10;
-    flex-shrink: 0;
-    align-self: stretch;
-  }
+@mixin horizontal-scroll-fade-start($background-color: var(--mat-sys-surface)) {
+  @include horizontal-scroll-fade-base;
 
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
+  left: 0;
+  background: linear-gradient(to right, #{$background-color}, transparent);
+}
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+@mixin horizontal-scroll-fade-end($background-color: var(--mat-sys-surface)) {
+  @include horizontal-scroll-fade-base;
 
-  &::-webkit-scrollbar-thumb {
-    background: var(--mat-sys-outline);
-    border-radius: 3px;
+  right: 0;
+  background: linear-gradient(to left, #{$background-color}, transparent);
+}
 
-    &:hover {
-      background: var(--mat-sys-on-surface-variant);
-    }
-  }
+@mixin horizontal-scroll-bar {
+  height: 6px;
+}
+
+@mixin horizontal-scroll-thumb {
+  background: var(--mat-sys-outline);
+  border-radius: 3px;
 }

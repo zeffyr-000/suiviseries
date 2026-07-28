@@ -1,0 +1,34 @@
+<footer class="app-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <span class="footer-name title-medium">{{ 'app.title' | transloco }}</span>
+            <p class="footer-tagline body-medium">{{ 'footer.tagline' | transloco }}</p>
+        </div>
+
+        <nav class="footer-nav" [attr.aria-label]="'footer.navigation' | transloco">
+            <h2 class="footer-heading label-medium">{{ 'footer.navigation' | transloco }}</h2>
+            <ul>
+                <li>
+                    <a routerLink="/">{{ 'navigation.home' | transloco }}</a>
+                </li>
+                <li>
+                    <a routerLink="/search">{{ 'navigation.search' | transloco }}</a>
+                </li>
+            </ul>
+        </nav>
+
+        <nav class="footer-nav" [attr.aria-label]="'footer.project' | transloco">
+            <h2 class="footer-heading label-medium">{{ 'footer.project' | transloco }}</h2>
+            <ul>
+                <li>
+                    <a routerLink="/legal">{{ 'navigation.legal' | transloco }}</a>
+                </li>
+                <li>
+                    <a [href]="projectRepo" target="_blank" rel="noopener noreferrer">
+                        {{ 'footer.source_code' | transloco }}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</footer>

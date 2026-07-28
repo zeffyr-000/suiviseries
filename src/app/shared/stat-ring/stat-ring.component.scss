@@ -1,0 +1,55 @@
+.stat-ring {
+  --ring-accent: var(--gold);
+  --ring-glow: var(--gold-glow);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+}
+
+.stat-ring--ice {
+  --ring-accent: var(--ice);
+  --ring-glow: var(--ice-glow);
+}
+
+.stat-ring--flare {
+  --ring-accent: var(--flare);
+  --ring-glow: var(--flare-glow);
+}
+
+.stat-ring-svg {
+  position: absolute;
+  inset: 0;
+  // Starts the arc at twelve o'clock instead of three.
+  transform: rotate(-90deg);
+}
+
+.stat-ring-track,
+.stat-ring-value {
+  fill: none;
+  stroke-width: 3;
+}
+
+.stat-ring-track {
+  stroke: color-mix(in srgb, var(--ink) 75%, transparent);
+}
+
+.stat-ring-value {
+  stroke: var(--ring-accent);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px var(--ring-glow));
+  transition: stroke-dashoffset var(--md-sys-motion-duration-long2)
+    var(--md-sys-motion-easing-emphasized);
+}
+
+.stat-ring-label {
+  position: relative;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--mat-sys-on-surface);
+  text-shadow: 0 1px 6px color-mix(in srgb, var(--ink) 90%, transparent);
+}

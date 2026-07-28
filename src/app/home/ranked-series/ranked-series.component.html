@@ -1,0 +1,10 @@
+<ol class="ranked-grid">
+    @for (serie of series(); track serie.id; let index = $index) {
+        <li class="ranked-item">
+            <!-- The rank is already conveyed by the list order, so the glyph is
+                 decorative for assistive technology. -->
+            <span class="rank-number" aria-hidden="true">{{ rankLabel(index) }}</span>
+            <app-serie-card [serie]="serie" />
+        </li>
+    }
+</ol>

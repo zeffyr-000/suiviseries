@@ -1,129 +1,88 @@
-<div>
-    <section class="hero-section" [class.has-backdrop]="heroBackdrop()">
-        @if (heroBackdrop(); as backdrop) {
-            <div
-                class="hero-backdrop"
-                [style.background-image]="'url(' + backdrop + ')'"
-                aria-hidden="true"
-            ></div>
-        }
-        <div class="hero-overlay" aria-hidden="true"></div>
-        <div class="hero-background-shapes"></div>
-        <div class="hero-content">
-            <h1 class="display-large">{{ 'hero.title' | transloco }}</h1>
-            <p class="body-large">{{ 'hero.subtitle' | transloco }}</p>
-            <div class="hero-actions">
-                <button
-                    mat-flat-button
-                    color="primary"
-                    class="hero-button"
-                    routerLink="/search"
-                    [attr.aria-label]="'hero.browse_series' | transloco"
-                >
-                    <mat-icon>search</mat-icon>
-                    {{ 'hero.browse_series' | transloco }}
+<app-home-hero [backdrop]="heroBackdrop()" [featured]="featuredSerie()" />
+
+<section class="home-section reveal-on-scroll">
+    <app-section-header
+        titleKey="sections.popular_right_now"
+        eyebrowKey="sections.popular_eyebrow"
+    />
+
+    @if (loading()) {
+        <div class="skeleton-rail">
+            @for (item of skeletonSlots; track item) {
+                <div class="skeleton skeleton-poster"></div>
+            }
+        </div>
+    } @else {
+        <div class="trending-bento">
+            @if (featuredSerie(); as featured) {
+                <app-featured-serie [serie]="featured" />
+            }
+
+            <div class="trending-rail">
+                <!-- The leading posters sit beside the featured card, above the
+                     fold, so they are fetched eagerly rather than lazily. Four
+                     covers the widest common desktop; the count matches what
+                     this page requested before the rail replaced the grid. -->
+                <app-serie-rail
+                    [series]="railSeries()"
+                    labelKey="sections.rail_label"
+                    [eagerCount]="4"
+                />
+
+                @if (hasMore() && !loadingMore()) {
+                    <button mat-stroked-button class="load-more" (click)="loadMoreSeries()">
+                        <mat-icon>add</mat-icon>
+                        {{ 'sections.load_more' | transloco }}
+                    </button>
+                }
+
+                @if (loadingMore()) {
+                    <p class="loading-more body-medium">
+                        {{ 'sections.loading_more' | transloco }}
+                    </p>
+                }
+            </div>
+        </div>
+    }
+</section>
+
+<section class="home-section reveal-on-scroll" id="decouvrir">
+    <app-section-header
+        titleKey="value_props.title"
+        eyebrowKey="value_props.eyebrow"
+        accent="flare"
+    />
+    <app-home-value-props />
+</section>
+
+<section class="home-section reveal-on-scroll">
+    <app-section-header
+        titleKey="sections.top_rated"
+        eyebrowKey="sections.top_rated_eyebrow"
+        leadKey="sections.top_rated_lead"
+        accent="ice"
+    />
+
+    @if (topRatedLoading()) {
+        <div class="skeleton-grid">
+            @for (item of skeletonSlots; track item) {
+                <div class="skeleton skeleton-poster"></div>
+            }
+        </div>
+    } @else {
+        <app-ranked-series [series]="rankedSeries()" />
+
+        @if (topRatedHasMore() && !topRatedLoadingMore()) {
+            <div class="load-more-row">
+                <button mat-stroked-button class="load-more" (click)="loadMoreTopRated()">
+                    <mat-icon>expand_more</mat-icon>
+                    {{ 'sections.load_more' | transloco }}
                 </button>
             </div>
-        </div>
-    </section>
-
-    <section class="series-section">
-        <div class="section-header">
-            <h2 class="headline-medium">
-                <mat-icon aria-hidden="true">local_fire_department</mat-icon>
-                {{ 'sections.popular_right_now' | transloco }}
-            </h2>
-        </div>
-
-        @if (loading()) {
-            <div class="loading-grid">
-                @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-                    <mat-card class="series-card loading">
-                        <div class="poster-placeholder"></div>
-                        <mat-card-content>
-                            <div class="title-placeholder"></div>
-                            <div class="info-placeholder"></div>
-                        </mat-card-content>
-                    </mat-card>
-                }
-            </div>
-        } @else {
-            <div class="series-grid">
-                @for (serie of popularSeries(); track serie.id; let idx = $index) {
-                    <app-serie-card [serie]="serie" [priority]="idx < 4" />
-                }
-            </div>
-
-            @if (hasMore() && !loadingMore()) {
-                <div class="load-more-container">
-                    <button
-                        mat-flat-button
-                        color="primary"
-                        (click)="loadMoreSeries()"
-                        class="load-more-button"
-                    >
-                        <mat-icon>expand_more</mat-icon>
-                        {{ 'sections.load_more' | transloco }}
-                    </button>
-                </div>
-            }
-
-            @if (loadingMore()) {
-                <div class="load-more-container">
-                    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
-                    <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
-                </div>
-            }
         }
-    </section>
 
-    <section class="series-section">
-        <div class="section-header">
-            <h2 class="headline-medium">
-                <mat-icon aria-hidden="true">star</mat-icon>
-                {{ 'sections.top_rated' | transloco }}
-            </h2>
-        </div>
-
-        @if (topRatedLoading()) {
-            <div class="loading-grid">
-                @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-                    <mat-card class="series-card loading">
-                        <div class="poster-placeholder"></div>
-                        <mat-card-content>
-                            <div class="title-placeholder"></div>
-                            <div class="info-placeholder"></div>
-                        </mat-card-content>
-                    </mat-card>
-                }
-            </div>
-        } @else {
-            <div class="series-grid">
-                @for (serie of topRatedSeries(); track serie.id) {
-                    <app-serie-card [serie]="serie" />
-                }
-            </div>
-
-            @if (topRatedHasMore() && !topRatedLoadingMore()) {
-                <div class="load-more-container">
-                    <button
-                        mat-flat-button
-                        color="primary"
-                        (click)="loadMoreTopRated()"
-                        class="load-more-button"
-                    >
-                        <mat-icon>expand_more</mat-icon>
-                        {{ 'sections.load_more' | transloco }}
-                    </button>
-                </div>
-            }
-
-            @if (topRatedLoadingMore()) {
-                <div class="load-more-container">
-                    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
-                    <span class="body-medium">{{ 'sections.loading_more' | transloco }}</span>
-                </div>
-            }
+        @if (topRatedLoadingMore()) {
+            <p class="loading-more body-medium">{{ 'sections.loading_more' | transloco }}</p>
         }
-    </section>
-</div>
+    }
+</section>

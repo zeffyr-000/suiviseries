@@ -1,0 +1,73 @@
+@use '../../../styles/mixins' as *;
+
+.app-footer {
+  margin-top: var(--spacing-4xl);
+  padding: var(--spacing-3xl) var(--spacing-lg) var(--spacing-xl);
+  border-top: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  max-width: 1400px;
+  margin-inline: auto;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 34ch;
+}
+
+.footer-name {
+  color: var(--mat-sys-on-surface);
+}
+
+.footer-tagline {
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: inline-block;
+    padding: var(--spacing-xs) 0;
+    color: var(--mat-sys-on-surface-variant);
+    text-decoration: none;
+    transition: color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized);
+  }
+}
+
+.footer-heading {
+  margin: 0;
+  color: var(--gold);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+@media (hover: hover) {
+  .footer-nav a:hover {
+    color: var(--gold);
+  }
+}
+
+@include respond-below(sm) {
+  .app-footer {
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  }
+}

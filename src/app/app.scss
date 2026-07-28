@@ -20,36 +20,56 @@
       padding: var(--spacing-lg) var(--spacing-sm);
 
       mat-list-item {
+        position: relative;
         margin: 0 var(--spacing-xs) var(--spacing-xs);
         border-radius: 28px; // M3 full rounding for nav items
         min-height: 56px;
+        overflow: hidden;
         transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1); // M3 emphasized easing, micro duration
 
-        &:hover {
-          background-color: color-mix(in srgb, var(--primary-color) 16%, transparent);
+        @media (hover: hover) {
+          &:hover {
+            background-color: color-mix(in srgb, var(--gold) 12%, transparent);
+          }
         }
 
-        // Active state (current route)
+        // Active state (current route). A gradient marker on the leading edge
+        // rather than a flat tint: it reads at a glance and is the same
+        // signature gradient used on the headings.
         &[aria-current='page'],
         &.mat-mdc-list-item-active,
         &.mdc-list-item--activated {
-          background-color: color-mix(in srgb, var(--primary-color) 24%, transparent);
+          background-color: color-mix(in srgb, var(--gold) 14%, transparent);
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            translate: 0 -50%;
+            width: 3px;
+            height: 60%;
+            border-radius: var(--md-sys-shape-corner-full);
+            background: var(--aurora);
+          }
 
           mat-icon {
-            color: var(--primary-color);
+            color: var(--gold);
           }
 
           span {
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--gold);
           }
         }
 
         &.logout-item {
           margin-top: var(--spacing-md);
 
-          &:hover {
-            background-color: rgba(244, 67, 54, 0.1);
+          @media (hover: hover) {
+            &:hover {
+              background-color: rgba(244, 67, 54, 0.1);
+            }
           }
 
           mat-icon {
@@ -65,8 +85,10 @@
           transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
         }
 
-        &:hover mat-icon {
-          transform: scale(1.08);
+        @media (hover: hover) {
+          &:hover mat-icon {
+            transform: scale(1.08);
+          }
         }
       }
     }
@@ -106,7 +128,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 64px var(--spacing-xl);
+  padding: var(--spacing-3xl) var(--spacing-xl);
   color: var(--mat-sys-on-surface-variant);
 
   mat-icon {
@@ -155,8 +177,10 @@
     }
   }
 
-  &:hover {
-    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  @media (hover: hover) {
+    &:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    }
   }
 
   &:active {
@@ -254,8 +278,10 @@
     }
   }
 
-  &:hover .delete-button {
-    opacity: 1;
+  @media (hover: hover) {
+    &:hover .delete-button {
+      opacity: 1;
+    }
   }
 
   .delete-button:active {
@@ -292,10 +318,20 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--elevation-shadow);
-  background-color: var(--mat-sys-surface-container) !important;
   height: 64px; // M3 standard app bar height
   color: var(--mat-sys-on-surface) !important;
+
+  // Frosted rather than opaque, so the artwork of a hero passes underneath
+  // instead of stopping at a hard bar. !important is needed here for the same
+  // reason as elsewhere in this file: Material sets the container colour
+  // through a higher-specificity theme rule.
+  background-color: color-mix(in srgb, var(--ink) 62%, transparent) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  box-shadow: var(--md-sys-elevation-level1);
+  transition: background-color var(--md-sys-motion-duration-medium2)
+    var(--md-sys-motion-easing-emphasized);
 
   button[mat-icon-button] {
     color: var(
@@ -327,8 +363,10 @@
     cursor: pointer;
     transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1); // M3 micro duration
 
-    &:hover {
-      opacity: 0.85;
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.85;
+      }
     }
 
     &:active {
@@ -336,24 +374,18 @@
       transform: scale(0.98);
     }
 
+    // Now an inline SVG mark rather than a Material icon glyph.
     .app-title-icon {
-      font-size: 1.75rem;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Material Icons', sans-serif;
-      font-weight: normal;
-      font-style: normal;
-      text-rendering: auto;
-      -webkit-font-smoothing: antialiased;
-      flex-shrink: 0; // Prevent icon from shrinking
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border-radius: 7px;
     }
 
     .app-title {
       font-size: 1.375rem; // M3 title-large
-      font-weight: 400;
-      letter-spacing: 0;
+      font-weight: 700;
+      letter-spacing: -0.01em;
     }
   }
 
@@ -381,8 +413,10 @@
       display: block;
     }
 
-    &:hover .user-avatar {
-      border-color: rgba(255, 255, 255, 0.4);
+    @media (hover: hover) {
+      &:hover .user-avatar {
+        border-color: rgba(255, 255, 255, 0.4);
+      }
     }
   }
 
@@ -400,9 +434,11 @@
       transform 150ms cubic-bezier(0.2, 0, 0, 1),
       box-shadow 150ms cubic-bezier(0.2, 0, 0, 1);
 
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px -6px var(--gold-glow) !important;
+    @media (hover: hover) {
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px -6px var(--gold-glow) !important;
+      }
     }
 
     &:active {
@@ -524,8 +560,10 @@
     margin: 0 var(--spacing-xs);
     transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
 
-    &:hover {
-      background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+    @media (hover: hover) {
+      &:hover {
+        background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+      }
     }
 
     &:active {
@@ -539,8 +577,10 @@
       transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    &:hover mat-icon {
-      transform: scale(1.08);
+    @media (hover: hover) {
+      &:hover mat-icon {
+        transform: scale(1.08);
+      }
     }
 
     span {
@@ -555,9 +595,11 @@
   }
 }
 
+// No width cap here on purpose. Every routed page already caps its own content
+// (1400px on home and my-series, 1200px on search and serie detail, 800px on
+// legal), so capping again at the shell only forced full-width heroes to break
+// out with negative margins — which then got clipped back by this container.
 .app-content {
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 0;
 }
 
@@ -571,7 +613,8 @@
     }
 
     .app-title-icon {
-      font-size: 1.5rem;
+      width: 24px;
+      height: 24px;
     }
   }
 

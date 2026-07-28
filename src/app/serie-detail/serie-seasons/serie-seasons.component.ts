@@ -41,6 +41,22 @@ export class SerieSeasonsComponent {
         return this.watchedSeasons().includes(seasonId);
     }
 
+    // Counted from the episodes themselves rather than from the season flag, so
+    // a partially watched season still shows how far along it is.
+    protected seasonWatchedCount(season: Season): number {
+        const watched = this.watchedEpisodes();
+        return (season.episodes ?? []).filter((episode) => watched.includes(episode.id)).length;
+    }
+
+    protected seasonEpisodeCount(season: Season): number {
+        return season.episodes?.length || season.episode_count || 0;
+    }
+
+    protected seasonProgress(season: Season): number {
+        const total = this.seasonEpisodeCount(season);
+        return total > 0 ? Math.round((this.seasonWatchedCount(season) / total) * 100) : 0;
+    }
+
     protected isSeasonLoading(seasonId: number): boolean {
         return this.seasonLoadingStates().get(seasonId) || false;
     }

@@ -11,35 +11,30 @@
   }
 }
 
+// Left aligned, like every other page heading in the app. The centred stack
+// under a 48px icon was the same shape as the empty and error states below it,
+// so the page read as three variations of one block.
 .search-header {
-  text-align: center;
-  margin-bottom: var(--spacing-xxl);
-
-  .header-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-md);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
 
   h1 {
-    margin: 0 0 var(--spacing-sm) 0;
+    margin: 0;
     color: var(--mat-sys-on-surface);
-    font-family: 'Poppins', 'Roboto', sans-serif; // display typeface
-    font-size: 2.5rem;
-    font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: var(--type-display);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
   }
 
   .subtitle {
-    color: var(--mat-sys-on-surface-variant);
+    max-width: 56ch;
     margin: 0;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0.5px;
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -273,13 +268,20 @@
     }
   }
 
+  // Matched to the home grids. The old 280px minimum came from a card that
+  // carried a text block under the poster; the poster-led card reads well much
+  // smaller, so more results fit on screen.
   .results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-xl);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
 
-    @include respond-below(md) {
-      grid-template-columns: 1fr;
+    @include respond-below(sm) {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: var(--spacing-md);
     }
   }
 }
@@ -486,4 +488,19 @@
     transform: scale(1) rotate(0deg);
     opacity: 1;
   }
+}
+
+// The field is the instrument of this page, so it gets a halo when focused
+// rather than only a colour change on a 1px outline. drop-shadow is used over
+// box-shadow so the glow follows the field's rounded notched outline.
+.search-form-container .search-field.mat-focused {
+  filter: drop-shadow(0 0 16px var(--gold-glow));
+}
+
+// The submit button sits beside a 56px field, so it matches that height
+// rather than the shared 40px baseline. The specificity here is what lets it
+// win against the global button rules without weakening them for every button.
+.search-form-container .mat-mdc-raised-button.search-button {
+  height: 56px !important;
+  border-radius: var(--md-sys-shape-corner-full) !important;
 }

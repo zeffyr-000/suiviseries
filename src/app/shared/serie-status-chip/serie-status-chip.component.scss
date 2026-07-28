@@ -177,3 +177,31 @@ mat-chip {
     }
   }
 }
+
+// Inline variant: colour and wording only, for use over artwork where a filled
+// pill would compete with the poster.
+.status-inline {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+
+  &.status-returning {
+    color: var(--status-returning-text);
+  }
+
+  &.status-ended {
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &.status-canceled {
+    color: var(--status-canceled-text);
+  }
+
+  &.status-production {
+    color: var(--status-production-text);
+  }
+
+  &.status-planned {
+    color: var(--status-planned-text);
+  }
+}

@@ -26,6 +26,11 @@ describe('SerieCardComponent', () => {
         vote_count: 15000,
     });
 
+    const renderWith = (serie: unknown = mockSerie) => {
+        fixture.componentRef.setInput('serie', serie);
+        fixture.detectChanges();
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [SerieCardComponent, getTranslocoTestingModule()],
@@ -49,8 +54,7 @@ describe('SerieCardComponent', () => {
 
     describe('Template Rendering', () => {
         it('should display serie title', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
             const title = fixture.nativeElement.querySelector('.series-title');
 
@@ -59,8 +63,7 @@ describe('SerieCardComponent', () => {
         });
 
         it('should display serie poster', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
             const img = fixture.nativeElement.querySelector('.series-poster');
 
@@ -69,21 +72,8 @@ describe('SerieCardComponent', () => {
             expect(img.alt).toBe('Breaking Bad');
         });
 
-        it('should display rating with star icon', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
-
-            const ratingBadge = fixture.nativeElement.querySelector('.rating-badge');
-            const icon = ratingBadge.querySelector('mat-icon');
-
-            expect(ratingBadge).toBeTruthy();
-            expect(icon?.textContent?.trim()).toBe('star');
-            expect(ratingBadge.textContent).toContain('4.8');
-        });
-
         it('should display serie status chip', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
             const statusChip = fixture.nativeElement.querySelector('app-serie-status-chip');
 
@@ -91,28 +81,19 @@ describe('SerieCardComponent', () => {
         });
 
         it('should display number of seasons', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
-            const seasons = fixture.nativeElement.querySelector('.seasons');
-
-            expect(seasons).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.seasons')).toBeTruthy();
         });
 
         it('should display number of episodes', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
-            const episodes = fixture.nativeElement.querySelector('.episodes');
-
-            expect(episodes).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.episodes')).toBeTruthy();
         });
 
         it('should display truncated overview when longer than 100 characters', () => {
-            const longOverview = 'A'.repeat(150);
-            const serieWithLongOverview = { ...mockSerie, overview: longOverview };
-            fixture.componentRef.setInput('serie', serieWithLongOverview);
-            fixture.detectChanges();
+            renderWith({ ...mockSerie, overview: 'A'.repeat(150) });
 
             const overview = fixture.nativeElement.querySelector('.series-overview');
 
@@ -123,20 +104,16 @@ describe('SerieCardComponent', () => {
 
         it('should display full overview when shorter than 100 characters', () => {
             const shortOverview = 'Short description';
-            const serieWithShortOverview = { ...mockSerie, overview: shortOverview };
-            fixture.componentRef.setInput('serie', serieWithShortOverview);
-            fixture.detectChanges();
+            renderWith({ ...mockSerie, overview: shortOverview });
 
             const overview = fixture.nativeElement.querySelector('.series-overview');
 
-            expect(overview).toBeTruthy();
             expect(overview.textContent.trim()).toBe(shortOverview);
             expect(overview.textContent).not.toContain('...');
         });
 
         it('should have clickable card link', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
             const link = fixture.nativeElement.querySelector('.series-card-link');
 
@@ -144,110 +121,108 @@ describe('SerieCardComponent', () => {
             expect(link.tagName).toBe('A');
         });
 
-        it('should render mat-card wrapper', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+        it('should expose the artwork to the bloom layer as a custom property', () => {
+            renderWith();
 
-            const card = fixture.nativeElement.querySelector('mat-card');
+            const card = fixture.nativeElement.querySelector('.series-card');
 
-            expect(card).toBeTruthy();
-        });
-    });
-
-    describe('Router Link Generation', () => {
-        it('should have router link element', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
-
-            const link = fixture.nativeElement.querySelector('.series-card-link');
-
-            expect(link).toBeTruthy();
-            expect(link.tagName).toBe('A');
+            expect(card.style.getPropertyValue('--poster-src')).toContain('/poster.jpg');
         });
     });
 
     describe('Image Handling', () => {
         it('should generate correct TMDB image URL for w500', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
             const img = fixture.nativeElement.querySelector('.series-poster');
 
             expect(img.src).toBe('https://image.tmdb.org/t/p/w500/poster.jpg');
         });
 
-        it('should handle missing poster_path', () => {
-            const serieWithoutPoster = { ...mockSerie, poster_path: '' };
-            fixture.componentRef.setInput('serie', serieWithoutPoster);
-            fixture.detectChanges();
+        it('should request nothing when the serie has no artwork', () => {
+            renderWith({ ...mockSerie, poster_path: '' });
 
             const img = fixture.nativeElement.querySelector('.series-poster');
 
+            // No src at all rather than an empty one, which would make the
+            // browser re-request the current page.
             expect(img).toBeTruthy();
-            expect(img.src).toContain('w500');
+            expect(img.getAttribute('src')).toBeNull();
+        });
+
+        it('should survive artwork the API returned as null', () => {
+            expect(() => renderWith({ ...mockSerie, poster_path: null })).not.toThrow();
+            expect(
+                fixture.nativeElement.querySelector('.series-poster').getAttribute('src'),
+            ).toBeNull();
         });
     });
 
-    describe('Rating Formatting', () => {
-        it('should format rating from 0-10 to 0-5 scale', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+    describe('Rating Ring', () => {
+        it('should display the rating on the TMDB 0-10 scale', () => {
+            renderWith();
 
-            const ratingBadge = fixture.nativeElement.querySelector('.rating-badge');
+            const rating = fixture.nativeElement.querySelector('.rating-value');
 
-            // vote_average: 9.5 → (9.5 / 10 * 5) = 4.75 → "4.8"
-            expect(ratingBadge.textContent).toContain('4.8');
+            expect(rating.textContent.trim()).toBe('9.5');
         });
 
         it('should handle low ratings', () => {
-            const lowRatedSerie = { ...mockSerie, vote_average: 2 };
-            fixture.componentRef.setInput('serie', lowRatedSerie);
-            fixture.detectChanges();
+            renderWith({ ...mockSerie, vote_average: 2 });
 
-            const ratingBadge = fixture.nativeElement.querySelector('.rating-badge');
-
-            // vote_average: 2.0 → (2.0 / 10 * 5) = 1.0
-            expect(ratingBadge.textContent).toContain('1.0');
+            expect(fixture.nativeElement.querySelector('.rating-value').textContent.trim()).toBe(
+                '2.0',
+            );
         });
 
-        it('should handle perfect ratings', () => {
-            const perfectSerie = { ...mockSerie, vote_average: 10 };
-            fixture.componentRef.setInput('serie', perfectSerie);
-            fixture.detectChanges();
+        it('should leave no gap in the arc for a perfect rating', () => {
+            renderWith({ ...mockSerie, vote_average: 10 });
 
-            const ratingBadge = fixture.nativeElement.querySelector('.rating-badge');
+            const arc = fixture.nativeElement.querySelector('.rating-ring-value');
 
-            // vote_average: 10.0 → (10.0 / 10 * 5) = 5.0
-            expect(ratingBadge.textContent).toContain('5.0');
+            expect(Number(arc.getAttribute('stroke-dashoffset'))).toBeCloseTo(0);
+        });
+
+        it('should leave the arc empty for an unrated serie', () => {
+            renderWith({ ...mockSerie, vote_average: 0 });
+
+            const arc = fixture.nativeElement.querySelector('.rating-ring-value');
+            const circumference = Number(arc.getAttribute('stroke-dasharray'));
+
+            expect(Number(arc.getAttribute('stroke-dashoffset'))).toBeCloseTo(circumference);
+        });
+
+        it('should fill half the arc for a rating of five', () => {
+            renderWith({ ...mockSerie, vote_average: 5 });
+
+            const arc = fixture.nativeElement.querySelector('.rating-ring-value');
+            const circumference = Number(arc.getAttribute('stroke-dasharray'));
+
+            expect(Number(arc.getAttribute('stroke-dashoffset'))).toBeCloseTo(circumference / 2);
         });
     });
 
-    describe('Responsive Classes', () => {
-        it('should have series-card class for styling', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+    describe('View Transition', () => {
+        it('should name the poster after the serie so it can morph into the detail hero', () => {
+            renderWith();
 
-            const card = fixture.nativeElement.querySelector('.series-card');
+            const img = fixture.nativeElement.querySelector('.series-poster');
 
-            expect(card).toBeTruthy();
+            expect(img.style.viewTransitionName).toBe(`serie-poster-${mockSerie.id}`);
         });
+    });
 
-        it('should have poster-container for image layout', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+    describe('Structure', () => {
+        it('should have series-card class for styling', () => {
+            renderWith();
 
-            const container = fixture.nativeElement.querySelector('.poster-container');
-
-            expect(container).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.series-card')).toBeTruthy();
         });
 
         it('should have series-info section', () => {
-            fixture.componentRef.setInput('serie', mockSerie);
-            fixture.detectChanges();
+            renderWith();
 
-            const info = fixture.nativeElement.querySelector('.series-info');
-
-            expect(info).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.series-info')).toBeTruthy();
         });
     });
 });

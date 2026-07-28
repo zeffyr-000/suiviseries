@@ -29,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
 import { MetadataService } from '../services/metadata.service';
-import { Serie, Season, SerieStats, getTmdbImageUrl, formatRating } from '../models/serie.model';
+import { Serie, Season, SerieStats, getTmdbImageUrl } from '../models/serie.model';
 import { SerieWatchProvidersComponent } from './serie-watch-providers/serie-watch-providers.component';
 import { SerieVideosComponent } from './serie-videos/serie-videos.component';
 import { SerieSeasonsComponent } from './serie-seasons/serie-seasons.component';
@@ -744,6 +744,4 @@ export class SerieDetailComponent implements OnInit {
             user_data: updatedUserData,
         });
     }
-
-    protected formatRating = formatRating;
 }

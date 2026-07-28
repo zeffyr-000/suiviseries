@@ -8,6 +8,7 @@ import { SeriesService } from '../services/series.service';
 import { MetadataService } from '../services/metadata.service';
 import { getTranslocoTestingModule } from '../testing/transloco-testing.module';
 import { createMockSerie, createMockMetadataService } from '../testing/mocks';
+import { SerieStatus } from '../models/serie.model';
 
 describe('MySeriesComponent', () => {
     let component: MySeriesComponent;
@@ -138,6 +139,70 @@ describe('MySeriesComponent', () => {
         it('should call router navigate', () => {
             // Navigation is tested indirectly through the router provider
             expect(() => component['goToSearch']()).not.toThrow();
+        });
+    });
+
+    describe('Collection statistics', () => {
+        it('should total seasons and episodes across the collection', () => {
+            component['mySeries'].set([
+                createMockSerie({ id: 1, number_of_seasons: 5, number_of_episodes: 62 }),
+                createMockSerie({ id: 2, number_of_seasons: 3, number_of_episodes: 30 }),
+            ]);
+
+            expect(component['totalSeasons']()).toBe(8);
+            expect(component['totalEpisodes']()).toBe(92);
+        });
+
+        it('should count only the series still airing', () => {
+            component['mySeries'].set([
+                createMockSerie({ id: 1, status: SerieStatus.RETURNING }),
+                createMockSerie({ id: 2, status: SerieStatus.ENDED }),
+                createMockSerie({ id: 3, status: SerieStatus.RETURNING }),
+                createMockSerie({ id: 4, status: SerieStatus.CANCELED }),
+            ]);
+
+            expect(component['airingCount']()).toBe(2);
+        });
+
+        it('should report zero totals for an empty collection', () => {
+            component['mySeries'].set([]);
+
+            expect(component['totalSeasons']()).toBe(0);
+            expect(component['totalEpisodes']()).toBe(0);
+            expect(component['airingCount']()).toBe(0);
+        });
+
+        it('should hide watch progress when the payload carries none', () => {
+            component['mySeries'].set([createMockSerie({ id: 1 })]);
+
+            expect(component['hasWatchedData']()).toBe(false);
+        });
+
+        it('should compute watch progress when the payload carries it', () => {
+            component['mySeries'].set([
+                createMockSerie({
+                    id: 1,
+                    number_of_episodes: 20,
+                    user_data: {
+                        is_following: true,
+                        followed_at: null,
+                        is_watched: false,
+                        watched_at: null,
+                        watched_seasons: [],
+                        watched_episodes: [1, 2, 3, 4, 5],
+                    },
+                }),
+            ]);
+
+            expect(component['hasWatchedData']()).toBe(true);
+            expect(component['watchedEpisodes']()).toBe(5);
+            expect(component['watchedPercent']()).toBe(25);
+        });
+
+        it('should not divide by zero when the episode count is unknown', () => {
+            component['mySeries'].set([createMockSerie({ id: 1, number_of_episodes: 0 })]);
+
+            expect(component['watchedRatio']()).toBe(0);
         });
     });
 });

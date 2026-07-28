@@ -1,282 +1,184 @@
-@use '../../../styles/mixins';
+@use '../../../styles/mixins' as *;
 
-.hero-backdrop {
+.serie-hero {
   position: relative;
-  height: 60vh;
-  min-height: 500px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   display: flex;
-  align-items: end;
-  border-radius: 0 0 28px 28px;
+  align-items: flex-end;
+  // Without a global box-sizing reset the padding would stack on top of
+  // min-height, as it did on the home hero.
+  box-sizing: border-box;
+  min-height: min(64vh, 620px);
+  padding: var(--spacing-4xl) var(--spacing-xl) var(--spacing-3xl);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.hero-overlay {
+// Masked on the artwork layers only. Masking the section itself would also
+// fade the action buttons sitting near the bottom edge.
+.hero-backdrop,
+.hero-scrim,
+.hero-glow {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.92) 0%,
-    rgba(0, 0, 0, 0.7) 30%,
-    rgba(0, 0, 0, 0.4) 60%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-  display: flex;
-  align-items: end;
-  border-radius: 0 0 28px 28px;
+  mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
 }
 
-.hero-content {
-  position: relative;
-  width: 100%;
-  padding: var(--spacing-xl);
-  color: white;
+.hero-backdrop {
+  z-index: -3;
+  background-size: cover;
+  background-position: center 18%;
+  transform: scale(1.06);
+}
+
+.hero-scrim {
+  z-index: -2;
+  background:
+    linear-gradient(
+      92deg,
+      color-mix(in srgb, var(--ink) 96%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 82%, transparent) 40%,
+      color-mix(in srgb, var(--ink) 25%, transparent) 80%
+    ),
+    linear-gradient(0deg, var(--ink) 2%, transparent 52%);
+}
+
+.hero-glow {
+  z-index: -1;
+  background: radial-gradient(32% 44% at 10% 88%, var(--gold-glow), transparent 70%);
+  mix-blend-mode: screen;
 }
 
 .back-button {
+  @include glass-surface(60%, 16px);
+
   position: absolute;
   top: var(--spacing-lg);
   left: var(--spacing-lg);
-  background-color: color-mix(in srgb, var(--mat-sys-inverse-surface) 90%, transparent);
-  backdrop-filter: blur(12px);
-  color: var(--mat-sys-inverse-on-surface);
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
-
-  mat-icon {
-    color: var(--mat-sys-inverse-on-surface);
-  }
-
-  &:hover {
-    background-color: color-mix(in srgb, var(--mat-sys-inverse-surface) 100%, transparent);
-    transform: scale(1.08);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-  }
-
-  &:active {
-    transform: scale(0.92);
-  }
+  z-index: 2;
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--mat-sys-on-surface);
 }
 
-.serie-hero-info {
+.hero-content {
   display: flex;
-  gap: var(--spacing-xl);
   align-items: flex-end;
-  max-width: 1200px;
-  margin: 0 auto;
-
-  @include mixins.respond-below(md) {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: var(--spacing-lg);
-  }
+  gap: var(--spacing-xl);
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
 }
 
-.poster-container {
-  position: relative;
-  flex-shrink: 0;
-}
-
+// The morph target: the card poster animates into this element on navigation.
 .serie-poster {
+  flex: 0 0 auto;
   width: 200px;
-  height: 300px;
+  aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 16px;
-  box-shadow:
-    0 12px 32px -8px rgba(0, 0, 0, 0.6),
-    0 0 0 1px color-mix(in srgb, var(--gold) 28%, transparent);
-  border: 2px solid color-mix(in srgb, var(--gold) 22%, transparent);
-  transition:
-    transform 300ms cubic-bezier(0.2, 0, 0, 1),
-    box-shadow 300ms cubic-bezier(0.2, 0, 0, 1);
-
-  &:hover {
-    transform: scale(1.02);
-    box-shadow:
-      0 16px 40px -8px rgba(0, 0, 0, 0.7),
-      0 0 0 1px var(--gold-glow);
-  }
-
-  @include mixins.respond-below(md) {
-    width: 150px;
-    height: 225px;
-  }
-}
-
-.rating-badge {
-  @include mixins.rating-badge;
-  top: 12px;
-  right: 12px;
-  padding: 6px 12px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  // Gold-glass to match serie cards
-  background: color-mix(in srgb, #0e1227 72%, transparent);
-  color: var(--gold-bright);
-  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    color: var(--gold-bright);
-  }
+  border-radius: var(--md-sys-shape-corner-large);
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  box-shadow: var(--md-sys-elevation-level4);
 }
 
 .serie-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
   min-width: 0;
 }
 
 .serie-title {
+  margin: 0;
   font-family: 'Poppins', 'Roboto', sans-serif;
-  font-size: 2.75rem;
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  margin: 0 0 var(--spacing-sm) 0;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
-
-  @include mixins.respond-below(md) {
-    font-size: 2rem;
-  }
+  font-size: var(--type-display);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+  color: var(--mat-sys-on-surface);
+  text-wrap: balance;
 }
 
 .original-title {
-  font-size: 1.125rem;
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
   font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: 0.15px;
-  margin: 0 0 var(--spacing-lg) 0;
-  opacity: 0.85;
-  font-style: italic;
 }
 
 .serie-meta {
-  margin-bottom: var(--spacing-xl);
-
-  mat-chip-set {
-    margin-bottom: var(--spacing-md);
-  }
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--mat-sys-on-surface-variant);
+  font-variant-numeric: tabular-nums;
 }
 
-.meta-info {
+.separator {
+  opacity: 0.5;
+}
+
+.serie-stats {
+  display: flex;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-sm);
+}
+
+.stat {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-
-  .separator {
-    opacity: 0.6;
-  }
-
-  @include mixins.respond-below(md) {
-    flex-wrap: wrap;
-    justify-content: center;
-    font-size: 0.875rem;
-  }
 }
 
-.vote-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: 0.25px;
-
-  .vote-average {
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-    color: var(--mat-sys-on-surface);
-    background: color-mix(in srgb, var(--mat-sys-surface) 95%, transparent);
-    backdrop-filter: blur(12px);
-    padding: 6px 12px;
-    border-radius: 12px;
-    border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
-  }
-
-  .vote-count {
-    opacity: 0.85;
-  }
+.stat-caption {
+  color: var(--mat-sys-on-surface-variant);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .action-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing-md);
-  align-items: center;
+  margin-top: var(--spacing-md);
+}
 
-  // Self-contained button styling (does not rely on Material color palettes),
-  // so both states always read clearly as buttons against the dark hero.
-  .action-btn {
-    --mdc-filled-button-container-shape: 9999px;
-    height: 44px;
-    padding: 0 22px;
-    border-radius: 9999px; // M3 full pill
-    font-size: 0.9375rem;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    transition:
-      transform 150ms cubic-bezier(0.2, 0, 0, 1),
-      box-shadow 150ms cubic-bezier(0.2, 0, 0, 1),
-      background-color 150ms cubic-bezier(0.2, 0, 0, 1),
-      border-color 150ms cubic-bezier(0.2, 0, 0, 1);
+.action-btn {
+  @include glass-surface(45%, 14px);
 
-    // Inactive state = solid gold filled button (primary call to action)
-    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%) !important;
-    color: #1a1200 !important;
-    border: 1px solid transparent !important;
-    box-shadow:
-      0 6px 18px -6px var(--gold-glow),
-      var(--md-sys-elevation-level1) !important;
+  color: var(--mat-sys-on-surface);
+  transition:
+    border-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized),
+    background-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized);
+}
 
-    mat-icon {
-      color: #1a1200;
-    }
+.action-btn--active {
+  border-color: color-mix(in srgb, var(--flare) 55%, transparent);
+  background: color-mix(in srgb, var(--flare) 16%, transparent);
+  color: var(--flare);
+}
 
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 10px 24px -6px var(--gold-glow),
-        var(--md-sys-elevation-level2) !important;
-    }
+@media (hover: hover) {
+  .action-btn:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--mat-sys-on-surface) 40%, transparent);
+  }
+}
 
-    &:active {
-      transform: scale(0.96);
-    }
-
-    // Active state = gold-tinted glass, still unmistakably a button
-    // (strong gold border + gold label) but visually distinct from inactive.
-    &.action-btn--active {
-      background: color-mix(in srgb, var(--gold) 16%, rgba(14, 18, 39, 0.72)) !important;
-      backdrop-filter: blur(12px);
-      color: var(--gold-bright) !important;
-      border: 1.5px solid color-mix(in srgb, var(--gold) 60%, transparent) !important;
-      box-shadow:
-        0 4px 14px -4px rgba(0, 0, 0, 0.5),
-        inset 0 0 0 1px color-mix(in srgb, var(--gold) 14%, transparent) !important;
-
-      mat-icon {
-        color: var(--gold-bright);
-      }
-
-      &:hover {
-        background: color-mix(in srgb, var(--gold) 24%, rgba(14, 18, 39, 0.78)) !important;
-        border-color: color-mix(in srgb, var(--gold) 80%, transparent) !important;
-      }
-    }
+@include respond-below(md) {
+  .serie-hero {
+    min-height: 60vh;
+    padding: var(--spacing-3xl) var(--spacing-md) var(--spacing-xl);
   }
 
-  @include mixins.respond-below(md) {
-    justify-content: center;
-    flex-wrap: wrap;
+  .hero-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+  }
+
+  .serie-poster {
+    width: 128px;
+  }
+
+  .serie-stats {
+    gap: var(--spacing-lg);
   }
 }

@@ -1,0 +1,17 @@
+<header class="section-header">
+    @if (eyebrowKey()) {
+        <p
+            class="eyebrow"
+            [class.eyebrow--flare]="accent() === 'flare'"
+            [class.eyebrow--ice]="accent() === 'ice'"
+        >
+            {{ eyebrowKey() | transloco }}
+        </p>
+    }
+
+    <h2 class="section-title">{{ titleKey() | transloco }}</h2>
+
+    @if (leadKey()) {
+        <p class="section-lead body-large">{{ leadKey() | transloco }}</p>
+    }
+</header>

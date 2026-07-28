@@ -21,8 +21,37 @@
 
 .recommendations-grid {
   @include mixins.horizontal-scroll;
+
   gap: var(--spacing-lg);
   padding: var(--spacing-md) 0;
+
+  // The fades and the scrollbar are nested here rather than inside the mixin,
+  // so every selector has a parent it can actually resolve against.
+  &::before {
+    @include mixins.horizontal-scroll-fade-start;
+  }
+
+  &::after {
+    @include mixins.horizontal-scroll-fade-end;
+  }
+
+  &::-webkit-scrollbar {
+    @include mixins.horizontal-scroll-bar;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @include mixins.horizontal-scroll-thumb;
+
+    @media (hover: hover) {
+      &:hover {
+        background: var(--mat-sys-on-surface-variant);
+      }
+    }
+  }
 
   @include mixins.respond-below(md) {
     gap: var(--spacing-md);

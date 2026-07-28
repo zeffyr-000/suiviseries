@@ -7,7 +7,12 @@ import {
     Injectable,
     inject,
 } from '@angular/core';
-import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
+import {
+    provideRouter,
+    withPreloading,
+    withViewTransitions,
+    PreloadAllModules,
+} from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTransloco, TranslocoLoader, Translation } from '@jsverse/transloco';
@@ -40,7 +45,9 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideZonelessChangeDetection(),
-        provideRouter(routes, withPreloading(PreloadAllModules)),
+        // View transitions let a poster morph into the detail hero. Browsers
+        // without support navigate normally, so nothing is gated on it.
+        provideRouter(routes, withPreloading(PreloadAllModules), withViewTransitions()),
         provideHttpClient(withInterceptors([authInterceptor])),
         // eslint-disable-next-line @typescript-eslint/no-deprecated
         provideAnimations(),
