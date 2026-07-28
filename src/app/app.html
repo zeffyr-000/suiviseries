@@ -143,7 +143,36 @@
                     class="app-title-link"
                     [attr.aria-label]="'app.title' | transloco"
                 >
-                    <mat-icon class="app-title-icon" aria-hidden="true">live_tv</mat-icon>
+                    <!-- The favicon mark, redrawn with the signature gradient so
+                         the brand reads the same in the tab and in the bar. -->
+                    <svg class="app-title-icon" viewBox="0 0 512 512" aria-hidden="true">
+                        <defs>
+                            <!-- Same stops as public/favicon.svg, so the mark in
+                                 the bar and the one in the browser tab match. -->
+                            <linearGradient id="brandMark" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="#f2d888" />
+                                <stop offset="0.32" stop-color="#e4c368" />
+                                <stop offset="0.66" stop-color="#ff4d6d" />
+                                <stop offset="1" stop-color="#7c5cff" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="512" height="512" rx="112" fill="url(#brandMark)" />
+                        <g fill="none" stroke="#0b0e1e" stroke-width="26" stroke-linecap="round">
+                            <line x1="256" y1="120" x2="196" y2="64" />
+                            <line x1="256" y1="120" x2="316" y2="64" />
+                        </g>
+                        <rect
+                            x="96"
+                            y="150"
+                            width="320"
+                            height="236"
+                            rx="34"
+                            fill="none"
+                            stroke="#0b0e1e"
+                            stroke-width="30"
+                        />
+                        <path d="M226 214 L226 322 L312 268 Z" fill="#0b0e1e" />
+                    </svg>
                     <span class="app-title title-large">{{ 'app.title' | transloco }}</span>
                 </a>
                 <span class="spacer"></span>
@@ -245,6 +274,8 @@
             <main class="app-content">
                 <router-outlet />
             </main>
+
+            <app-footer />
 
             @if (currentUser()) {
                 <app-push-notification-prompt />

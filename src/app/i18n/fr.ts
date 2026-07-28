@@ -46,11 +46,14 @@ export const frTranslations = {
         legal: 'Mentions légales',
     },
     hero: {
-        title: 'Découvrez des Séries TV Incroyables',
-        subtitle:
-            'Suivez vos séries préférées, découvrez de nouvelles séries et ne ratez jamais un épisode',
-        start_watching: 'Commencer à Regarder',
         browse_series: 'Parcourir les Séries',
+        eyebrow: 'Ce soir sur Suivi Séries',
+        headline_lead: 'Ne ratez plus jamais un',
+        headline_accent: 'épisode',
+        tagline:
+            'Vos séries, saison par saison, épisode par épisode. Gratuitement et sans publicité.',
+        how_it_works: 'Comment ça marche',
+        now_showing: 'À l’affiche',
     },
     sections: {
         popular_right_now: 'Populaires en ce Moment',
@@ -58,6 +61,34 @@ export const frTranslations = {
         view_all: 'Voir Tout',
         load_more: 'Charger plus',
         loading_more: 'Chargement...',
+        trending_eyebrow: 'La tendance du moment',
+        popular_eyebrow: 'En ce moment',
+        top_rated_eyebrow: 'Le classement',
+        top_rated_lead: 'Les mieux notées, dans l’ordre',
+        rail_label: 'Séries populaires',
+        featured_label: 'Série mise en avant',
+    },
+    value_props: {
+        eyebrow: 'Ce que fait Suivi Séries',
+        title: 'Tout votre suivi au même endroit',
+        tracking_title: 'Suivi hiérarchique',
+        tracking_desc:
+            'Marquez une série, une saison ou un seul épisode : la progression se synchronise automatiquement aux autres niveaux.',
+        alerts_title: 'Alertes de diffusion',
+        alerts_desc:
+            'Une notification à la sortie d’une nouvelle saison ou de nouveaux épisodes, jusque sur votre téléphone.',
+        gallery_title: 'Galerie haute définition',
+        gallery_desc:
+            'Affiches, arrière-plans et logos en pleine résolution, avec diaporama, plein écran et navigation au clavier.',
+        offline_title: 'Installable et hors-ligne',
+        offline_desc:
+            'Application installable sur mobile comme sur bureau, consultable sans connexion. Gratuite et sans publicité.',
+    },
+    footer: {
+        tagline: 'Suivez vos séries TV préférées, saison par saison.',
+        navigation: 'Navigation',
+        project: 'Le projet',
+        source_code: 'Code source',
     },
     series: {
         seasons: '{count, plural, =0 {Aucune saison} one {# saison} other {# saisons}}',
@@ -97,6 +128,12 @@ export const frTranslations = {
         overview: 'Synopsis',
         details: 'Détails',
         votes: '{count, plural, =0 {aucun vote} one {# vote} other {# votes}}',
+        rating_description: 'Note de {rating} sur 10',
+        progress: 'Progression',
+        progress_description:
+            '{watched, plural, =0 {Aucun épisode vu} one {# épisode vu} other {# épisodes vus}} sur {total}',
+        season_progress:
+            '{watched, plural, =0 {Aucun épisode vu} one {# épisode vu} other {# épisodes vus}} sur {total}',
         first_air_date: 'Première diffusion',
         last_air_date: 'Dernière diffusion',
         popularity: 'Popularité',
@@ -110,7 +147,6 @@ export const frTranslations = {
         season_title: 'Saison',
         episodes_count: '{count, plural, =0 {Aucun épisode} one {# épisode} other {# épisodes}}',
         no_description: 'Aucune description disponible.',
-        no_episode_description: 'Aucune description disponible pour cet épisode.',
         incomplete_data_title: 'Données incomplètes',
         incomplete_data_message:
             'Les informations concernant les saisons et les épisodes de cette série ne sont pas disponibles actuellement.',
@@ -177,6 +213,7 @@ export const frTranslations = {
         logout: 'Se déconnecter',
     },
     search: {
+        eyebrow: 'Explorer le catalogue',
         title: 'Recherche de Séries',
         subtitle: 'Trouvez vos séries TV préférées parmi notre vaste collection',
         placeholder: 'Nom de la série, acteur, réalisateur...',
@@ -207,6 +244,12 @@ export const frTranslations = {
         subtitle: 'Retrouvez toutes les séries que vous suivez',
         add_series: 'Ajouter des séries',
         series_followed: 'séries suivies',
+        stats_seasons: 'saisons',
+        stats_episodes: 'épisodes',
+        stats_airing: 'en diffusion',
+        stats_watched: 'vus',
+        stats_watched_description:
+            '{watched, plural, =0 {Aucun épisode vu} one {# épisode vu} other {# épisodes vus}} sur {total}',
         loading: 'Chargement de vos séries...',
         error_title: 'Erreur',
         go_to_search: 'Aller à la recherche',

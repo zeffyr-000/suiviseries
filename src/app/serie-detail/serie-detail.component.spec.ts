@@ -936,10 +936,23 @@ describe('SerieDetailComponent', () => {
         });
     });
 
-    describe('formatRating', () => {
-        it('should have formatRating function available', () => {
-            expect(component['formatRating']).toBeDefined();
-            expect(typeof component['formatRating']).toBe('function');
+    describe('Watch progress', () => {
+        it('should pass the watched episode count to the header', () => {
+            component['serie'].set(
+                createMockSerie({
+                    number_of_episodes: 62,
+                    user_data: {
+                        is_following: true,
+                        followed_at: null,
+                        is_watched: false,
+                        watched_at: null,
+                        watched_seasons: [],
+                        watched_episodes: [1001, 1002, 1003],
+                    },
+                }),
+            );
+
+            expect(component['watchedEpisodes']()).toHaveLength(3);
         });
     });
 });

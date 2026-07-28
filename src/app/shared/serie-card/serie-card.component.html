@@ -1,22 +1,40 @@
-<mat-card class="series-card">
+<article class="series-card" appSpotlight [style.--poster-src]="posterCssUrl()">
     <a [routerLink]="serieRoute()" class="series-card-link">
-        <div class="poster-container">
-            <img
-                [src]="getTmdbImageUrl(serie().poster_path, 'w500')"
-                [alt]="serie().name"
-                class="series-poster"
-                [attr.loading]="priority() ? 'eager' : 'lazy'"
-                [attr.fetchpriority]="priority() ? 'high' : null"
-            />
-            <div class="rating-badge">
-                <mat-icon>star</mat-icon>
-                {{ formatRating(serie().vote_average) }}
-            </div>
+        <!-- The image source is bound as an attribute so it disappears entirely
+             when a serie has no artwork. Left as an empty value, the browser
+             would treat it as a reference to the current page and request it
+             again. -->
+        <img
+            [attr.src]="posterUrl() || null"
+            [alt]="serie().name"
+            class="series-poster"
+            [style.view-transition-name]="transitionName()"
+            [attr.loading]="priority() ? 'eager' : 'lazy'"
+            [attr.fetchpriority]="priority() ? 'high' : null"
+        />
+
+        <div class="series-scrim" aria-hidden="true"></div>
+        <div class="series-spot" aria-hidden="true"></div>
+
+        <div class="rating-badge">
+            <svg class="rating-ring" viewBox="0 0 46 46" aria-hidden="true">
+                <circle class="rating-ring-track" cx="23" cy="23" [attr.r]="ringRadius" />
+                <circle
+                    class="rating-ring-value"
+                    cx="23"
+                    cy="23"
+                    [attr.r]="ringRadius"
+                    [attr.stroke-dasharray]="ringCircumference"
+                    [attr.stroke-dashoffset]="ringOffset()"
+                />
+            </svg>
+            <span class="rating-value">{{ rating() }}</span>
         </div>
-        <mat-card-content>
+
+        <div class="series-body">
             <h3 class="series-title title-medium">{{ serie().name }}</h3>
+
             <div class="series-info">
-                <app-serie-status-chip [status]="serie().status" size="small" />
                 <div class="series-meta body-small">
                     <span class="seasons">{{
                         'series.seasons' | transloco: { count: serie().number_of_seasons }
@@ -25,14 +43,10 @@
                         'series.episodes' | transloco: { count: serie().number_of_episodes }
                     }}</span>
                 </div>
+                <app-serie-status-chip [status]="serie().status" variant="inline" />
             </div>
-            <p class="series-overview body-medium">
-                {{
-                    serie().overview.length > 100
-                        ? serie().overview.substring(0, 100) + '...'
-                        : serie().overview
-                }}
-            </p>
-        </mat-card-content>
+
+            <p class="series-overview body-small">{{ overview() }}</p>
+        </div>
     </a>
-</mat-card>
+</article>

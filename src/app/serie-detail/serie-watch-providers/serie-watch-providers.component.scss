@@ -16,8 +16,29 @@
 
 .watch-provider-list {
   @include mixins.horizontal-scroll;
+
   gap: var(--spacing-md);
   padding: var(--spacing-xs) 0 var(--spacing-md) 0;
+
+  &::before {
+    @include mixins.horizontal-scroll-fade-start;
+  }
+
+  &::after {
+    @include mixins.horizontal-scroll-fade-end;
+  }
+
+  &::-webkit-scrollbar {
+    @include mixins.horizontal-scroll-bar;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @include mixins.horizontal-scroll-thumb;
+  }
 }
 
 .watch-provider-item {

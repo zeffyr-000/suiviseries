@@ -45,7 +45,27 @@
 }
 
 .image-list {
-  @include mixins.horizontal-scroll(var(--mat-sys-surface));
+  @include mixins.horizontal-scroll;
+
+  &::before {
+    @include mixins.horizontal-scroll-fade-start;
+  }
+
+  &::after {
+    @include mixins.horizontal-scroll-fade-end;
+  }
+
+  &::-webkit-scrollbar {
+    @include mixins.horizontal-scroll-bar;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @include mixins.horizontal-scroll-thumb;
+  }
 }
 
 .image-item {
@@ -58,7 +78,7 @@
   overflow: hidden;
   background: var(--mat-sys-surface-container);
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--mat-sys-level-1);
+  box-shadow: var(--md-sys-elevation-level1);
   cursor: pointer;
   border: none;
   padding: 0;
@@ -69,7 +89,7 @@
   &:hover,
   &:focus {
     will-change: transform, box-shadow;
-    box-shadow: var(--mat-sys-level-2);
+    box-shadow: var(--md-sys-elevation-level2);
     outline: none;
 
     &::before {
@@ -90,7 +110,7 @@
   &.selected {
     outline: 3px solid var(--mat-sys-primary);
     outline-offset: 2px;
-    box-shadow: var(--mat-sys-level-3);
+    box-shadow: var(--md-sys-elevation-level3);
   }
 
   &.poster {
@@ -230,7 +250,7 @@
       background: var(--mat-sys-primary);
       color: var(--mat-sys-on-primary);
       border-radius: 16px;
-      box-shadow: var(--mat-sys-level-2);
+      box-shadow: var(--md-sys-elevation-level2);
 
       mat-icon {
         width: 20px;
@@ -316,7 +336,7 @@
       max-height: 80vh;
       object-fit: contain;
       border-radius: 28px;
-      box-shadow: var(--mat-sys-level-4);
+      box-shadow: var(--md-sys-elevation-level4);
       user-select: none;
       -webkit-user-drag: none;
       touch-action: pinch-zoom;
@@ -402,7 +422,7 @@
       border-radius: 16px;
       backdrop-filter: blur(8px);
       font-weight: 500;
-      box-shadow: var(--mat-sys-level-2);
+      box-shadow: var(--md-sys-elevation-level2);
     }
 
     &:fullscreen .image-counter {
@@ -418,7 +438,7 @@
       padding: var(--spacing-sm) var(--spacing-md);
       border-radius: 16px;
       backdrop-filter: blur(8px);
-      box-shadow: var(--mat-sys-level-2);
+      box-shadow: var(--md-sys-elevation-level2);
 
       .info-row {
         display: flex;
@@ -519,7 +539,7 @@
     padding: var(--spacing-md);
     background: var(--mat-sys-surface-container-high);
     border-radius: 28px 28px 0 0;
-    box-shadow: var(--mat-sys-level-2);
+    box-shadow: var(--md-sys-elevation-level2);
 
     h2 {
       margin: 0;
@@ -541,7 +561,7 @@
     padding: var(--spacing-lg);
     background: var(--mat-sys-surface);
     border-radius: 0 0 28px 28px;
-    box-shadow: var(--mat-sys-level-2);
+    box-shadow: var(--md-sys-elevation-level2);
     align-content: start;
 
     .grid-item {
@@ -550,7 +570,7 @@
       overflow: hidden;
       cursor: pointer;
       transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: var(--mat-sys-level-1);
+      box-shadow: var(--md-sys-elevation-level1);
       aspect-ratio: 16 / 9;
       background: var(--mat-sys-surface-container);
       border: none;
@@ -561,7 +581,7 @@
 
       &:hover {
         transform: scale(1.05);
-        box-shadow: var(--mat-sys-level-3);
+        box-shadow: var(--md-sys-elevation-level3);
       }
 
       img {

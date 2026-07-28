@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Notification } from '../models/notification.model';
+import { getTmdbImageUrl, TmdbImageSize } from '../models/serie.model';
 
 @Injectable({
     providedIn: 'root',
@@ -94,8 +95,11 @@ export class UserNotificationService {
         }
     }
 
-    getTmdbPosterUrl(posterPath: string, size: 'w200' | 'w500' = 'w200'): string {
+    // Delegates so notification artwork gets the same handling as everywhere
+    // else: the API returns a bare path from some endpoints and a full URL from
+    // others, and only one of the two shapes used to survive being prefixed.
+    getTmdbPosterUrl(posterPath: string, size: TmdbImageSize = 'w200'): string {
         if (!posterPath) return '';
-        return `https://image.tmdb.org/t/p/${size}${posterPath}`;
+        return getTmdbImageUrl(posterPath, size);
     }
 }

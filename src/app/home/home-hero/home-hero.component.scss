@@ -1,0 +1,224 @@
+@use '../../../styles/mixins' as *;
+
+// Deliberately short of a full screen: the point of the home page is that the
+// catalogue starts immediately, so the next section has to be visible without
+// scrolling. A hero that fills the viewport pushes everything below the fold.
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  // The project has no global box-sizing reset, so without this the padding
+  // would be added on top of min-height and the hero would run 96px taller
+  // than intended.
+  box-sizing: border-box;
+  min-height: clamp(360px, 56vh, 560px);
+  padding-block: var(--spacing-3xl) var(--spacing-xl);
+  // The artwork runs edge to edge while the copy stays on the same 1400px
+  // content band as every section below, so the headline lines up with the
+  // grids rather than hugging the viewport edge on a wide screen. The sections
+  // pad outside their max-width, which is why no gutter is added here.
+  padding-inline: max(var(--spacing-lg), calc((100% - 1400px) / 2));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+// The old hero ended on a 28px rounded rectangle, which read as a card. A mask
+// lets the artwork dissolve into the page instead of stopping at an edge.
+// It is applied to the artwork layers only: masking the whole section would
+// also fade the tagline and the calls to action sitting near the bottom.
+.hero-backdrop,
+.hero-scrim,
+.hero-glow {
+  mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
+}
+
+.hero-backdrop {
+  position: absolute;
+  inset: -8% 0 0;
+  z-index: -3;
+  background-size: cover;
+  background-position: center 20%;
+  transform: scale(1.08);
+}
+
+// Scroll-linked parallax, paced by scroll position rather than by a timer, so
+// it replaces the old 24s zoom that ran forever whether or not anyone looked.
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-backdrop {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll();
+      animation-range: 0 88vh;
+    }
+  }
+}
+
+@keyframes hero-parallax {
+  to {
+    transform: scale(1.16) translate3d(0, 8%, 0);
+  }
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(
+      92deg,
+      color-mix(in srgb, var(--ink) 96%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 80%, transparent) 36%,
+      color-mix(in srgb, var(--ink) 18%, transparent) 74%,
+      color-mix(in srgb, var(--ink) 55%, transparent) 100%
+    ),
+    linear-gradient(0deg, var(--ink) 2%, transparent 46%);
+}
+
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(30% 44% at 8% 84%, var(--flare-glow), transparent 70%),
+    radial-gradient(34% 40% at 62% 8%, var(--gold-glow), transparent 70%);
+  mix-blend-mode: screen;
+}
+
+// A gradient stands in when no backdrop has loaded, so the hero never appears
+// as a flat empty band.
+.hero:not(.hero--has-backdrop) {
+  background: radial-gradient(
+    140% 120% at 50% 0%,
+    color-mix(in srgb, var(--violet) 22%, var(--ink)) 0%,
+    var(--ink) 62%
+  );
+}
+
+// Wide enough for the headline to set on two lines rather than three, which
+// is most of what made the hero so tall.
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: min(54rem, 94%);
+}
+
+// Slightly below the global display size. At 7rem the headline needs three
+// lines and 316px of height on its own, which is what pushed the catalogue off
+// the screen; this keeps the scale dramatic while giving that height back.
+.hero-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 5.6vw, 5.25rem);
+  color: var(--mat-sys-on-surface);
+}
+
+.hero-tagline {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+.hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  min-height: 48px;
+  padding: 0 var(--spacing-md);
+  border-radius: var(--md-sys-shape-corner-full);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 24%, transparent);
+  color: var(--mat-sys-on-surface);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition:
+    border-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized),
+    background-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized);
+
+  mat-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 1.125rem;
+  }
+}
+
+@media (hover: hover) {
+  .hero-secondary:hover {
+    border-color: color-mix(in srgb, var(--mat-sys-on-surface) 45%, transparent);
+    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+  }
+}
+
+// Credits the artwork and doubles as a way in. Sits on the right, opposite the
+// headline, so it reads as a caption on the image rather than part of the copy.
+.hero-credit {
+  @include glass-surface(48%, 14px);
+
+  position: absolute;
+  right: max(var(--spacing-lg), calc((100% - 1400px) / 2));
+  bottom: var(--spacing-xl);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  max-width: min(20rem, 40vw);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--mat-sys-on-surface);
+  text-decoration: none;
+  transition:
+    border-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized),
+    transform var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-emphasized);
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+    color: var(--gold);
+  }
+}
+
+.hero-credit-label {
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+  white-space: nowrap;
+}
+
+.hero-credit-name {
+  font-weight: 500;
+  color: var(--gold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .hero-credit:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--gold) 50%, transparent);
+  }
+}
+
+@include respond-below(md) {
+  .hero {
+    min-height: clamp(320px, 48vh, 440px);
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  // No room for a caption beside the copy at this width; the same serie leads
+  // the featured card a screen below, so nothing is lost.
+  .hero-credit {
+    display: none;
+  }
+}

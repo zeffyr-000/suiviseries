@@ -1,8 +1,10 @@
 <article class="search-page" itemscope itemtype="https://schema.org/SearchResultsPage">
     <header class="search-header">
-        <mat-icon class="header-icon" aria-hidden="true">search</mat-icon>
+        <p class="eyebrow">{{ 'search.eyebrow' | transloco }}</p>
         <h1 itemprop="name">{{ 'search.title' | transloco }}</h1>
-        <p class="subtitle" itemprop="description">{{ 'search.subtitle' | transloco }}</p>
+        <p class="subtitle body-large" itemprop="description">
+            {{ 'search.subtitle' | transloco }}
+        </p>
     </header>
 
     <section class="search-form-container" aria-label="{{ 'search.form_label' | transloco }}">
@@ -83,7 +85,7 @@
                     </mat-chip-set>
                 </div>
             </header>
-            <ul class="results-grid">
+            <ul class="results-grid reveal-on-scroll">
                 @for (serie of searchResults(); track serie.id) {
                     <li><app-serie-card [serie]="serie" /></li>
                 }

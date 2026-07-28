@@ -72,9 +72,11 @@
         margin-right: var(--spacing-xs);
       }
 
-      &:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        transform: translateY(-1px);
+      @media (hover: hover) {
+        &:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          transform: translateY(-1px);
+        }
       }
 
       &:active {
@@ -124,50 +126,70 @@
 }
 
 // M3 Series stats badge
+// A row of tiles rather than the single count badge this page used to show.
+// The collection is the one place in the app with data worth summarising.
 .series-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-xxl);
-  animation: slideInFromLeft 500ms cubic-bezier(0.2, 0, 0, 1);
+}
 
-  .stats-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-lg);
-    padding: var(--spacing-lg) var(--spacing-xl);
-    background: color-mix(in srgb, var(--primary-color) 15%, transparent);
-    border-radius: 20px; // M3 full rounding
-    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
-    transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
+.stat-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+  border: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
+  border-radius: var(--md-sys-shape-corner-large);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mat-sys-surface-container) 90%, transparent),
+    color-mix(in srgb, var(--mat-sys-surface) 60%, transparent)
+  );
+  overflow: hidden;
 
-    &:hover {
-      background: color-mix(in srgb, var(--primary-color) 20%, transparent);
-      border-color: color-mix(in srgb, var(--primary-color) 40%, transparent);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    mat-icon {
-      color: var(--primary-color);
-      font-size: 1.75rem;
-      width: 1.75rem;
-      height: 1.75rem;
-      animation: iconPulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-
-    .stats-count {
-      font-size: 1.75rem; // M3 headline-medium
-      font-weight: 400;
-      line-height: 1.29;
-      letter-spacing: 0;
-      color: var(--mat-sys-on-surface);
-    }
-
-    .stats-label {
-      font-size: 0.875rem; // M3 body-medium
-      font-weight: 400;
-      letter-spacing: 0.25px;
-      color: var(--mat-sys-on-surface-variant);
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 2px;
+    background: var(--tile-accent);
   }
+
+  &[data-accent='gold'] {
+    --tile-accent: var(--gold);
+  }
+
+  &[data-accent='ice'] {
+    --tile-accent: var(--ice);
+  }
+
+  &[data-accent='flare'] {
+    --tile-accent: var(--flare);
+  }
+}
+
+.stat-tile--ring {
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+.stat-value {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--mat-sys-on-surface);
+}
+
+.stat-label {
+  color: var(--mat-sys-on-surface-variant);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 @keyframes slideInFromLeft {
@@ -194,8 +216,9 @@
 // M3 Series grid
 .series-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-xl);
+  // Matched to the home and search grids now that the card is poster-led.
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
   margin-top: var(--spacing-xl);
 
   // M3 Staggered animation for cards
@@ -290,9 +313,11 @@
       animation: none;
     }
 
-    &:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      transform: translateY(-1px);
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+      }
     }
 
     &:active {

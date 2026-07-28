@@ -77,14 +77,6 @@ mat-list-item:focus-visible {
   }
 }
 
-// Reduced motion support
-// Note: Using 1ms (not 0s) ensures animationend events fire reliably across browsers
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
-  }
-}
+// Reduced motion is handled once, globally, in src/styles.scss. It used to
+// be declared here as well with a different duration; two competing resets
+// made the effective value depend on import order.

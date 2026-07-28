@@ -1,0 +1,9 @@
+<!-- A named <section> carries the region role natively, so no explicit role is
+     needed. No tabindex either: every card is a link, and tabbing onto one that
+     is scrolled out of view makes the browser bring it into view, which is what
+     made the container focusable in the first place. -->
+<section class="serie-rail" [attr.aria-label]="labelKey() | transloco">
+    @for (serie of series(); track serie.id; let index = $index) {
+        <app-serie-card class="rail-item" [serie]="serie" [priority]="index < eagerCount()" />
+    }
+</section>

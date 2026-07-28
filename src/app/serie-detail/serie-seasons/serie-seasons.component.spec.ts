@@ -116,11 +116,31 @@ describe('SerieSeasonsComponent', () => {
             expect(posters.length).toBeGreaterThanOrEqual(1);
         });
 
-        it('should render episodes for seasons with episode data', () => {
+        it('should render episodes as a flat list rather than a second accordion', () => {
             const compiled = fixture.nativeElement as HTMLElement;
-            // Episodes are in mat-expansion-panel elements
-            const allPanels = compiled.querySelectorAll('mat-expansion-panel');
-            expect(allPanels.length).toBeGreaterThan(0);
+
+            // One panel per season, and no panel nested inside them for episodes.
+            const panels = compiled.querySelectorAll('mat-expansion-panel');
+            const episodes = compiled.querySelectorAll('.episode-list .episode');
+
+            expect(panels).toHaveLength(mockSeasons.length);
+            expect(episodes.length).toBeGreaterThanOrEqual(2);
+        });
+
+        it('should show how far along each season is, once signed in', () => {
+            componentRef.setInput('isAuthenticated', true);
+            fixture.detectChanges();
+
+            const compiled = fixture.nativeElement as HTMLElement;
+            const fill = compiled.querySelector('.season-progress-fill') as HTMLElement;
+            const value = compiled.querySelector('.season-progress-value');
+
+            expect(fill).toBeTruthy();
+            expect(value?.textContent?.trim()).toMatch(/^\d+\/\d+$/);
+        });
+
+        it('should not show progress to signed-out visitors', () => {
+            expect(fixture.nativeElement.querySelector('.season-progress')).toBeNull();
         });
 
         it('should render episode names', () => {

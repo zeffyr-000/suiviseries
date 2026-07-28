@@ -12,21 +12,15 @@ describe('SerieHeaderComponent', () => {
     let componentRef: ComponentRef<SerieHeaderComponent>;
 
     const mockSerieData: SerieHeaderData = {
+        id: 1396,
         name: 'Breaking Bad',
         original_name: 'Breaking Bad',
-        backdrop_path: '/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg',
-        poster_path: '/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
         vote_average: 9.3,
         vote_count: 12000,
         number_of_seasons: 5,
         number_of_episodes: 62,
         first_air_date: '2008-01-20',
         status: SerieStatus.ENDED,
-        overview: 'A high school chemistry teacher turned methamphetamine producer.',
-    };
-
-    const mockFormatRating = (rating: number): string => {
-        return rating.toFixed(1);
     };
 
     beforeEach(() => {
@@ -53,7 +47,6 @@ describe('SerieHeaderComponent', () => {
         componentRef.setInput('isWatched', false);
         componentRef.setInput('followLoading', false);
         componentRef.setInput('watchedLoading', false);
-        componentRef.setInput('formatRating', mockFormatRating);
 
         fixture.detectChanges();
     });
@@ -72,7 +65,7 @@ describe('SerieHeaderComponent', () => {
             expect(component.isWatched()).toBe(false);
             expect(component.followLoading()).toBe(false);
             expect(component.watchedLoading()).toBe(false);
-            expect(component.formatRating()).toBeDefined();
+            expect(component.watchedEpisodeCount()).toBe(0);
         });
     });
 
@@ -103,10 +96,41 @@ describe('SerieHeaderComponent', () => {
             expect(backButton).toBeTruthy();
         });
 
-        it('should render vote average with formatRating', () => {
+        it('should render the rating on the same 0-10 scale as the arc', () => {
             const compiled = fixture.nativeElement as HTMLElement;
-            const rating = compiled.querySelector('.rating-badge');
-            expect(rating?.textContent).toContain('9.3');
+            const rating = compiled.querySelector('.stat-ring-label');
+            expect(rating?.textContent?.trim()).toBe('9.3');
+        });
+
+        it('should name the poster so it can morph in from the card that was clicked', () => {
+            const poster = fixture.nativeElement.querySelector('.serie-poster') as HTMLElement;
+            expect(poster.style.viewTransitionName).toBe('serie-poster-1396');
+        });
+
+        it('should hide the progress ring from signed-out visitors', () => {
+            const rings = fixture.nativeElement.querySelectorAll('app-stat-ring');
+            expect(rings).toHaveLength(1);
+        });
+
+        it('should show a progress ring once signed in', () => {
+            componentRef.setInput('isAuthenticated', true);
+            componentRef.setInput('watchedEpisodeCount', 31);
+            fixture.detectChanges();
+
+            const rings = fixture.nativeElement.querySelectorAll('app-stat-ring');
+            const labels = fixture.nativeElement.querySelectorAll('.stat-ring-label');
+
+            expect(rings).toHaveLength(2);
+            // 31 of 62 episodes
+            expect(labels[1].textContent.trim()).toBe('50%');
+        });
+
+        it('should report no progress when the episode count is unknown', () => {
+            componentRef.setInput('isAuthenticated', true);
+            componentRef.setInput('serie', { ...mockSerieData, number_of_episodes: 0 });
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelectorAll('app-stat-ring')).toHaveLength(1);
         });
     });
 

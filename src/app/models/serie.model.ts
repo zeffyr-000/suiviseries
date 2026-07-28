@@ -157,11 +157,42 @@ export enum SerieStatus {
     PLANNED = 'Planned',
 }
 
+const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p';
+const TMDB_PATH_MARKER = '/t/p/';
+
+// The API is not consistent about artwork: the list endpoints return a full URL
+// that already carries a size ("https://image.tmdb.org/t/p/w500/abc.jpg"),
+// while the detail endpoint returns a bare path ("/abc.jpg"). Prefixing both
+// produced ".../w780https://.../w1280/abc.jpg", which the CDN quietly accepted
+// while serving whatever size the response had baked in — so the size argument
+// did nothing on every list page. Rewriting instead of prefixing makes it real.
+export type TmdbImageSize = 'w200' | 'w300' | 'w500' | 'w780' | 'original';
+
 export const getTmdbImageUrl = (
-    path: string,
-    size: 'w300' | 'w500' | 'w780' | 'original' = 'w500',
+    path: string | null | undefined,
+    size: TmdbImageSize = 'w500',
 ): string => {
-    return `https://image.tmdb.org/t/p/${size}${path}`;
+    // TMDB has no artwork for some entries and the API forwards that as null,
+    // which Recommendation already types. The parameter is widened rather than
+    // left as string so the guard describes a case the compiler agrees exists:
+    // the previous template-literal body absorbed null into ".../w500null",
+    // whereas indexing into it would throw.
+    if (!path) {
+        return '';
+    }
+
+    const markerIndex = path.indexOf(TMDB_PATH_MARKER);
+
+    if (markerIndex === -1) {
+        return `${TMDB_IMAGE_BASE}/${size}${path}`;
+    }
+
+    const afterMarker = path.slice(markerIndex + TMDB_PATH_MARKER.length);
+    const fileIndex = afterMarker.indexOf('/');
+
+    return fileIndex === -1
+        ? `${TMDB_IMAGE_BASE}/${size}`
+        : `${TMDB_IMAGE_BASE}/${size}${afterMarker.slice(fileIndex)}`;
 };
 
 export const formatRating = (rating: number): string => {

@@ -1,0 +1,34 @@
+<article class="featured">
+    <img
+        class="featured-backdrop"
+        [src]="backdropUrl()"
+        [alt]="serie().name"
+        loading="eager"
+        fetchpriority="high"
+    />
+    <div class="featured-scrim" aria-hidden="true"></div>
+
+    <div class="featured-content">
+        <p class="eyebrow eyebrow--flare">{{ 'sections.trending_eyebrow' | transloco }}</p>
+
+        <h3 class="featured-title">{{ serie().name }}</h3>
+
+        <p class="featured-overview body-medium">{{ serie().overview }}</p>
+
+        <div class="featured-meta label-medium">
+            @if (isAiring()) {
+                <span class="live-pill">{{ 'status.returning_series' | transloco }}</span>
+            }
+            <span>{{ 'series.seasons' | transloco: { count: serie().number_of_seasons } }}</span>
+            <span class="separator" aria-hidden="true">·</span>
+            <span>{{ 'series.episodes' | transloco: { count: serie().number_of_episodes } }}</span>
+            <span class="separator" aria-hidden="true">·</span>
+            <span class="featured-rating">{{ rating() }}</span>
+        </div>
+
+        <a mat-flat-button class="btn-expressive featured-cta" [routerLink]="serieRoute()">
+            <mat-icon>play_arrow</mat-icon>
+            {{ 'series.details' | transloco }}
+        </a>
+    </div>
+</article>

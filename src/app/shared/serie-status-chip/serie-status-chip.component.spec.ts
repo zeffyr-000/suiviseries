@@ -156,4 +156,40 @@ describe('SerieStatusChipComponent', () => {
             expect(chip.textContent).toContain('Prévue');
         });
     });
+
+    describe('Inline variant', () => {
+        beforeEach(() => {
+            fixture.componentRef.setInput('variant', 'inline');
+        });
+
+        it('should drop the Material chip', () => {
+            setInput(SerieStatus.RETURNING);
+
+            expect(fixture.nativeElement.querySelector('mat-chip')).toBeFalsy();
+            expect(fixture.nativeElement.querySelector('.status-inline')).toBeTruthy();
+        });
+
+        it('should keep the shared wording', () => {
+            setInput(SerieStatus.CANCELED);
+
+            expect(fixture.nativeElement.querySelector('.status-inline').textContent.trim()).toBe(
+                'Annulée',
+            );
+        });
+
+        it('should keep the status colour class alongside the variant class', () => {
+            setInput(SerieStatus.RETURNING);
+
+            const label = fixture.nativeElement.querySelector('.status-inline');
+
+            expect(label.classList.contains('status-returning')).toBe(true);
+        });
+
+        it('should default to the chip variant', () => {
+            fixture.componentRef.setInput('variant', 'chip');
+            setInput(SerieStatus.ENDED);
+
+            expect(fixture.nativeElement.querySelector('mat-chip')).toBeTruthy();
+        });
+    });
 });

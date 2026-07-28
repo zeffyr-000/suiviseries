@@ -43,13 +43,50 @@
         </div>
     } @else {
         <div class="series-stats">
-            <div class="stats-badge">
-                <mat-icon>tv</mat-icon>
-                <span class="stats-count headline-medium">{{ mySeries().length }}</span>
-                <span class="stats-label body-medium">{{
+            <div class="stat-tile" data-accent="gold">
+                <span class="stat-value">{{ mySeries().length }}</span>
+                <span class="stat-label label-medium">{{
                     'my_series.series_followed' | transloco
                 }}</span>
             </div>
+
+            <div class="stat-tile" data-accent="ice">
+                <span class="stat-value">{{ totalSeasons() }}</span>
+                <span class="stat-label label-medium">{{
+                    'my_series.stats_seasons' | transloco
+                }}</span>
+            </div>
+
+            <div class="stat-tile" data-accent="ice">
+                <span class="stat-value">{{ totalEpisodes() }}</span>
+                <span class="stat-label label-medium">{{
+                    'my_series.stats_episodes' | transloco
+                }}</span>
+            </div>
+
+            <div class="stat-tile" data-accent="flare">
+                <span class="stat-value">{{ airingCount() }}</span>
+                <span class="stat-label label-medium">{{
+                    'my_series.stats_airing' | transloco
+                }}</span>
+            </div>
+
+            @if (hasWatchedData()) {
+                <div class="stat-tile stat-tile--ring" data-accent="ice">
+                    <app-stat-ring
+                        [ratio]="watchedRatio()"
+                        [label]="watchedPercent() + '%'"
+                        accent="ice"
+                        [description]="
+                            'my_series.stats_watched_description'
+                                | transloco: { watched: watchedEpisodes(), total: totalEpisodes() }
+                        "
+                    />
+                    <span class="stat-label label-medium">{{
+                        'my_series.stats_watched' | transloco
+                    }}</span>
+                </div>
+            }
         </div>
 
         <div class="series-grid">

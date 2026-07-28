@@ -1,0 +1,9 @@
+<ul class="value-props">
+    @for (prop of props; track prop.titleKey) {
+        <li class="value-prop" [attr.data-accent]="prop.accent">
+            <mat-icon class="value-prop-icon" aria-hidden="true">{{ prop.icon }}</mat-icon>
+            <h3 class="value-prop-title title-medium">{{ prop.titleKey | transloco }}</h3>
+            <p class="value-prop-desc body-medium">{{ prop.descriptionKey | transloco }}</p>
+        </li>
+    }
+</ul>

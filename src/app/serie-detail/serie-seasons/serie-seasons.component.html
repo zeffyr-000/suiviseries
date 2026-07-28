@@ -30,7 +30,34 @@
                                         <span class="separator">•</span>
                                         <span>{{ season.air_date | date: 'yyyy' }}</span>
                                     }
+
                                     @if (isAuthenticated()) {
+                                        <!-- Progress is the reason to open a season, so it is
+                                             readable without opening it. -->
+                                        <span
+                                            class="season-progress"
+                                            [attr.aria-label]="
+                                                'serie_detail.season_progress'
+                                                    | transloco
+                                                        : {
+                                                              watched: seasonWatchedCount(season),
+                                                              total: seasonEpisodeCount(season),
+                                                          }
+                                            "
+                                        >
+                                            <span class="season-progress-track">
+                                                <span
+                                                    class="season-progress-fill"
+                                                    [style.width.%]="seasonProgress(season)"
+                                                ></span>
+                                            </span>
+                                            <span class="season-progress-value" aria-hidden="true">
+                                                {{ seasonWatchedCount(season) }}/{{
+                                                    seasonEpisodeCount(season)
+                                                }}
+                                            </span>
+                                        </span>
+
                                         <button
                                             mat-icon-button
                                             class="season-watched-button"
@@ -67,6 +94,7 @@
                                 </div>
                             </mat-panel-description>
                         </mat-expansion-panel-header>
+
                         <div class="season-content">
                             <div class="season-header">
                                 @if (season.poster_path) {
@@ -111,22 +139,70 @@
                                 <mat-divider />
                                 <div class="episodes-section">
                                     <h4>{{ 'serie_detail.episodes' | transloco }}</h4>
-                                    <mat-accordion>
+
+                                    <!-- A flat list: an episode carries one line of metadata and a
+                                         short synopsis, which never justified a second accordion
+                                         nested inside the season one. -->
+                                    <ul class="episode-list">
                                         @for (
                                             episode of season.episodes;
                                             track episode.episode_number
                                         ) {
-                                            <mat-expansion-panel>
-                                                <mat-expansion-panel-header>
-                                                    <mat-panel-title>
-                                                        <span class="episode-number"
-                                                            >{{ episode.episode_number }}.</span
-                                                        >
-                                                        <span class="episode-name">{{
-                                                            episode.name
-                                                        }}</span>
-                                                    </mat-panel-title>
-                                                    <mat-panel-description>
+                                            <li
+                                                class="episode"
+                                                [class.episode--watched]="
+                                                    isEpisodeWatched(episode.id)
+                                                "
+                                            >
+                                                @if (isAuthenticated()) {
+                                                    <button
+                                                        mat-icon-button
+                                                        class="episode-watched-button"
+                                                        [class.is-watched]="
+                                                            isEpisodeWatched(episode.id)
+                                                        "
+                                                        [disabled]="isEpisodeLoading(episode.id)"
+                                                        (click)="
+                                                            onToggleEpisodeWatched(
+                                                                episode.id,
+                                                                $event
+                                                            )
+                                                        "
+                                                        [matTooltip]="
+                                                            isEpisodeWatched(episode.id)
+                                                                ? ('series.tooltip_mark_episode_unwatched'
+                                                                  | transloco)
+                                                                : ('series.tooltip_mark_episode_watched'
+                                                                  | transloco)
+                                                        "
+                                                        [attr.aria-label]="
+                                                            isEpisodeWatched(episode.id)
+                                                                ? ('series.tooltip_mark_episode_unwatched'
+                                                                  | transloco)
+                                                                : ('series.tooltip_mark_episode_watched'
+                                                                  | transloco)
+                                                        "
+                                                        matTooltipPosition="right"
+                                                    >
+                                                        @if (isEpisodeLoading(episode.id)) {
+                                                            <mat-spinner diameter="16" />
+                                                        } @else {
+                                                            <mat-icon>{{
+                                                                isEpisodeWatched(episode.id)
+                                                                    ? 'check_box'
+                                                                    : 'check_box_outline_blank'
+                                                            }}</mat-icon>
+                                                        }
+                                                    </button>
+                                                }
+
+                                                <span class="episode-number" aria-hidden="true">{{
+                                                    episode.episode_number
+                                                }}</span>
+
+                                                <div class="episode-body">
+                                                    <p class="episode-name">{{ episode.name }}</p>
+                                                    <p class="episode-meta">
                                                         @if (episode.air_date) {
                                                             <span>{{
                                                                 episode.air_date
@@ -137,89 +213,34 @@
                                                             <span class="separator">•</span>
                                                             <span>{{ episode.runtime }} min</span>
                                                         }
-                                                        @if (isAuthenticated()) {
-                                                            <button
-                                                                mat-icon-button
-                                                                class="episode-watched-button"
-                                                                [class.is-watched]="
-                                                                    isEpisodeWatched(episode.id)
-                                                                "
-                                                                [disabled]="
-                                                                    isEpisodeLoading(episode.id)
-                                                                "
-                                                                (click)="
-                                                                    onToggleEpisodeWatched(
-                                                                        episode.id,
-                                                                        $event
-                                                                    )
-                                                                "
-                                                                [matTooltip]="
-                                                                    isEpisodeWatched(episode.id)
-                                                                        ? ('series.tooltip_mark_episode_unwatched'
-                                                                          | transloco)
-                                                                        : ('series.tooltip_mark_episode_watched'
-                                                                          | transloco)
-                                                                "
-                                                                [attr.aria-label]="
-                                                                    isEpisodeWatched(episode.id)
-                                                                        ? ('series.tooltip_mark_episode_unwatched'
-                                                                          | transloco)
-                                                                        : ('series.tooltip_mark_episode_watched'
-                                                                          | transloco)
-                                                                "
-                                                                matTooltipPosition="right"
-                                                            >
-                                                                @if (isEpisodeLoading(episode.id)) {
-                                                                    <mat-spinner diameter="16" />
-                                                                } @else {
-                                                                    <mat-icon>{{
-                                                                        isEpisodeWatched(episode.id)
-                                                                            ? 'check_box'
-                                                                            : 'check_box_outline_blank'
-                                                                    }}</mat-icon>
-                                                                }
-                                                            </button>
+                                                        @if (episode.vote_average > 0) {
+                                                            <span class="separator">•</span>
+                                                            <span class="episode-rating">
+                                                                {{ episode.vote_average }}/10
+                                                            </span>
                                                         }
-                                                    </mat-panel-description>
-                                                </mat-expansion-panel-header>
-
-                                                <div class="episode-content">
-                                                    <div class="episode-header">
-                                                        <div class="episode-info">
-                                                            @if (episode.still_path) {
-                                                                <img
-                                                                    [src]="
-                                                                        'https://image.tmdb.org/t/p/w500' +
-                                                                        episode.still_path
-                                                                    "
-                                                                    [alt]="episode.name"
-                                                                    class="episode-still"
-                                                                    loading="lazy"
-                                                                />
-                                                            }
-                                                            <p class="episode-overview">
-                                                                {{
-                                                                    episode.overview ||
-                                                                        ('serie_detail.no_episode_description'
-                                                                            | transloco)
-                                                                }}
-                                                            </p>
-                                                            @if (episode.vote_average > 0) {
-                                                                <div class="episode-rating">
-                                                                    <mat-icon>star</mat-icon>
-                                                                    <span
-                                                                        >{{
-                                                                            episode.vote_average
-                                                                        }}/10</span
-                                                                    >
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                    </div>
+                                                    </p>
+                                                    @if (episode.overview) {
+                                                        <p class="episode-overview">
+                                                            {{ episode.overview }}
+                                                        </p>
+                                                    }
                                                 </div>
-                                            </mat-expansion-panel>
+
+                                                @if (episode.still_path) {
+                                                    <img
+                                                        [src]="
+                                                            'https://image.tmdb.org/t/p/w300' +
+                                                            episode.still_path
+                                                        "
+                                                        [alt]="episode.name"
+                                                        class="episode-still"
+                                                        loading="lazy"
+                                                    />
+                                                }
+                                            </li>
                                         }
-                                    </mat-accordion>
+                                    </ul>
                                 </div>
                             }
                         </div>
