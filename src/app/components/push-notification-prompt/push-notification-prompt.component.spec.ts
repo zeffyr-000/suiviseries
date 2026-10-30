@@ -1,37 +1,41 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslocoService } from '@jsverse/transloco';
-import { throwError } from 'rxjs';
+import { NEVER, throwError } from 'rxjs';
 
-import { PushNotificationPromptComponent } from './push-notification-prompt.component';
+import {
+    PushNotificationPromptComponent,
+    PUSH_PROMPT_COOLDOWN_MS,
+    PUSH_PROMPT_DISMISSED_KEY,
+} from './push-notification-prompt.component';
 import { PushNotificationService } from '../../services/push-notification.service';
+import { NotificationService } from '../../services/notification.service';
 import { getTranslocoTestingModule } from '../../testing/transloco-testing.module';
-import { createMockPushNotificationService, createMockMatSnackBar } from '../../testing/mocks';
+import {
+    createMockPushNotificationService,
+    createMockNotificationService,
+} from '../../testing/mocks';
 
 describe('PushNotificationPromptComponent', () => {
     let component: PushNotificationPromptComponent;
     let mockPushService: ReturnType<typeof createMockPushNotificationService>;
-    let mockSnackBar: ReturnType<typeof createMockMatSnackBar>;
-    let translocoService: TranslocoService;
-    let translateSpy: ReturnType<typeof vi.spyOn>;
+    let mockNotificationService: ReturnType<typeof createMockNotificationService>;
+
+    const createComponent = () =>
+        TestBed.createComponent(PushNotificationPromptComponent).componentInstance;
 
     beforeEach(() => {
         mockPushService = createMockPushNotificationService();
-        mockSnackBar = createMockMatSnackBar();
+        mockNotificationService = createMockNotificationService();
 
         TestBed.configureTestingModule({
             imports: [PushNotificationPromptComponent, getTranslocoTestingModule()],
             providers: [
                 { provide: PushNotificationService, useValue: mockPushService },
-                { provide: MatSnackBar, useValue: mockSnackBar },
+                { provide: NotificationService, useValue: mockNotificationService },
             ],
         });
 
-        translocoService = TestBed.inject(TranslocoService);
-        translateSpy = vi.spyOn(translocoService, 'translate');
-
-        component = TestBed.createComponent(PushNotificationPromptComponent).componentInstance;
+        component = createComponent();
     });
 
     afterEach(() => {
@@ -80,22 +84,6 @@ describe('PushNotificationPromptComponent', () => {
         });
     });
 
-    describe('isBlocked computed', () => {
-        it('should return false when permission is default', () => {
-            expect(component.isBlocked()).toBe(false);
-        });
-
-        it('should return true when permission is denied', () => {
-            mockPushService.permission.set('denied');
-            expect(component.isBlocked()).toBe(true);
-        });
-
-        it('should return false when permission is granted', () => {
-            mockPushService.permission.set('granted');
-            expect(component.isBlocked()).toBe(false);
-        });
-    });
-
     describe('dismiss', () => {
         it('should hide the prompt', () => {
             expect(component.shouldShowPrompt()).toBe(true);
@@ -108,9 +96,30 @@ describe('PushNotificationPromptComponent', () => {
         it('should save dismissal to localStorage', () => {
             component.dismiss();
 
-            const stored = localStorage.getItem('push-notification-dismissed');
+            const stored = localStorage.getItem(PUSH_PROMPT_DISMISSED_KEY);
             expect(stored).toBeTruthy();
             expect(Number.parseInt(stored!, 10)).toBeGreaterThan(0);
+        });
+    });
+
+    describe('persisted dismissal', () => {
+        it('should stay hidden on a later visit after a recent dismissal', () => {
+            localStorage.setItem(PUSH_PROMPT_DISMISSED_KEY, Date.now().toString());
+
+            expect(createComponent().shouldShowPrompt()).toBe(false);
+        });
+
+        it('should ask again once the cooldown has elapsed', () => {
+            const expired = Date.now() - PUSH_PROMPT_COOLDOWN_MS - 1000;
+            localStorage.setItem(PUSH_PROMPT_DISMISSED_KEY, expired.toString());
+
+            expect(createComponent().shouldShowPrompt()).toBe(true);
+        });
+
+        it('should ignore an unreadable stored value', () => {
+            localStorage.setItem(PUSH_PROMPT_DISMISSED_KEY, 'not-a-timestamp');
+
+            expect(createComponent().shouldShowPrompt()).toBe(true);
         });
     });
 
@@ -131,14 +140,12 @@ describe('PushNotificationPromptComponent', () => {
             expect(mockPushService.subscribeToPush).toHaveBeenCalled();
         });
 
-        it('should show success snackbar on successful subscription', async () => {
+        it('should confirm success through the notification service', async () => {
             await component.enableNotifications();
 
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.enabled_success');
-            expect(translateSpy).toHaveBeenCalledWith('notifications.close');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 3000,
-            });
+            expect(mockNotificationService.success).toHaveBeenCalledWith(
+                'push_notifications.enabled_success',
+            );
         });
 
         it('should dismiss prompt after successful subscription', async () => {
@@ -161,28 +168,17 @@ describe('PushNotificationPromptComponent', () => {
                 expectedKey: 'push_notifications.error_dialog_closed',
             },
             {
-                error: 'Permission not granted',
-                expectedKey: 'push_notifications.error_dialog_closed',
-            },
-            {
                 error: 'Service Worker not registered',
                 expectedKey: 'push_notifications.error_service_worker',
             },
-        ])(
-            'should map "$error" to $expectedKey and show error snackbar',
-            async ({ error, expectedKey }) => {
-                mockPushService.subscribeToPush.mockReturnValue(throwError(() => new Error(error)));
+        ])('should report "$error" as $expectedKey', async ({ error, expectedKey }) => {
+            vi.spyOn(console, 'error').mockImplementation(() => undefined);
+            mockPushService.subscribeToPush.mockReturnValue(throwError(() => new Error(error)));
 
-                await component.enableNotifications();
+            await component.enableNotifications();
 
-                expect(translateSpy).toHaveBeenCalledWith(expectedKey);
-                expect(mockSnackBar.open).toHaveBeenCalledWith(
-                    expect.any(String),
-                    expect.any(String),
-                    { duration: 5000 },
-                );
-            },
-        );
+            expect(mockNotificationService.error).toHaveBeenCalledWith(expectedKey);
+        });
 
         it('should reset loading state even after error', async () => {
             mockPushService.subscribeToPush.mockReturnValue(
@@ -209,14 +205,56 @@ describe('PushNotificationPromptComponent', () => {
         });
 
         it('should handle non-Error objects', async () => {
+            vi.spyOn(console, 'error').mockImplementation(() => undefined);
             mockPushService.subscribeToPush.mockReturnValue(throwError(() => 'String error'));
 
             await component.enableNotifications();
 
-            expect(translateSpy).toHaveBeenCalledWith('push_notifications.error_generic');
-            expect(mockSnackBar.open).toHaveBeenCalledWith(expect.any(String), expect.any(String), {
-                duration: 5000,
-            });
+            expect(mockNotificationService.error).toHaveBeenCalledWith(
+                'push_notifications.error_generic',
+            );
+        });
+    });
+
+    describe('Template', () => {
+        const render = () => {
+            const fixture = TestBed.createComponent(PushNotificationPromptComponent);
+            fixture.detectChanges();
+            return fixture;
+        };
+
+        it('should render the prompt as a labelled complementary region', () => {
+            const prompt = render().nativeElement.querySelector('aside.push-prompt');
+
+            expect(prompt).toBeTruthy();
+            expect(prompt.getAttribute('aria-label')).toBeTruthy();
+        });
+
+        it('should render nothing when the browser cannot receive push', () => {
+            mockPushService.isSupported.set(false);
+
+            expect(render().nativeElement.querySelector('.push-prompt')).toBeNull();
+        });
+
+        it('should disappear when "not now" is clicked', () => {
+            const fixture = render();
+
+            fixture.nativeElement.querySelector('.push-prompt-actions button').click();
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.push-prompt')).toBeNull();
+        });
+
+        it('should lock the enable button while subscribing', () => {
+            mockPushService.subscribeToPush.mockReturnValue(NEVER);
+            const fixture = render();
+            const buttons = fixture.nativeElement.querySelectorAll('.push-prompt-actions button');
+
+            buttons[1].click();
+            fixture.detectChanges();
+
+            expect(buttons[1].disabled).toBe(true);
+            expect(fixture.nativeElement.querySelector('.spinner')).toBeTruthy();
         });
     });
 });

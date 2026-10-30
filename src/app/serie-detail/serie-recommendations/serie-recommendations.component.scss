@@ -1,17 +1,9 @@
 @use '../../../styles/mixins';
 
 .recommendations-card {
+  @include mixins.detail-section-card;
+
   mat-card-header {
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-
-      mat-icon {
-        color: var(--mat-sys-primary);
-      }
-    }
-
     mat-card-subtitle {
       color: var(--mat-sys-on-surface-variant);
       margin-top: var(--spacing-xs);

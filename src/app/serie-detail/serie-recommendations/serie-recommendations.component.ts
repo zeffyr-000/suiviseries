@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { getSerieRouteParams } from '../../utils/url.utils';
-import { formatRating, Recommendation } from '../../models/serie.model';
+import { Recommendation } from '../../models/serie.model';
 
 @Component({
     selector: 'app-serie-recommendations',
@@ -20,5 +20,10 @@ export class SerieRecommendationsComponent {
         return getSerieRouteParams(serie.id, serie.name);
     }
 
-    protected formatRating = formatRating;
+    // Same TMDB 0-10 scale as the header and the cards on this page. The badge
+    // used to halve it onto a five-star scale, so a serie rated 8.0 in the
+    // header was recommended as 4.0 a few cards below.
+    protected rating(serie: Recommendation): string {
+        return serie.vote_average.toFixed(1);
+    }
 }

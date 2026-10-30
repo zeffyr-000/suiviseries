@@ -162,15 +162,25 @@ describe('SerieCardComponent', () => {
         it('should display the rating on the TMDB 0-10 scale', () => {
             renderWith();
 
-            const rating = fixture.nativeElement.querySelector('.rating-value');
+            const rating = fixture.nativeElement.querySelector('.stat-ring-label');
 
             expect(rating.textContent.trim()).toBe('9.5');
+        });
+
+        it('should describe the rating for screen readers', () => {
+            renderWith();
+
+            const description = fixture.nativeElement.querySelector(
+                '.rating-badge .visually-hidden',
+            );
+
+            expect(description.textContent.trim()).toBe('Note de 9.5 sur 10');
         });
 
         it('should handle low ratings', () => {
             renderWith({ ...mockSerie, vote_average: 2 });
 
-            expect(fixture.nativeElement.querySelector('.rating-value').textContent.trim()).toBe(
+            expect(fixture.nativeElement.querySelector('.stat-ring-label').textContent.trim()).toBe(
                 '2.0',
             );
         });
@@ -178,7 +188,7 @@ describe('SerieCardComponent', () => {
         it('should leave no gap in the arc for a perfect rating', () => {
             renderWith({ ...mockSerie, vote_average: 10 });
 
-            const arc = fixture.nativeElement.querySelector('.rating-ring-value');
+            const arc = fixture.nativeElement.querySelector('.stat-ring-value');
 
             expect(Number(arc.getAttribute('stroke-dashoffset'))).toBeCloseTo(0);
         });
@@ -186,7 +196,7 @@ describe('SerieCardComponent', () => {
         it('should leave the arc empty for an unrated serie', () => {
             renderWith({ ...mockSerie, vote_average: 0 });
 
-            const arc = fixture.nativeElement.querySelector('.rating-ring-value');
+            const arc = fixture.nativeElement.querySelector('.stat-ring-value');
             const circumference = Number(arc.getAttribute('stroke-dasharray'));
 
             expect(Number(arc.getAttribute('stroke-dashoffset'))).toBeCloseTo(circumference);
@@ -195,7 +205,7 @@ describe('SerieCardComponent', () => {
         it('should fill half the arc for a rating of five', () => {
             renderWith({ ...mockSerie, vote_average: 5 });
 
-            const arc = fixture.nativeElement.querySelector('.rating-ring-value');
+            const arc = fixture.nativeElement.querySelector('.stat-ring-value');
             const circumference = Number(arc.getAttribute('stroke-dasharray'));
 
             expect(Number(arc.getAttribute('stroke-dashoffset'))).toBeCloseTo(circumference / 2);

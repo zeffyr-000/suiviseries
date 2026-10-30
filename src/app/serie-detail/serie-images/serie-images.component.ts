@@ -78,6 +78,11 @@ export class SerieImagesComponent {
                 if (this.selectedImage()) {
                     if (!overlay.nativeElement.open) {
                         overlay.nativeElement.showModal();
+                        // showModal() focuses the first button (fullscreen): a screen
+                        // reader announced that instead of the preview, and Enter
+                        // toggled fullscreen. The viewer takes focus itself, which is
+                        // also where its arrow-key navigation listens.
+                        overlay.nativeElement.focus();
                     }
                 } else if (overlay.nativeElement.open) {
                     overlay.nativeElement.close();

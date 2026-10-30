@@ -28,7 +28,7 @@ describe('SectionHeaderComponent', () => {
         const heading = fixture.nativeElement.querySelector('h2');
 
         expect(heading).toBeTruthy();
-        expect(heading.textContent.trim()).toBe('Meilleures Notes');
+        expect(heading.textContent.trim()).toBe('Meilleures notes');
     });
 
     it('should omit the eyebrow and lead when no key is given', () => {

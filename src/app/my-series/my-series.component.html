@@ -2,17 +2,17 @@
     <div class="page-header">
         <div class="header-content">
             <h1 class="page-title display-small">
-                <mat-icon>favorite</mat-icon>
+                <mat-icon aria-hidden="true">favorite</mat-icon>
                 {{ 'my_series.title' | transloco }}
             </h1>
             <p class="page-subtitle body-large">{{ 'my_series.subtitle' | transloco }}</p>
         </div>
 
         <div class="header-actions">
-            <button mat-flat-button color="primary" (click)="goToSearch()">
+            <a mat-flat-button routerLink="/search">
                 <mat-icon>add</mat-icon>
                 {{ 'my_series.add_series' | transloco }}
-            </button>
+            </a>
         </div>
     </div>
 
@@ -21,25 +21,15 @@
             <mat-spinner diameter="50" />
             <p class="body-medium">{{ 'my_series.loading' | transloco }}</p>
         </div>
-    } @else if (error()) {
-        <div class="error-container">
-            <mat-icon color="warn">error</mat-icon>
-            <h2 class="headline-small">{{ 'my_series.error_title' | transloco }}</h2>
-            <p class="body-large">{{ error() }}</p>
-            <button mat-flat-button color="primary" (click)="goToSearch()">
-                <mat-icon>search</mat-icon>
-                {{ 'my_series.go_to_search' | transloco }}
-            </button>
-        </div>
     } @else if (mySeries().length === 0) {
         <div class="empty-container">
             <mat-icon class="empty-icon">tv_off</mat-icon>
             <h2 class="headline-small">{{ 'my_series.empty_title' | transloco }}</h2>
             <p class="body-large">{{ 'my_series.empty_message' | transloco }}</p>
-            <button mat-flat-button color="primary" (click)="goToSearch()">
+            <a mat-flat-button routerLink="/search">
                 <mat-icon>search</mat-icon>
                 {{ 'my_series.start_exploring' | transloco }}
-            </button>
+            </a>
         </div>
     } @else {
         <div class="series-stats">

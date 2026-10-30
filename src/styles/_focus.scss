@@ -4,7 +4,7 @@
 
 // Global fallback for all interactive elements
 *:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: 2px solid var(--focus-ring-color);
   outline-offset: 2px;
   border-radius: inherit;
 }
@@ -16,13 +16,13 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:not([tabindex='-1']):focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: 2px solid var(--focus-ring-color);
   outline-offset: 2px;
 }
 
 // Links focus (default)
 a:focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: 2px solid var(--focus-ring-color);
   outline-offset: 2px;
 }
 
@@ -32,18 +32,18 @@ a:focus-visible {
 .mat-mdc-unelevated-button:focus-visible,
 .mat-mdc-outlined-button:focus-visible,
 .mat-mdc-flat-button:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring-color) 30%, transparent);
 }
 
 // Icon button focus
 .mat-mdc-icon-button:focus-visible {
-  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+  background-color: color-mix(in srgb, var(--focus-ring-color) 12%, transparent);
 }
 
 // Card/Link focus (enhanced visibility for clickable cards)
 .series-card-link:focus-visible,
 a.card-link:focus-visible {
-  outline: 3px solid var(--primary-color);
+  outline: 3px solid var(--focus-ring-color);
   outline-offset: 2px;
 }
 
@@ -55,9 +55,9 @@ a.card-link:focus-visible {
 }
 
 // Navigation items focus
-mat-list-item:focus-visible {
-  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
-  outline: 2px solid var(--primary-color);
+.mat-mdc-list-item:focus-visible {
+  background-color: color-mix(in srgb, var(--focus-ring-color) 12%, transparent);
+  outline: 2px solid var(--focus-ring-color);
   outline-offset: -2px;
 }
 

@@ -6,7 +6,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { Serie, SerieStatus, getTmdbImageUrl } from '../../models/serie.model';
+import { Serie, SerieStatus, getTmdbImageUrl, getTmdbSrcset } from '../../models/serie.model';
 import { createSlug } from '../../utils/url.utils';
 
 @Component({
@@ -22,6 +22,12 @@ export class FeaturedSerieComponent {
     // aspect ratio is what breaks the page out of a single repeated rhythm.
     protected readonly backdropUrl = computed(() =>
         getTmdbImageUrl(this.serie().backdrop_path, 'w780'),
+    );
+
+    // The card spans most of a phone and nearly half a desktop, which a
+    // single w780 only covers at 1x.
+    protected readonly backdropSrcset = computed(() =>
+        getTmdbSrcset(this.serie().backdrop_path, ['w780', 'w1280']),
     );
 
     protected readonly rating = computed(() => this.serie().vote_average.toFixed(1));

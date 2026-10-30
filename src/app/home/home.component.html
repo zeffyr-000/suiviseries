@@ -1,47 +1,47 @@
-<app-home-hero [backdrop]="heroBackdrop()" [featured]="featuredSerie()" />
+<app-home-hero [spotlight]="spotlightSerie()" />
 
-<section class="home-section reveal-on-scroll">
+<!-- No scroll reveal on this band: it is on screen at load, and a reveal keyed
+     to scroll position left it part-faded until the visitor scrolled. -->
+<section class="home-section">
     <app-section-header
         titleKey="sections.popular_right_now"
         eyebrowKey="sections.popular_eyebrow"
     />
 
-    @if (loading()) {
-        <div class="skeleton-rail">
-            @for (item of skeletonSlots; track item) {
-                <div class="skeleton skeleton-poster"></div>
-            }
-        </div>
-    } @else {
-        <div class="trending-bento">
-            @if (featuredSerie(); as featured) {
-                <app-featured-serie [serie]="featured" />
-            }
-
-            <div class="trending-rail">
-                <!-- The leading posters sit beside the featured card, above the
-                     fold, so they are fetched eagerly rather than lazily. Four
-                     covers the widest common desktop; the count matches what
-                     this page requested before the rail replaced the grid. -->
-                <app-serie-rail
-                    [series]="railSeries()"
-                    labelKey="sections.rail_label"
-                    [eagerCount]="4"
-                />
-
-                @if (hasMore() && !loadingMore()) {
-                    <button mat-stroked-button class="load-more" (click)="loadMoreSeries()">
-                        <mat-icon>add</mat-icon>
-                        {{ 'sections.load_more' | transloco }}
-                    </button>
-                }
-
-                @if (loadingMore()) {
-                    <p class="loading-more body-medium">
-                        {{ 'sections.loading_more' | transloco }}
-                    </p>
+    @if (!listsReady()) {
+        <!-- Same grid as the loaded band, so nothing jumps when it lands. -->
+        <div class="trending-bento" aria-hidden="true">
+            <div class="skeleton skeleton-feature"></div>
+            <div class="skeleton-rail">
+                @for (item of skeletonSlots; track item) {
+                    <div class="skeleton skeleton-poster"></div>
                 }
             </div>
+        </div>
+    } @else {
+        <div class="trending-bento" [class.trending-bento--rail-only]="!trendingSerie()">
+            @if (trendingSerie(); as trending) {
+                <app-featured-serie [serie]="trending" />
+            }
+
+            <!-- The leading posters sit beside the featured card, above the
+                 fold, so they are fetched eagerly rather than lazily. Four
+                 covers the widest common desktop. -->
+            <app-serie-rail [series]="railSeries()" labelKey="sections.rail_label" [eagerCount]="4">
+                <!-- The next page continues the rail, so the button closes it
+                     as a poster-sized tile rather than sitting under it. -->
+                @if (hasMore()) {
+                    <button
+                        type="button"
+                        class="rail-more load-more"
+                        [appButtonLoading]="loadingMore()"
+                        (click)="loadMoreSeries()"
+                    >
+                        <mat-icon>add</mat-icon>
+                        <span class="label-large">{{ 'sections.load_more' | transloco }}</span>
+                    </button>
+                }
+            </app-serie-rail>
         </div>
     }
 </section>
@@ -64,25 +64,26 @@
     />
 
     @if (topRatedLoading()) {
-        <div class="skeleton-grid">
-            @for (item of skeletonSlots; track item) {
+        <div class="skeleton-grid" aria-hidden="true">
+            @for (item of rankingSkeletonSlots; track item) {
                 <div class="skeleton skeleton-poster"></div>
             }
         </div>
     } @else {
-        <app-ranked-series [series]="rankedSeries()" />
+        <app-ranked-series [series]="topRatedSeries()" />
 
-        @if (topRatedHasMore() && !topRatedLoadingMore()) {
+        @if (topRatedHasMore()) {
             <div class="load-more-row">
-                <button mat-stroked-button class="load-more" (click)="loadMoreTopRated()">
+                <button
+                    mat-stroked-button
+                    class="load-more"
+                    [appButtonLoading]="topRatedLoadingMore()"
+                    (click)="loadMoreTopRated()"
+                >
                     <mat-icon>expand_more</mat-icon>
                     {{ 'sections.load_more' | transloco }}
                 </button>
             </div>
-        }
-
-        @if (topRatedLoadingMore()) {
-            <p class="loading-more body-medium">{{ 'sections.loading_more' | transloco }}</p>
         }
     }
 </section>

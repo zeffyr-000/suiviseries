@@ -1,10 +1,22 @@
 import { Component, computed, signal, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 import { PushNotificationService } from '../../services/push-notification.service';
+import { NotificationService } from '../../services/notification.service';
+import { getPushErrorKey } from '../../utils/push-error.utils';
+
+export const PUSH_PROMPT_DISMISSED_KEY = 'push-notification-dismissed';
+
+// "Not now" means later, not never: the prompt stays away for this long, then
+// asks once more. Notifications can be turned on from the user menu meanwhile.
+export const PUSH_PROMPT_COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000;
+
+function wasDismissedRecently(): boolean {
+    const stored = Number(localStorage.getItem(PUSH_PROMPT_DISMISSED_KEY));
+    return stored > 0 && Date.now() - stored < PUSH_PROMPT_COOLDOWN_MS;
+}
 
 @Component({
     selector: 'app-push-notification-prompt',
@@ -14,12 +26,15 @@ import { PushNotificationService } from '../../services/push-notification.servic
 })
 export class PushNotificationPromptComponent {
     private readonly pushService = inject(PushNotificationService);
-    private readonly snackBar = inject(MatSnackBar);
-    private readonly transloco = inject(TranslocoService);
+    private readonly notificationService = inject(NotificationService);
 
-    private readonly dismissed = signal(false);
+    // Seeded from storage: the dismissal used to be written but never read
+    // back, so the prompt returned on every visit.
+    private readonly dismissed = signal(wasDismissedRecently());
     readonly isLoading = signal(false);
 
+    // Only a browser that has not yet been asked gets the prompt. A denied
+    // permission cannot be lifted from the page, so offering it would be noise.
     readonly shouldShowPrompt = computed(() => {
         return (
             !this.dismissed() &&
@@ -29,11 +44,9 @@ export class PushNotificationPromptComponent {
         );
     });
 
-    readonly isBlocked = computed(() => this.pushService.permission() === 'denied');
-
     dismiss(): void {
         this.dismissed.set(true);
-        localStorage.setItem('push-notification-dismissed', Date.now().toString());
+        localStorage.setItem(PUSH_PROMPT_DISMISSED_KEY, Date.now().toString());
     }
 
     async enableNotifications(): Promise<void> {
@@ -41,37 +54,11 @@ export class PushNotificationPromptComponent {
 
         try {
             await firstValueFrom(this.pushService.subscribeToPush());
-
-            this.snackBar.open(
-                this.transloco.translate('push_notifications.enabled_success'),
-                this.transloco.translate('notifications.close'),
-                { duration: 3000 },
-            );
-
+            this.notificationService.success('push_notifications.enabled_success');
             this.dismissed.set(true);
         } catch (error) {
             console.error('Error enabling push notifications:', error);
-
-            let message = this.transloco.translate('push_notifications.error_generic');
-
-            if (error instanceof Error) {
-                if (error.message.includes('denied')) {
-                    message = this.transloco.translate('push_notifications.error_denied');
-                } else if (error.message.includes('not supported')) {
-                    message = this.transloco.translate('push_notifications.error_not_supported');
-                } else if (
-                    error.message.includes('dialog closed') ||
-                    error.message.includes('not granted')
-                ) {
-                    message = this.transloco.translate('push_notifications.error_dialog_closed');
-                } else if (error.message.includes('Service Worker')) {
-                    message = this.transloco.translate('push_notifications.error_service_worker');
-                }
-            }
-
-            this.snackBar.open(message, this.transloco.translate('notifications.close'), {
-                duration: 5000,
-            });
+            this.notificationService.error(getPushErrorKey(error));
         } finally {
             this.isLoading.set(false);
         }

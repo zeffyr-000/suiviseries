@@ -7,22 +7,23 @@ import { Serie, getTmdbImageUrl } from '../../models/serie.model';
 import { createSlug } from '../../utils/url.utils';
 import { SerieStatusChipComponent } from '../serie-status-chip/serie-status-chip.component';
 import { SpotlightDirective } from '../directives/spotlight.directive';
-
-const RING_RADIUS = 20;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+import { StatRingComponent } from '../stat-ring/stat-ring.component';
 
 @Component({
     selector: 'app-serie-card',
-    imports: [RouterModule, TranslocoModule, SerieStatusChipComponent, SpotlightDirective],
+    imports: [
+        RouterModule,
+        TranslocoModule,
+        SerieStatusChipComponent,
+        SpotlightDirective,
+        StatRingComponent,
+    ],
     templateUrl: './serie-card.component.html',
     styleUrl: './serie-card.component.scss',
 })
 export class SerieCardComponent {
     readonly serie = input.required<Serie>();
     readonly priority = input<boolean>(false);
-
-    protected readonly ringCircumference = RING_CIRCUMFERENCE;
-    protected readonly ringRadius = RING_RADIUS;
 
     protected readonly posterUrl = computed(() =>
         getTmdbImageUrl(this.serie().poster_path, 'w500'),
@@ -35,10 +36,8 @@ export class SerieCardComponent {
     // Shown on the TMDB 0-10 scale, matching the detail page and the ring arc.
     protected readonly rating = computed(() => this.serie().vote_average.toFixed(1));
 
-    protected readonly ringOffset = computed(() => {
-        const ratio = Math.min(Math.max(this.serie().vote_average / 10, 0), 1);
-        return RING_CIRCUMFERENCE * (1 - ratio);
-    });
+    // The ring clamps out-of-range values itself.
+    protected readonly ratingRatio = computed(() => this.serie().vote_average / 10);
 
     // Paired with the same name on the detail hero so the poster morphs across
     // the navigation. Keyed by id, so a page must not list a serie twice.

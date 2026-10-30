@@ -72,44 +72,12 @@
     gap: var(--spacing-lg);
   }
 
-  mat-card,
-  app-serie-watch-providers,
-  app-serie-videos,
-  app-serie-seasons {
-    border-radius: 16px;
-  }
-
   // Frosted rather than filled, so the ambient layer and the tail of the hero
-  // backdrop stay faintly visible through the stack of cards.
-  mat-card {
-    @include glass-surface(72%, 18px);
-
-    box-shadow: var(--md-sys-elevation-level1);
-    transition: box-shadow var(--md-sys-motion-duration-medium2)
-      var(--md-sys-motion-easing-emphasized);
-
-    &:hover {
-      box-shadow: var(--md-sys-elevation-level2);
-    }
-
-    mat-card-header {
-      padding-bottom: var(--spacing-md);
-
-      mat-card-title {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-        font-family: 'Poppins', 'Roboto', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        color: var(--mat-sys-on-surface);
-
-        mat-icon {
-          color: var(--gold);
-        }
-      }
-    }
+  // backdrop stay faintly visible through the stack of cards. The section
+  // components include the same mixin, so every card on the page matches.
+  .overview-card,
+  .details-card {
+    @include detail-section-card;
   }
 }
 
@@ -231,12 +199,6 @@
 }
 
 // M3 Details grid
-.details-card {
-  mat-card-header {
-    padding-bottom: var(--spacing-md);
-  }
-}
-
 .details-grid {
   display: grid;
   gap: var(--spacing-lg);
@@ -269,32 +231,4 @@
     letter-spacing: 0.5px;
     color: var(--mat-sys-on-surface);
   }
-}
-
-// M3 Buttons in expansion panels
-button[mat-icon-button] {
-  border-radius: 50%;
-  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
-
-  &:hover {
-    background-color: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
-  }
-
-  &:active {
-    transform: scale(0.92);
-  }
-}
-
-:host ::ng-deep .tooltip-attached {
-  background-color: color-mix(in srgb, var(--mat-sys-inverse-surface) 90%, transparent) !important;
-  backdrop-filter: blur(8px);
-  color: var(--mat-sys-inverse-on-surface) !important;
-  font-size: 0.75rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.5px !important;
-  padding: var(--spacing-xs) var(--spacing-sm) !important;
-  border-radius: 8px !important;
-  max-width: 200px !important;
-  text-align: center !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }

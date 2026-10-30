@@ -166,7 +166,7 @@ const TMDB_PATH_MARKER = '/t/p/';
 // produced ".../w780https://.../w1280/abc.jpg", which the CDN quietly accepted
 // while serving whatever size the response had baked in — so the size argument
 // did nothing on every list page. Rewriting instead of prefixing makes it real.
-export type TmdbImageSize = 'w200' | 'w300' | 'w500' | 'w780' | 'original';
+export type TmdbImageSize = 'w200' | 'w300' | 'w500' | 'w780' | 'w1280' | 'original';
 
 export const getTmdbImageUrl = (
     path: string | null | undefined,
@@ -195,6 +195,26 @@ export const getTmdbImageUrl = (
         : `${TMDB_IMAGE_BASE}/${size}${afterMarker.slice(fileIndex)}`;
 };
 
-export const formatRating = (rating: number): string => {
-    return ((rating / 10) * 5).toFixed(1);
+// TMDB does not report the pixel width of "original", which runs from 1920 to
+// 3840 for backdrops. The low end is declared, so the browser only reaches for
+// it when it really needs more than w1280.
+const ORIGINAL_NOMINAL_WIDTH = 1920;
+
+// A srcset over several TMDB renditions of the same artwork, so the browser
+// picks the sharpest one the slot and the screen density actually need rather
+// than stretching a single fixed size.
+export const getTmdbSrcset = (
+    path: string | null | undefined,
+    sizes: readonly TmdbImageSize[],
+): string => {
+    if (!path) {
+        return '';
+    }
+
+    return sizes
+        .map((size) => {
+            const width = size === 'original' ? ORIGINAL_NOMINAL_WIDTH : Number(size.slice(1));
+            return `${getTmdbImageUrl(path, size)} ${width}w`;
+        })
+        .join(', ');
 };

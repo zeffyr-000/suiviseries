@@ -110,6 +110,22 @@ describe('SerieSeasonsComponent', () => {
             expect(seasonTitles[0].textContent).toContain('Saison');
         });
 
+        it('should show the TMDB name under the title only when it says something new', () => {
+            componentRef.setInput('seasons', [
+                { ...mockSeasons[0], season_number: 0, name: 'Épisodes spéciaux' },
+                { ...mockSeasons[1], season_number: 2, name: 'Saison 2' },
+            ]);
+            fixture.detectChanges();
+
+            const headers = fixture.nativeElement.querySelectorAll('.season-title-container');
+
+            expect(headers[0].querySelector('.season-title').textContent.trim()).toBe('Saison 0');
+            expect(headers[0].querySelector('.season-subtitle').textContent.trim()).toBe(
+                'Épisodes spéciaux',
+            );
+            expect(headers[1].querySelector('.season-subtitle')).toBeNull();
+        });
+
         it('should render season posters', () => {
             const compiled = fixture.nativeElement as HTMLElement;
             const posters = compiled.querySelectorAll('.season-poster');

@@ -2,8 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Serie Images Component - Integration Tests', () => {
     test.beforeEach(async ({ page }) => {
-        // Navigate to a serie detail page with images
-        await page.goto('/serie/1399');
+        // Routes take the app's internal id, not the TMDB id: 1399 is Game of
+        // Thrones on TMDB but "Sunday" here, which has no images at all.
+        // Breaking Bad fills all three tabs, with plenty of backdrops to page.
+        await page.goto('/serie/1311/breaking-bad');
         await page.waitForLoadState('networkidle');
     });
 

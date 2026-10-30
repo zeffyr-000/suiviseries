@@ -12,17 +12,17 @@ export const frTranslations = {
     },
     seo: {
         home: {
-            title: 'Suivi de Séries TV en Ligne - Gestion, Statistiques et Recommandations Gratuit',
+            title: 'Suivi de séries TV en ligne - Gestion, statistiques et recommandations gratuites',
             description:
                 'Gérez facilement votre collection de séries TV, suivez votre progression, découvrez les tendances et recevez des recommandations personnalisées. Suivi Séries vous aide à ne jamais rater un épisode et à explorer de nouvelles séries populaires, le tout gratuitement et sans publicité.',
         },
         search: {
-            title: 'Recherche de Séries',
+            title: 'Recherche de séries',
             description:
                 'Recherchez parmi des milliers de séries TV. Trouvez votre prochaine série préférée grâce à notre moteur de recherche avancé.',
         },
         my_series: {
-            title: 'Mes Séries',
+            title: 'Mes séries',
             description:
                 'Gérez votre collection personnelle de séries TV. Suivez votre progression et ne ratez jamais un épisode.',
         },
@@ -37,16 +37,18 @@ export const frTranslations = {
         },
     },
     navigation: {
+        main: 'Navigation principale',
+        open_menu: 'Ouvrir le menu',
         home: 'Accueil',
-        my_series: 'Mes Séries',
+        my_series: 'Mes séries',
         search: 'Rechercher',
         trending: 'Tendances',
-        top_rated: 'Mieux Notées',
+        top_rated: 'Mieux notées',
         settings: 'Paramètres',
         legal: 'Mentions légales',
     },
     hero: {
-        browse_series: 'Parcourir les Séries',
+        browse_series: 'Parcourir les séries',
         eyebrow: 'Ce soir sur Suivi Séries',
         headline_lead: 'Ne ratez plus jamais un',
         headline_accent: 'épisode',
@@ -56,11 +58,10 @@ export const frTranslations = {
         now_showing: 'À l’affiche',
     },
     sections: {
-        popular_right_now: 'Populaires en ce Moment',
-        top_rated: 'Meilleures Notes',
-        view_all: 'Voir Tout',
+        popular_right_now: 'Populaires en ce moment',
+        top_rated: 'Meilleures notes',
+        view_all: 'Voir tout',
         load_more: 'Charger plus',
-        loading_more: 'Chargement...',
         trending_eyebrow: 'La tendance du moment',
         popular_eyebrow: 'En ce moment',
         top_rated_eyebrow: 'Le classement',
@@ -93,7 +94,7 @@ export const frTranslations = {
     series: {
         seasons: '{count, plural, =0 {Aucune saison} one {# saison} other {# saisons}}',
         episodes: '{count, plural, =0 {Aucun épisode} one {# épisode} other {# épisodes}}',
-        add_to_list: 'Ajouter à la Liste',
+        add_to_list: 'Ajouter à la liste',
         follow: 'Suivre la série',
         following: 'Série suivie',
         unfollow: 'Ne plus suivre',
@@ -129,6 +130,10 @@ export const frTranslations = {
         details: 'Détails',
         votes: '{count, plural, =0 {aucun vote} one {# vote} other {# votes}}',
         rating_description: 'Note de {rating} sur 10',
+        watch_providers_list: 'Plateformes de streaming disponibles',
+        video_player: 'Lecteur vidéo',
+        video_list: 'Liste des vidéos disponibles',
+        play_video: 'Lire {name}',
         progress: 'Progression',
         progress_description:
             '{watched, plural, =0 {Aucun épisode vu} one {# épisode vu} other {# épisodes vus}} sur {total}',
@@ -192,7 +197,7 @@ export const frTranslations = {
     },
     auth: {
         welcome_title: 'Bienvenue',
-        connection_or_registration: 'Connexion ou Inscription',
+        connection_or_registration: 'Connexion ou inscription',
         google_signin_explanation:
             'Utilisez votre compte Google pour vous connecter instantanément ou créer un nouveau compte.',
         simple_explanation: 'Connectez-vous avec Google pour accéder à votre espace personnel.',
@@ -214,7 +219,7 @@ export const frTranslations = {
     },
     search: {
         eyebrow: 'Explorer le catalogue',
-        title: 'Recherche de Séries',
+        title: 'Recherche de séries',
         subtitle: 'Trouvez vos séries TV préférées parmi notre vaste collection',
         placeholder: 'Nom de la série, acteur, réalisateur...',
         search_button: 'Rechercher',
@@ -240,7 +245,7 @@ export const frTranslations = {
         instruction_3: 'Cliquez sur une série pour voir ses détails',
     },
     my_series: {
-        title: 'Mes Séries',
+        title: 'Mes séries',
         subtitle: 'Retrouvez toutes les séries que vous suivez',
         add_series: 'Ajouter des séries',
         series_followed: 'séries suivies',
@@ -251,8 +256,6 @@ export const frTranslations = {
         stats_watched_description:
             '{watched, plural, =0 {Aucun épisode vu} one {# épisode vu} other {# épisodes vus}} sur {total}',
         loading: 'Chargement de vos séries...',
-        error_title: 'Erreur',
-        go_to_search: 'Aller à la recherche',
         empty_title: 'Aucune série suivie',
         empty_message:
             'Vous ne suivez aucune série pour le moment. Découvrez notre catalogue pour commencer !',
@@ -297,6 +300,7 @@ export const frTranslations = {
         status_ended: 'La série est terminée',
         mark_as_read: 'Marquer comme lue',
         delete: 'Supprimer',
+        delete_named: 'Supprimer la notification de {name}',
         no_notifications: 'Aucune notification',
         view_serie: 'Voir la série',
         date: {
@@ -327,8 +331,6 @@ export const frTranslations = {
         status_blocked: 'Bloquées',
         disable: 'Désactiver',
         disabled_success: 'Notifications push désactivées',
-        blocked_title: 'Vous avez bloqué les notifications',
-        blocked_message: 'Activez-les dans les paramètres de votre navigateur pour les recevoir.',
         open_settings: 'Voir comment activer',
         confirmation_enabled_title: 'Notifications activées !',
         confirmation_enabled_body: 'Vous recevrez désormais des alertes pour vos séries préférées.',

@@ -6,8 +6,12 @@
   flex-direction: column;
   justify-content: flex-end;
   // No fixed height: the grid row already stretches this item, and forcing
-  // 100% clipped the call to action whenever the copy ran long.
-  min-height: 400px;
+  // 100% clipped the call to action whenever the copy ran long. The minimum
+  // is a rail poster plus the rail's padding, so the two columns end level.
+  // Border-box, because the project has no global reset: the padding used to
+  // stack on top and left the card 76px taller than the rail beside it.
+  box-sizing: border-box;
+  min-height: 350px;
   padding: var(--spacing-xl);
   border-radius: var(--md-sys-shape-corner-extra-large);
   border: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 10%, transparent);
@@ -28,12 +32,21 @@
   position: absolute;
   inset: 0;
   z-index: -1;
+  // Two layers: the bottom-up fade carries the call to action, and the
+  // leading-edge fade backs the eyebrow and title, which sit high enough on a
+  // tall card to land on bare artwork with the bottom fade alone.
   background:
     linear-gradient(
       8deg,
       color-mix(in srgb, var(--ink) 97%, transparent) 8%,
       color-mix(in srgb, var(--ink) 60%, transparent) 46%,
       transparent 78%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink) 70%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 30%, transparent) 45%,
+      transparent 70%
     ),
     radial-gradient(40% 60% at 88% 12%, var(--flare-glow), transparent 70%);
 }
@@ -43,6 +56,30 @@
   flex-direction: column;
   gap: var(--spacing-md);
   max-width: 42ch;
+}
+
+// A frosted pill rather than bare text: the eyebrow sits highest on the card,
+// where the scrim is thinnest, and flare on a bright backdrop (the yellow of
+// Les Simpson) was barely legible. The pill carries its own contrast.
+.featured-eyebrow {
+  @include glass-surface(70%, 10px);
+
+  align-self: flex-start;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm) var(--spacing-xs) var(--spacing-xs);
+  border-radius: var(--md-sys-shape-corner-full);
+  border-color: color-mix(in srgb, var(--flare) 35%, transparent);
+
+  // The rule that leads a plain eyebrow; the icon takes its place here.
+  &::before {
+    display: none;
+  }
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
 }
 
 .featured-title {
@@ -66,22 +103,45 @@
   overflow: hidden;
 }
 
+// The separators hang in the gap before each item and are clipped when that
+// item starts a new line, so a narrow card never ends a line on a stray dot.
+// Same device as the meta line of the poster cards.
 .featured-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-sm) 1.25em;
+  overflow: hidden;
   color: var(--mat-sys-on-surface-variant);
   font-variant-numeric: tabular-nums;
 }
 
-.featured-rating {
-  color: var(--gold);
-  font-weight: 700;
+.meta-item {
+  white-space: nowrap;
 }
 
-.separator {
+.meta-item + .meta-item::before {
+  content: '·';
+  display: inline-block;
+  width: 1.25em;
+  margin-left: -1.25em;
+  text-align: center;
   opacity: 0.5;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.featured-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--gold);
+  font-weight: 700;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
 }
 
 // Flare marks what is live: a returning series is the one thing on this page
@@ -123,7 +183,7 @@
 
 @include respond-below(md) {
   .featured {
-    min-height: 320px;
+    min-height: 340px;
     padding: var(--spacing-lg);
   }
 }

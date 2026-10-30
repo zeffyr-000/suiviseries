@@ -28,7 +28,7 @@ TV series tracking PWA — Angular 22, zoneless, standalone, signals. No SSR, no
 - Services (services/*): AuthService (Google OAuth + JWT), SeriesService (REST /api/* + rxResource search),
   MetadataService, NotificationService (MatSnackBar wrapper), UserNotificationService,
   PushNotificationService, UpdateService (SwUpdate), KeepAliveService, AnalyticsRouterService
-- authGuard protects /my-series; lazy loadComponent routes
+- authGuard protects /mes-series; lazy loadComponent routes
 - /api/* proxied to http://localhost:8888/suiviseries-api/www/ in dev
 - Backend returns snake_case (TMDB-shaped); models in models/serie.model.ts mirror those fields
 - Response envelopes carry { success, results } — check success first
@@ -41,7 +41,7 @@ Component consumes results()/isLoading()/error() computed signals. Auto-cancels 
 - NotificationService (wraps MatSnackBar) with translation keys — never raw MatSnackBar for user text
 - MatMenu max-width 280px — use MatSidenav position="end" for wider panels
 - M3 typography classes (.display-*, .headline-*, .body-*, .label-*) — never inline font-size
-- Theme via mat.theme(...) in SCSS (rose primary, red tertiary)
+- Theme via mat.theme(...) in SCSS ("Nuit & Or": gold primary, flare tertiary, dark only)
 
 ## PWA
 - ngsw-config.json service worker; UpdateService for SwUpdate prompts

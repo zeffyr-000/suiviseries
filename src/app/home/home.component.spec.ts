@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 
 import { HomeComponent } from './home.component';
 import { SeriesService } from '../services/series.service';
@@ -76,7 +76,7 @@ describe('HomeComponent', () => {
             component.ngOnInit();
 
             expect(mockMetadataService.updatePageMetadata).toHaveBeenCalledWith({
-                title: 'Suivi de Séries TV en Ligne - Gestion, Statistiques et Recommandations Gratuit',
+                title: 'Suivi de séries TV en ligne - Gestion, statistiques et recommandations gratuites',
                 description:
                     'Gérez facilement votre collection de séries TV, suivez votre progression, découvrez les tendances et recevez des recommandations personnalisées. Suivi Séries vous aide à ne jamais rater un épisode et à explorer de nouvelles séries populaires, le tout gratuitement et sans publicité.',
                 canonicalUrl: 'http://localhost:4200/',
@@ -281,48 +281,97 @@ describe('HomeComponent', () => {
         });
     });
 
-    describe('heroBackdrop', () => {
-        // The hero no longer takes the first popular serie: it shows whichever
-        // serie the daily rotation picked, so the two must always agree.
-        it('should show the artwork of the serie the rotation picked', () => {
-            component['popularSeries'].set([
-                createMockSerie({ id: 1, backdrop_path: '/backdrop1.jpg', vote_average: 8.1 }),
-                createMockSerie({ id: 2, backdrop_path: '/backdrop2.jpg', vote_average: 8.2 }),
-            ]);
-            component['topRatedSeries'].set([]);
+    describe('Headliners', () => {
+        const land = (popular: ReturnType<typeof createMockSerie>[], topRated = popular) => {
+            component['popularSeries'].set(popular);
+            component['topRatedSeries'].set(topRated);
             component['loading'].set(false);
             component['topRatedLoading'].set(false);
+        };
 
-            const featured = component['featuredSerie']();
+        it('should feature the most popular serie as the trend, in the API order', () => {
+            land(
+                [
+                    createMockSerie({ id: 5, backdrop_path: '/b5.jpg', vote_average: 8.0 }),
+                    createMockSerie({ id: 3, backdrop_path: '/b3.jpg', vote_average: 9.0 }),
+                ],
+                [],
+            );
 
-            expect(featured).not.toBeNull();
-            expect(component['heroBackdrop']()).toContain(featured!.backdrop_path);
+            expect(component['trendingSerie']()?.id).toBe(5);
         });
 
-        it('should never pick a serie that has no wide artwork', () => {
+        it('should pass over entries that cannot carry a headline', () => {
+            land(
+                [
+                    createMockSerie({ id: 1, name: 'Talk show', vote_average: 5.1 }),
+                    createMockSerie({ id: 2, backdrop_path: '', vote_average: 9.1 }),
+                    createMockSerie({ id: 3, backdrop_path: '/b3.jpg', vote_average: 8.0 }),
+                ],
+                [],
+            );
+
+            expect(component['trendingSerie']()?.id).toBe(3);
+        });
+
+        it('should never show the trending serie in the hero as well', () => {
+            land(
+                [
+                    createMockSerie({ id: 1, backdrop_path: '/b1.jpg', vote_average: 8.1 }),
+                    createMockSerie({ id: 2, backdrop_path: '/b2.jpg', vote_average: 8.2 }),
+                    createMockSerie({ id: 3, backdrop_path: '/b3.jpg', vote_average: 8.3 }),
+                ],
+                [],
+            );
+
+            for (let day = 0; day < 6; day++) {
+                component['dayIndex'].set(day);
+
+                expect(component['spotlightSerie']()).not.toBeNull();
+                expect(component['spotlightSerie']()?.id).not.toBe(
+                    component['trendingSerie']()?.id,
+                );
+            }
+        });
+
+        it('should leave the hero to its gradient when the trend is the only candidate', () => {
+            land([createMockSerie({ id: 1, backdrop_path: '/b1.jpg', vote_average: 8.1 })], []);
+
+            expect(component['trendingSerie']()?.id).toBe(1);
+            expect(component['spotlightSerie']()).toBeNull();
+        });
+
+        it('should keep the ranking whole and let the rail give way instead', () => {
+            const popular = [
+                createMockSerie({ id: 1, backdrop_path: '/b1.jpg', vote_average: 8.1 }),
+                createMockSerie({ id: 2, backdrop_path: '/b2.jpg', vote_average: 6.0 }),
+                createMockSerie({ id: 3, backdrop_path: '/b3.jpg', vote_average: 8.5 }),
+                createMockSerie({ id: 7, backdrop_path: '/b7.jpg', vote_average: 9.0 }),
+            ];
+            const topRated = [
+                createMockSerie({ id: 7, backdrop_path: '/b7.jpg', vote_average: 9.0 }),
+                createMockSerie({ id: 8, backdrop_path: '/b8.jpg', vote_average: 9.4 }),
+            ];
+            land(popular, topRated);
+
+            // 1 trends. 7 and 8 rank, so neither can take the hero: 3 is the only
+            // candidate left, however well rated the other two are.
+            expect(component['trendingSerie']()?.id).toBe(1);
+            expect(component['spotlightSerie']()?.id).toBe(3);
+            // 7 is both popular and ranked: it keeps its place in the ranking
+            // and leaves the rail, along with both headliners.
+            expect(component['railSeries']().map((serie) => serie.id)).toEqual([2]);
+            expect(component['topRatedSeries']().map((serie) => serie.id)).toEqual([7, 8]);
+        });
+
+        it('should hold both picks back until both lists have landed', () => {
             component['popularSeries'].set([
-                createMockSerie({ id: 1, backdrop_path: '', vote_average: 9.9 }),
-                createMockSerie({ id: 2, backdrop_path: '/backdrop2.jpg', vote_average: 8.2 }),
+                createMockSerie({ id: 1, backdrop_path: '/b1.jpg', vote_average: 8.1 }),
             ]);
-            component['topRatedSeries'].set([]);
             component['loading'].set(false);
-            component['topRatedLoading'].set(false);
 
-            expect(component['heroBackdrop']()).toContain('/backdrop2.jpg');
-        });
-
-        it('should return null when no popular serie has a backdrop', () => {
-            component['popularSeries'].set([
-                createMockSerie({ backdrop_path: '', name: 'No Backdrop' }),
-            ]);
-
-            expect(component['heroBackdrop']()).toBeNull();
-        });
-
-        it('should return null when popularSeries is empty', () => {
-            component['popularSeries'].set([]);
-
-            expect(component['heroBackdrop']()).toBeNull();
+            expect(component['trendingSerie']()).toBeNull();
+            expect(component['spotlightSerie']()).toBeNull();
         });
     });
 
@@ -350,8 +399,8 @@ describe('HomeComponent', () => {
             expect(mockDialog.open).toHaveBeenCalledWith(
                 LoginComponent,
                 expect.objectContaining({
-                    width: '400px',
-                    disableClose: false,
+                    width: '540px',
+                    maxWidth: '90vw',
                     autoFocus: true,
                 }),
             );
@@ -401,6 +450,8 @@ describe('HomeComponent', () => {
             createMockSerie({ id: 20, name: 'Tagesschau', vote_average: 6.8 }),
             createMockSerie({ id: 30, name: 'House of the Dragon', vote_average: 8.4 }),
             createMockSerie({ id: 40, name: 'Sans image', vote_average: 9, backdrop_path: '' }),
+            createMockSerie({ id: 70, name: 'Severance', vote_average: 8.4 }),
+            createMockSerie({ id: 60, name: 'The Bear', vote_average: 8.1 }),
         ];
         const topRated = [
             createMockSerie({ id: 30, name: 'House of the Dragon', vote_average: 8.4 }),
@@ -428,20 +479,24 @@ describe('HomeComponent', () => {
             vi.useRealTimers();
         });
 
-        it('should merge both lists into the pool, without duplicates', () => {
+        it('should draw the pool from the popular list, leaving out the trend and the ranking', () => {
             onDay('2026-03-01T10:00:00');
             bootWith();
 
-            const ids = component['featureCandidates']().map((serie) => serie.id);
+            const ids = component['spotlightCandidates']().map((serie) => serie.id);
 
-            expect(ids).toEqual([10, 30, 50]);
+            // Silo (10) leads the popular list, so it is the trend, not a
+            // candidate. House of the Dragon (30) is popular but also ranks, and
+            // Breaking Bad (50) only ranks: the ranking keeps both.
+            expect(component['trendingSerie']()?.id).toBe(10);
+            expect(ids).toEqual([60, 70]);
         });
 
         it('should reject series below the rating floor, which is what keeps news shows off the front page', () => {
             onDay('2026-03-01T10:00:00');
             bootWith();
 
-            const names = component['featureCandidates']().map((serie) => serie.name);
+            const names = component['spotlightCandidates']().map((serie) => serie.name);
 
             expect(names).not.toContain('Tagesschau');
         });
@@ -450,16 +505,16 @@ describe('HomeComponent', () => {
             onDay('2026-03-01T10:00:00');
             bootWith();
 
-            expect(component['featureCandidates']().map((serie) => serie.id)).not.toContain(40);
+            expect(component['spotlightCandidates']().map((serie) => serie.id)).not.toContain(40);
         });
 
         it('should keep the same pick throughout a day, so nothing swaps on reload', () => {
             onDay('2026-03-01T08:00:00');
             bootWith();
-            const morning = component['featuredSerie']()?.id;
+            const morning = component['spotlightSerie']()?.id;
 
             onDay('2026-03-01T23:30:00');
-            const night = component['featuredSerie']()?.id;
+            const night = component['spotlightSerie']()?.id;
 
             expect(morning).toBeDefined();
             expect(night).toBe(morning);
@@ -468,11 +523,11 @@ describe('HomeComponent', () => {
         it('should move to another serie the next day', () => {
             onDay('2026-03-01T10:00:00');
             bootWith();
-            const today = component['featuredSerie']()?.id;
+            const today = component['spotlightSerie']()?.id;
 
             onDay('2026-03-02T10:00:00');
             bootWith();
-            const tomorrow = component['featuredSerie']()?.id;
+            const tomorrow = component['spotlightSerie']()?.id;
 
             expect(today).toBeDefined();
             expect(tomorrow).not.toBe(today);
@@ -481,15 +536,15 @@ describe('HomeComponent', () => {
         it('should walk the whole pool before repeating', () => {
             const seen = new Set<number | undefined>();
 
-            for (let day = 1; day <= 3; day++) {
+            for (let day = 1; day <= 2; day++) {
                 onDay(`2026-03-0${day}T10:00:00`);
                 bootWith();
-                seen.add(component['featuredSerie']()?.id);
+                seen.add(component['spotlightSerie']()?.id);
             }
 
-            // Three candidates clear the floor, so three days give three
-            // different headliners before the sequence comes back round.
-            expect(seen.size).toBe(3);
+            // Two candidates are left once the trend is set aside, so two days
+            // give two different headliners before the sequence comes round.
+            expect(seen.size).toBe(2);
         });
 
         it('should hold back the pick until both lists have landed', () => {
@@ -497,38 +552,211 @@ describe('HomeComponent', () => {
             component = TestBed.createComponent(HomeComponent).componentInstance;
 
             // ngOnInit not called: both lists are still marked as loading.
-            expect(component['featuredSerie']()).toBeNull();
+            expect(component['spotlightSerie']()).toBeNull();
         });
 
         it('should not change when more pages are appended', () => {
             onDay('2026-03-01T10:00:00');
             bootWith();
-            const before = component['featuredSerie']()?.id;
+            const before = component['spotlightSerie']()?.id;
 
             mockSeriesService.getPopularSeries.mockReturnValue(
                 of([createMockSerie({ id: 99, name: 'Page deux', vote_average: 9.9 })]),
             );
             component['loadMoreSeries']();
+            // A later ranking page that happens to list the hero leaves it alone
+            mockSeriesService.getTopRatedSeries.mockReturnValue(
+                of([createMockSerie({ id: before, vote_average: 8.4 })]),
+            );
+            component['loadMoreTopRated']();
 
-            expect(component['featuredSerie']()?.id).toBe(before);
+            expect(component['spotlightSerie']()?.id).toBe(before);
         });
 
         it('should return nothing when no serie clears the bar', () => {
             onDay('2026-03-01T10:00:00');
             bootWith([createMockSerie({ id: 1, vote_average: 3 })], []);
 
-            expect(component['featuredSerie']()).toBeNull();
+            expect(component['spotlightSerie']()).toBeNull();
         });
 
-        it('should keep the featured serie out of the ranking below it', () => {
-            onDay('2026-03-01T10:00:00');
-            bootWith();
+        it('should never take the hero from the ranking, which stays whole', () => {
+            for (let day = 1; day <= 4; day++) {
+                onDay(`2026-03-0${day}T10:00:00`);
+                bootWith();
 
-            const featuredId = component['featuredSerie']()?.id;
-            const rankedIds = component['rankedSeries']().map((serie) => serie.id);
+                const spotlightId = component['spotlightSerie']()?.id;
+                const rankedIds = component['topRatedSeries']().map((serie) => serie.id);
 
-            expect(featuredId).toBeDefined();
-            expect(rankedIds).not.toContain(featuredId);
+                expect(spotlightId).toBeDefined();
+                expect(rankedIds).toEqual([30, 50]);
+                expect(rankedIds).not.toContain(spotlightId);
+            }
+        });
+    });
+
+    describe('Template', () => {
+        // Popular entries clear the feature rating floor and top-rated ones do
+        // not, and the two pages share no id unless a test says so, so the
+        // counts below stay deterministic whatever the day of the rotation.
+        const popularPage = (count: number, firstId = 1) =>
+            Array.from({ length: count }, (_, index) =>
+                createMockSerie({
+                    id: firstId + index,
+                    name: `Popular ${firstId + index}`,
+                    backdrop_path: '/backdrop.jpg',
+                    vote_average: 8.2,
+                }),
+            );
+        const topRatedPage = (count: number) =>
+            Array.from({ length: count }, (_, index) =>
+                createMockSerie({ id: 100 + index, name: `Top ${index}`, vote_average: 7 }),
+            );
+
+        const render = () => {
+            const fixture = TestBed.createComponent(HomeComponent);
+            fixture.detectChanges();
+            return fixture;
+        };
+
+        it('should show placeholders while the lists load', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(NEVER);
+            mockSeriesService.getTopRatedSeries.mockReturnValue(NEVER);
+
+            const fixture = render();
+
+            // The page mirrors its loaded layout: one feature and a row of
+            // posters, then a full page of the ranking grid.
+            expect(fixture.nativeElement.querySelectorAll('.skeleton-feature')).toHaveLength(1);
+            expect(fixture.nativeElement.querySelectorAll('.skeleton-rail .skeleton')).toHaveLength(
+                6,
+            );
+            expect(fixture.nativeElement.querySelectorAll('.skeleton-grid .skeleton')).toHaveLength(
+                12,
+            );
+            expect(fixture.nativeElement.querySelector('app-featured-serie')).toBeNull();
+        });
+
+        it('should keep the first band skeleton until both lists have landed', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(NEVER);
+
+            const fixture = render();
+
+            expect(fixture.nativeElement.querySelector('.skeleton-feature')).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('app-serie-rail')).toBeNull();
+        });
+
+        it('should headline two different series and keep both out of the rail', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(12)));
+
+            const fixture = render();
+            const element: HTMLElement = fixture.nativeElement;
+
+            const trending = element.querySelector('app-featured-serie h3')?.textContent?.trim();
+            const spotlight = element.querySelector('.hero-credit-name')?.textContent?.trim();
+
+            expect(trending).toBe('Popular 1');
+            expect(spotlight).toBeTruthy();
+            expect(spotlight).not.toBe(trending);
+            expect(element.querySelectorAll('app-serie-rail app-serie-card')).toHaveLength(10);
+            expect(element.querySelectorAll('app-ranked-series li')).toHaveLength(12);
+        });
+
+        it('should rank a serie that is also popular in its place, and drop it from the rail', () => {
+            const shared = popularPage(1, 5)[0];
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of([shared, ...topRatedPage(11)]));
+
+            const fixture = render();
+            const element: HTMLElement = fixture.nativeElement;
+            const titles = (selector: string) =>
+                [...element.querySelectorAll(`${selector} .series-title`)].map((title) =>
+                    title.textContent?.trim(),
+                );
+
+            expect(element.querySelectorAll('app-ranked-series li')).toHaveLength(12);
+            expect(titles('app-ranked-series')[0]).toBe('Popular 5');
+            expect(titles('app-serie-rail')).not.toContain('Popular 5');
+            expect(element.querySelector('.hero-credit-name')?.textContent?.trim()).not.toBe(
+                'Popular 5',
+            );
+        });
+
+        it('should give the rail the whole band when nothing can trend', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(topRatedPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(5)));
+
+            const fixture = render();
+            const bento = fixture.nativeElement.querySelector('.trending-bento');
+
+            expect(fixture.nativeElement.querySelector('app-featured-serie')).toBeNull();
+            expect(bento.classList.contains('trending-bento--rail-only')).toBe(true);
+        });
+
+        it('should offer "load more" on both lists after a full page', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(12)));
+
+            const fixture = render();
+
+            expect(fixture.nativeElement.querySelectorAll('button.load-more')).toHaveLength(2);
+        });
+
+        it('should hide "load more" once a partial page reveals the end of a list', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(5)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(5)));
+
+            const fixture = render();
+
+            expect(fixture.nativeElement.querySelector('button.load-more')).toBeNull();
+        });
+
+        it('should request the next popular page from the rail button', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(5)));
+            const fixture = render();
+
+            mockSeriesService.getPopularSeries.mockReturnValue(NEVER);
+            const tile: HTMLButtonElement = fixture.nativeElement.querySelector(
+                'app-serie-rail button.rail-more',
+            );
+            tile.click();
+            fixture.detectChanges();
+
+            expect(mockSeriesService.getPopularSeries).toHaveBeenLastCalledWith(12, 2);
+            // The tile stays in place and turns into a spinner, rather than
+            // vanishing and shifting the rail while the page loads.
+            expect(tile.disabled).toBe(true);
+            expect(tile.querySelector('mat-progress-spinner')).toBeTruthy();
+        });
+
+        it('should close the rail with the "load more" tile, after the last poster', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(12)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(5)));
+
+            const fixture = render();
+            const rail = fixture.nativeElement.querySelector('.serie-rail');
+
+            expect(rail.lastElementChild.classList.contains('rail-more')).toBe(true);
+        });
+
+        it('should request the next top-rated page from the ranking button', () => {
+            mockSeriesService.getPopularSeries.mockReturnValue(of(popularPage(5)));
+            mockSeriesService.getTopRatedSeries.mockReturnValue(of(topRatedPage(12)));
+            const fixture = render();
+
+            mockSeriesService.getTopRatedSeries.mockReturnValue(NEVER);
+            const button: HTMLButtonElement = fixture.nativeElement.querySelector(
+                '.load-more-row button.load-more',
+            );
+            button.click();
+            fixture.detectChanges();
+
+            expect(mockSeriesService.getTopRatedSeries).toHaveBeenLastCalledWith(12, 2);
+            expect(button.disabled).toBe(true);
+            expect(button.querySelector('mat-progress-spinner')).toBeTruthy();
         });
     });
 });

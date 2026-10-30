@@ -1,50 +1,60 @@
 <div>
     <mat-sidenav-container class="app-container">
-        <mat-sidenav #sidenav mode="over" [opened]="menuOpen()">
-            <mat-nav-list>
-                <mat-list-item
+        <!-- Real links rather than list items carrying routerLink: an anchor is
+             focusable and activated by Enter natively, so keyboard users reach
+             the same navigation as pointer users without hand-written key
+             handlers. openedChange keeps the signal in step when the drawer is
+             closed by its backdrop or by Escape. -->
+        <mat-sidenav
+            #sidenav
+            mode="over"
+            [opened]="menuOpen()"
+            (openedChange)="menuOpen.set($event)"
+        >
+            <mat-nav-list [attr.aria-label]="'navigation.main' | transloco">
+                <a
+                    mat-list-item
                     routerLink="/"
-                    (click)="toggleMenu()"
-                    (keydown.enter)="toggleMenu()"
-                    (keydown.space)="$event.preventDefault(); toggleMenu()"
                     routerLinkActive="mat-mdc-list-item-active"
+                    ariaCurrentWhenActive="page"
                     [routerLinkActiveOptions]="{ exact: true }"
+                    (click)="closeMenu()"
                 >
                     <mat-icon matListItemIcon>home</mat-icon>
                     <span matListItemTitle>{{ 'navigation.home' | transloco }}</span>
-                </mat-list-item>
+                </a>
                 @if (currentUser()) {
-                    <mat-list-item
+                    <a
+                        mat-list-item
                         routerLink="/mes-series"
-                        (click)="toggleMenu()"
-                        (keydown.enter)="toggleMenu()"
-                        (keydown.space)="$event.preventDefault(); toggleMenu()"
                         routerLinkActive="mat-mdc-list-item-active"
+                        ariaCurrentWhenActive="page"
+                        (click)="closeMenu()"
                     >
                         <mat-icon matListItemIcon>tv</mat-icon>
                         <span matListItemTitle>{{ 'navigation.my_series' | transloco }}</span>
-                    </mat-list-item>
+                    </a>
                 }
-                <mat-list-item
+                <a
+                    mat-list-item
                     routerLink="/search"
-                    (click)="toggleMenu()"
-                    (keydown.enter)="toggleMenu()"
-                    (keydown.space)="$event.preventDefault(); toggleMenu()"
                     routerLinkActive="mat-mdc-list-item-active"
+                    ariaCurrentWhenActive="page"
+                    (click)="closeMenu()"
                 >
                     <mat-icon matListItemIcon>search</mat-icon>
                     <span matListItemTitle>{{ 'navigation.search' | transloco }}</span>
-                </mat-list-item>
-                <mat-list-item
+                </a>
+                <a
+                    mat-list-item
                     routerLink="/legal"
-                    (click)="toggleMenu()"
-                    (keydown.enter)="toggleMenu()"
-                    (keydown.space)="$event.preventDefault(); toggleMenu()"
                     routerLinkActive="mat-mdc-list-item-active"
+                    ariaCurrentWhenActive="page"
+                    (click)="closeMenu()"
                 >
                     <mat-icon matListItemIcon>gavel</mat-icon>
                     <span matListItemTitle>{{ 'navigation.legal' | transloco }}</span>
-                </mat-list-item>
+                </a>
             </mat-nav-list>
         </mat-sidenav>
 
@@ -60,7 +70,7 @@
                 <button
                     mat-icon-button
                     (click)="toggleNotifications()"
-                    [attr.aria-label]="'notification.close' | transloco"
+                    [attr.aria-label]="'notification.close_drawer' | transloco"
                 >
                     <mat-icon>close</mat-icon>
                 </button>
@@ -73,69 +83,82 @@
                         <p>{{ 'notification.no_notifications' | transloco }}</p>
                     </div>
                 } @else {
-                    @for (
-                        notification of userNotificationService.notifications();
-                        track notification.user_notification_id
-                    ) {
-                        <button
-                            type="button"
-                            class="notification-item"
-                            [class.unread]="notification.status === 'unread'"
-                            [class.new-season]="notification.type === 'new_season'"
-                            [class.new-episodes]="notification.type === 'new_episodes'"
-                            [class.status-update]="
-                                notification.type === 'status_canceled' ||
-                                notification.type === 'status_ended'
-                            "
-                            (click)="onNotificationClick(notification)"
-                        >
-                            <div class="notification-content">
-                                @if (notification.serie_poster) {
-                                    <img
-                                        [src]="
-                                            userNotificationService.getTmdbPosterUrl(
-                                                notification.serie_poster,
-                                                'w200'
-                                            )
-                                        "
-                                        [alt]="notification.serie_name"
-                                        class="notification-poster"
-                                    />
-                                } @else {
-                                    <div class="notification-icon-fallback">
-                                        <mat-icon>tv</mat-icon>
-                                    </div>
-                                }
-                                <div class="notification-text">
-                                    <div class="notification-title">
-                                        {{ notification.serie_name }}
-                                    </div>
-                                    <div class="notification-message">
-                                        {{ getNotificationMessage(notification) }}
-                                    </div>
-                                    <div class="notification-date">
-                                        {{ getFormattedDate(notification.created_at) }}
-                                    </div>
-                                </div>
-                            </div>
-                            <button
-                                mat-icon-button
-                                type="button"
-                                class="delete-button"
-                                (click)="onNotificationDelete($event, notification)"
-                                [matTooltip]="'notification.delete' | transloco"
+                    <ul class="notification-list">
+                        @for (
+                            notification of userNotificationService.notifications();
+                            track notification.user_notification_id
+                        ) {
+                            <li
+                                class="notification-item"
+                                [class.unread]="notification.status === 'unread'"
+                                [class.new-season]="notification.type === 'new_season'"
+                                [class.new-episodes]="notification.type === 'new_episodes'"
+                                [class.status-update]="
+                                    notification.type === 'status_canceled' ||
+                                    notification.type === 'status_ended'
+                                "
                             >
-                                <mat-icon>close</mat-icon>
-                            </button>
-                        </button>
-                    }
+                                <button
+                                    type="button"
+                                    class="notification-main"
+                                    (click)="onNotificationClick(notification)"
+                                >
+                                    @if (notification.serie_poster) {
+                                        <img
+                                            [src]="
+                                                userNotificationService.getTmdbPosterUrl(
+                                                    notification.serie_poster,
+                                                    'w200'
+                                                )
+                                            "
+                                            alt=""
+                                            class="notification-poster"
+                                        />
+                                    } @else {
+                                        <span class="notification-icon-fallback">
+                                            <mat-icon>tv</mat-icon>
+                                        </span>
+                                    }
+                                    <span class="notification-text">
+                                        <span class="notification-title">
+                                            {{ notification.serie_name }}
+                                        </span>
+                                        <span class="notification-message">
+                                            {{ getNotificationMessage(notification) }}
+                                        </span>
+                                        <span class="notification-date">
+                                            {{ getFormattedDate(notification.created_at) }}
+                                        </span>
+                                    </span>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    type="button"
+                                    class="delete-button"
+                                    (click)="onNotificationDelete(notification)"
+                                    [attr.aria-label]="
+                                        'notification.delete_named'
+                                            | transloco: { name: notification.serie_name }
+                                    "
+                                    [matTooltip]="'notification.delete' | transloco"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </li>
+                        }
+                    </ul>
                 }
             </div>
         </mat-sidenav>
 
         <mat-sidenav-content>
-            <mat-toolbar color="primary" class="app-toolbar">
-                <button mat-icon-button (click)="toggleMenu()" aria-label="Menu">
+            <mat-toolbar class="app-toolbar">
+                <button
+                    mat-icon-button
+                    (click)="toggleMenu()"
+                    [attr.aria-label]="'navigation.open_menu' | transloco"
+                    [attr.aria-expanded]="menuOpen()"
+                >
                     <mat-icon>menu</mat-icon>
                 </button>
                 <a
@@ -266,7 +289,7 @@
                 } @else {
                     <button mat-flat-button (click)="login()" class="login-button">
                         <mat-icon>login</mat-icon>
-                        {{ 'auth.sign_in' | transloco }}
+                        <span class="login-label">{{ 'auth.sign_in' | transloco }}</span>
                     </button>
                 }
             </mat-toolbar>

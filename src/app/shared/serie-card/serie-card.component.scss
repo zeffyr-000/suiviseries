@@ -63,47 +63,18 @@
   transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
 }
 
+// A frosted disc behind the ring: the top-right corner is where posters put
+// their title logo, and a bare ring over "FRIENDS" or "MÉDIUM" was hard to
+// read. Card only; the detail header sets the same ring on a dark scrim.
 .rating-badge {
   position: absolute;
   top: var(--spacing-sm);
   right: var(--spacing-sm);
   z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-}
-
-.rating-ring {
-  position: absolute;
-  inset: 0;
-  transform: rotate(-90deg);
-}
-
-.rating-ring-track,
-.rating-ring-value {
-  fill: none;
-  stroke-width: 3;
-}
-
-.rating-ring-track {
-  stroke: color-mix(in srgb, var(--ink) 75%, transparent);
-}
-
-.rating-ring-value {
-  stroke: var(--gold);
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 5px var(--gold-glow));
-}
-
-.rating-value {
-  position: relative;
-  font-family: 'Poppins', 'Roboto', sans-serif;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--mat-sys-on-surface);
-  text-shadow: 0 1px 6px color-mix(in srgb, var(--ink) 90%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 62%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 // The backing is anchored to the text block itself, not to the card, so it
@@ -125,10 +96,17 @@
   );
 }
 
+// Two lines at most: a third pushed the text block up over half the poster.
+// Clamped visually only, so the full name stays in the link's text.
 .series-title {
   margin: 0;
   color: var(--mat-sys-on-surface);
   line-height: 1.15;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .series-info {
@@ -138,16 +116,30 @@
   gap: var(--spacing-sm);
 }
 
+// Each count stays on one line and the pair wraps as a whole. On a narrow
+// card the two used to break inside themselves, stacking "38 / saisons" over
+// "816 / épisodes". The separator hangs in the gap before the episodes: when
+// they wrap to a line of their own it falls outside the box and is clipped,
+// so no line starts with a stray dot.
 .series-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-sm);
+  column-gap: 1em;
+  overflow: hidden;
   color: var(--mat-sys-on-surface-variant);
   font-variant-numeric: tabular-nums;
 
+  > span {
+    white-space: nowrap;
+  }
+
   .episodes::before {
     content: '·';
-    margin-right: var(--spacing-sm);
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    text-align: center;
   }
 }
 

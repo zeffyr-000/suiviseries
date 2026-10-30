@@ -15,9 +15,33 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+    MatDialog,
+    MatDialogModule,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 
 import { AuthService } from '../services/auth.service';
+
+export interface LoginDialogData {
+    returnUrl?: string;
+}
+
+// Single entry point for the sign-in dialog, so the toolbar and the auth-guard
+// redirect open it with the same size. The dialog navigates to returnUrl
+// itself once signed in; callers have nothing else to do.
+export function openLoginDialog(
+    dialog: MatDialog,
+    returnUrl?: string,
+): MatDialogRef<LoginComponent, unknown> {
+    return dialog.open<LoginComponent, LoginDialogData>(LoginComponent, {
+        width: '540px',
+        maxWidth: '90vw',
+        autoFocus: true,
+        data: { returnUrl },
+    });
+}
 
 @Component({
     selector: 'app-login-modal',
@@ -39,7 +63,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
     public readonly dialogRef = inject(MatDialogRef<LoginComponent>);
-    public readonly data = inject(MAT_DIALOG_DATA) as { returnUrl?: string };
+    public readonly data = inject<LoginDialogData | null>(MAT_DIALOG_DATA);
 
     constructor() {
         this.loading = this.authService.loading;

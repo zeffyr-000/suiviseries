@@ -5,15 +5,13 @@ test.describe('Home', () => {
         await page.goto('/');
 
         await expect(page.locator('h1')).toBeVisible();
-        await expect(
-            page.locator('button:has-text("Parcourir"), button:has-text("Browse")'),
-        ).toBeVisible();
+        await expect(page.getByRole('link', { name: /Parcourir|Browse/ })).toBeVisible();
     });
 
     test('should navigate to search', async ({ page }) => {
         await page.goto('/');
 
-        await page.click('button:has-text("Parcourir"), button:has-text("Browse")');
+        await page.getByRole('link', { name: /Parcourir|Browse/ }).click();
 
         await expect(page).toHaveURL('/search');
     });

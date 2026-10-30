@@ -195,17 +195,17 @@ describe('SerieWatchProvidersComponent', () => {
             fixture.detectChanges();
 
             const compiled = fixture.nativeElement as HTMLElement;
-            const nav = compiled.querySelector('nav');
-            expect(nav).toBeTruthy();
+            const list = compiled.querySelector('ul.watch-provider-list');
+            expect(list).toBeTruthy();
         });
 
-        it('should have aria-label on nav', () => {
+        it('should have aria-label on the provider list', () => {
             componentRef.setInput('providers', mockProviders);
             fixture.detectChanges();
 
             const compiled = fixture.nativeElement as HTMLElement;
-            const nav = compiled.querySelector('nav');
-            expect(nav?.getAttribute('aria-label')).toBeTruthy();
+            const list = compiled.querySelector('ul.watch-provider-list');
+            expect(list?.getAttribute('aria-label')).toBe('Plateformes de streaming disponibles');
         });
 
         it('should have alt text on provider logos', () => {

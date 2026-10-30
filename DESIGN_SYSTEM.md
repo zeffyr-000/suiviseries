@@ -5,7 +5,7 @@
 The **Suiviseries** project uses **Material Design 3** with full modernization across all components.
 
 **Theme**: "Nuit & Or" — single dark, cinematic theme (deep night-blue surfaces + gold accent).
-**Last Updated**: May 29, 2026
+**Last Updated**: October 29, 2026
 **M3 Conformity Score**: 98/100 ⭐
 
 > 🕰️ For the app's visual evolution (V1 light → V2 dark), see
@@ -83,21 +83,26 @@ src/
 **`src/styles/_mixins.scss`**
 
 ```scss
+// xs: mobile portrait, sm: mobile landscape, md: tablet, lg: desktop, xl: large desktop
 $md-breakpoints: (
     xs: 0px,
-    // Mobile portrait
     sm: 600px,
-    // Mobile landscape
     md: 905px,
-    // Tablet
     lg: 1240px,
-    // Desktop
-    xl: 1440px, // Large desktop,,,,,,
+    xl: 1440px,
 );
 
 // Usage: @include respond-to(lg) { ... }    // min-width
 // Usage: @include respond-below(md) { ... }  // max-width
 ```
+
+The same file holds the shared surfaces:
+
+- `glass-surface($opacity, $blur)` — frosted panel over artwork (toolbar, badges, pills).
+- `detail-section-card` — the frosted section card of the serie detail page, title included.
+  Every section component (`serie-watch-providers`, `serie-videos`, `serie-images`,
+  `serie-seasons`, `serie-recommendations`) includes it on its own `mat-card`: the page's
+  encapsulated styles cannot reach cards rendered by child components.
 
 ### Component SCSS Import Pattern
 
@@ -122,12 +127,14 @@ All component SCSS files must import mixins:
 ### M3 Border Radius Tokens
 
 ```scss
-// Small components (chips, small buttons)
---md-sys-shape-corner-extra-small: 4px --md-sys-shape-corner-small: 8px // Medium components (standard buttons, inputs)
-    --md-sys-shape-corner-medium: 12px // Large components (cards, dialogs)
-    --md-sys-shape-corner-large: 16px // Extra large (hero sections, large cards)
-    --md-sys-shape-corner-extra-large: 28px // Full rounding (pills, badges, FABs)
-    --md-sys-shape-corner-full: 9999px;
+html {
+    --md-sys-shape-corner-extra-small: 4px; // Small components (chips, small buttons)
+    --md-sys-shape-corner-small: 8px;
+    --md-sys-shape-corner-medium: 12px; // Standard buttons, inputs, menus
+    --md-sys-shape-corner-large: 16px; // Cards, dialogs
+    --md-sys-shape-corner-extra-large: 28px; // Hero sections, large cards
+    --md-sys-shape-corner-full: 9999px; // Pills, badges, FABs
+}
 ```
 
 ### Application in Project
@@ -264,16 +271,27 @@ into `src/styles/_theme-colors.scss`, and `html { color-scheme: dark; }` resolve
 Changing the entire identity is centralized in `src/styles.scss` (the `mat.theme(...)`
 block + the custom CSS variables below).
 
-### Primary Colors
+### Brand Colors
+
+Three accents, three jobs, never interchangeable (declared on `html` in `src/styles.scss`):
 
 ```scss
-// Gold accent on deep night-blue surfaces
---primary-color: #c7a850 // Gold (primary)
-    --accent-color: #e4c368 // Bright amber (highlights)
-    --warn-color: #ff5449 // Error red (dark-tuned)
-    // Gold helpers (glow / highlights)
-    --gold: #c7a850 --gold-bright: #e4c368 --gold-glow: rgba(199, 168, 80, 0.35);
+html {
+    --ink: #060916; // Page background
+    --gold: #e4c368; // Identity and prestige: titles, ratings, primary action (11.6:1 on ink)
+    --gold-deep: #c7a850; // Deeper gold for tints and borders
+    --flare: #ff4d6d; // Energy: trending, followed, hover (6.2:1, icons and large type only)
+    --ice: #56dfff; // Data: progress, counters (12.7:1 on ink)
+    --violet: #7c5cff; // Third stop of the signature gradient
+
+    --success-color: #10b981; // Semantic states, kept apart from the brand accents
+    --warning-color: #f59e0b;
+    --focus-ring-color: var(--gold); // Keyboard focus indicator
+}
 ```
+
+The former aliases `--primary-color`, `--accent-color`, `--warn-color` and `--gold-bright`
+were removed: use the brand tokens above, or `--mat-sys-*` tokens for Material roles.
 
 > Palette seeds used to generate `_theme-colors.scss`:
 > primary `#C8A951` (gold), secondary/tertiary night-blue, neutral `#2A2E45` (night-blue tinted).
@@ -296,7 +314,7 @@ M3 recommends `color-mix()` for adaptive transparency:
 
 ```scss
 // Subtle background tint (15% opacity)
-background: color-mix(in srgb, var(--primary-color) 15%, transparent);
+background: color-mix(in srgb, var(--gold) 15%, transparent);
 
 // Border with transparency (30% opacity)
 border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 30%, transparent);

@@ -155,11 +155,11 @@
 }
 
 @if (selectedImage()) {
-    <!-- Native <dialog> element is inherently focusable with built-in focus trap -->
-    <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+    <!-- Native modal <dialog> traps focus; tabindex lets the viewer itself take it on open -->
     <dialog
         #dialogOverlay
         class="image-preview-overlay"
+        tabindex="-1"
         (click)="closePreview($event)"
         (keydown)="onKeydown($event)"
         aria-modal="true"

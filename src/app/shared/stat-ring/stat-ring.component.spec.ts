@@ -97,4 +97,20 @@ describe('StatRingComponent', () => {
 
         expect(fixture.nativeElement.querySelector('.visually-hidden')).toBeNull();
     });
+
+    it('should hide the bare figure from screen readers when a description replaces it', () => {
+        render(0.5, '50%', { description: '31 épisodes vus sur 62' });
+
+        expect(
+            fixture.nativeElement.querySelector('.stat-ring-label').getAttribute('aria-hidden'),
+        ).toBe('true');
+    });
+
+    it('should leave the figure readable when there is no description', () => {
+        render(0.5, '50%');
+
+        expect(
+            fixture.nativeElement.querySelector('.stat-ring-label').hasAttribute('aria-hidden'),
+        ).toBe(false);
+    });
 });

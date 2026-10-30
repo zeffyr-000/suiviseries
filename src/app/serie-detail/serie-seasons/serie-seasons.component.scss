@@ -1,21 +1,7 @@
 @use '../../../styles/mixins' as *;
 
 .seasons-card {
-  mat-card-header {
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-
-      mat-icon {
-        color: var(--mat-sys-primary);
-      }
-    }
-  }
-
-  .mat-mdc-card-header {
-    padding-bottom: 1rem;
-  }
+  @include detail-section-card;
 }
 
 .season-content {
@@ -236,10 +222,25 @@
   }
 }
 
+// Headers size to their content. At Material's fixed 48px a title over a
+// subtitle overflowed and each subtitle landed on the row below; any fixed
+// height either wastes room on the many one-line rows or still overflows on
+// a phone, where the episode count wraps as well.
+.seasons-accordion {
+  --mat-expansion-header-collapsed-state-height: auto;
+  --mat-expansion-header-expanded-state-height: auto;
+}
+
+.season-panel mat-expansion-panel-header {
+  box-sizing: border-box;
+  min-height: 56px;
+  padding-block: var(--spacing-sm);
+}
+
 .season-title-container {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 2px;
 
   .season-title {
     font-weight: 600;
@@ -271,7 +272,7 @@
 
   // Watched state = gold, clearly distinct from the neutral unwatched state
   &.is-watched {
-    color: var(--gold-bright);
+    color: var(--gold);
     background-color: color-mix(in srgb, var(--gold) 16%, transparent);
 
     @media (hover: hover) {
@@ -281,7 +282,7 @@
     }
 
     mat-icon {
-      color: var(--gold-bright);
+      color: var(--gold);
     }
   }
 }

@@ -139,10 +139,9 @@ describe('Notifications Integration', () => {
         });
 
         it('should delete notification and update count', async () => {
-            const event = new MouseEvent('click');
             const notification = mockNotifications[0];
 
-            component.onNotificationDelete(event, notification);
+            component.onNotificationDelete(notification);
 
             const req = httpMock.expectOne(
                 `/api/notifications/${notification.user_notification_id}`,
@@ -162,9 +161,7 @@ describe('Notifications Integration', () => {
             readReq.flush({});
 
             expect(notificationService.unreadCount()).toBe(1);
-
-            const event = new MouseEvent('click');
-            component.onNotificationDelete(event, mockNotifications[1]);
+            component.onNotificationDelete(mockNotifications[1]);
             const deleteReq = httpMock.expectOne('/api/notifications/2');
             expect(deleteReq.request.method).toBe('DELETE');
             deleteReq.flush({});
@@ -232,9 +229,8 @@ describe('Notifications Integration', () => {
         it('should handle delete API error', async () => {
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
             const originalLength = notificationService.notifications().length;
-            const event = new MouseEvent('click');
 
-            component.onNotificationDelete(event, mockNotifications[0]);
+            component.onNotificationDelete(mockNotifications[0]);
 
             const req = httpMock.expectOne('/api/notifications/1');
             req.error(new ProgressEvent('error'), { status: 404, statusText: 'Not Found' });
@@ -269,9 +265,7 @@ describe('Notifications Integration', () => {
         it('should update badge count when deleting unread notifications', async () => {
             notificationService.setNotifications(mockNotifications, 2);
             fixture.detectChanges();
-
-            const event = new MouseEvent('click');
-            component.onNotificationDelete(event, mockNotifications[0]);
+            component.onNotificationDelete(mockNotifications[0]);
 
             const req = httpMock.expectOne('/api/notifications/1');
             req.flush({});
