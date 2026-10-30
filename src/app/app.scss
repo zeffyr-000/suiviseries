@@ -19,7 +19,8 @@
     mat-nav-list {
       padding: var(--spacing-lg) var(--spacing-sm);
 
-      mat-list-item {
+      // Class selector, not the element: items are <a mat-list-item> links.
+      .mat-mdc-list-item {
         position: relative;
         margin: 0 var(--spacing-xs) var(--spacing-xs);
         border-radius: 28px; // M3 full rounding for nav items
@@ -60,24 +61,6 @@
           span {
             font-weight: 600;
             color: var(--gold);
-          }
-        }
-
-        &.logout-item {
-          margin-top: var(--spacing-md);
-
-          @media (hover: hover) {
-            &:hover {
-              background-color: rgba(244, 67, 54, 0.1);
-            }
-          }
-
-          mat-icon {
-            color: #f44336;
-          }
-
-          span {
-            color: #f44336;
           }
         }
 
@@ -146,25 +129,26 @@
   }
 }
 
+.notification-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// The row is a list item holding two sibling buttons: open and delete. They
+// used to be nested, a button inside a button, which is invalid HTML and left
+// the delete action unreachable by keyboard.
 .notification-item {
-  display: flex;
-  align-items: stretch;
   position: relative;
-  padding: 12px var(--spacing-lg);
-  border: none;
-  background: transparent;
   border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 15%, transparent);
-  cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
-  width: 100%;
-  text-align: left;
 
   &:last-child {
     border-bottom: none;
   }
 
   &.unread {
-    background-color: color-mix(in srgb, var(--primary-color) 4%, transparent);
+    background-color: color-mix(in srgb, var(--gold-deep) 4%, transparent);
 
     &::before {
       content: '';
@@ -173,7 +157,7 @@
       top: 0;
       bottom: 0;
       width: 3px;
-      background-color: var(--primary-color);
+      background-color: var(--gold-deep);
     }
   }
 
@@ -183,16 +167,53 @@
     }
   }
 
+  // Type marker. Colours come from the semantic and data tokens rather than
+  // stock Material hues, so they sit in the same palette as the rest.
+  &.new-season::after,
+  &.new-episodes::after,
+  &.status-update::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &.new-season::after {
+    background-color: var(--success-color);
+  }
+
+  &.new-episodes::after {
+    background-color: var(--ice);
+  }
+
+  &.status-update::after {
+    background-color: var(--warning-color);
+  }
+}
+
+.notification-main {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  // The trailing padding keeps the text clear of the delete button and the
+  // type marker, both laid over the right edge of the row.
+  padding: 12px 48px 12px var(--spacing-lg);
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 150ms cubic-bezier(0.2, 0, 0, 1);
+
   &:active {
     background-color: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
     transform: scale(0.98);
-  }
-
-  .notification-content {
-    display: flex;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
   }
 
   .notification-poster {
@@ -260,57 +281,45 @@
     color: var(--mat-sys-on-surface-variant);
     opacity: 0.7;
   }
+}
 
-  .delete-button {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    opacity: 0;
-    transition:
-      opacity 150ms cubic-bezier(0.2, 0, 0, 1),
-      transform 150ms cubic-bezier(0.2, 0, 0, 1);
-    z-index: 1;
+.delete-button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  z-index: 1;
+  opacity: 0;
+  transition:
+    opacity 150ms cubic-bezier(0.2, 0, 0, 1),
+    transform 150ms cubic-bezier(0.2, 0, 0, 1);
 
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 
-  @media (hover: hover) {
-    &:hover .delete-button {
-      opacity: 1;
-    }
-  }
-
-  .delete-button:active {
+  &:active {
     transform: scale(0.9);
   }
+}
 
-  &.new-season::after,
-  &.new-episodes::after,
-  &.status-update::after {
-    content: '';
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+// Revealed on hover for pointer users and whenever the row holds focus, so a
+// keyboard user tabbing onto it can see what they are about to press. Touch
+// screens have no hover to reveal it, so there it stays visible.
+.notification-item:focus-within .delete-button {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .notification-item:hover .delete-button {
+    opacity: 1;
   }
+}
 
-  &.new-season::after {
-    background-color: #4caf50;
-  }
-
-  &.new-episodes::after {
-    background-color: #2196f3;
-  }
-
-  &.status-update::after {
-    background-color: #ff9800;
+@media (hover: none) {
+  .delete-button {
+    opacity: 1;
   }
 }
 
@@ -422,7 +431,7 @@
 
   .login-button {
     // Explicit gold fill (independent of Material color palettes) so it always reads as a button
-    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%) !important;
+    background: var(--gold) !important;
     color: #1a1200 !important;
     height: 40px;
     border-radius: 20px; // M3 full rounding
@@ -468,7 +477,7 @@
   .user-info {
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: 12px 12px 0 0;
-    background-color: color-mix(in srgb, var(--primary-color) 5%, transparent);
+    background-color: color-mix(in srgb, var(--gold-deep) 5%, transparent);
 
     .user-name {
       font-weight: 500;
@@ -606,6 +615,33 @@
 @include respond-below(sm) {
   .app-toolbar {
     height: 56px; // M3 mobile app bar height
+
+    // A phone has no room for the brand and a labelled button side by side:
+    // they touched. The button folds to its icon, and the label stays in the
+    // DOM, visually hidden, so it still names the button.
+    .login-button {
+      --mat-button-filled-horizontal-padding: 0;
+      --mat-button-filled-with-icon-horizontal-padding: 0;
+      --mat-button-filled-icon-offset: 0;
+      --mat-button-filled-icon-spacing: 0;
+
+      width: 48px;
+      min-width: 48px;
+      border-radius: 50%;
+
+      mat-icon {
+        margin: 0;
+      }
+    }
+
+    .login-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
 
     .app-title {
       font-size: 1.25rem; // M3 title-medium for mobile

@@ -34,7 +34,7 @@
       color: var(--mat-sys-on-surface);
 
       mat-icon {
-        color: var(--primary-color);
+        color: var(--gold-deep);
         font-size: 2.25rem;
         width: 2.25rem;
         height: 2.25rem;
@@ -245,9 +245,8 @@
   }
 }
 
-// M3 Loading, error, empty states
+// M3 Loading and empty states
 .loading-container,
-.error-container,
 .empty-container {
   display: flex;
   flex-direction: column;
@@ -326,18 +325,6 @@
   }
 }
 
-.error-container {
-  mat-icon:first-child {
-    color: var(--mat-sys-error);
-    opacity: 0.8;
-    animation: errorPulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
-
-  h2 {
-    color: var(--mat-sys-error);
-  }
-}
-
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -356,18 +343,6 @@
   }
   50% {
     transform: translateY(-8px);
-  }
-}
-
-@keyframes errorPulse {
-  0%,
-  100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
   }
 }
 
@@ -415,7 +390,6 @@
     }
 
     .loading-container,
-    .error-container,
     .empty-container {
       padding: var(--spacing-xxl) var(--spacing-lg);
       min-height: 300px;

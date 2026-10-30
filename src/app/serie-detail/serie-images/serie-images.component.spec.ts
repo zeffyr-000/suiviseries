@@ -79,6 +79,34 @@ describe('SerieImagesComponent', () => {
             expect(component['selectedImage']()).toBeNull();
         });
 
+        it('should hand focus to the preview itself rather than its first button', () => {
+            // jsdom has no modal dialog support at all, so stand in for the two
+            // methods the component calls and take them away again afterwards
+            const proto = HTMLDialogElement.prototype;
+            const showModal = vi.fn(function (this: HTMLDialogElement) {
+                this.setAttribute('open', '');
+            });
+            proto.showModal = showModal;
+            proto.close = function (this: HTMLDialogElement) {
+                this.removeAttribute('open');
+            };
+
+            try {
+                component['onImageClick'](mockImages.backdrops[0], 'backdrop');
+                fixture.detectChanges();
+
+                const dialog = fixture.nativeElement.querySelector('.image-preview-overlay');
+                expect(showModal).toHaveBeenCalledOnce();
+                expect(document.activeElement).toBe(dialog);
+
+                component['closePreview']();
+                fixture.detectChanges();
+            } finally {
+                Reflect.deleteProperty(proto, 'showModal');
+                Reflect.deleteProperty(proto, 'close');
+            }
+        });
+
         it('should set imageLoading to true when clicking an image', () => {
             const image = mockImages.backdrops[0];
             expect(component['imageLoading']()).toBe(false);

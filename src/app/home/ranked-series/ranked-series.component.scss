@@ -10,42 +10,51 @@
 }
 
 .ranked-item {
-  position: relative;
-  padding-left: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  min-width: 0;
 }
 
-// The card is positioned explicitly so the numeral can be ordered above it;
-// left to auto stacking, the card's own positioned layers won the paint order
-// and swallowed the part of the glyph that overlaps the artwork.
-.ranked-item app-serie-card {
-  position: relative;
-  z-index: 1;
-  display: block;
-}
-
-// Outlined numerals that break out of the artwork: the editorial device that
-// tells this section apart from the rail above it, at almost no weight.
-// Anchored to the top-left corner, the only quiet area of the card: the
-// bottom carries the title block and the top-right carries the rating.
+// The numeral heads its card on a rule of its own. It used to overlap the top
+// corner of the poster, where it collided with title artwork and logos on
+// one card in three, and read as a smudge more than a rank. Above the card it
+// never covers the artwork and stays legible at any size.
 .rank-number {
-  position: absolute;
-  left: calc(var(--spacing-xs) * -1);
-  top: calc(var(--spacing-sm) * -1);
-  z-index: 2;
-  text-shadow: 0 2px 12px var(--ink);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
   font-family: 'Poppins', 'Roboto', sans-serif;
-  font-size: 4rem;
+  font-size: 1.75rem;
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
-  color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--mat-sys-on-surface) 30%, transparent);
-  pointer-events: none;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--mat-sys-on-surface) 18%, transparent),
+      transparent
+    );
+  }
 }
 
+// The top of the ranking takes the brand accent, and its rule with it.
 .ranked-item:first-child .rank-number {
-  -webkit-text-stroke-color: color-mix(in srgb, var(--gold) 85%, transparent);
+  color: var(--gold);
+
+  &::after {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--gold) 55%, transparent),
+      transparent
+    );
+  }
 }
 
 @include respond-below(sm) {
@@ -55,6 +64,6 @@
   }
 
   .rank-number {
-    font-size: 3rem;
+    font-size: 1.375rem;
   }
 }

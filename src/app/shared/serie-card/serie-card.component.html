@@ -16,20 +16,12 @@
         <div class="series-scrim" aria-hidden="true"></div>
         <div class="series-spot" aria-hidden="true"></div>
 
-        <div class="rating-badge">
-            <svg class="rating-ring" viewBox="0 0 46 46" aria-hidden="true">
-                <circle class="rating-ring-track" cx="23" cy="23" [attr.r]="ringRadius" />
-                <circle
-                    class="rating-ring-value"
-                    cx="23"
-                    cy="23"
-                    [attr.r]="ringRadius"
-                    [attr.stroke-dasharray]="ringCircumference"
-                    [attr.stroke-dashoffset]="ringOffset()"
-                />
-            </svg>
-            <span class="rating-value">{{ rating() }}</span>
-        </div>
+        <app-stat-ring
+            class="rating-badge"
+            [ratio]="ratingRatio()"
+            [label]="rating()"
+            [description]="'serie_detail.rating_description' | transloco: { rating: rating() }"
+        />
 
         <div class="series-body">
             <h3 class="series-title title-medium">{{ serie().name }}</h3>

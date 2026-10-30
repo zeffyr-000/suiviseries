@@ -55,11 +55,9 @@ html {
   --success-color: #10b981;
   --warning-color: #f59e0b;
 
-  // Legacy aliases: still referenced across component styles.
-  --primary-color: #c7a850;
-  --accent-color: #e4c368;
-  --warn-color: #ff5449;
-  --gold-bright: #e4c368;
+  // Keyboard focus indicator. Gold rather than gold-deep: 11.6:1 against --ink
+  // keeps the ring unmistakable on the darkest surfaces.
+  --focus-ring-color: var(--gold);
 
   --md-sys-shape-corner-none: 0;
   --md-sys-shape-corner-extra-small: 4px;
@@ -678,29 +676,33 @@ body {
 }
 
 /* MatSnackBar custom styles for notification types */
+// Material 22 reads --mat-snack-bar-* tokens. The --mdc-snackbar-* names these
+// rules used before were dropped with MDC, so every type rendered identically.
+// The class sits on the snack bar container and the tokens inherit inward, so
+// no !important is needed to win over the theme defaults set on <html>.
 .snackbar-error,
 .snackbar-success,
 .snackbar-warning,
 .snackbar-info {
-  --mdc-snackbar-container-shape: 12px;
-  --mdc-snackbar-supporting-text-color: #ffffff !important;
-  --mat-snack-bar-button-color: #ffffff !important;
+  --mat-snack-bar-container-shape: var(--md-sys-shape-corner-medium);
+  --mat-snack-bar-supporting-text-color: #ffffff;
+  --mat-snack-bar-button-color: #ffffff;
 }
 
 .snackbar-error {
-  --mdc-snackbar-container-color: #b3261e !important;
+  --mat-snack-bar-container-color: #b3261e;
 }
 
 .snackbar-success {
-  --mdc-snackbar-container-color: #2e7d4f !important;
+  --mat-snack-bar-container-color: #2e7d4f;
 }
 
 .snackbar-warning {
-  --mdc-snackbar-container-color: #6f4f00 !important;
+  --mat-snack-bar-container-color: #6f4f00;
 }
 
 .snackbar-info {
-  --mdc-snackbar-container-color: #2a4c8c !important;
+  --mat-snack-bar-container-color: #2a4c8c;
 }
 
 /* Accessibility: honor users who prefer reduced motion */

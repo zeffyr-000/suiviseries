@@ -74,6 +74,37 @@ $md-breakpoints: (
   border: 1px solid color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
 }
 
+// The frosted section card of the serie detail page, with its title. A mixin
+// rather than a rule in the page stylesheet: most sections are child
+// components, which the page's encapsulated styles never reached, so only two
+// cards out of seven were frosted and titled in the display face while the
+// rest fell back to default Material cards.
+@mixin detail-section-card {
+  @include glass-surface(72%, 18px);
+
+  border-radius: var(--md-sys-shape-corner-large);
+  box-shadow: var(--md-sys-elevation-level1);
+
+  mat-card-header {
+    padding-bottom: var(--spacing-md);
+  }
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--mat-sys-on-surface);
+  }
+
+  mat-card-title mat-icon {
+    color: var(--gold);
+  }
+}
+
 // Cinematic bloom: the artwork blurred behind itself, so a poster casts its own
 // colour onto the page. The template passes the image in through --poster-src,
 // which keeps the URL out of the stylesheet and unduplicated.

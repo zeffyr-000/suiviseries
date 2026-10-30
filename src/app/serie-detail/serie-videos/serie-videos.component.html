@@ -8,7 +8,10 @@
         </mat-card-header>
         <mat-card-content>
             @if (selectedVideo()) {
-                <section class="video-player-container" aria-label="Lecteur vidéo">
+                <section
+                    class="video-player-container"
+                    [attr.aria-label]="'serie_detail.video_player' | transloco"
+                >
                     @for (video of videos(); track video.key) {
                         @if (
                             video.key === selectedVideo() && getVideoEmbedUrl(video);
@@ -35,13 +38,21 @@
                 </section>
             }
 
-            <nav class="video-list" aria-label="Liste des vidéos disponibles">
+            <!-- A group of toggle buttons, not a nav: selecting one swaps the
+                 player above rather than leaving the page. -->
+            <div
+                class="video-list"
+                role="group"
+                [attr.aria-label]="'serie_detail.video_list' | transloco"
+            >
                 @for (video of videos(); track video.key) {
                     <button
                         class="video-item"
                         [class.selected]="selectedVideo() === video.key"
                         (click)="selectVideo(video.key)"
-                        [attr.aria-label]="'Lire ' + video.name"
+                        [attr.aria-label]="
+                            'serie_detail.play_video' | transloco: { name: video.name }
+                        "
                         [attr.aria-pressed]="selectedVideo() === video.key"
                         itemprop="video"
                         itemscope
@@ -100,7 +111,7 @@
                         </div>
                     </button>
                 }
-            </nav>
+            </div>
         </mat-card-content>
     </mat-card>
 }

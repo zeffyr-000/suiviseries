@@ -1,17 +1,7 @@
 @use '../../../styles/mixins';
 
 .videos-card {
-  mat-card-header {
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-
-      mat-icon {
-        color: var(--mat-sys-primary);
-      }
-    }
-  }
+  @include mixins.detail-section-card;
 
   .video-player-container {
     position: relative;

@@ -14,20 +14,12 @@
 }
 
 .images-card {
+  @include mixins.detail-section-card;
+
   mat-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-
-      mat-icon {
-        color: var(--mat-sys-primary);
-      }
-    }
 
     .show-all-button {
       color: var(--mat-sys-primary);

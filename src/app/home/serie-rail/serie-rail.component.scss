@@ -1,6 +1,10 @@
 @use '../../../styles/mixins' as *;
 
 .serie-rail {
+  // Exposed so projected content, such as a "load more" tile, can match the
+  // posters without restating their size.
+  --rail-item-width: clamp(150px, 40vw, 220px);
+
   display: flex;
   gap: var(--spacing-md);
   overflow-x: auto;
@@ -25,7 +29,7 @@
 }
 
 .rail-item {
-  flex: 0 0 clamp(150px, 40vw, 210px);
+  flex: 0 0 var(--rail-item-width);
   scroll-snap-align: start;
 }
 

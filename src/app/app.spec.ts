@@ -5,12 +5,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { signal } from '@angular/core';
+import { of, throwError } from 'rxjs';
 import { App } from './app';
 import { AuthService } from './services/auth.service';
 import { UserNotificationService } from './services/user-notification.service';
 import { PushNotificationService } from './services/push-notification.service';
+import { NotificationService } from './services/notification.service';
 import { getTranslocoTestingModule } from './testing/transloco-testing.module';
 import { Notification } from './models/notification.model';
+import { createMockNotificationService } from './testing/mocks';
 
 describe('App', () => {
     let mockAuthService: {
@@ -25,6 +28,15 @@ describe('App', () => {
         delete: ReturnType<typeof vi.fn>;
         getTmdbPosterUrl: ReturnType<typeof vi.fn>;
     };
+    let mockPushService: {
+        permission: ReturnType<typeof signal<NotificationPermission>>;
+        isSubscribed: ReturnType<typeof vi.fn>;
+        isSupported: ReturnType<typeof signal<boolean>>;
+        subscribeToPush: ReturnType<typeof vi.fn>;
+        unsubscribeFromPush: ReturnType<typeof vi.fn>;
+        showNotification: ReturnType<typeof vi.fn>;
+    };
+    let mockNotificationService: ReturnType<typeof createMockNotificationService>;
 
     const mockNotification: Notification = {
         user_notification_id: 1,
@@ -56,14 +68,15 @@ describe('App', () => {
             getTmdbPosterUrl: vi.fn((path: string) => `https://image.tmdb.org/t/p/w200${path}`),
         };
 
-        const mockPushService = {
-            permission: signal('default'),
+        mockPushService = {
+            permission: signal<NotificationPermission>('default'),
             isSubscribed: vi.fn().mockReturnValue(false),
             isSupported: signal(false),
-            subscribeToPush: vi.fn(),
-            unsubscribeFromPush: vi.fn(),
+            subscribeToPush: vi.fn().mockReturnValue(of(undefined)),
+            unsubscribeFromPush: vi.fn().mockReturnValue(of(undefined)),
             showNotification: vi.fn().mockResolvedValue(undefined),
         };
+        mockNotificationService = createMockNotificationService();
 
         TestBed.configureTestingModule({
             imports: [App, getTranslocoTestingModule(), MatDialogModule],
@@ -77,6 +90,7 @@ describe('App', () => {
                 { provide: AuthService, useValue: mockAuthService },
                 { provide: UserNotificationService, useValue: mockUserNotificationService },
                 { provide: PushNotificationService, useValue: mockPushService },
+                { provide: NotificationService, useValue: mockNotificationService },
             ],
         });
     });
@@ -166,16 +180,12 @@ describe('App', () => {
         expect(mockUserNotificationService.markAsRead).toHaveBeenCalledWith(1);
     });
 
-    it('should delete notification and stop propagation', async () => {
+    it('should delete a notification', async () => {
         const fixture = TestBed.createComponent(App);
         const app = fixture.componentInstance;
-        const event = {
-            stopPropagation: vi.fn(),
-        } as unknown as Event;
 
-        await app.onNotificationDelete(event, mockNotification);
+        await app.onNotificationDelete(mockNotification);
 
-        expect(event.stopPropagation).toHaveBeenCalled();
         expect(mockUserNotificationService.delete).toHaveBeenCalledWith(1);
     });
 
@@ -197,5 +207,166 @@ describe('App', () => {
 
         expect(mockAuthService.logout).toHaveBeenCalled();
         expect(navigateSpy).toHaveBeenCalledWith(['/']);
+    });
+
+    describe('Side navigation', () => {
+        it('should close the menu explicitly', () => {
+            const fixture = TestBed.createComponent(App);
+            const app = fixture.componentInstance;
+
+            app.toggleMenu();
+            app['closeMenu']();
+
+            expect(app['menuOpen']()).toBe(false);
+        });
+
+        it('should render each destination as a real link', () => {
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+
+            const hrefs = Array.from(
+                fixture.nativeElement.querySelectorAll('mat-nav-list a[mat-list-item]'),
+                (link: Element) => link.getAttribute('href'),
+            );
+
+            expect(hrefs).toEqual(['/', '/search', '/legal']);
+        });
+
+        it('should add the collection link once signed in', () => {
+            mockAuthService.currentUser.set({ user_id: 1, display_name: 'Test' });
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+
+            const hrefs = Array.from(
+                fixture.nativeElement.querySelectorAll('mat-nav-list a[mat-list-item]'),
+                (link: Element) => link.getAttribute('href'),
+            );
+
+            expect(hrefs).toContain('/mes-series');
+        });
+
+        it('should label the menu button for assistive technology', () => {
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+
+            const button = fixture.nativeElement.querySelector('.app-toolbar button');
+
+            expect(button.getAttribute('aria-label')).toBe('Ouvrir le menu');
+            expect(button.getAttribute('aria-expanded')).toBe('false');
+        });
+    });
+
+    describe('Notification list', () => {
+        it('should not nest the delete button inside the open button', () => {
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('button button')).toBeNull();
+        });
+
+        it('should give the delete button an accessible name', () => {
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+
+            const deleteButton = fixture.nativeElement.querySelector('.delete-button');
+
+            expect(deleteButton.getAttribute('aria-label')).toBe(
+                'Supprimer la notification de Breaking Bad',
+            );
+        });
+
+        it('should open the serie when the row is activated', () => {
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+            const app = fixture.componentInstance;
+            const openSpy = vi.spyOn(app, 'onNotificationClick').mockResolvedValue();
+
+            fixture.nativeElement.querySelector('.notification-main').click();
+
+            expect(openSpy).toHaveBeenCalledWith(mockNotification);
+        });
+
+        it('should delete without opening the serie', () => {
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+            const app = fixture.componentInstance;
+            const openSpy = vi.spyOn(app, 'onNotificationClick').mockResolvedValue();
+
+            fixture.nativeElement.querySelector('.delete-button').click();
+
+            expect(mockUserNotificationService.delete).toHaveBeenCalledWith(1);
+            expect(openSpy).not.toHaveBeenCalled();
+        });
+
+        it('should show the empty state when there is nothing to show', () => {
+            mockUserNotificationService.notifications.set([]);
+            const fixture = TestBed.createComponent(App);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.no-notifications')).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.notification-item')).toBeNull();
+        });
+    });
+
+    describe('togglePushNotifications', () => {
+        beforeEach(() => {
+            vi.spyOn(console, 'error').mockImplementation(() => undefined);
+        });
+
+        it('should subscribe and confirm when push is off', async () => {
+            const app = TestBed.createComponent(App).componentInstance;
+
+            await app.togglePushNotifications();
+
+            expect(mockPushService.subscribeToPush).toHaveBeenCalled();
+            expect(mockNotificationService.success).toHaveBeenCalledWith(
+                'push_notifications.enabled_success',
+            );
+            expect(mockPushService.showNotification).toHaveBeenCalled();
+            expect(app['pushLoading']()).toBe(false);
+        });
+
+        it('should report a denied permission with its own message', async () => {
+            mockPushService.subscribeToPush.mockReturnValue(
+                throwError(() => new Error('Permission denied')),
+            );
+            const app = TestBed.createComponent(App).componentInstance;
+
+            await app.togglePushNotifications();
+
+            expect(mockNotificationService.error).toHaveBeenCalledWith(
+                'push_notifications.error_denied',
+            );
+            expect(app['pushLoading']()).toBe(false);
+        });
+
+        it('should unsubscribe and confirm when push is on', async () => {
+            mockPushService.permission.set('granted');
+            mockPushService.isSubscribed.mockReturnValue(true);
+            const app = TestBed.createComponent(App).componentInstance;
+
+            await app.togglePushNotifications();
+
+            expect(mockPushService.unsubscribeFromPush).toHaveBeenCalled();
+            expect(mockNotificationService.success).toHaveBeenCalledWith(
+                'push_notifications.disabled_success',
+            );
+        });
+
+        it('should report a failed unsubscribe', async () => {
+            mockPushService.permission.set('granted');
+            mockPushService.isSubscribed.mockReturnValue(true);
+            mockPushService.unsubscribeFromPush.mockReturnValue(
+                throwError(() => new Error('No subscription found')),
+            );
+            const app = TestBed.createComponent(App).componentInstance;
+
+            await app.togglePushNotifications();
+
+            expect(mockNotificationService.error).toHaveBeenCalledWith(
+                'push_notifications.error_generic',
+            );
+            expect(app['pushLoading']()).toBe(false);
+        });
     });
 });

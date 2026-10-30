@@ -33,8 +33,9 @@ Envelope shapes (`models/serie.model.ts`):
 ## Helpers
 
 ```typescript
-getTmdbImageUrl(path, size); // 'w300' | 'w500' | 'w780' | 'original' → full TMDB image URL
-formatRating(rating); // vote_average (0–10) → 5-star string, 1 decimal
+getTmdbImageUrl(path, size); // 'w200' | 'w300' | 'w500' | 'w780' | 'w1280' | 'original' → full TMDB image URL
+getTmdbSrcset(path, sizes); // e.g. ['w780', 'w1280', 'original'] → "url 780w, url 1280w, url 1920w" for <img srcset>
+// Ratings: always the TMDB 0–10 scale, one decimal — vote_average.toFixed(1)
 ```
 
 ## Rules

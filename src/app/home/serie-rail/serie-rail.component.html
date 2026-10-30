@@ -6,4 +6,6 @@
     @for (serie of series(); track serie.id; let index = $index) {
         <app-serie-card class="rail-item" [serie]="serie" [priority]="index < eagerCount()" />
     }
+    <!-- Whatever continues the rail, such as a "load more" tile. -->
+    <ng-content />
 </section>

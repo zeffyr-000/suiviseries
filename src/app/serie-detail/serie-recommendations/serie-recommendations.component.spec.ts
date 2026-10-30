@@ -131,10 +131,25 @@ describe('SerieRecommendationsComponent', () => {
         expect(placeholder).toBeTruthy();
     });
 
-    it('should format rating correctly', () => {
-        expect(component['formatRating'](8)).toBe('4.0');
-        expect(component['formatRating'](7.5)).toBe('3.8');
-        expect(component['formatRating'](10)).toBe('5.0');
+    it('should show the rating on the same 0-10 scale as the rest of the page', () => {
+        fixture.componentRef.setInput('recommendations', [
+            {
+                id: 1,
+                tmdb_id: 101,
+                name: 'Silo',
+                original_name: 'Silo',
+                overview: '',
+                poster_path: 'https://example.com/poster1.jpg',
+                backdrop_path: null,
+                first_air_date: '2023-05-05',
+                vote_average: 7.46,
+                popularity: 100,
+            },
+        ]);
+        fixture.detectChanges();
+
+        const badge = fixture.nativeElement.querySelector('.rating-badge span');
+        expect(badge.textContent.trim()).toBe('7.5');
     });
 
     it('should display year from first_air_date', () => {

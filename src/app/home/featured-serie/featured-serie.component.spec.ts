@@ -46,7 +46,15 @@ describe('FeaturedSerieComponent', () => {
         const image = fixture.nativeElement.querySelector('.featured-backdrop');
 
         expect(image.src).toBe('https://image.tmdb.org/t/p/w780/backdrop.jpg');
-        expect(image.alt).toBe('Silo');
+        expect(image.getAttribute('srcset')).toContain('/w1280/backdrop.jpg 1280w');
+    });
+
+    it('should leave the artwork unnamed, since the heading already names the serie', () => {
+        renderWith();
+
+        expect(fixture.nativeElement.querySelector('.featured-backdrop').getAttribute('alt')).toBe(
+            '',
+        );
     });
 
     it('should render the title as a level three heading, below the section heading', () => {
@@ -58,8 +66,13 @@ describe('FeaturedSerieComponent', () => {
     it('should round the rating to one decimal', () => {
         renderWith();
 
-        expect(fixture.nativeElement.querySelector('.featured-rating').textContent.trim()).toBe(
+        const rating = fixture.nativeElement.querySelector('.featured-rating');
+
+        expect(rating.querySelector('[aria-hidden="true"]:not(mat-icon)').textContent.trim()).toBe(
             '8.2',
+        );
+        expect(rating.querySelector('.visually-hidden').textContent.trim()).toBe(
+            'Note de 8.2 sur 10',
         );
     });
 

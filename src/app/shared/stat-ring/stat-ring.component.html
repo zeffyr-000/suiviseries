@@ -15,7 +15,11 @@
         />
     </svg>
 
-    <span class="stat-ring-label">{{ label() }}</span>
+    <!-- When a description is given it carries the full meaning, so the bare
+         figure is hidden from assistive technology rather than read twice. -->
+    <span class="stat-ring-label" [attr.aria-hidden]="description() ? 'true' : null">{{
+        label()
+    }}</span>
 
     @if (description()) {
         <span class="visually-hidden">{{ description() }}</span>

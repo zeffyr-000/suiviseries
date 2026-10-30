@@ -35,9 +35,7 @@ describe('MySeriesComponent', () => {
         TestBed.configureTestingModule({
             imports: [MySeriesComponent, getTranslocoTestingModule()],
             providers: [
-                // Catch-all so goToSearch()'s router.navigate(['/search']) resolves
-                // instead of rejecting async with NG04002 (an unhandled rejection that
-                // otherwise floats onto unrelated test files).
+                // Catch-all so the template's routerLink to /search resolves.
                 provideRouter([{ path: '**', children: [] }]),
                 { provide: SeriesService, useValue: mockSeriesService },
                 { provide: MetadataService, useValue: mockMetadataService },
@@ -55,7 +53,6 @@ describe('MySeriesComponent', () => {
         it('should have initial signal values', () => {
             expect(component['mySeries']()).toEqual([]);
             expect(component['loading']()).toBe(true);
-            expect(component['error']()).toBeNull();
         });
     });
 
@@ -64,10 +61,10 @@ describe('MySeriesComponent', () => {
             component.ngOnInit();
 
             expect(mockMetadataService.updatePageMetadata).toHaveBeenCalledWith({
-                title: 'Mes Séries',
+                title: 'Mes séries',
                 description:
                     'Gérez votre collection personnelle de séries TV. Suivez votre progression et ne ratez jamais un épisode.',
-                canonicalUrl: 'http://localhost:4200/my-series',
+                canonicalUrl: 'http://localhost:4200/mes-series',
             });
         });
 
@@ -89,6 +86,7 @@ describe('MySeriesComponent', () => {
         });
 
         it('should handle errors gracefully', () => {
+            vi.spyOn(console, 'error').mockImplementation(() => undefined);
             mockSeriesService.getUserSeries.mockReturnValue(
                 throwError(() => new Error('API Error')),
             );
@@ -100,45 +98,35 @@ describe('MySeriesComponent', () => {
         });
     });
 
-    describe('onRefresh', () => {
-        beforeEach(() => {
-            component.ngOnInit();
-            vi.clearAllMocks();
+    describe('Template', () => {
+        it('should link the add action to the search page', () => {
+            const fixture = TestBed.createComponent(MySeriesComponent);
+            fixture.detectChanges();
+
+            const link: HTMLAnchorElement =
+                fixture.nativeElement.querySelector('.header-actions a');
+
+            expect(link.getAttribute('href')).toBe('/search');
         });
 
-        it('should reload user series', () => {
-            component['onRefresh']();
+        it('should offer a link to the search page when the collection is empty', () => {
+            mockSeriesService.getUserSeries.mockReturnValue(of([]));
+            const fixture = TestBed.createComponent(MySeriesComponent);
+            fixture.detectChanges();
 
-            expect(mockSeriesService.getUserSeries).toHaveBeenCalled();
+            const link: HTMLAnchorElement =
+                fixture.nativeElement.querySelector('.empty-container a');
+
+            expect(link.getAttribute('href')).toBe('/search');
         });
 
-        it('should reset error state', () => {
-            component['error'].set('Previous error');
+        it('should render one card per followed serie', () => {
+            const fixture = TestBed.createComponent(MySeriesComponent);
+            fixture.detectChanges();
 
-            component['onRefresh']();
-
-            expect(component['error']()).toBeNull();
-        });
-
-        it('should update series list', () => {
-            const newSeries = [
-                createMockSerie({
-                    id: 2,
-                    name: 'New Serie',
-                }),
-            ];
-            mockSeriesService.getUserSeries.mockReturnValue(of(newSeries));
-
-            component['onRefresh']();
-
-            expect(component['mySeries']()).toEqual(newSeries);
-        });
-    });
-
-    describe('goToSearch', () => {
-        it('should call router navigate', () => {
-            // Navigation is tested indirectly through the router provider
-            expect(() => component['goToSearch']()).not.toThrow();
+            expect(fixture.nativeElement.querySelectorAll('app-serie-card')).toHaveLength(
+                mockSeries.length,
+            );
         });
     });
 

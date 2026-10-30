@@ -139,10 +139,17 @@ export function createMockMatDialog() {
     };
 }
 
-// Mock MatSnackBar factory
-export function createMockMatSnackBar() {
+// Mock NotificationService factory. Components show user messages through it
+// rather than through MatSnackBar, so this is the one to assert against.
+export function createMockNotificationService() {
     return {
-        open: vi.fn(),
+        show: vi.fn(),
+        error: vi.fn(),
+        success: vi.fn(),
+        warning: vi.fn(),
+        info: vi.fn(),
+        dismiss: vi.fn(),
+        clear: vi.fn(),
     };
 }
 

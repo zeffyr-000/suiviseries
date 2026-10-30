@@ -19,12 +19,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { SeriesService } from '../services/series.service';
 import { AuthService } from '../services/auth.service';
@@ -48,12 +43,7 @@ import { getSerieCanonicalUrl } from '../utils/url.utils';
         MatButtonModule,
         MatIconModule,
         MatCardModule,
-        MatProgressBarModule,
         MatProgressSpinnerModule,
-        MatDividerModule,
-        MatExpansionModule,
-        MatTabsModule,
-        MatTooltipModule,
         SerieWatchProvidersComponent,
         SerieVideosComponent,
         SerieSeasonsComponent,

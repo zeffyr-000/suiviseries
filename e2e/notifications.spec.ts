@@ -7,9 +7,11 @@ test.describe('Notifications', () => {
 
     test.describe('When not logged in', () => {
         test('should not display notifications button', async ({ page }) => {
+            // Matched on the notifications label itself: a bare "Ouvrir" also
+            // matches the menu button ("Ouvrir le menu"), which is always shown.
             await expect(
-                page.locator('button[aria-label*="notification"], button[aria-label*="Ouvrir"]'),
-            ).not.toBeVisible();
+                page.getByRole('button', { name: /Ouvrir les notifications|Open notifications/ }),
+            ).toHaveCount(0);
         });
     });
 

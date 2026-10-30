@@ -7,9 +7,13 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <nav class="watch-provider-list" aria-label="Plateformes de streaming disponibles">
+            <!-- A list, not a nav: the entries are informational and link nowhere. -->
+            <ul
+                class="watch-provider-list"
+                [attr.aria-label]="'serie_detail.watch_providers_list' | transloco"
+            >
                 @for (provider of providers(); track provider.provider_id) {
-                    <article
+                    <li
                         class="watch-provider-item"
                         itemprop="potentialAction"
                         itemscope
@@ -47,9 +51,9 @@
                                 }
                             </span>
                         </div>
-                    </article>
+                    </li>
                 }
-            </nav>
+            </ul>
             <footer class="justwatch-attribution">
                 <span class="label-small">{{
                     'serie_detail.justwatch_attribution' | transloco

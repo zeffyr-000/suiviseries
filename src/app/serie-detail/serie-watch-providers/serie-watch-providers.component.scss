@@ -1,24 +1,16 @@
 @use '../../../styles/mixins';
 
 .watch-providers-card {
-  mat-card-header {
-    mat-card-title {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-
-      mat-icon {
-        color: var(--mat-sys-primary);
-      }
-    }
-  }
+  @include mixins.detail-section-card;
 }
 
 .watch-provider-list {
   @include mixins.horizontal-scroll;
 
   gap: var(--spacing-md);
+  margin: 0;
   padding: var(--spacing-xs) 0 var(--spacing-md) 0;
+  list-style: none;
 
   &::before {
     @include mixins.horizontal-scroll-fade-start;

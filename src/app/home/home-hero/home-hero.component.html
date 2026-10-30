@@ -1,10 +1,17 @@
-<section class="hero" [class.hero--has-backdrop]="!!backdrop()">
-    @if (backdrop(); as image) {
-        <div
+<section class="hero" [class.hero--has-backdrop]="!!backdropSrc()">
+    @if (backdropSrc(); as src) {
+        <!-- Capped at 1280px wide in "sizes": the left half sits under a dense
+             scrim, so w1280 is enough at 1x and the original is only fetched
+             for high-density screens. -->
+        <img
             class="hero-backdrop"
-            [style.background-image]="'url(' + image + ')'"
+            [src]="src"
+            [attr.srcset]="backdropSrcset()"
+            sizes="(min-width: 1280px) 1280px, 100vw"
+            alt=""
             aria-hidden="true"
-        ></div>
+            fetchpriority="high"
+        />
     }
 
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -21,25 +28,23 @@
         <p class="hero-tagline body-large">{{ 'hero.tagline' | transloco }}</p>
 
         <div class="hero-actions">
-            <button
-                mat-flat-button
-                class="btn-expressive"
-                routerLink="/search"
-                [attr.aria-label]="'hero.browse_series' | transloco"
-            >
+            <a mat-flat-button class="btn-expressive" routerLink="/search">
                 <mat-icon>search</mat-icon>
                 {{ 'hero.browse_series' | transloco }}
-            </button>
+            </a>
 
-            <a class="hero-secondary" href="#decouvrir">
+            <!-- Through the router: a bare "#decouvrir" reaches it as a
+                 history pop, which its scroll restoration answers by putting
+                 the page back where the previous entry left it. -->
+            <a class="hero-secondary" routerLink="/" fragment="decouvrir">
                 {{ 'hero.how_it_works' | transloco }}
                 <mat-icon aria-hidden="true">arrow_downward</mat-icon>
             </a>
         </div>
     </div>
 
-    @if (featured(); as serie) {
-        <a class="hero-credit label-small" [routerLink]="featuredRoute()">
+    @if (spotlight(); as serie) {
+        <a class="hero-credit label-small" [routerLink]="spotlightRoute()">
             <span class="hero-credit-label">{{ 'hero.now_showing' | transloco }}</span>
             <span class="hero-credit-name">{{ serie.name }}</span>
             <mat-icon aria-hidden="true">arrow_forward</mat-icon>

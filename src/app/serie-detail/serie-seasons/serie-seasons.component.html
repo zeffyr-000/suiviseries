@@ -12,12 +12,18 @@
                     <mat-expansion-panel class="season-panel">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
+                                @let defaultTitle =
+                                    ('serie_detail.season_title' | transloco) +
+                                    ' ' +
+                                    season.season_number;
                                 <div class="season-title-container">
-                                    <span class="season-title"
-                                        >{{ 'serie_detail.season_title' | transloco }}
-                                        {{ season.season_number }}</span
-                                    >
-                                    <span class="season-subtitle">{{ season.name }}</span>
+                                    <span class="season-title">{{ defaultTitle }}</span>
+                                    <!-- Only when TMDB gives the season a name of its own
+                                         ("Épisodes spéciaux"): most are just "Saison 3",
+                                         which repeated the line above word for word. -->
+                                    @if (season.name && season.name !== defaultTitle) {
+                                        <span class="season-subtitle">{{ season.name }}</span>
+                                    }
                                 </div>
                             </mat-panel-title>
                             <mat-panel-description>

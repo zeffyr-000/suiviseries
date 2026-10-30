@@ -36,8 +36,8 @@
     linear-gradient(
       92deg,
       color-mix(in srgb, var(--ink) 96%, transparent) 0%,
-      color-mix(in srgb, var(--ink) 82%, transparent) 40%,
-      color-mix(in srgb, var(--ink) 25%, transparent) 80%
+      color-mix(in srgb, var(--ink) 82%, transparent) 48%,
+      color-mix(in srgb, var(--ink) 25%, transparent) 82%
     ),
     linear-gradient(0deg, var(--ink) 2%, transparent 52%);
 }
@@ -59,12 +59,14 @@
   color: var(--mat-sys-on-surface);
 }
 
+// Same 1200px column as the cards below, so the poster lines up with their
+// left edge instead of sitting out on its own near the viewport.
 .hero-content {
   display: flex;
   align-items: flex-end;
   gap: var(--spacing-xl);
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin-inline: auto;
 }
 
@@ -163,9 +165,13 @@
 }
 
 @include respond-below(md) {
+  // Side padding matches the content column below at this width.
   .serie-hero {
     min-height: 60vh;
-    padding: var(--spacing-3xl) var(--spacing-md) var(--spacing-xl);
+    // The top padding clears the floating back button (24px inset, 48px touch
+    // target) plus a gap. On a short screen the content rises to meet it, and
+    // at 64px the poster ran under the button on an iPhone in Safari.
+    padding: calc(var(--spacing-lg) + 48px + var(--spacing-md)) var(--spacing-lg) var(--spacing-xl);
   }
 
   .hero-content {

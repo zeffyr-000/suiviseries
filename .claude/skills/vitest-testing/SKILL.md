@@ -55,7 +55,7 @@ describe('HomeComponent', () => {
 ## Mock Factories (`src/app/testing/mocks/`)
 
 - Data: `createMockSerie(overrides?)`, `createMockSeason()`, `createMockEpisode()`, `createMockSerieStats()`, `createMockUser()`
-- Services: `createMockAuthService()`, `createMockAuthenticatedAuthService()`, `createMockSeriesService()`, `createMockMetadataService()`, `createMockMatDialog()`
+- Services: `createMockAuthService()`, `createMockAuthenticatedAuthService()`, `createMockSeriesService()`, `createMockMetadataService()`, `createMockPushNotificationService()`, `createMockNotificationService()`, `createMockMatDialog()`
 
 Prefer these over hand-rolling mocks so the shape stays in sync with the models.
 

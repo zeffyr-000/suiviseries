@@ -1,15 +1,21 @@
 <article class="featured">
+    <!-- Decorative: the heading below already names the serie, and an alt
+         repeating it made screen readers announce the title twice. -->
     <img
         class="featured-backdrop"
         [src]="backdropUrl()"
-        [alt]="serie().name"
+        [attr.srcset]="backdropSrcset()"
+        sizes="(min-width: 905px) 45vw, 100vw"
+        alt=""
         loading="eager"
-        fetchpriority="high"
     />
     <div class="featured-scrim" aria-hidden="true"></div>
 
     <div class="featured-content">
-        <p class="eyebrow eyebrow--flare">{{ 'sections.trending_eyebrow' | transloco }}</p>
+        <p class="eyebrow eyebrow--flare featured-eyebrow">
+            <mat-icon aria-hidden="true">trending_up</mat-icon>
+            {{ 'sections.trending_eyebrow' | transloco }}
+        </p>
 
         <h3 class="featured-title">{{ serie().name }}</h3>
 
@@ -19,11 +25,19 @@
             @if (isAiring()) {
                 <span class="live-pill">{{ 'status.returning_series' | transloco }}</span>
             }
-            <span>{{ 'series.seasons' | transloco: { count: serie().number_of_seasons } }}</span>
-            <span class="separator" aria-hidden="true">·</span>
-            <span>{{ 'series.episodes' | transloco: { count: serie().number_of_episodes } }}</span>
-            <span class="separator" aria-hidden="true">·</span>
-            <span class="featured-rating">{{ rating() }}</span>
+            <span class="meta-item">{{
+                'series.seasons' | transloco: { count: serie().number_of_seasons }
+            }}</span>
+            <span class="meta-item">{{
+                'series.episodes' | transloco: { count: serie().number_of_episodes }
+            }}</span>
+            <span class="meta-item featured-rating">
+                <mat-icon aria-hidden="true">star</mat-icon>
+                <span aria-hidden="true">{{ rating() }}</span>
+                <span class="visually-hidden">{{
+                    'serie_detail.rating_description' | transloco: { rating: rating() }
+                }}</span>
+            </span>
         </div>
 
         <a mat-flat-button class="btn-expressive featured-cta" [routerLink]="serieRoute()">

@@ -44,7 +44,7 @@ Google OAuth → AuthService → JWT token → authInterceptor → Backend API (
 
 ### Routing (`app.routes.ts`)
 
-Lazy-loaded routes with `loadComponent`. `authGuard` protects `/my-series` and other authenticated routes.
+Lazy-loaded routes with `loadComponent`. `authGuard` protects `/mes-series` and other authenticated routes.
 
 ```typescript
 // authGuard redirects unauthenticated users to home with the login dialog
@@ -166,7 +166,7 @@ return this.http.get<Response>(`${this.apiUrl}/endpoint`).pipe(
 
 The backend returns **snake_case** JSON (TMDB-shaped). Frontend models in `models/serie.model.ts` mirror those fields directly (`poster_path`, `first_air_date`, `user_data`, `is_watched`, …). Response envelopes carry a `success` boolean plus a `results` / `serie` payload — always check `success` before using `results`.
 
-Key models: `Serie`, `Season`, `Episode`, `SerieUserData`, `SerieStats`, `SearchResponse`, `SerieDetailResponse`, `UserSeriesResponse`, `SerieStatus` (enum). Helpers: `getTmdbImageUrl(path, size)`, `formatRating(rating)`.
+Key models: `Serie`, `Season`, `Episode`, `SerieUserData`, `SerieStats`, `SearchResponse`, `SerieDetailResponse`, `UserSeriesResponse`, `SerieStatus` (enum). Helpers: `getTmdbImageUrl(path, size)`, `getTmdbSrcset(path, sizes)` (responsive `srcset` for artwork drawn wider than ~500px). Ratings are always shown on the TMDB 0–10 scale with one decimal (`vote_average.toFixed(1)`).
 
 ### Hierarchical Watched State
 
@@ -177,7 +177,8 @@ Series → Season → Episode marking is synchronized: marking a series marks al
 - Use `NotificationService` (wraps `MatSnackBar`) with translation keys — never call `MatSnackBar` directly for user text
 - **MatMenu max-width is 280px** — use `MatSidenav` with `position="end"` for wider panels
 - For sidenav: `mode="over"`, sync state with `(openedChange)`; use unique template refs (`#sidenav`, `#notificationsSidenav`) for multiple sidenavs
-- M3 theme is configured in SCSS via `mat.theme(...)` (rose primary, red tertiary) — see the `material-design-3` and `scss-styling` skills
+- M3 theme ("Nuit & Or", dark only) is configured in SCSS via `mat.theme(...)` (gold primary, flare tertiary); brand tokens `--gold`, `--flare`, `--ice` live in `styles.scss` — see the `material-design-3` and `scss-styling` skills
+- Material 22 component tokens are `--mat-<component>-*` (e.g. `--mat-snack-bar-container-color`); the old `--mdc-*` names no longer exist and silently do nothing
 - Use M3 typography classes (`.display-large`, `.headline-medium`, `.body-large`, `.label-large`, …) — never inline `font-size`
 - Use `NgOptimizedImage` for static images (NOT for inline base64)
 
@@ -237,7 +238,9 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 ```
 
-Available factories (from `testing/mocks/`): `createMockSerie(overrides?)`, `createMockSeason()`, `createMockEpisode()`, `createMockSerieStats()`, `createMockUser()`, `createMockAuthService()`, `createMockAuthenticatedAuthService()`, `createMockSeriesService()`, `createMockMetadataService()`, `createMockMatDialog()`.
+Available factories (from `testing/mocks/`): `createMockSerie(overrides?)`, `createMockSeason()`, `createMockEpisode()`, `createMockSerieStats()`, `createMockUser()`, `createMockAuthService()`, `createMockAuthenticatedAuthService()`, `createMockSeriesService()`, `createMockMetadataService()`, `createMockPushNotificationService()`, `createMockNotificationService()`, `createMockMatDialog()`.
+
+`getTranslocoTestingModule()` includes the MessageFormat transpiler (locale `fr`), so templates render the same text as in production: plurals and single-brace params (`{name}`) are resolved.
 
 Test against **translation keys**, not translated strings:
 

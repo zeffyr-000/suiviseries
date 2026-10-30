@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, computed, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +19,7 @@ import { environment } from '../../environments/environment';
 @Component({
     selector: 'app-my-series',
     imports: [
+        RouterModule,
         TranslocoModule,
         MatButtonModule,
         MatIconModule,
@@ -32,14 +33,12 @@ import { environment } from '../../environments/environment';
 })
 export class MySeriesComponent implements OnInit {
     private readonly seriesService = inject(SeriesService);
-    private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
     private readonly metadataService = inject(MetadataService);
     private readonly translocoService = inject(TranslocoService);
 
-    protected mySeries = signal<Serie[]>([]);
-    protected loading = signal<boolean>(true);
-    protected error = signal<string | null>(null);
+    protected readonly mySeries = signal<Serie[]>([]);
+    protected readonly loading = signal<boolean>(true);
 
     // Everything below is derived from fields the collection endpoint always
     // returns. Runtime and follower counts would make richer tiles, but the
@@ -85,33 +84,28 @@ export class MySeriesComponent implements OnInit {
         this.metadataService.updatePageMetadata({
             title: this.translocoService.translate('seo.my_series.title'),
             description: this.translocoService.translate('seo.my_series.description'),
-            canonicalUrl: `${environment.siteUrl}/my-series`,
+            canonicalUrl: `${environment.siteUrl}/mes-series`,
         });
     }
 
+    // getUserSeries notifies the user and resolves to an empty list on failure,
+    // so there is no error state to render. The error callback only guarantees
+    // the spinner cannot hang if that contract is ever broken.
     private loadMySeries(): void {
         this.loading.set(true);
-        this.error.set(null);
 
         this.seriesService
             .getUserSeries(true)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: (series: Serie[]) => {
+                next: (series) => {
                     this.mySeries.set(series);
                     this.loading.set(false);
                 },
-                error: () => {
+                error: (err: unknown) => {
+                    console.error('Error loading user series:', err);
                     this.loading.set(false);
                 },
             });
-    }
-
-    protected onRefresh(): void {
-        this.loadMySeries();
-    }
-
-    protected goToSearch(): void {
-        this.router.navigate(['/search']);
     }
 }
